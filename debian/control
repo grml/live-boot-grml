@@ -12,7 +12,7 @@ XS-Vcs-Browse: http://git.debian.org/?p=users/daniel/live-initramfs.git
 
 Package: live-initramfs
 Architecture: all
-Depends: ${misc:Depends}, file, initramfs-tools, sudo, user-setup
+Depends: ${misc:Depends}, file, initramfs-tools, sudo, user-setup, busybox
 Recommends: eject, wget, live-initscripts
 Suggests: genext2fs, squashfs-tools
 Description: Debian Live initramfs hook
