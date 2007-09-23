@@ -7,24 +7,30 @@ casper-snapshot \- a simple script to ease persistence usage.
 .B casper-snapshot
 .RB [\| \-c \||\| \-\-cow
 .IR DIRECTORY \|]
-.RB [\| \-d \||\| \-\-destination
-.IR DIRECTORY \||\| FILE \|]
+.RB [\| \-d \||\| \-\-device
+.IR DEVICE \|]
+.RB [\| \-e \||\| \-\-exclude\-list
+.IR FILE \|]
 .RB [\| \-o \||\| \-\-output
 .IR FILE \|]
 .RB [\| \-t \||\| \-\-type
 .IR TYPE \|]
 .PP
-.B make-live
+.B casper-snapshot
+.RB \-r \||\| \-\-resync\-string
+.IR STRING
+.br
+.B casper-snapshot
 .RB \-h \||\| \-\-help
 .br
-.B make-live
+.B casper-snapshot
 .RB \-u \||\| \-\-usage
 .br
-.B make-live
+.B casper-snapshot
 .RB \-v \||\| \-\-version
 
 .SH DESCRIPTION
-Casper-snapshot is a script useful to build the right types of persistent image files supported by casper.
+Casper-snapshot is a script useful to build the right types of persistent image files supported by casper, it is also used on exit by the casper init script to resync the boot-found snapshots devices.
 
 .SH OPTIONS
 .TP
@@ -32,9 +38,17 @@ Casper-snapshot is a script useful to build the right types of persistent image 
 specifies the input directory to be cloned in the image file.
 This parameters often does not need to be specified as the default of "/cow" for it should be right for most uses, however it could be handy to specify "/home" and type ext2 for the type to prepare an image file suited to be directly mounted by casper as home.
 .TP
-.BI "\-d, \-\-destination" DIRECTORY
+.BI "\-d, \-\-device" DEVICE
+the device on where the media which the snapshot/persistence file/partition will be put. If not specified a tmpfs will be used and linked on user's desktop to move it where he/her wants. If the device has not a filesystem on it, an ext2 fs will be created in it and labeled like --output options or with a sane default.
+.TP
+.BI "\-e, \-\-exclude\-list" FILE
+you could pass a list of filenames/path that should not be saved. This exclude list will be remebered on the target snapshotting media for reuse.
 .TP
 .BI "\-o, \-\-output" FILE
+the filename/label to be used for the output file/partition, if left blank it could search for a proper file on the device or use the whole partition.
+.TP
+.BI "\-r, \-\-resync\-string" STRING
+internally used on resyncs.
 .TP
 .BI "\-t, \-\-type" TYPE
 

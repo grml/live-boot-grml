@@ -9,7 +9,7 @@ Package: casper
 Architecture: any
 Section: misc
 Priority: extra
-Depends: initramfs-tools (>= 0.40ubuntu11), dmsetup, user-setup, sudo
+Depends: initramfs-tools (>= 0.40ubuntu11), user-setup, sudo
 Conflicts: usplash (<< 0.4-27)
 Tag: admin::boot, admin::filesystem, implemented-in::shell, protocol::smb, role::plugin, scope::utility, special::completely-tagged, works-with-format::iso9660
 Description: Run a "live" preinstalled system from read-only media

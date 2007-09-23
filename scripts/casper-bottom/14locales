@@ -26,7 +26,7 @@ elif [ -e /root/etc/environment ]; then # Old locales policy
     grep_file=/root/etc/environment
 fi
 
-if [ ! -z "${grep_file}" ]; then
+if [ -n "${grep_file}" ]; then
     locale=$(grep -s 'LANG=' ${grep_file} | sed s/'LANG='// | tr -d '"' )
 else
     grep_file=/root/etc/default/locale
@@ -45,11 +45,27 @@ if [ -z "${locale}" ]; then
 fi
 
 if [ "${set_locale}" ]; then
+    if echo "${locale}" | grep -sqE '^[[:lower:]]{2}$' ; then
+        # input is like "locale=it", so we will convert and setup also the keyboard
+        if [ -z "${KBD}" ]; then
+            # FIXME: look if this keyb is supported
+            KBD="${locale}"
+        fi
+        uploc=$(echo "${locale}" | tr '[a-z]' '[A-Z]')
+        locale="${locale}_${uploc}.UTF-8"
+    fi
     LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 |sed -e 's, .*,,' -e q)
-    printf 'LANG="%s"\n' "${LANG}" >> "${grep_file}"
+
+    if [ -z "${LANG}" ]; then
+        log_warning_message "Locale ${locale} is unsupported."
+    fi
+
     if [ "${BUILD_SYSTEM}" == "Debian" ]; then
+        printf 'LANG=%s\n' "${LANG}" >> "${grep_file}"
+        printf '%s UTF-8\n' "${LANG}" >> /root/etc/locale.gen
         chroot /root /usr/sbin/locale-gen
     else
+        printf 'LANG="%s"\n' "${LANG}" > "${grep_file}"
         chroot /root /usr/sbin/locale-gen "${LANG}"
     fi
 fi

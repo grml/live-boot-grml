@@ -8,25 +8,20 @@ mountpoint=/live_media
 
 root_persistence="casper-rw"
 home_persistence="home-rw"
-root_snapshot="casper-sn"
-home_snapshot="home-sn"
+root_snapshot_label="casper-sn"
+home_snapshot_label="home-sn"
 
 USERNAME="casper"
 USERFULLNAME="Live session user"
-HOST="live"
+HOSTNAME="live"
 BUILD_SYSTEM="Debian"
 
 mkdir -p $mountpoint
 
 [ -f /etc/casper.conf ] && . /etc/casper.conf
+export USERNAME USERFULLNAME HOSTNAME BUILD_SYSTEM
 
-export USERNAME USERFULLNAME HOST BUILD_SYSTEM
-
-if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
-    MP_QUIET="-Q"
-else
-    MP_QUIET="-q"
-fi
+. /scripts/casper-helpers
 
 parse_cmdline ()
 {
@@ -37,8 +32,8 @@ parse_cmdline ()
                 export USERFULLNAME=${x#userfullname=}
                 export CASPERCONF="changed"
                 ;;
-            host=*)
-                export HOST=${x#host=}
+            hostname=*)
+                export HOSTNAME=${x#hostname=}
                 export CASPERCONF="changed"
                 ;;
             username=*)
@@ -76,7 +71,7 @@ parse_cmdline ()
             kbd-chooser/method=*)
                 export KBD=${x#kbd-chooser/method=} ;;
             keyb=*)
-                export KBD=${x#kbd=} ;;
+                export KBD=${x#keyb=} ;;
             console-setup/layoutcode=*)
                 export CSLAYOUT=${x#console-setup/layoutcode=} ;;
             console-setup/variantcode=*)
@@ -101,8 +96,7 @@ parse_cmdline ()
 is_casper_path() {
     path=$1
     if [ -d "$path/casper" ]; then
-        if [ "$(echo $path/casper/*.cloop)" != "$path/casper/*.cloop" ] ||
-            [ "$(echo $path/casper/*.squashfs)" != "$path/casper/*.squashfs" ] ||
+        if [ "$(echo $path/casper/*.squashfs)" != "$path/casper/*.squashfs" ] ||
             [ "$(echo $path/casper/*.ext2)" != "$path/casper/*.ext2" ] ||
             [ "$(echo $path/casper/*.dir)" != "$path/casper/*.dir" ]; then
             return 0
@@ -111,22 +105,8 @@ is_casper_path() {
     return 1
 }
 
-subdevices() {
-    sysblock=$1
-    r=""
-    for dev in "${sysblock}" "${sysblock}"/*; do
-        if [ -e "${dev}/dev" ]; then
-            r="${r} ${dev}"
-        fi
-    done
-    echo ${r}
-}
-
 get_backing_device() {
     case "$1" in
-        *.cloop)
-            echo $(setup_loop "$1" "cloop" "/sys/block/cloop*")
-            ;;
         *.squashfs|*.ext2)
             echo $(setup_loop "$1" "loop" "/sys/block/loop*")
             ;;
@@ -152,40 +132,13 @@ match_files_in_dir() {
 mount_images_in_directory() {
     directory="$1"
     rootmnt="$2"
-    if match_files_in_dir "$directory/casper/*.cloop"; then
-        # Let's hope there's just one matching *.cloop... FIXME
-        setup_devmapper $(get_backing_device "$directory/casper/*.cloop") "$rootmnt"
-    elif match_files_in_dir "$directory/casper/*.squashfs" || 
+    if match_files_in_dir "$directory/casper/*.squashfs" ||
         match_files_in_dir "$directory/casper/*.ext2" ||
         match_files_in_dir "$directory/casper/*.dir"; then
         setup_unionfs "$directory/casper" "$rootmnt"
     else
         :
     fi
-}
-
-sys2dev() {
-    sysdev=${1#/sys}
-    echo "/dev/$(udevinfo -q name -p ${sysdev} 2>/dev/null|| echo ${sysdev##*/})"
-}
-
-setup_loop() {
-    local fspath=$1
-    local module=$2
-    local pattern=$3
-
-    modprobe "${MP_QUIET}" -b "$module"
-    udevsettle
-
-    for loopdev in $pattern; do
-        if [ "$(cat $loopdev/size)" -eq 0 ]; then
-            dev=$(sys2dev "${loopdev}")
-            losetup "$dev" "$fspath"
-            echo "$dev"
-            return 0
-        fi
-    done
-    panic "No loop devices available"
 }
 
 get_fstype() {
@@ -197,36 +150,6 @@ get_fstype() {
         return 0
     fi
     /lib/udev/vol_id -t $1 2>/dev/null
-}
-
-setup_devmapper() {
-    backdev="$1"
-    rootmnt="$2"
-
-    modprobe "${MP_QUIET}" -b dm-mod
-    COW_DEVICE=/dev/ram1
-    COW_NAME="casper-cow"
-
-    BACKING_FILE_SIZE=$(blockdev --getsize "$backdev")
-    MAX_COW_SIZE=$(blockdev --getsize "$COW_DEVICE")
-    CHUNK_SIZE=8 # sectors
-
-    if [ -z "$COW_SIZE" -o "$COW_SIZE" -gt "$MAX_COW_SIZE" ]; then
-        COW_SIZE=$MAX_COW_SIZE
-    fi
-
-    echo "0 $COW_SIZE linear $COW_DEVICE 0" | dmsetup create $COW_NAME
-
-    echo "0 $BACKING_FILE_SIZE snapshot $backdev /dev/mapper/$COW_NAME p $CHUNK_SIZE" | \
-        dmsetup create casper-snapshot
-    if [ "$(get_fstype $backdev)" = "unknown" ]; then
-        panic "Unknown file system type on $backdev"
-    fi
-    mount -t $(get_fstype "$backdev") /dev/mapper/casper-snapshot $rootmnt || panic "Can not mount /dev/mapper/casper/snapshot on $rootmnt"
-
-    mkdir -p "$rootmnt/rofs"
-    echo "0 $BACKING_FILE_SIZE linear $backdev 0" | dmsetup create casper-backing
-    mount -t $(get_fstype "$backdev") /dev/mapper/casper-backing "$rootmnt/rofs"
 }
 
 is_nice_device() {
@@ -247,45 +170,6 @@ is_supported_fs ()
             ;;
     esac
     return 1
-}
-
-where_is_mounted() {
-    device=$1
-    if grep -q "^$device " /proc/mounts; then
-        grep "^$device " /proc/mounts | read d mountpoint rest
-        echo $mountpoint
-        return 0
-    fi
-    return 1
-}
-
-used_fs_size ()
-{
-    # Returns used fs kbytes + 5% more
-    # You could pass a block device as $1 or the mount point as $2
-
-    dev="${1}"
-    mountp="${2}"
-
-    if [ -z "${mountp}" ]; then
-        mountp=$(where_is_mounted "${dev}")
-        if [ "$?" -gt 0 ]; then
-            mountp=/mnt/tmp_fs_size
-            mkdir -p "${mountp}"
-            mount -t $(get_fstype "${dev}") -o ro "${dev}" "${mountp}"
-            doumount=1
-        fi
-    fi
-
-    size=$(du -ks ${mountp} | cut -f1)
-    size=$(expr ${size} + ${size}/20 ) # FIXME: 5% more to be sure
-    needed_space=$(expr ${size} * 1024)
-
-    if [ ! -z "${doumount}" ]; then
-        umount "${mountp}"
-        rmdir "${mountp}"
-    fi
-    echo "${needed_space}"
 }
 
 copy_live_to() {
@@ -329,68 +213,6 @@ copy_live_to() {
     rmdir ${copyto}
     [ "$quiet" != "y" ] && log_end_msg
     return 0
-}
-
-try_mount ()
-{
-    dev="${1}"
-    mountp="${2}"
-    opts="${3}"
-
-    if where_is_mounted ${dev} > /dev/null; then
-        mount -o remount,"${opts}" ${dev} $(where_is_mounted ${dev}) || panic "Remounting failed"
-        mount -o bind $(where_is_mounted ${dev}) ${mountp} || panic "Cannot bind-mount"
-    else
-        mount -t $(get_fstype "${dev}") -o "${opts}" "${dev}" "${mountp}" || panic "Cannot mount ${dev} on ${mountp}"
-    fi
-}
-
-find_cow_device() {
-    pers_label="${1}"
-    cow_backing="/${pers_label}-backing"
-    for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop); do
-        for dev in $(subdevices "${sysblock}"); do
-            devname=$(sys2dev "${dev}")
-            if [ "$(/lib/udev/vol_id -l $devname 2>/dev/null)" = "${pers_label}" ]; then
-                echo "$devname"
-                return
-            elif [ "$(get_fstype ${devname})" = "vfat" ]; then # FIXME: all supported block devices should be scanned
-                mkdir -p "${cow_backing}"
-                try_mount "${devname}" "${cow_backing}" "rw"
-                if [ -e "${cow_backing}/${pers_label}" ]; then
-                    echo $(setup_loop "${cow_backing}/${pers_label}" "loop" "/sys/block/loop*")
-                    return 0
-                else
-                    umount ${cow_backing}
-                fi
-            fi
-        done
-    done
-}
-
-find_files()
-# return the first of $filenames found on vfat and ext2 devices
-# FIXME: merge with above function
-{
-    filenames="${1}"
-    snap_backing="/snap-backing"
-    for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop); do
-        for dev in $(subdevices "${sysblock}"); do
-            devname=$(sys2dev "${dev}")
-            devfstype="$(get_fstype ${devname})"
-            if [ "${devfstype}" = "vfat" ] ||  [ "${devfstype}" = "ext2" ] ; then # FIXME: all supported block devices should be scanned
-                mkdir -p "${snap_backing}"
-                try_mount "${devname}" "${snap_backing}" "ro"
-                for filename in ${filenames}; do
-                    if [ -e "${snap_backing}/${filename}" ]; then
-                        echo "${devname} ${snap_backing} ${filename}"
-                        return 0
-                    fi
-                done
-                umount ${snap_backing}
-            fi
-        done
-    done
 }
 
 do_netmount() {
@@ -459,25 +281,36 @@ do_snap_copy ()
     todir="${2}"
     snap_type="${3}"
 
-    size=$(used_fs_size "${fromdev}")
+    #size=$(used_fs_size "${fromdev}")
 
     if [ -b "${fromdev}" ]; then
         # look for free mem
-        if [ ! -z "${HOMEMOUNTED}" ] && [ "${snap_type}" = "HOME" ]; then
-            freespace="$(df -k ${copytodev} | grep -s ${copytodev} | awk '{print $4}')"
+        if [ -n "${HOMEMOUNTED}" -a "${snap_type}" = "HOME" ]; then
+            todev=$(cat /proc/mounts | grep -s " $(base_path ${todir}) " | awk '{print $1}' )
+            freespace=$(df -k  | grep -s ${todev} | awk '{print $4}')
         else
             freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( cat /proc/meminfo | grep Cached | head -n 1 | awk '/Cached/{print $2}' - ))
         fi
-        tomount="/mnt/tmpsnap"
-        mkdir -p "${tomount}"
-        mount -t $(get_fstype "${fromdev}") -o ro "${fromdev}" "${tomount}"
-        cp -a "${tomount}"/* ${todir}
-        umount "${tomount}"
 
-        if echo ${fromdev} | grep -qs loop; then
-            losetup -d "${fromdev}"
+        tomount="/mnt/tmpsnap"
+        if [ ! -d "${tomount}" ] ; then
+            mkdir -p "${tomount}"
         fi
 
+        fstype=$(get_fstype "${fromdev}")
+        if [ -n "${fstype}" ]; then
+            # Copying stuff...
+            mount -t "${fstype}" -o ro "${fromdev}" "${tomount}"
+            cp -a "${tomount}"/* ${todir}
+            umount "${tomount}"
+        else
+            log_warning_msg "Unrecognized fstype: ${fstype} on ${fromdev}:${snap_type}"
+        fi
+
+        rmdir "${tomount}"
+        if echo ${fromdev} | grep -qs loop; then
+           losetup -d "${fromdev}"
+        fi
         return 0
     else
         return 1
@@ -487,54 +320,60 @@ do_snap_copy ()
 
 try_snap ()
 {
+    # Look for $snap_label.* in block devices and copy the contents to $snap_mount
+    #   and remember the device and filename for resync on exit in casper.init
+
     snap_label="${1}"
     snap_mount="${2}"
     snap_type="${3}"
 
-    snapdata=$(find_files "${snap_label}.squashfs ${snap_label}.cpio.gz ${snap_label}.cpz ${snap_label}.gz")
+    snapdata=$(find_files "${snap_label}.squashfs ${snap_label}.cpio.gz ${snap_label}.ext2")
     if [ ! -z "${snapdata}" ]; then
-        snapdev=$(echo ${snapdata} | cut -f1 -d ' ')
-        snapback=$(echo ${snapdata} | cut -f2 -d ' ')
-        snapfile=$(echo ${snapdata} | cut -f3 -d ' ')
-        if echo "${snapfile}" | grep -qs "squashfs" ; then
-            # squashfs snapshot
-            if ! do_snap_copy $( get_backing_device "${snapback}/${snapfile}" ) "${snap_mount}" "${snap_type}"; then
+        snapdev="$(echo ${snapdata} | cut -f1 -d ' ')"
+        snapback="$(echo ${snapdata} | cut -f2 -d ' ')"
+        snapfile="$(echo ${snapdata} | cut -f3 -d ' ')"
+        if echo "${snapfile}" | grep -qs '\(squashfs\|ext2\)'; then
+            # squashfs or ext2 snapshot
+            dev=$(get_backing_device "${snapback}/${snapfile}")
+            if ! do_snap_copy "${dev}" "${snap_mount}" "${snap_type}"; then
                  log_warning_msg "Impossible to include the ${snapfile} Snapshot"
                  return 1
             fi
         else
             # cpio.gz snapshot
-            if ! (cd "${snap_mount}" && zcat "${snapback}/${snapfile}" | cpio -i -u -d ) ; then
+            if ! (cd "${snap_mount}" && zcat "${snapback}/${snapfile}" | cpio -i -u -d 2>/dev/null) ; then
                 log_warning_msg "Impossible to include the ${snapfile} Snapshot"
                 return 1
             fi
         fi
         umount "${snapback}"
-    else # try pure snapshot device better elif.. rework all that routine
-        if ! do_snap_copy $(find_cow_device "${snap_label}") "${snap_mount}" "${snap_type}"; then
+    else
+        dev=$(find_cow_device "${snap_label}")
+        if [ -b ${dev} ]; then
+            if echo "${dev}" | grep -qs loop; then
+                # strange things happens, user confused?
+                snaploop=$( losetup ${dev} | awk '{print $3}' | tr -d '()' )
+                snapfile=$(basename ${snaploop})
+                snapdev=$(cat /proc/mounts | awk '{print $2,$1}' | grep -es "^$( dirname ${snaploop} )" | cut -f2 -d ' ')
+            else
+                snapdev="${dev}"
+            fi
+            if ! do_snap_copy "${dev}" "${snap_mount}" "${snap_type}" ; then
+                log_warning_msg "Impossible to include the ${snap_label} Snapshot"
+                return 1
+            else
+                if [ -n "${snapfile}" ]; then
+                     # it was a loop device, user confused
+                     umount ${snapdev}
+                fi
+            fi
+        else
             log_warning_msg "Impossible to include the ${snap_label} Snapshot"
             return 1
         fi
     fi
-    echo "export ${snap_type}SNAP=${snapdev}:${snapfile}" >> /etc/casper.conf # for resync on reboot/halt
+    echo "export ${snap_type}SNAP="${snap_mount}":${snapdev}:${snapfile}" >> /etc/casper.conf # for resync on reboot/halt
     return 0
-}
-
-do_others_persistences ()
-{
-    # directly mount /home
-    # FIXME: add a custom mounts configurable system
-    homecow=$(find_cow_device "${home_persistence}" )
-    if [ -b "${homecow}" ]; then
-        mount ${homecow} -t $(get_fstype "${homecow}") -o rw "${rootmnt}/home"
-        export HOMEMOUNTED=1
-    else
-        [ "$quiet" != "y" ] && log_warning_msg "Unable to find the persistent home medium"
-    fi
-
-    # Look for snapshots to copy in
-    try_snap "${root_snapshot}" "${rootmnt}" "ROOT"
-    try_snap "${home_snapshot}" "${rootmnt}/home" "HOME"
 }
 
 setup_unionfs() {
@@ -585,7 +424,7 @@ setup_unionfs() {
     cow_fstype="tmpfs"
 
     # Looking for "${root_persistence}" device or file
-    if [ ! -z "${PERSISTENT}" ]; then
+    if [ -n "${PERSISTENT}" ]; then
         cowprobe=$(find_cow_device "${root_persistence}")
         if [ -b "${cowprobe}" ]; then
             cowdevice=${cowprobe}
@@ -600,11 +439,22 @@ setup_unionfs() {
     mount -t unionfs -o dirs=/cow=rw:$rofsstring unionfs "$rootmnt" || panic "Unionfs mount failed"
 
     # Adding other custom mounts
-    if [ ! -z "${PERSISTENT}" ]; then
-        do_others_persistences
+    if [ -n "${PERSISTENT}" ]; then
+        # directly mount /home
+        # FIXME: add a custom mounts configurable system
+        homecow=$(find_cow_device "${home_persistence}" )
+        if [ -b "${homecow}" ]; then
+            mount -t $(get_fstype "${homecow}") -o rw "${homecow}" "${rootmnt}/home"
+            export HOMEMOUNTED=1 # used to proper calculate free space in do_snap_copy()
+        else
+            [ "$quiet" != "y" ] && log_warning_msg "Unable to find the persistent home medium"
+        fi
+        # Look for other snapshots to copy in
+        try_snap "${root_snapshot_label}" "${rootmnt}" "ROOT"
+        try_snap "${home_snapshot_label}" "${rootmnt}/home" "HOME"
     fi
 
-    if [ ! -z "${SHOWMOUNTS}" ]; then
+    if [ -n "${SHOWMOUNTS}" ]; then
         for d in ${rofslist}; do
             mkdir -p "${rootmnt}/casper/${d##*/}"
             case d in
@@ -617,8 +467,8 @@ setup_unionfs() {
     fi
 
     # shows cow fs on /cow for use by casper-snapshot
-    mkdir -p "$rootmnt/cow"
-    mount -o bind /cow "$rootmnt/cow"
+    mkdir -p "${rootmnt}/cow"
+    mount -o bind /cow "${rootmnt}/cow"
 }
 
 check_dev ()

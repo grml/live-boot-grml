@@ -1,3 +1,24 @@
+casper (1.77+debian-2) unstable; urgency=medium
+
+  [ Marco Amadori ]
+  * Improved snapshotting (but still experimental).
+  * Renamed "host=" boot parameter to "hostname=" and shell variable "HOST" to
+    "HOSTNAME" for consistence, with linux and with username/USERNAME, as
+    requested by many people.
+  * Fixed a "keyb=" typo.
+  * Added dependence on lsb-base (used by init-script and
+    casper-snapshot).
+  * Removed DM support (obsolete).
+  * Changed a bit locale and keyboard handling.
+  * Fixed locale generation.
+  * Urgency is set to medium to try reaching Etch with important
+    features/bugfixes.
+ 
+  [ Otavio Salvador ]
+  * Really lowered usplash conflicts since Debian doesn't has 0.4.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Mon, 30 Oct 2006 17:06:48 +0100
+
 casper (1.77+debian-1) unstable; urgency=low
 
   * New upstream release.

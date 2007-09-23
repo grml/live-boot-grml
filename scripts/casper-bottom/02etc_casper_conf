@@ -1,6 +1,9 @@
 #!/bin/sh
 
 PREREQ=""
+DESCRIPTION="Copying config on real root fs..."
+
+. /scripts/casper-functions
 
 prereqs()
 {
@@ -15,13 +18,14 @@ prereqs)
        ;;
 esac
 
- 
+log_begin_msg "$DESCRIPTION"
+
 if [ -f /etc/casper.conf ] ; then 
 	if [ ! -z "${CASPERCONF}" ]; then
 		# Updating casper.conf
 		sed -i -e 's/\(USERNAME="\).*"/\1'"${USERNAME}"'"/g' \
 		    -e 's/\(USERFULLNAME="\).*"/\1'"${USERFULLNAME}"'"/g' \
-		    -e 's/\(HOST="\).*"/\1'"${HOST}"'"/g' /etc/casper.conf
+		    -e 's/\(HOSTNAME="\).*"/\1'"${HOSTNAME}"'"/g' /etc/casper.conf
 	fi
 	cp -p /etc/casper.conf /root/etc/casper.conf
 
@@ -29,7 +33,7 @@ else
 	cat <<EOF >/root/etc/casper.conf
 export USERNAME="$USERNAME"
 export USERFULLNAME="$USERFULLNAME"
-export HOST="$HOST"
+export HOSTNAME="$HOSTNAME"
 EOF
 
 fi

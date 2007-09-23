@@ -26,16 +26,16 @@ csvariant=
 csmodel=
 
 # commandline
-if [ ! -z "${KBD}" ]; then
+if [ -n "${KBD}" ]; then
     kbd="${KBD}"
 fi
-if [ ! -z "${CSLAYOUT}" ]; then
+if [ -n "${CSLAYOUT}" ]; then
     cslayout="${CSLAYOUT}"
 fi
-if [ ! -z "${CSVARIANT}" ]; then
+if [ -n "${CSVARIANT}" ]; then
     csvariant="${CSVARIANT}"
 fi
-if [ ! -z "${CSMODEL}" ]; then
+if [ -n "${CSMODEL}" ]; then
     csmodel="${CSMODEL}"
 fi
 

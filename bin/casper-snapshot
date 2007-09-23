@@ -1,9 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
-# casper-snapshot - utility to do Debian Live systems snapshots
+# casper-snapshot - utility to manage Debian Live systems snapshots
 #
-#   This program mount a /tmpfs under ~/Desktop and save the /cow
-#   filesystem in it for reusing in another session.
+#   This program mount a device (fallback to /tmpfs under /mnt/snapshot
+#   and save the /cow (or a different dir) filesystem in it for reusing
+#   in another casper session. Look at manpage for more info.
 #
 # Copyright (C) 2006 Marco Amadori <marco.amadori@gmail.com>
 #
@@ -27,18 +28,45 @@
 PROGRAM="`basename ${0}`"
 VERSION=0.0.1
 
+
 # Source casper conf
 if [ -e /etc/casper.conf ]; then
 	. /etc/casper.conf
 else
-	USERNAME=`cat /etc/passwd | grep "999" | cut -f1 -d ':'`
+	USERNAME=$(cat /etc/passwd | grep "999" | cut -f1 -d ':')
+	HOSTNAME=$(hostname)
+	BUILD_SYSTEM="Debian"
 fi
+
+export USERNAME USERFULLNAME HOSTNAME BUILD_SYSTEM
+
+# Source helper functions
+helpers="/usr/share/initramfs-tools/scripts/casper-helpers"
+if [ -e "${helpers}" ]; then
+	. "${helpers}"
+else
+	echo "Error: I cannot found helper functions \"${helpers}\"."
+	exit 1
+fi
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
+. /lib/lsb/init-functions
+
+# Some defaults:
+MOUNTP="/mnt/casper-snapshot"
+COW="/cow"
+DEV=""
+DEST="${MOUNTP}/casper-sn.cpio.gz"
+TYPE="cpio"
+DESKTOP_LINK=/home/$USERNAME/Desktop/casper-snapshot
 
 Header ()
 {
 	echo "${PROGRAM} - utility to do Debian Live snapshots"
 	echo
-	echo "Usage: ${PROGRAM} [-c|--cow DIRECTORY] [-d|--dest DIRECTORY] [-o|--output FILE] [-t|--type TYPE]"
+	echo "Usage: ${PROGRAM} [-c|--cow DIRECTORY] [-d|--device DEVICE] [-o|--output FILE] [-t|--type TYPE]"
+	echo "Usage: ${PROGRAM} [-r|--resync-string STRING]"
 	echo "Usage: ${PROGRAM} [-h|--help]"
 	echo "Usage: ${PROGRAM} [-u|--usage]"
 	echo "Usage: ${PROGRAM} [-v|--version]"
@@ -66,7 +94,9 @@ Help ()
 	echo "  -c, --cow: specifies the copy on write directory (default: /cow)."
 	echo "  -d, --destination: specifies the output snapshot directory (default: /home/\$USERNAME/Desktop/casper-snapshot)."
 	echo "  -o, --output: specifies the output image file (default: $type dependent)."
+    echo "  -r, --resync-string: internally used to resync previous made snapshots."
 	echo "  -t,--type: specifies the snapshot type between \'squashfs\', \'ext2\' or \'cpio\'.gz archive (default: cpio)"
+    echo -e "\nLook at casper-snapshot(1) man page for more information."
 	exit 0
 }
 
@@ -121,31 +151,6 @@ Do_snapshot ()
 	esac
 }
 
-Lastline()
-{
-	while read lines ; do
-		line=${lines}
-	done
-	echo "${line}"
-}
-
-Base_path ()
-{
-	testpath="${1}"
-	mounts="`awk '{print $2}' /proc/mounts`"
-	testpath="`realpath ${testpath}`"
-
-	while true ; do
-		if echo "${mounts}" | grep -qs "^${testpath}" ; then
-			set -- `echo "${mounts}" | grep "^${testpath}" | Lastline`
-			echo ${1}
-			break
-		else
-			testpath=`dirname $testpath`
-		fi
-	done
-}
-
 Is_same_mount ()
 {
 	dir1="`Base_path ${1}`"
@@ -174,12 +179,14 @@ Parse_args ()
 		case "${1}" in
 			-c|--cow)
 				SNAP_COW="${2}"; shift 2 ;;
-			-d|--destination)
-				SNAP_DEST="${2}"; shift 2 ;;
+			-d|--device)
+				SNAP_DEV="${2}"; shift 2 ;;
 			-o|--output)
 				SNAP_OUTPUT="${2}"; shift 2 ;;
 			-t|--type)
 				SNAP_TYPE="${2}"; shift 2 ;;
+			-r|--resync-string)
+				SNAP_RSTRING="${2}"; break ;;
 			-h|--help)
 				Help; shift ;;
 			-u|--usage)
@@ -194,34 +201,85 @@ Parse_args ()
 	done
 }
 
+Mount_device ()
+{
+	dev="${1}"
+
+	if [ ! -d "${MOUNTP}" ]; then
+		mkdir -p "${MOUNTP}"
+	fi
+
+	if [ -n "${dev}" ]; then
+		# create a temp
+		mount -t tmpfs -o rw tmpfs "${MOUNTP}"
+		if [ ! -L /home/$USERNAME/Desktop/casper-snapshot ]; then
+			ln -s "${MOUNTP}" /home/$USERNAME/Desktop/casper-snapshot
+		fi
+	else
+		if [ -b "${dev}" ] ; then
+			try_mount "${dev}" "${MOUNTP}" rw
+		fi
+	fi
+}
+
 Defaults ()
 {
-	DEF_COW="/cow"
-
-	# Bad options handling
-	if [ -z "${SNAP_COW}" ]; then
-		COW="${DEF_COW}"
+	if [ -n "${SNAP_RSTRING}" ]; then
+		COW=$(echo "${SNAP_RSTRING}" | cut -f1 -d ':')
+		DEV=$(echo "${SNAP_RSTRING}" | cut -f2 -d ':')
+		DEST=$(echo "${SNAP_RSTRING}" | cut -f3 -d ':')
+		
+		case "${DEST}" in
+			*.cpio.gz|*.cpz|*.gz)
+				TYPE="cpio" ;;
+			*.squashfs|*.squ})
+				TYPE="squashfs" ;;
+			"")
+				TYPE="ext2" ;;
+			*.ext2|*.ext)
+				TYPE="ext2" ;;
+			*)
+				Usage "Unregognized String" ;;
+		esac
 	else
-		COW="${SNAP_COW}"
+		DEF_COW="/cow"
+		# Bad options handling
+		if [ -z "${SNAP_COW}" ]; then
+			COW="${DEF_COW}"
+		else
+			COW="${SNAP_COW}"
+		fi
+	
+		case "${SNAP_TYPE}" in
+			"cpio"|"squashfs"|"ext2")
+				TYPE="${SNAP_TYPE}"
+				;;
+			"")
+				TYPE="cpio" ;;
+			*)
+				Usage "Error: unrecognized snapshot type"
+				;;
+		esac
+		#if [ -d 
+		#if Is_same_mount 
 	fi
+
+	Mount_device $DEV
+	DEST="${MOUNTP}/${DEST}"
+
+	# check vars
 	if [ ! -d "${COW}" ]; then
 		Usage "Error: ${COW} is not a directory"
 	fi
+}
 
-	case "${SNAP_TYPE}" in
-		"cpio"|"squashfs"|"ext2")
-			TYPE="${SNAP_TYPE}"
-			;;
-		"")
-			TYPE="cpio" ;;
-		*)
-			Usage "Error: unrecognized snapshot type"
-			;;
-	esac
-	
-	#if [ -d 
-	#if Is_same_mount 
-
+Clean ()
+{
+	if [ -n "$DEV" ]; then
+		umount "${MOUNTP}"
+		rmdir "${MOUNTP}"
+		rm 
+	fi
 }
 
 Main ()
@@ -229,6 +287,7 @@ Main ()
 	Parse_args "${@}"
 	Defaults
 	Do_snapshot
+	Clean
 }
 
 Main "${@}"
