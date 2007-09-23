@@ -34,6 +34,7 @@ fi
 
 # U6aMy0wojraho is just a blank password
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null <<EOF
+set passwd/make-user true
 set passwd/root-password-crypted *
 set passwd/user-password-crypted ${user_crypted}
 set passwd/user-fullname $USERFULLNAME
@@ -51,6 +52,7 @@ fi
 
 # Clear out debconf database again to avoid confusing ubiquity later.
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null <<EOF
+set passwd/make-user
 set passwd/root-password-crypted
 set passwd/user-password-crypted
 set passwd/user-fullname
