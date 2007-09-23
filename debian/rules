@@ -24,16 +24,16 @@ build-stamp:
 	dh_testdir
 
 	# Checking scripts
-	for SCRIPT in bin/* scripts/casper scripts/casper-bottom/*; \
+	for SCRIPT in scripts/live scripts/live-bottom/*; \
 	do \
 		sh -n $$SCRIPT || exit 1; \
 	done
 
 	# Setting BUILD_SYSTEM in the binary package
-	sed -i -e 's/\(BUILD_SYSTEM="\).*"/\1'$(BUILD_SYSTEM)'"/g' casper.conf
+	sed -e 's/\(BUILD_SYSTEM="\).*"/\1'$(BUILD_SYSTEM)'"/g' conf/live.conf > live.conf
 
 	# Building package
-	CFLAGS="$(CFLAGS)" $(MAKE) -C casper-md5check
+	CFLAGS="$(CFLAGS)" $(MAKE) -C bin/live-md5check
 
 	touch build-stamp
 
@@ -43,7 +43,8 @@ clean:
 	rm -f build-stamp
 
 	# Cleaning package
-	$(MAKE) -C casper-md5check clean
+	$(MAKE) -C bin/live-md5check clean
+	rm -f live.conf
 
 	dh_clean
 
@@ -54,8 +55,8 @@ install: build
 	dh_installdirs
 
 	# Installing package
-	install -m 0755 casper-md5check/casper-md5check debian/live-initramfs/usr/lib/casper
-	install -m 0644 casper.conf debian/live-initramfs/etc/casper.conf
+	install -m 0755 bin/live-md5check/live-md5check debian/live-initramfs/usr/lib/live-initramfs
+	install -m 0644 live.conf debian/live-initramfs/etc/live.conf
 
 binary-indep: build install
 
