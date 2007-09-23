@@ -1,3 +1,12 @@
+2007-06-04  Daniel Baumann  <daniel@debian.org>
+
+	* Uploaded 1.87.6-1.
+
+2007-05-28  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/live-bottom/42apt_upgrade:
+	  - Moved to dedicated live-sysvinit package.
+
 2007-05-24  Daniel Baumann  <daniel@debian.org>
 
 	* debian/control:
