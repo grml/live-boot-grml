@@ -95,7 +95,7 @@ parse_cmdline ()
                 PRESEEDS="${PRESEEDS}\"${question}=${value}\" "
                 ;;
             console=*)
-                export DEFCONSOLE=$(sed -e 's%.*console=%console=%' /proc/cmdline) ;;
+                export DEFCONSOLE="${x#*=}" ;;
         esac
     done
 
