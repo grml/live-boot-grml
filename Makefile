@@ -3,7 +3,7 @@
 CFLAGS = -Wall -g -O2
 BUILD_SYSTEM := $(shell lsb_release --short --id)
 
-TRANSLATIONS=""
+TRANSLATIONS="it"
 
 all: build
 
@@ -83,6 +83,7 @@ uninstall:
 	rm -rf $(DESTDIR)/usr/share/live-initramfs
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	rm -rf $(DESTDIR)/usr/share/initramfs-tools/scripts/live*
+	rm -f $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top/live
 
 	# Uninstalling documentation
 	rm -rf $(DESTDIR)/usr/share/doc/live-initramfs
@@ -118,6 +119,7 @@ update:
 	set -e; for MANPAGE in manpages/*.en.*; \
 	do \
 		sed -i	-e 's/2007\\-06\\-25/2007\\-07\\-02/' \
+			-e 's/25.06.2007/02.07.2007/' \
 			-e 's/1.91.2/1.91.3/' \
 		$$MANPAGE; \
 	done

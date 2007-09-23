@@ -1,3 +1,24 @@
+2007-06-31  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/live:
+	  - Added patch from Julian Andres Klode <jak@jak-linux.org> to add
+	    support for aufs.
+	* hooks/live, manpage/live-initramfs.en.7, scripts/live-bottom/12fstab:
+	  - Added aufs support.
+	* Uploaded 1.91.3-1.
+
+2007-06-30  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/live-bottom/12fstab:
+	  - Added disabling of /etc/init.d/checkfs.sh to avoid file systemcheck
+	    at boot time. Added nofastboot parameter to be able to change that.
+	  - Disabled removal of checkroot.sh.
+
+2007-06-28  Daniel Baumann  <daniel@debian.org>
+
+	* Applied patch from Mathieu Geli <mathieu.geli@gmail.com> to set the
+	  timezone with a boot parameter.
+
 2007-06-25  Daniel Baumann  <daniel@debian.org>
 
 	* scripts/live:
@@ -52,7 +73,7 @@
 2007-05-28  Daniel Baumann  <daniel@debian.org>
 
 	* scripts/live-bottom/42apt_upgrade:
-	  - Moved to dedicated live-sysvinit package.
+	  - Moved to dedicated live-initscripts package.
 
 2007-05-24  Daniel Baumann  <daniel@debian.org>
 

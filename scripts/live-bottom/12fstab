@@ -29,10 +29,16 @@ log_begin_msg "Configuring fstab..."
 FSTAB=/root/etc/fstab
 
 cat > $FSTAB <<EOF
-unionfs / unionfs rw 0 0
+${UNIONTYPE} / ${UNIONTYPE} rw 0 0
 tmpfs /tmp tmpfs nosuid,nodev 0 0
 EOF
 
-rm -f /root/etc/rcS.d/S*checkroot.sh
+# disabled for now
+#rm -f /root/etc/rcS.d/S*checkroot.sh
+
+if [ "${NOFASTBOOT}" != "Yes" ]
+then
+	touch root/fastboot
+fi
 
 log_end_msg
