@@ -1,0 +1,29 @@
+#!/bin/sh
+# workaround for AppArmor bug #131976
+
+PREREQ=""
+DESCRIPTION="Disabling AppArmor profile for Cups..."
+
+. /scripts/casper-functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+PROFILE=/root/etc/apparmor.d/usr.sbin.cupsd
+if [ -e "$PROFILE" ]; then
+    sed -i '/{/ s/{/flags=(complain) {/' $PROFILE
+fi
+
+log_end_msg
