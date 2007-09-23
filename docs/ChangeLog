@@ -1,3 +1,16 @@
+2007-07-12  Daniel Baumann  <daniel@debian.org>
+
+	* bin/live-snapshot, scripts/live:
+	  - Moved /cow to /live/cow.
+	* scripts/live, scripts/live-bottom/01integrity_check, 05mountpoints:
+	  - Moved /live_media to /live/image.
+	* Uploaded 1.91.4-1.
+
+2007-07-07  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/live:
+	  - Added debug parameter.
+
 2007-06-31  Daniel Baumann  <daniel@debian.org>
 
 	* scripts/live:

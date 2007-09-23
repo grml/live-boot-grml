@@ -83,7 +83,7 @@ do_stop ()
     if [ -z ${QUICKREBOOT} ]; then
 	if [ -x /usr/bin/eject ]
 	then
-		eject -p -m /live_media >/dev/null 2>&1
+		eject -p -m /live/image >/dev/null 2>&1
 	fi
 
 	# XXX - i18n

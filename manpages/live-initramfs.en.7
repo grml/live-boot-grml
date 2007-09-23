@@ -1,4 +1,4 @@
-.TH LIVE\-INITRAMFS 7 "2007\-07\-02" "1.91.3" "live\-initramfs"
+.TH LIVE\-INITRAMFS 7 "2007\-07\-09" "1.91.4" "live\-initramfs"
 
 .SH NAME
 live\-initramfs \- Debian Live initramfs hook
@@ -22,6 +22,8 @@ Here is the complete list of recognized boot parameters by live\-initramfs.
 Set the accessibility level for physically or visually impared users. ACCESS must be one of v1, v2, v3, m1, or m2. v1=lesser visual impairment, v2=moderate visual impairment, v3=blindness, m1=minor motor difficulties, m2=moderate motor difficulties.
 .IP "\fBconsole=\fR\fITTY\fR,\fISPEED\fR" 4
 Set the default console to be used with the "live\-getty" option. Example: "console=ttyS0,115200"
+.IP "\fBdebug\fR" 4
+Makes initramfs boot process more verbose.
 .IP "\fBhostname=\fR\fIHOSTNAME\fR, \fBusername=\fR\fIUSER\fR, \fBuserfullname=\fR\fIUSERFULLNAME\fR"4
 Those parameters lets you override values read from the config file.
 .IP "\fBintegrity\-check\fR" 4
