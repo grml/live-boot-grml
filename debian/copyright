@@ -36,7 +36,7 @@ License:
 On Debian systems, the complete text of the GNU General Public License
 can be found in /usr/share/common-licenses/GPL file.
 
-License (casper-md5check/md5.c, casper-md5check/md5,h):
+License (live-md5check/md5.c, live-md5check/md5,h):
 
 	Copyright (C) 1999-2002 Aladdin Enterprises
 	All rights reserved.

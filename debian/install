@@ -1,7 +1,7 @@
-bin/casper-getty	sbin
-bin/casper-login	sbin
-bin/casper-preseed	usr/share/casper
-bin/casper-reconfigure	usr/share/casper
-bin/casper-snapshot	sbin
+bin/live-getty		sbin
+bin/live-login		sbin
+bin/live-preseed	usr/share/live-initramfs
+bin/live-reconfigure	usr/share/live-initramfs
+bin/live-snapshot	sbin
 hooks			usr/share/initramfs-tools
 scripts			usr/share/initramfs-tools

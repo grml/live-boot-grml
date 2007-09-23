@@ -1,6 +1,0 @@
-#! /bin/sh
-
-USERNAME=root
-[ -f /etc/casper.conf ] && . /etc/casper.conf
-exec /bin/login -f $USERNAME
-
