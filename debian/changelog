@@ -1,3 +1,10 @@
+casper (1.66+debian-1) unstable; urgency=low
+
+  * Added "magic" to make it work seamlessy also on ubuntu systems.
+  * Default user password now "live".
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Fri,  1 Sep 2006 17:18:07 +0200
+
 casper (1.65+debian-1) unstable; urgency=low
 
   * New upstream release.

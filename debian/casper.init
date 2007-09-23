@@ -33,7 +33,7 @@ done
 eject -p -m /live_media >/dev/null 2>&1
 
 # XXX - i18n
-echo -n "Please remove the disc (if any), close the tray (if any) and press ENTER: "
+echo -n "Please remove the disc and close the tray (if any) then press ENTER: "
 if [ -x /sbin/usplash_write ]; then
     /sbin/usplash_write "TIMEOUT 0"
     /sbin/usplash_write "TEXT Please remove the disc, close the tray (if any)"

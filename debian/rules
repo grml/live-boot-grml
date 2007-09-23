@@ -3,25 +3,42 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+# Looking in which build system we are
+BUILD_SYSTEM := $(shell lsb_release --short --id)
+
 build: build-stamp
 build-stamp:
 	dh_testdir
-	
+	# Setting BUILD_SYSTEM in the binary package
+	sed -i -e 's/\(BUILD_SYSTEM="\).*"/\1'$(BUILD_SYSTEM)'"/g' casper.conf
+ifeq ($(BUILD_SYSTEM),Debian)
+	cp debian/control.debian debian/control
+else
+	cp debian/control.ubuntu debian/control
+endif
+
 	# Building package
 	$(MAKE) -C casper-md5check
 
 	touch build-stamp
 
 clean:
+
 	dh_testdir
 	rm -f build-stamp
 
 	# Cleaning package
 	-$(MAKE) -C casper-md5check clean
 
+	# Putting back default files
+	cp -f debian/control.debian debian/control
+	sed -i -e 's/\(BUILD_SYSTEM="\).*"/\1'Debian'"/g' casper.conf
+	
 	dh_clean
 
+
 install: build
+
 	dh_testdir
 	dh_testroot
 	dh_clean -k
@@ -37,23 +54,45 @@ install: build
 	# Installing lintian override
 	install -D -m 0644 debian/lintian debian/casper/usr/share/lintian/overrides/casper
 
-binary-indep: build install
+	# Install casper.conf
+	install -m 0644 casper.conf debian/casper/etc/casper.conf
 
-binary-arch: build install
+binary-indep: build install
+ifneq ($(BUILD_SYSTEM),Debian)
+	# Conditionally build Ubiquity 
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs debian/changelog.upstream
-	dh_installdocs
-	dh_installexamples
-	dh_installinit -r --no-start -- start 89 0 6 .
-	dh_link
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
+	dh_installexamples -i
+	dh_installdocs -i
+	dh_installchangelogs -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+endif
+
+binary-arch: build install
+
+	dh_testdir
+	dh_testroot
+ifeq ($(BUILD_SYSTEM),Debian)
+	dh_installchangelogs -a debian/changelog.upstream
+else
+	dh_installchangelogs -a
+endif
+	dh_installdocs -a
+	dh_installexamples -a
+	dh_installinit -a -r --no-start -- start 89 0 6 .
+	dh_link -a
+	dh_strip -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_installdeb -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
 
 binary: binary-arch binary-indep
 .PHONY: build clean binary-indep binary-arch binary install

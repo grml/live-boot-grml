@@ -47,6 +47,10 @@ if [ -z "$version" ]; then
     exit 0
 fi
 
-runcommandinroot "$root" dpkg-reconfigure -fnoninteractive --no-reload -phigh "$package"
+if [ "${BUILD_SYSTEM}" == "Debian" ]; then
+    runcommandinroot "$root" dpkg-reconfigure -fnoninteractive --no-reload -phigh "$package"
+else
+    runcommandinroot "$root" dpkg-reconfigure -fnoninteractive --no-reload "$package"
+fi
 
 exit 0

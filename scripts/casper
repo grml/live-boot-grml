@@ -23,12 +23,19 @@ home_persistence="home-rw"
 USERNAME="casper"
 USERFULLNAME="Live session user"
 HOST="live"
+BUILD_SYSTEM="Debian"
 
 mkdir -p $mountpoint
 
 [ -f /etc/casper.conf ] && . /etc/casper.conf
 
-export USERNAME USERFULLNAME HOST
+export USERNAME USERFULLNAME HOST BUILD_SYSTEM
+
+if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
+    MP_QUIET="-Q"
+else
+    MP_QUIET="-q"
+fi
 
 # looking for casper specifics options as kernel parameters
 for x in $(cat /proc/cmdline); do
@@ -133,7 +140,7 @@ setup_loop() {
     local module=$2
     local pattern=$3
 
-    modprobe -qb "$module"
+    modprobe "${MP_QUIET}" -b "$module"
     udevsettle
 
     for loopdev in $pattern; do
@@ -164,7 +171,7 @@ setup_devmapper() {
     backdev="$1"
     rootmnt="$2"
 
-    modprobe -qb dm-mod
+    modprobe "${MP_QUIET}" -b dm-mod
     COW_DEVICE=/dev/ram1
     COW_NAME="casper-cow"
 
@@ -267,7 +274,7 @@ find_cow_device() {
 do_netmount() {
     rc=1
 
-    modprobe -q af_packet # For DHCP
+    modprobe "${MP_QUIET}" af_packet # For DHCP
 
     ipconfig ${DEVICE} /tmp/net-${DEVICE}.conf
 
@@ -291,7 +298,7 @@ do_netmount() {
 
 do_nfsmount() {
     rc=1
-    modprobe -q nfs
+    modprobe "${MP_QUIET}" nfs
     if [ -z "${NFSOPTS}" ]; then
         NFSOPTS=""
     fi
@@ -315,7 +322,7 @@ do_cifsmount() {
         fi
 
         [ "$quiet" != "y" ] && log_begin_msg "Trying mount.cifs ${NFSROOT} ${mountpoint} ${CIFSOPTS}"
-        modprobe -q cifs
+        modprobe "${MP_QUIET}" cifs
 
         if mount.cifs "${NFSROOT}" "${mountpoint}" "${CIFSOPTS}" ; then
             rc=0
@@ -328,7 +335,7 @@ setup_unionfs() {
     image_directory="$1"
     rootmnt="$2"
 
-    modprobe -qb unionfs
+    modprobe "${MP_QUIET}" -b unionfs
 
     # run-init can't deal with this, but we're going to move all of these
     # away before it runs anyway.

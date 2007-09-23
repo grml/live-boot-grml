@@ -1,3 +1,13 @@
+casper (1.66) edgy; urgency=low
+
+  * Fix use of db_get in ubiquity accessibility hook.
+  * Use sudo instead of su to get to the live session user from the
+    initramfs or to the newly-installed user from ubiquity. su's argument
+    handling has changed so that the previous code no longer worked, and su
+    was never all that good for arguments containing spaces anyway.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon,  4 Sep 2006 15:46:55 +0100
+
 casper (1.65) edgy; urgency=low
 
   * Update to call udevsettle/udevtrigger instead of udevplug

@@ -27,6 +27,10 @@ elif [ -e /root/etc/environment ]; then # Old locales policy
 	grep_file=/root/etc/environment
 fi
 
+if [ -z "${grep_file}" ]; then 
+	grep_file=/root/etc/default/locale
+fi
+
 # commandline
 for x in $(cat /proc/cmdline); do
 	case $x in
@@ -49,8 +53,12 @@ fi
 
 if [ "${set_locale}" ]; then
 	LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 |sed -e 's, .*,,' -e q)
-	printf 'LANG="%s"\n' "${LANG}" >> "${grep_file}" 
-	chroot /root /usr/sbin/locale-gen "${LANG}"
+	printf 'LANG="%s"\n' "${LANG}" >> "${grep_file}"
+	if [ "${BUILD_SYSTEM}" == "Debian" ]; then
+		chroot /root /usr/sbin/locale-gen
+	else
+		chroot /root /usr/sbin/locale-gen "${LANG}"
+	fi
 fi
 
 log_end_msg

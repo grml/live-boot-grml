@@ -18,15 +18,21 @@ esac
 
 . /usr/share/initramfs-tools/hook-functions
 
-
 manual_add_modules unionfs
+
+# Copy in casper.conf
+if [ -e /etc/casper.conf ]; then
+    . /etc/casper.conf
+    mkdir -p ${DESTDIR}/etc
+    cp /etc/casper.conf ${DESTDIR}/etc
+fi
 
 # Needed for devmapper
 if [ -e /sbin/dmsetup ]; then
-	manual_add_modules cloop
-	copy_exec /sbin/blockdev /sbin
-	copy_exec /sbin/dmsetup /sbin
-	manual_add_modules dm-snapshot
+    manual_add_modules cloop
+    copy_exec /sbin/blockdev /sbin
+    copy_exec /sbin/dmsetup /sbin
+    manual_add_modules dm-snapshot
 fi
 
 # We need losetup
@@ -37,24 +43,24 @@ mkdir -p ${DESTDIR}/lib/casper
 copy_exec /usr/share/casper/casper-reconfigure /bin
 copy_exec /usr/share/casper/casper-preseed /bin
 
-# Ubuntu or Debian test
-#	mkdir -p ${DESTDIR}/lib/udev
-#	copy_exec /lib/udev/cdrom_id /lib/udev
-#	copy_exec /lib/udev/vol_id /lib/udev
-#	copy_exec /lib/udev/path_id /lib/udev
-# FIXME: add lsb check for ubuntu
+if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
+    mkdir -p ${DESTDIR}/lib/udev
+    copy_exec /lib/udev/cdrom_id /lib/udev
+    copy_exec /lib/udev/vol_id /lib/udev
+    copy_exec /lib/udev/path_id /lib/udev
+fi
+
 copy_exec /sbin/udevtrigger /sbin
 copy_exec /sbin/udevsettle /sbin
 
-
 copy_exec /usr/bin/udevinfo /bin
 
-# cifs boot 
+# cifs boot
 if [ -x /sbin/mount.cifs ]; then
-	copy_exec /sbin/mount.cifs /sbin
-	for x in cifs; do
-		manual_add_modules ${x}
-	done
+    copy_exec /sbin/mount.cifs /sbin
+    for x in cifs; do
+        manual_add_modules ${x}
+    done
 fi
 
 # squashfs

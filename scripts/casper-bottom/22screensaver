@@ -22,7 +22,7 @@ log_begin_msg "$DESCRIPTION"
 
 gnome_screensaver_version=$(chroot /root dpkg-query -W --showformat='${Version}' gnome-screensaver 2>/dev/null) || gnome_screensaver_version=""
 if [ -n "$gnome_screensaver_version" ]; then
-    chroot /root su $USERNAME -- gconftool-2 -t bool -s /apps/gnome-screensaver/lock false
+    chroot /root sudo -u "$USERNAME" gconftool-2 -t bool -s /apps/gnome-screensaver/lock false
 fi
 
 log_end_msg
