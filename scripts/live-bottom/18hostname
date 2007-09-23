@@ -27,7 +27,7 @@ log_begin_msg "Setting hostname..."
 # live-initramfs script
 
 echo "$HOSTNAME" > /root/etc/hostname
-cat > /root/etc/hosts <<EOF
+cat >> /root/etc/hosts <<EOF
 127.0.0.1 localhost
 127.0.1.1 $HOSTNAME
 

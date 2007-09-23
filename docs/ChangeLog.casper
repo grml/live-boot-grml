@@ -1,3 +1,11 @@
+casper (1.91) gutsy; urgency=low
+
+  * Fix Maintainer field (ubuntu-devel-discuss, not ubuntu-devel).
+  * Remember to strip directories from paths when dealing with driver update
+    .debs (LP: #120217).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 14 Jun 2007 09:51:33 +0100
+
 casper (1.90) gutsy; urgency=low
 
   * Added to 22screensaver, to stop the screen automatically locking.
