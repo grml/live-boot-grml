@@ -1,8 +1,8 @@
 Source: live-initramfs
 Section: misc
 Priority: optional
-Maintainer: Debian Live <debian-live-devel@lists.alioth.debian.org>
-Uploaders: Daniel Baumann <daniel@debian.org>, Marco Amadori <marco.amadori@gmail.com>
+Maintainer: Debian Live <debian-live-maint@lists.alioth.debian.org>
+Uploaders: Daniel Baumann <daniel@debian.org>
 Build-Depends: debhelper (>= 5), lsb-release
 Standards-Version: 3.7.2
 XS-Vcs-Svn: svn://svn.debian.org/debian-live/dists/trunk/live-initramfs/
@@ -13,8 +13,6 @@ Architecture: all
 Depends: ${misc:Depends}, file, initramfs-tools, sudo, user-setup
 Recommends: eject, live-initscripts
 Suggests: genext2fs, squashfs-tools
-Conflicts: casper
-Replaces: casper
 Description: Debian Live initramfs hook
  live-initramfs is a hook for the initramfs-tools, used to generate a initramfs
  capable to boot live systems, such as those created by live-helper. This

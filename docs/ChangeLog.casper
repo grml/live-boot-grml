@@ -1,3 +1,52 @@
+casper (1.95) gutsy; urgency=low
+
+  * Fix regex syntax error while looking for non-CD devices for driver
+    updates.
+  * Fix ip= boot parameter, documented but not properly merged from Debian.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 27 Jul 2007 15:03:41 +0100
+
+casper (1.94) gutsy; urgency=low
+
+  [ Colin Watson ]
+  * Hack around keyboard configuration not being done until after the keymap
+    is set by having /etc/init.d/usplash reconfigure the console
+    (LP: #68487).
+  * Disable pam_lastlog on the console if doing autologin (LP: #126800).
+
+  [ Luke Yelavich ]
+  * scripts/casper-bottom/30accessibility &
+    ubiquity-hooks/30accessibility:
+    - Prevent gksu from grabbing keyboard focus for the v2, v3, and m1
+      accessibility profiles. (LP: #67172)
+  * Start Orca when a Braille device is configured from choosing the
+    Braille option in the Accessibility menu. (Partially fixes Launchpad
+    bug #122024)
+  * Re-enable desktop sounds for the blindness accessibility profile, as
+    eSpeak should be able to speak alongside audio playback.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 24 Jul 2007 16:24:55 +0100
+
+casper (1.93) gutsy; urgency=low
+
+  * revert gdm-cdd.conf handling for autologin to the chrooted code
+    as we had it in feisty. not chrooting brings up problems with the
+    alternatives system (dead symlinks) used for gdm-cdd.conf
+
+ -- Oliver Grawert <ogra@ubuntu.com>  Wed, 18 Jul 2007 15:08:16 +0200
+
+casper (1.92) gutsy; urgency=low
+
+  [ Colin Watson ]
+  * Don't bother chrooting just to run test(1).
+
+  [ Evan Dandrea ]
+  * Added support for URL-based preseeding.
+  * Added 'noninteractive' option that starts ubiquity in noninteractive
+    mode on tty1.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 09 Jul 2007 15:23:51 +0100
+
 casper (1.91) gutsy; urgency=low
 
   * Fix Maintainer field (ubuntu-devel-discuss, not ubuntu-devel).
