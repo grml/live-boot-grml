@@ -6,6 +6,11 @@ else
     MP_QUIET="-q"
 fi
 
+if [ ! -x "/bin/fstype" ]; then
+    # klibc not in path -> not in initramfs
+    export PATH="${PATH}:/usr/lib/klibc/bin"
+fi
+
 sys2dev() {
     sysdev=${1#/sys}
     echo "/dev/$(udevinfo -q name -p ${sysdev} 2>/dev/null|| echo ${sysdev##*/})"
@@ -20,6 +25,17 @@ subdevices() {
         fi
     done
     echo ${r}
+}
+
+get_fstype() {
+    local FSTYPE
+    local FSSIZE
+    eval $(fstype < $1)
+    if [ "$FSTYPE" != "unknown" ]; then
+        echo $FSTYPE
+        return 0
+    fi
+    /lib/udev/vol_id -t $1 2>/dev/null
 }
 
 where_is_mounted() {
@@ -56,33 +72,38 @@ base_path ()
     done
 }
 
-used_fs_size ()
+fs_size ()
 {
-    # Returns used fs kbytes + 5% more
+    # Returns used/free fs kbytes + 5% more
     # You could pass a block device as $1 or the mount point as $2
 
     dev="${1}"
     mountp="${2}"
+    used="${3}"
 
     if [ -z "${mountp}" ]; then
         mountp=$(where_is_mounted "${dev}")
         if [ "$?" -gt 0 ]; then
-            mountp=/mnt/tmp_fs_size
+            mountp="/mnt/tmp_fs_size"
             mkdir -p "${mountp}"
             mount -t $(get_fstype "${dev}") -o ro "${dev}" "${mountp}"
             doumount=1
         fi
     fi
 
-    size=$(du -ks ${mountp} | cut -f1)
-    size=$(expr ${size} + ${size}/20 ) # FIXME: 5% more to be sure
-    needed_space=$(expr ${size} * 1024)
+    if [ "${used}" = "used" ]; then
+        size=$(du -ks ${mountp} | cut -f1)
+        size=$(expr ${size} + ${size} / 20 ) # FIXME: 5% more to be sure
+    else
+        # free space
+        size="$(df -k | grep -s ${mountp} | awk '{print $4}')"
+    fi
 
-    if [ ! -z "${doumount}" ]; then
+    if [ -n "${doumount}" ]; then
         umount "${mountp}"
         rmdir "${mountp}"
     fi
-    echo "${needed_space}"
+    echo "${size}"
 }
 
 setup_loop() {

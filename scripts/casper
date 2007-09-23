@@ -44,7 +44,7 @@ parse_cmdline ()
                 export NETBOOT=${x#netboot=} ;;
             toram)
                 export TORAM=1 ;;
-            todisk=)
+            todisk=*)
                 export TODISK=${x#todisk=} ;;
             showmounts)
                 export SHOWMOUNTS=1 ;;
@@ -141,17 +141,6 @@ mount_images_in_directory() {
     fi
 }
 
-get_fstype() {
-    local FSTYPE
-    local FSSIZE
-    eval $(fstype < $1)
-    if [ "$FSTYPE" != "unknown" ]; then
-        echo $FSTYPE
-        return 0
-    fi
-    /lib/udev/vol_id -t $1 2>/dev/null
-}
-
 is_nice_device() {
     sysfs_path="${1#/sys}"
     if /lib/udev/path_id "${sysfs_path}" | grep -E -q "ID_PATH=(usb|pci-[^-]*-[ide|scsi|usb])"; then
@@ -177,7 +166,7 @@ copy_live_to() {
     copytodev="${2}"
     copyto="${copyfrom}_swap"
 
-    size=$(used_fs_size "null" "${copyfrom}")
+    size=$(fs_size "" ${copyfrom} "used")
 
     if [ "${copytodev}" = "ram" ]; then
         # copying to ram:
@@ -189,29 +178,28 @@ copy_live_to() {
     else
         # it should be a writable block device
         if [ -b "${copytodev}" ]; then
-            free_string="space"
-            freespace="$(df -k ${copytodev} | grep -s ${copytodev} | awk '{print $4}')"
-            fstype="$(get_fstype ${devname})"
             dev="${copytodev}"
+            free_string="space"
+            fstype=$(get_fstype "${dev}")
+            freespace=$(fs_size "${dev}")
         else
+            [ "$quiet" != "y" ] && log_warning_msg "${copytodev} is not a block device."
             return 1
         fi
     fi
-    if [ ! ${freespace} -lt ${size}  ] ; then
-        [ "$quiet" != "y" ] && log_begin_msg "Not enough free ${free_string} to copy live media in ${copytodev}."
-        [ "$quiet" != "y" ] && log_end_msg
+    if [ "${freespace}" -lt "${size}" ] ; then
+        [ "$quiet" != "y" ] && log_warning_msg "Not enough free ${free_string} (${freespace}k > ${size}k) to copy live media in ${copytodev}."
         return 1
     fi
 
     # begin copying..
-    [ "$quiet" != "y" ] && log_begin_msg "Copying live media to ${copytodev}..." 
     mkdir "${copyto}"
+    echo "mount -t ${fstype} ${mount_options} ${dev} ${copyto}"
     mount -t "${fstype}" ${mount_options} "${dev}" "${copyto}"
     cp -a ${copyfrom}/* ${copyto} # "cp -a" from busybox also copies hidden files
     umount ${copyfrom}
     mount -r -o move ${copyto} ${copyfrom}
     rmdir ${copyto}
-    [ "$quiet" != "y" ] && log_end_msg
     return 0
 }
 
@@ -281,7 +269,7 @@ do_snap_copy ()
     todir="${2}"
     snap_type="${3}"
 
-    #size=$(used_fs_size "${fromdev}")
+    size=$(fs_size "${fromdev}" "" "used")
 
     if [ -b "${fromdev}" ]; then
         # look for free mem
@@ -578,10 +566,15 @@ mountroot() {
         panic "Unable to find a medium containing a live file system"
     fi
 
-    if [ ! -z "${TORAM}" ]; then
-        copy_live_to "${livefs_root}" "ram"
-    elif [ ! -z "${TODISK}" ]; then
-        copy_live_to "${livefs_root}" "${TODISK}"
+    if [ -n "${TORAM}" ]; then
+        live_dest="ram"
+    elif [ -n "${TODISK}" ]; then
+        live_dest="${TODISK}"
+    fi
+    if [ -n "${live_dest}" ]; then
+        [ "$quiet" != "y" ] && log_begin_msg "Copying live_media to ${live_dest}"
+        copy_live_to "${livefs_root}" "${live_dest}"
+        [ "$quiet" != "y" ] && log_end_msg
     fi
 
     mount_images_in_directory "${livefs_root}" "${rootmnt}"

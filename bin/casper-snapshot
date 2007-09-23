@@ -92,7 +92,7 @@ Help ()
 	echo
 	echo "Options:"
 	echo "  -c, --cow: specifies the copy on write directory (default: /cow)."
-	echo "  -d, --destination: specifies the output snapshot directory (default: /home/\$USERNAME/Desktop/casper-snapshot)."
+	echo "  -d, --device: specifies the output snapshot device (default: none)."
 	echo "  -o, --output: specifies the output image file (default: $type dependent)."
     echo "  -r, --resync-string: internally used to resync previous made snapshots."
 	echo "  -t,--type: specifies the snapshot type between \'squashfs\', \'ext2\' or \'cpio\'.gz archive (default: cpio)"
@@ -166,7 +166,7 @@ Parse_args ()
 {
 	# Parse command line
 	ARGS="${1}"
-	ARGUMENTS="`getopt --longoptions cow:,destination:,output:,type:,help,usage,version --name=${PROGRAM} --options c:d:o:t:,h,u,v --shell sh -- ${ARGS}`"
+	ARGUMENTS="`getopt --longoptions cow:,device:,output,resync-string:,type:,help,usage,version --name=${PROGRAM} --options c:d:o:t:r:,h,u,v --shell sh -- ${ARGS}`"
 
 	if [ "${?}" != "0" ]; then
 		echo "Terminating." >&2
@@ -230,13 +230,13 @@ Defaults ()
 		DEST=$(echo "${SNAP_RSTRING}" | cut -f3 -d ':')
 		
 		case "${DEST}" in
-			*.cpio.gz|*.cpz|*.gz)
+			*.cpio.gz)
 				TYPE="cpio" ;;
-			*.squashfs|*.squ})
+			*.squashfs)
 				TYPE="squashfs" ;;
 			"")
 				TYPE="ext2" ;;
-			*.ext2|*.ext)
+			*.ext2)
 				TYPE="ext2" ;;
 			*)
 				Usage "Unregognized String" ;;
