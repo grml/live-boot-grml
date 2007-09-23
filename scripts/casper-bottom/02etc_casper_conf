@@ -17,7 +17,14 @@ esac
 
  
 if [ -f /etc/casper.conf ] ; then 
+	if [ ! -z "${CASPERCONF}" ]; then
+		# Updating casper.conf
+		sed -i -e 's/\(USERNAME="\).*"/\1'"${USERNAME}"'"/g' \
+		    -e 's/\(USERFULLNAME="\).*"/\1'"${USERFULLNAME}"'"/g' \
+		    -e 's/\(HOST="\).*"/\1'"${HOST}"'"/g' /etc/casper.conf
+	fi
 	cp -p /etc/casper.conf /root/etc/casper.conf
+
 else
 	cat <<EOF >/root/etc/casper.conf
 export USERNAME="$USERNAME"

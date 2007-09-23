@@ -21,34 +21,48 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
+if [ "${STATICIP}" == "frommedia" ] && [ -e  "$IFFILE" ] ; then
+	# will use existent /etc/network/interfaces
+	log_end_msg
+	exit 0
+fi
+
 cat > "$IFFILE" <<EOF
 auto lo
 iface lo inet loopback
 
 EOF
 
-udevtrigger  
+udevtrigger
 
 if [ -z "${NETBOOT}" ] ; then
-	for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*; do
-		[ -e $interface ] || continue
-		i="$(basename $interface)"
-		cat >> "$IFFILE" <<EOF
+	if [ ! -z "${STATICIP}" ] && [ "${STATICIP}" != "frommedia" ]; then
+		parsed=$(echo "${STATICIP}" | sed -e 's/:/ /g')
+		for ifline in ${parsed}; do
+			ifname="$(echo ${ifline} | cut -f1 -d ',')"
+			ifaddress="$(echo ${ifline} | cut -f2 -d ',')"
+			ifnetmask="$(echo ${ifline} | cut -f3 -d ',')"
+			ifgateway="$(echo ${ifline} | cut -f4 -d ',')"
+			cat >> "$IFFILE" <<EOF
+auto ${ifname}
+iface ${ifname} inet static
+    address ${ifaddress}
+    netmask ${ifnetmask}
+    gateway ${ifgateway}
+
+EOF
+		done
+	else
+		for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*; do
+			[ -e $interface ] || continue
+			i="$(basename $interface)"
+			cat >> "$IFFILE" <<EOF
 auto $i
 iface $i inet dhcp
 
 EOF
-
-	done
+		done
+	fi
 fi
-
-for i in eth0 eth1 eth2 ath0 wlan0; do
-    [ ! -e /sys/class/net/$i ] || continue
-    cat >> "$IFFILE" <<EOF
-auto $i
-iface $i inet dhcp
-
-EOF
-done
 
 log_end_msg

@@ -10,7 +10,7 @@ Architecture: any
 Section: misc
 Priority: extra
 Depends: initramfs-tools (>= 0.40ubuntu11), dmsetup, user-setup, sudo
-Conflicts: usplash (<< 0.1-30)
+Conflicts: usplash (<< 0.4-27)
 Description: Run a "live" preinstalled system from read-only media
 
 Package: ubiquity-casper

@@ -8,8 +8,8 @@ Standards-Version: 3.7.2
 
 Package: casper
 Architecture: any
-Depends: initramfs-tools (>= 0.40), user-setup
-Conflicts: usplash (<< 0.1-30)
+Depends: initramfs-tools (>= 0.40), user-setup, sudo
+Conflicts: usplash (<< 0.4-27)
 Recommends: live-package
 Suggests: dmsetup
 Description: Debian Live initramfs generator

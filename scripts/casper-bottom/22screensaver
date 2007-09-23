@@ -20,9 +20,17 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
+
 gnome_screensaver_version=$(chroot /root dpkg-query -W --showformat='${Version}' gnome-screensaver 2>/dev/null) || gnome_screensaver_version=""
+
+if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
+	gnome_screensaver_lock="/apps/gnome-screensaver/lock"
+else
+	gnome_screensaver_lock="/apps/gnome-screensaver/lock_enabled"
+fi
+	
 if [ -n "$gnome_screensaver_version" ]; then
-    chroot /root sudo -u "$USERNAME" gconftool-2 -t bool -s /apps/gnome-screensaver/lock false
+    chroot /root sudo -u "$USERNAME" gconftool-2 -t bool -s "${gnome_screensaver_lock}" false
 fi
 
 log_end_msg

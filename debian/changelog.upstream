@@ -1,3 +1,21 @@
+casper (1.68) edgy; urgency=low
+
+  * Honour console-setup/layoutcode and console-setup/variantcode preseeding
+    (closes: Malone #61573).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 22 Sep 2006 16:09:53 +0100
+
+casper (1.67) edgy; urgency=low
+
+  * Make sure to write xorg.conf md5sum to the installed system, not the
+    live system in ubiquity-hooks/20xconfig
+  * Implement support for setting KDE's accessibility options too, thanks
+    to Jonathan Riddell for the patch.
+  * Use usplash's TEXT-URGENT for important messages when doing md5 checks
+  * Fix flashing of progress bar on 32 bit arches
+
+ -- Tollef Fog Heen <tfheen@ubuntu.com>  Wed, 23 Aug 2006 14:34:57 +0200
+
 casper (1.66) edgy; urgency=low
 
   * Fix use of db_get in ubiquity accessibility hook.

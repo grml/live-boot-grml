@@ -6,19 +6,8 @@ export PATH=/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin
 
 mountpoint=/live_media
 
-# Will be mounted if found as copy on write instead of tmpfs
 root_persistence="casper-rw"
-
-# TODO
-## Each file found with this pattern will be mounted directly in the 
-## mountpoint extracted from file name "${other_mounts_pattern}<mountpoint>"
-#other_mounts_pattern="casper-mount-"
 home_persistence="home-rw"
-
-#overlay_method=unionfs
-#if [ "${DPKG_ARCH}" = "ia64" ] || [ "${DPKG_ARCH}" = "hppa" ] || [ "${DPKG_ARCH}" = "sparc" ]; then
-#    overlay_method=devmapper
-#fi
 
 USERNAME="casper"
 USERFULLNAME="Live session user"
@@ -40,14 +29,32 @@ fi
 # looking for casper specifics options as kernel parameters
 for x in $(cat /proc/cmdline); do
     case $x in
+    	userfullname*)
+	    export USERFULLNAME=${x#userfullname=} 
+	    export CASPERCONF="changed"
+	    ;;
+    	host*)
+	    export HOST=${x#host=} 
+	    export CASPERCONF="changed"
+	    ;;
+    	username*)
+	    export USERNAME=${x#username=} 
+	    export CASPERCONF="changed"
+	    ;;
         netboot*)
             export NETBOOT=${x#netboot=} ;;
         toram)
             export TORAM=1 ;;
-        show-cow)
-            export SHOWCOW=1 ;;
+        hide-cow)
+            export HIDECOW=1 ;;
         persistent)
             export PERSISTENT=1 ;;
+        staticip*)
+            STATICIP=${x#staticip=} 
+            if [ "${STATICIP}" == "" ]; then
+                STATICIP="frommedia"
+            fi
+            export STATICIP ;;
         casper-getty)
             export CASPERGETTY=1 ;;
     esac
@@ -155,8 +162,6 @@ setup_loop() {
 }
 
 get_fstype() {
-    #FIXME# one use of this function expects "unknown" another does not!
-    # which is it???
     local FSTYPE
     local FSSIZE
     eval $(fstype < $1)
@@ -374,7 +379,7 @@ setup_unionfs() {
     mkdir -p /cow
     cowdevice="tmpfs"
     cow_fstype="tmpfs"
-    
+
     # Looking for "${root_persistence}" device or file
     if [ ! -z "${PERSISTENT}" ]; then
         cowprobe=$(find_cow_device "${root_persistence}")
@@ -382,19 +387,24 @@ setup_unionfs() {
             cowdevice=${cowprobe}
             cow_fstype=$(get_fstype "${cowprobe}")
         else
-            [ "$quiet" != "y" ] &&    log_begin_msg "Unable to find the persistent medium"
+            [ "$quiet" != "y" ] && log_begin_msg "Unable to find the persistent medium"
         fi
     fi
 
     mount ${cowdevice} -t ${cow_fstype} -o rw /cow || panic "Can not mount $cowdevice on /cow"
+
+    # Look for a snapshot to copy
     
+
     mount -t unionfs -o dirs=/cow=rw:$rofsstring unionfs "$rootmnt" || panic "Unionfs mount failed"
-    
+
     for d in ${rofslist}; do
         mkdir -p "${rootmnt}/casper/${d##*/}"
         case d in
-            *.dir) mount -o bind "${d}" "${rootmnt}/casper/${d##*/}" ;;
-            *) mount -o move "${d}" "${rootmnt}/casper/${d##*/}" ;;
+            *.dir) # do nothing # mount -o bind "${d}" "${rootmnt}/casper/${d##*/}"
+                ;;
+            *) mount -o move "${d}" "${rootmnt}/casper/${d##*/}"
+                ;;
         esac
     done
 
@@ -408,7 +418,7 @@ setup_unionfs() {
         fi
     fi
 
-    if [ ! -z "${SHOWCOW}" ]; then
+    if [ -z "${HIDECOW}" ]; then
         mkdir -p "$rootmnt/cow"
         mount -o bind /cow "$rootmnt/cow"
     fi
@@ -416,7 +426,7 @@ setup_unionfs() {
 
 is_usb_device() {
     sysfs_path="${1#/sys}"
-    if /lib/udev/path_id "${sysfs_path}" | grep -Eq "ID_PATH=(usb|pci-[^-]*-usb)"; then
+    if /lib/udev/path_id "${sysfs_path}" | grep -E -q "ID_PATH=(usb|pci-[^-]*-usb)"; then
         return 0
     fi
     return 1

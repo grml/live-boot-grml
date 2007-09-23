@@ -1,3 +1,13 @@
+casper (1.68+debian-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added static network configuration support.
+  * Fixed gnome-screensaver-lock differences between ubuntu.
+  * username, host, and userfullname are now also settable
+    via kernel parameters.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Fri,  8 Sep 2006 11:26:02 +0200
+
 casper (1.66+debian-1) unstable; urgency=low
 
   * Added "magic" to make it work seamlessy also on ubuntu systems.

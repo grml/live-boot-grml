@@ -23,10 +23,7 @@ log_begin_msg "$DESCRIPTION"
 # Arrange for shells on virtual consoles, rather than login prompts
 
 if [ -n "$USERNAME" ]; then
-    if [ -z "${CASPERGETTY}" ]; then
-        sed -i -e "s|^\([^:]*:[^:]*:[^:]*\):.*getty.*\<\(tty[0-9].*\).*$|\1:/bin/login -f $USERNAME </dev/\2 >/dev/\2 2>\&1|" /root/etc/inittab
-    else
-        sed -i -e'/^[^#]/s%respawn:/sbin/getty%respawn:/sbin/casper-getty%' /root/etc/inittab
+    if [ ! -z "${CASPERGETTY}" ]; then
         # AUTOMATIC SERIAL CONSOLE #
         defconsole=$(sed -e 's%.*console=%console=%' /proc/cmdline)
         if echo "${defconsole}" | grep -qs console=ttyS; then
@@ -49,6 +46,15 @@ if [ -n "$USERNAME" ]; then
                 echo "${ID}:2345:respawn:/sbin/casper-getty -L ${PORT} ${SPEED} vt100" \
                 >>/root/etc/inittab
             fi
+        fi
+    else
+        if [ -f /root/etc/inittab ]; then
+            sed -i -e "s|^\([^:]*:[^:]*:[^:]*\):.*getty.*\<\(tty[0-9]*\).*$|\1:/bin/login -f $USERNAME </dev/\2 >/dev/\2 2>\&1|" /root/etc/inittab
+	fi
+        if [ "/root/etc/event.d/tty*" != "$(echo /root/etc/event.d/tty*)" ]; then
+            for f in /root/etc/event.d/tty*; do
+                sed -i -e "s|^respawn.*|respawn /bin/login -f $USERNAME </dev/$(basename $f) > /dev/$(basename $f) 2>\&1|" $f
+            done
         fi
     fi
 fi

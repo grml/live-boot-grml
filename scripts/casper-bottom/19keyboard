@@ -21,15 +21,33 @@ esac
 log_begin_msg "$DESCRIPTION"
 
 kbd=us
+cslayout=
+csvariant=
 
 for x in $(cat /proc/cmdline); do
-                case $x in
-                        kbd-chooser/method=*)
-                                kbd=${x#kbd-chooser/method=}
-                                ;;
-                esac
+        case $x in
+                kbd-chooser/method=*)
+                        kbd=${x#kbd-chooser/method=}
+                        ;;
+                console-setup/layoutcode=*)
+                        cslayout=${x#console-setup/layoutcode=}
+                        ;;
+                console-setup/variantcode=*)
+                        csvariant=${x#console-setup/variantcode=}
+                        ;;
+        esac
 done
 
-chroot /root /usr/sbin/install-keymap $kbd
-casper-preseed /root debian-installer/keymap "$kbd"
+if [ "$cslayout" ] && [ -x /root/bin/setupcon ] && \
+   [ -f /etc/default/console-setup ]; then
+        chroot /root sed -i "s/^XKBLAYOUT=.*/XKBLAYOUT=\"$cslayout\"/" \
+                /etc/default/console-setup
+        if [ "$csvariant" ]; then
+                chroot /root sed -i "s/^XKBVARIANT=.*/XKBVARIANT=\"$csvariant\"/" \
+                        /etc/default/console-setup
+        fi
+else
+        chroot /root /usr/sbin/install-keymap $kbd
+        casper-preseed /root debian-installer/keymap "$kbd"
+fi
 log_end_msg
