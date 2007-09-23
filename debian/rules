@@ -49,11 +49,11 @@ install: build
 	# Install md5check
 	install -m 0755 casper-md5check/casper-md5check debian/casper/usr/lib/casper
 
-	# Fixing permission
+	# Fixing permissions
 	chmod 0755 debian/casper/usr/share/initramfs-tools/scripts/casper
-
-	# Installing lintian override
-	install -D -m 0644 debian/casper.lintian debian/casper/usr/share/lintian/overrides/casper
+	
+	# Temporary Fixing permissions (until upstream merge)
+	chmod 0755 debian/casper/usr/share/initramfs-tools/scripts/casper-bottom/02etc_casper_conf
 
 	# Install casper.conf
 	install -m 0644 casper.conf debian/casper/etc/casper.conf

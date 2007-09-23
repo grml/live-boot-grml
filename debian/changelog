@@ -1,3 +1,10 @@
+casper (1.68+debian-3) unstable; urgency=low
+
+  * Really add casper manpage (Closes: #389867).
+  * Lintian cleanness reached.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Thu, 28 Sep 2006 12:36:29 +0200
+
 casper (1.68+debian-2) unstable; urgency=low
 
   * Changed "staticip=" boot param to just "ip=".
