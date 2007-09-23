@@ -22,13 +22,14 @@ esac
 
 . /scripts/live-functions
 
-log_begin_msg "Installing driver updates..."
-
 # live-initramfs script
 
-if [ ! -d /tmp/driver-updates ]; then
+if [ ! -d /tmp/driver-updates ]
+then
 	exit 0
 fi
+
+log_begin_msg "Installing driver updates..."
 
 install_dir=/var/cache/driver-updates
 
@@ -37,11 +38,15 @@ cp -a /tmp/driver-updates/*.deb "/root$install_dir/"
 
 # We cannot leave packages in a bad state. So if the install fails, remove
 # it. This will get caught in live.log.
-for deb in "/root$install_dir"/*; do
+for deb in "/root$install_dir"/*
+do
 	[ -f "$deb" ] || continue
+
 	debbase="${deb##*/}"
-	if ! chroot /root dpkg -i "$install_dir/$debbase"; then
-	    chroot /root dpkg -P "${debbase%%_*}"
+
+	if ! chroot /root dpkg -i "$install_dir/$debbase"
+	then
+		chroot /root dpkg -P "${debbase%%_*}"
 	fi
 done
 

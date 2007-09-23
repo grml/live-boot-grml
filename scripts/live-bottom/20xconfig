@@ -20,16 +20,22 @@ esac
 
 # live-initramfs header
 
+if [ -n "${NOXAUTOCONFIG}" ]
+then
+	exit 0
+fi
+
 . /scripts/live-functions
 
 log_begin_msg "Configuring X..."
 
 # live-initramfs script
 
-if [ "$TERM_TYPE" = "serial" ]; then
-    # Don't bother trying to configure or start X on a serial console
-    rm -f /etc/rc?.d/S??[gxk]dm
-    exit 0
+if [ "$TERM_TYPE" = "serial" ]
+then
+	# Don't bother trying to configure or start X on a serial console
+	rm -f /etc/rc?.d/S??[gxk]dm
+	exit 0
 fi
 
 locale=en_US.UTF-8
@@ -38,34 +44,44 @@ mount -n -o bind /sys /root/sys
 mount -n -o bind /proc /root/proc
 mount -n -o bind /dev /root/dev
 
-if [ -n "${XDEBCONF}" -a -x /root/usr/sbin/xdebconfigurator ]; then
-    # xdebconfigurator
-    chroot /root /usr/sbin/xdebconfigurator
+if [ -n "${XDEBCONF}" -a -x /root/usr/sbin/xdebconfigurator ]
+then
+	# xdebconfigurator
+	chroot /root /usr/sbin/xdebconfigurator
 fi
 
-if [ "${BUILD_SYSTEM}" = "Ubuntu" ]; then
-    chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null <<EOF
+if [ "${BUILD_SYSTEM}" = "Ubuntu" ]
+then
+
+chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
 set xserver-xorg/autodetect_keyboard true
 fset xserver-xorg/autodetect_keyboard seen true
 EOF
-else
-    # d-i code not present, so:
-    if [ -n "${KOPTIONS}" ]; then
-        setoptions="set xserver-xorg/config/inputdevice/keyboard/options ${KOPTIONS}"
-    fi
-    if [ -n "${KVARIANT}" ]; then
-        setvariant="set xserver-xorg/config/inputdevice/keyboard/variant ${KVARIANT}"
-    fi
-    if [ -n "${KMODEL}" ]; then
-        setmodel="set xserver-xorg/config/inputdevice/keyboard/model ${KMODEL}"
-    fi
 
-    chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null <<EOF
+else
+	# d-i code not present, so:
+	if [ -n "${KOPTIONS}" ]
+	then
+		setoptions="set xserver-xorg/config/inputdevice/keyboard/options ${KOPTIONS}"
+	fi
+
+	if [ -n "${KVARIANT}" ]
+	then
+		setvariant="set xserver-xorg/config/inputdevice/keyboard/variant ${KVARIANT}"
+	fi
+
+	if [ -n "${KMODEL}" ]
+	then
+		setmodel="set xserver-xorg/config/inputdevice/keyboard/model ${KMODEL}"
+	fi
+
+chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
 set xserver-xorg/config/inputdevice/keyboard/layout ${kbd}
 ${setvariant}
 ${setmodel}
 ${setoptions}
 EOF
+
 fi
 
 DEBUG_XORG_PACKAGE=1 DEBUG_XORG_DEBCONF=1 live-reconfigure /root xserver-xorg

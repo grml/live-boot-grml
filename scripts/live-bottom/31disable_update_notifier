@@ -20,6 +20,11 @@ esac
 
 # live-initramfs header
 
+if [ -n "${NOUPDATENOTIFIER}" ]
+then
+	exit 0
+fi
+
 . /scripts/live-functions
 
 log_begin_msg "Disabling update-notifier..."
@@ -31,6 +36,7 @@ log_begin_msg "Disabling update-notifier..."
 # report handling.
 chroot /root dpkg-divert --add --rename --quiet \
 	/usr/lib/update-notifier/apt-check
+
 ln -s /bin/true /root/usr/lib/update-notifier/apt-check
 
 # For KDE, adept_notifier's only useful function at the moment is an

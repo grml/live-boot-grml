@@ -1,3 +1,38 @@
+2007-09-09  Daniel Baumann  <daniel@debian.org>
+
+	* Using common indenting.
+	* scripts/live:
+	  - Applied patch from Jim Paris <jim@jtan.com> to fix wrong usage of
+	    ipconfig (Closes: #440235).
+	* Uploaded 1.99.2-1.
+
+2007-09-09  Michael Prokop <mika@grml.org>
+
+	* scripts/live:
+	  - Extending toram parameter to specify module.
+	  - Adding forgotten nofstab boot parameter.
+	* scripts/live-bottom/40install_driver_updates:
+	  - Adding check driver updates.
+	* scripts/live-bottom/25configure_init:
+	  - Adding check for file-rc.
+	* scripts/live-bottom/21xvidemode:
+	  - Sorting variable checks always before logging.
+	* scripts/live, live-bottom/*:
+	  - Adding boot parameters to disable each service.
+	* scripts/live, live-bottom/22gnome_panel_date:
+	  - Adding nognomefstab boot parameter.
+	* scripts/live-bottom/38disable_restricted_manager:
+	  - Removing leftover reference to casper-functions.
+
+2007-09-05  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/live, scripts/live-bottom:
+	  - Added nouser parameter to disable user creation.
+	  - Added noxautoconfig parameter to disable xorg re-configuration.
+	  - Added nohosts parameter to disable /etc/hosts creation.
+	* scripts/live-bottom/15autologin:
+	  - Moved disabling of kpersonalizer to 34disable_kpersonalizer.
+
 2007-09-01  Daniel Baumann  <daniel@debian.org>
 
 	* Merging changes from casper 1.97, 1.98 and 1.99.

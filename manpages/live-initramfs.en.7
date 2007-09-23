@@ -1,4 +1,4 @@
-.TH LIVE\-INITRAMFS 7 "2007\-09\-03" "1.96.3" "live\-initramfs"
+.TH LIVE\-INITRAMFS 7 "2007\-09\-10" "1.99.2" "live\-initramfs"
 
 .SH NAME
 live\-initramfs \- Debian Live initramfs hook
@@ -68,6 +68,10 @@ disables the "persistent" feature, useful if the bootloader (like syslinux) has 
 This parameter disables the automatic configuration of sudo.
 .IP "\fBnoswap\fR" 4
 This parameter disables usage of local swap partitions.
+.IP "\fBnouser\fR" 4
+This parameter disables the creation of the default user completely.
+.IP "\fBnoxautoconfig\fR" 4
+This parameter disables Xorg auto-reconfiguration at boot time. This is valuable if you either do the detection on your own, or, if you want to ship a custom, premade xorg.conf in your live system.
 .IP "\fBpersistent\fR" 4
 live\-initramfs will look for persistent and snapshot partitions or files labeled "live\-rw", "home\-rw", and files called "live\-sn*", "home\-sn*" and will try to, in order: mount as /cow the first, mount the second in /home, and just copy the contents of the latter in appropriate locations (snapshots). Snapshots will be tried to be updated on reboot/shutdown. Look at \fIlive\-snapshot\fR(1) for more informations.
 .IP "\fB{preseed/file|file}=\fR\fIFILE\fR" 4
@@ -118,6 +122,6 @@ Report bugs against live\-initramfs <\fIhttp://packages.qa.debian.org/live\-init
 More information about the Debian Live project can be found at <\fIhttp://debian\-live.alioth.debian.org/\fR> and <\fIhttp://wiki.debian.org/DebianLive/\fR>.
 
 .SH AUTHORS
-live\-initramfs is maintained by Daniel Baumann <\fIdaniel@debian.org\fR> and Marco Amadori <\fImarco.amadori@gmail.com\fR> for the Debian project.
+live\-initramfs is maintained by Daniel Baumann <\fIdaniel@debian.org\fR> for the Debian project.
 .PP
 live\-initramfs is a fork of casper <\fIhttp://packages.ubuntu.com/casper/\fR>. casper was originally written by Tollef Fog Heen <\fItfheen@canonical.com\fR> and Matt Zimmerman <\fImdz@canonical.com\fR>.
