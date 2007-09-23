@@ -1,3 +1,11 @@
+casper (1.100) gutsy; urgency=low
+
+  * scripts/casper-bottom/41apt_cdrom: Remove unnecessary /root/cdrom
+    mounting/unmounting code, which only serves to generate error messages
+    (scripts/casper-bottom/05mountpoints handles this already).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 11 Sep 2007 19:47:58 +0100
+
 casper (1.99) gutsy; urgency=low
 
   [ Luke Yelavich ]
