@@ -7,7 +7,7 @@
 
 diff -Naur casper-1.61+debian.orig/bin/casper-reconfigure casper-1.61+debian/bin/casper-reconfigure
 --- casper-1.61+debian.orig/bin/casper-reconfigure	2006-05-11 19:03:29.000000000 +0000
-+++ casper-1.61+debian/bin/casper-reconfigure	2006-07-19 17:38:18.000000000 +0000
++++ casper-1.61+debian/bin/casper-reconfigure	2006-07-19 18:54:36.000000000 +0000
 @@ -47,6 +47,6 @@
      exit 0
  fi
@@ -18,7 +18,7 @@ diff -Naur casper-1.61+debian.orig/bin/casper-reconfigure casper-1.61+debian/bin
  exit 0
 diff -Naur casper-1.61+debian.orig/casper.conf casper-1.61+debian/casper.conf
 --- casper-1.61+debian.orig/casper.conf	2006-05-02 12:16:55.000000000 +0000
-+++ casper-1.61+debian/casper.conf	2006-07-19 17:38:18.000000000 +0000
++++ casper-1.61+debian/casper.conf	2006-07-19 18:54:36.000000000 +0000
 @@ -3,7 +3,7 @@
  # Supported variables are:
  # USERNAME, USERFULLNAME, HOST
@@ -32,7 +32,7 @@ diff -Naur casper-1.61+debian.orig/casper.conf casper-1.61+debian/casper.conf
  
 diff -Naur casper-1.61+debian.orig/hooks/casper casper-1.61+debian/hooks/casper
 --- casper-1.61+debian.orig/hooks/casper	2006-06-15 09:04:08.000000000 +0000
-+++ casper-1.61+debian/hooks/casper	2006-07-19 17:38:18.000000000 +0000
++++ casper-1.61+debian/hooks/casper	2006-07-19 18:54:36.000000000 +0000
 @@ -18,10 +18,17 @@
  
  . /usr/share/initramfs-tools/hook-functions
@@ -89,7 +89,7 @@ diff -Naur casper-1.61+debian.orig/hooks/casper casper-1.61+debian/hooks/casper
  manual_add_modules squashfs
 diff -Naur casper-1.61+debian.orig/scripts/casper casper-1.61+debian/scripts/casper
 --- casper-1.61+debian.orig/scripts/casper	2006-07-17 10:53:28.000000000 +0000
-+++ casper-1.61+debian/scripts/casper	2006-07-19 17:38:18.000000000 +0000
++++ casper-1.61+debian/scripts/casper	2006-07-19 18:54:36.000000000 +0000
 @@ -4,7 +4,9 @@
  
  export PATH=/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin:/bin:/sbin
@@ -393,7 +393,7 @@ diff -Naur casper-1.61+debian.orig/scripts/casper casper-1.61+debian/scripts/cas
      maybe_break casper-bottom
 diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/01integrity_check casper-1.61+debian/scripts/casper-bottom/01integrity_check
 --- casper-1.61+debian.orig/scripts/casper-bottom/01integrity_check	2006-04-21 14:08:09.000000000 +0000
-+++ casper-1.61+debian/scripts/casper-bottom/01integrity_check	2006-07-19 17:38:18.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/01integrity_check	2006-07-19 18:54:36.000000000 +0000
 @@ -15,4 +15,4 @@
         ;;
  esac
@@ -402,8 +402,15 @@ diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/01integrity_check caspe
 +grep integrity-check /proc/cmdline && casper-md5check /live_media /live_media/md5sum.txt < /dev/tty8
 diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/10adduser casper-1.61+debian/scripts/casper-bottom/10adduser
 --- casper-1.61+debian.orig/scripts/casper-bottom/10adduser	2006-05-11 11:35:21.000000000 +0000
-+++ casper-1.61+debian/scripts/casper-bottom/10adduser	2006-07-19 17:38:18.000000000 +0000
-@@ -28,7 +28,9 @@
++++ casper-1.61+debian/scripts/casper-bottom/10adduser	2006-07-19 18:54:55.000000000 +0000
+@@ -22,13 +22,15 @@
+ 
+ chroot /root debconf-communicate -fnoninteractive casper > /dev/null <<EOF
+ set passwd/root-password-crypted *
+-set passwd/user-password-crypted U6aMy0wojraho
++set passwd/user-password-crypted $1$NkzZXpgE$WUcfPW16xGuUQAlx99HAF0
+ set passwd/user-fullname $USERFULLNAME 
+ set passwd/username $USERNAME
  set passwd/user-uid 999
  EOF
  
@@ -449,7 +456,7 @@ diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/10adduser casper-1.61+d
      chroot /root install -o $USERNAME -g $USERNAME -d /home/$USERNAME/Desktop/
 diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/14locales casper-1.61+debian/scripts/casper-bottom/14locales
 --- casper-1.61+debian.orig/scripts/casper-bottom/14locales	2006-05-16 10:45:27.000000000 +0000
-+++ casper-1.61+debian/scripts/casper-bottom/14locales	2006-07-19 17:38:18.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/14locales	2006-07-19 18:54:36.000000000 +0000
 @@ -20,18 +20,33 @@
  
  log_begin_msg "$DESCRIPTION"
@@ -495,7 +502,7 @@ diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/14locales casper-1.61+d
  log_end_msg
 diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/15autologin casper-1.61+debian/scripts/casper-bottom/15autologin
 --- casper-1.61+debian.orig/scripts/casper-bottom/15autologin	2006-05-11 10:06:07.000000000 +0000
-+++ casper-1.61+debian/scripts/casper-bottom/15autologin	2006-07-19 17:48:50.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/15autologin	2006-07-19 18:54:36.000000000 +0000
 @@ -27,6 +27,8 @@
  fi
  
@@ -507,7 +514,7 @@ diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/15autologin casper-1.61
          -e "s/^AutomaticLoginEnable=.*\$/AutomaticLoginEnable=true/" \
 diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/22gnome_panel_data casper-1.61+debian/scripts/casper-bottom/22gnome_panel_data
 --- casper-1.61+debian.orig/scripts/casper-bottom/22gnome_panel_data	2006-05-11 10:05:55.000000000 +0000
-+++ casper-1.61+debian/scripts/casper-bottom/22gnome_panel_data	2006-07-19 17:38:18.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/22gnome_panel_data	2006-07-19 18:54:36.000000000 +0000
 @@ -20,8 +20,10 @@
  
  log_begin_msg "$DESCRIPTION"
@@ -523,7 +530,7 @@ diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/22gnome_panel_data casp
  panel_version=$(chroot /root /usr/bin/dpkg-query -W --showformat='${Version}' gnome-panel-data 2>/dev/null) || panel_version=""
 diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/23networking casper-1.61+debian/scripts/casper-bottom/23networking
 --- casper-1.61+debian.orig/scripts/casper-bottom/23networking	2006-05-11 10:05:11.000000000 +0000
-+++ casper-1.61+debian/scripts/casper-bottom/23networking	2006-07-19 17:38:18.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/23networking	2006-07-19 18:54:36.000000000 +0000
 @@ -27,7 +27,11 @@
  
  EOF
@@ -539,7 +546,7 @@ diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/23networking casper-1.6
      [ -e $interface ] || continue
 diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/25configure_init casper-1.61+debian/scripts/casper-bottom/25configure_init
 --- casper-1.61+debian.orig/scripts/casper-bottom/25configure_init	2006-06-15 09:08:14.000000000 +0000
-+++ casper-1.61+debian/scripts/casper-bottom/25configure_init	2006-07-19 17:38:18.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/25configure_init	2006-07-19 18:54:36.000000000 +0000
 @@ -28,9 +28,11 @@
  
  # This has the nice side effect of the cron.{daily,weekly,monthly} jobs in
@@ -575,7 +582,7 @@ diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/25configure_init casper
  log_end_msg
 diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/33disable_binary_drivers casper-1.61+debian/scripts/casper-bottom/33disable_binary_drivers
 --- casper-1.61+debian.orig/scripts/casper-bottom/33disable_binary_drivers	2006-05-13 08:13:22.000000000 +0000
-+++ casper-1.61+debian/scripts/casper-bottom/33disable_binary_drivers	2006-07-19 17:38:18.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/33disable_binary_drivers	2006-07-19 18:54:36.000000000 +0000
 @@ -20,4 +20,6 @@
  
  log_begin_msg "$DESCRIPTION"
