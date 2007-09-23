@@ -34,8 +34,7 @@ kderc_addtoprefixes() {
     fi
 }
 
-for x in $(cat /proc/cmdline); do
-                case $x in
+case ${ACCESS} in
                         # Lesser Visual Impairment
                         access=v1)
                         gct -s -t string /desktop/gnome/interface/gtk_theme HighContrastLargePrint
@@ -85,7 +84,7 @@ for x in $(cat /proc/cmdline); do
                         kderc_addtoprefixes /usr/share/kubuntu-default-settings/kde-profile/minor-motor-difficulties/
                         if [ -e /root/etc/xdg/xfce4/mcs_settings/keyboard.xml ]; then
                             sed -i 's/0/1/' /root/etc/xdg/xfce4/mcs_settings/keyboard.xml
-                        fi 
+                        fi
                         ;;
                         # Motor Difficulties - pointing devices
                         access=m2)
@@ -99,8 +98,7 @@ for x in $(cat /proc/cmdline); do
                         kderc_addtoprefixes /usr/share/kubuntu-default-settings/kde-profile/minor-motor-difficulties/,/usr/share/kubuntu-default-settings/kde-profile/motor-difficulties-pointing-devices/
                         if [ -e /root/etc/xdg/xfce4/mcs_settings/keyboard.xml ]; then
                             sed -i '/Sticky/ s/0/1/' /root/etc/xdg/xfce4/mcs_settings/keyboard.xml
-                        fi 
+                        fi
                         ;;
-		esac
-done
+esac
 log_end_msg

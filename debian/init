@@ -1,20 +1,21 @@
-#! /bin/sh
+#!/bin/sh
+
 ### BEGIN INIT INFO
-# Provides:          live-initramfs
-# Required-Start:    $syslog
-# Required-Stop:     $syslog
-# Should-Start:      $local_fs
-# Should-Stop:       $local_fs
-# Default-Start:     1 2 3 4 5
-# Default-Stop:      0 6
-# Short-Description: Casper init script
-# Description:       Resyncs snapshots, evantually caches files in order
-#                    to let remove the media.
+# Provides:		live-initramfs
+# Required-Start:	$syslog
+# Required-Stop:	$syslog
+# Should-Start:		$local_fs
+# Should-Stop:		$local_fs
+# Default-Start:	1 2 3 4 5
+# Default-Stop:		0 6
+# Short-Description:	live-initramfs init script
+# Description:		Resyncs snapshots, evantually caches files in order to
+#			let remove the media.
 ### END INIT INFO
 
-# Author: Tollef Fog Heen <tfheen@canonical.com>
-#         Marco Amadori <marco.amadori@gmail.com>
-#
+# Authors: Tollef Fog Heen <tfheen@canonical.com>
+#	   Marco Amadori <marco.amadori@gmail.com>
+
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
 NAME=live-initramfs
 SCRIPTNAME=/etc/init.d/${NAME}
@@ -71,17 +72,27 @@ do_stop ()
         cache_path "$path"
     done
 
-    eject -p -m /cdrom >/dev/null 2>&1
+    for x in $(cat /proc/cmdline); do
+	case $x in
+	    quickreboot)
+		QUICKREBOOT="Yes"
+	    ;;
+	esac
+    done
 
-    # XXX - i18n
-    echo "Please remove the disc and close the tray (if any) then press ENTER: "
-    if [ -x /sbin/usplash_write ]; then
-        /sbin/usplash_write "TIMEOUT 86400"
-        /sbin/usplash_write "TEXT-URGENT Please remove the disc, close the tray (if any)"
-        /sbin/usplash_write "TEXT-URGENT and press ENTER to continue"
+    if [ -z ${QUICKREBOOT} ]; then
+	eject -p -m /live_media >/dev/null 2>&1
+
+	# XXX - i18n
+	echo "Please remove the disc and close the tray (if any) then press ENTER: "
+	if [ -x /sbin/usplash_write ]; then
+	    /sbin/usplash_write "TIMEOUT 86400"
+	    /sbin/usplash_write "TEXT-URGENT Please remove the disc, close the tray (if any)"
+	    /sbin/usplash_write "TEXT-URGENT and press ENTER to continue"
+	fi
+
+	read x < /dev/console
     fi
-
-    read x < /dev/console
 }
 
 case "$1" in

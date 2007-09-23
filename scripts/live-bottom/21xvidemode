@@ -1,0 +1,41 @@
+#!/bin/sh
+
+PREREQ=""
+DESCRIPTION="Configuring X kludges..."
+
+. /scripts/live-functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+if [ -n "$XVIDEOMODE" ]
+then
+	mount -n -o bind /sys /root/sys
+	mount -n -o bind /proc /root/proc
+	mount -n -o bind /dev /root/dev
+
+chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
+set xserver-xorg/config/monitor/mode-list ${XVIDEOMODE}
+set xserver-xorg/config/display/modes ${XVIDEOMODE}
+EOF
+
+	chroot /root dexconf
+
+	umount /root/sys
+	umount /root/proc
+	umount /root/dev
+fi
+
+log_end_msg

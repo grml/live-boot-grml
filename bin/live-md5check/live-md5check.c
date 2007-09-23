@@ -6,12 +6,12 @@
    modify it under the terms of the GNU General Public License as
    published by the Free Software Foundation; either version 2 of the
    License, or (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
@@ -128,7 +128,7 @@ void usplash_success(int fd, char *format, ...) {
   asprintf(&s1, "SUCCESS %s", s);
 
   write_and_retry(fd, s1);
-  
+
   free(s);
   free(s1);
 }
@@ -161,10 +161,10 @@ int set_nocanonical_tty(int fd) {
 }
 
 int main(int argc, char **argv) {
-  
+
   int pipe_fd, check_fd;
   int failed = 0;
-  
+
   FILE *md5_file;
   md5_state_t state;
   md5_byte_t digest[16];
@@ -180,20 +180,20 @@ int main(int argc, char **argv) {
     fprintf(stderr,"%s <root directory> <md5sum file>\n", argv[0]);
     exit(1);
   }
-  
+
   if (chdir(argv[1]) != 0) {
     perror("chdir");
     exit(1);
   }
-  
+
   pipe_fd = open(USPLASH_FIFO, O_WRONLY|O_NONBLOCK);
-  
+
   if (pipe_fd == -1) {
     /* We can't really do anything useful here */
     perror("Opening pipe");
     exit(1);
   }
-  
+
 
   usplash_progress(pipe_fd, 0);
   usplash_urgent(pipe_fd, "Checking integrity, this may take some time");
@@ -218,18 +218,18 @@ int main(int argc, char **argv) {
     char buf[BUFSIZ];
     ssize_t rsize;
     int i;
-    
+
     md5_init(&state);
-    
+
     usplash_text(pipe_fd, "Checking %s", checkfile);
-    
+
     check_fd = open(checkfile, O_RDONLY);
     if (check_fd < 0) {
       usplash_timeout(pipe_fd, 300);
       usplash_failure(pipe_fd, "%s", strerror(errno));
       sleep(10);
     }
-    
+
     rsize = read(check_fd, buf, sizeof(buf));
 
     while (rsize > 0) {
@@ -239,13 +239,13 @@ int main(int argc, char **argv) {
       md5_append(&state, (const md5_byte_t *)buf, rsize);
       rsize = read(check_fd, buf, sizeof(buf));
     }
-    
+
     close(check_fd);
     md5_finish(&state, digest);
-    
+
     for (i = 0; i < 16; i++)
       sprintf(hex_output + i * 2, "%02x", digest[i]);
-    
+
     if (strncmp(hex_output, checksum, strlen(hex_output)) == 0) {
       usplash_success(pipe_fd, "OK");
     } else {
@@ -266,5 +266,5 @@ int main(int argc, char **argv) {
   getchar();
   reboot(LINUX_REBOOT_CMD_RESTART);
   return 0;
-  
+
 }

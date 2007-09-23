@@ -21,6 +21,11 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
+if [ -n "${SWAPOFF}" ]
+then
+    exit 0
+fi
+
 devices=""
 for device in /dev/[hs]d[a-z][0-9]*; do
     if ! [ -b "$device" ]; then
@@ -28,7 +33,7 @@ for device in /dev/[hs]d[a-z][0-9]*; do
     fi
 
     magic=$(/bin/dd if="$device" bs=4086 skip=1 count=1 2>/dev/null | /bin/dd bs=10 count=1 2>/dev/null) || continue
-    
+
     if [ "$magic" = "SWAPSPACE2" -o "$magic" = "SWAP-SPACE" ]; then
 #        log "Found $device"
         devices="$devices $device"

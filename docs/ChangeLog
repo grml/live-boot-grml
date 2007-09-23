@@ -1,0 +1,162 @@
+2007-05-12  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/live:
+	  - Renamed CASPERCONF to LIVECONF.
+	  - Renamed CASPERGETTY to LIVE_GETTY.
+	  - Renamed LIVEMEDIA_* to LIVE_MEDIA_*.
+	* Uploaded 1.87.3-1.
+
+2007-05-11  Daniel Baumann  <daniel@debian.org>
+
+	* hooks/live:
+	  - Reformated.
+	* scripts/live, scripts/live-bottom/13swap:
+	  - Added check for swapoff bootparameter to disable usage of local swap
+	    partitions.
+
+2007-05-09  Daniel Baumann  <daniel@debian.org>
+
+	* manpages/*:
+	  - Added language suffix.
+	  - Partially rewritten and reformated.
+
+2007-05-08  Daniel Baumann  <daniel@debian.org>
+
+	* Makefile, doc/AUTHORS, doc/CREDITS:
+	  - Added.
+	* doc:
+	  - Renamed to docs.
+
+2007-05-07  Daniel Baumann  <daniel@debian.org>
+
+	* debian/control:
+	  - Added suggests to genext2fs and squashfs-tools.
+	  - Removed depends to dmsetup.
+	* scripts/live-bottom/10adduser:
+	  - Added patch from Ben Armstrong <synrg@debian.org> to write
+	    $HOME/.su-to-rootrc file.
+	* scripts/live, scripts/live-bottom/21xvideomode:
+	  - Added patch from Mathieu Geli <mathieu.geli@gmail.com> to have the
+	    ability to force X video mode from kernel append line.
+
+2007-05-06  Daniel Baumann  <daniel@debian.org>
+
+	* Merging patches from casper 1.81+debian-4, see ChangeLog.casper.
+	* conf/live.conf:
+	  - Renamed HOST to HOSTNAME.
+	* debian/init:
+	  - Added quickreboot.
+	  - Renamed /cdrom to /live_media.
+	* doc/ChangeLog.casper:
+	  - Added missing debian uploads.
+	* manpages/live-initramfs.7:
+	  - Updated.
+	* hooks/live:
+	  - Reading live.conf earlier.
+	  - Making some udev copies conditional for ubuntu.
+	  - Allowing local keymap when using encrypted filesystems.
+	* scripts/live:
+	  - Renamed HOST to HOSTNAME.
+	  - Renamed /cdrom to /live_media.
+	  - Added support for live-snapshot.
+	  - Parsing commandline in one central place now.
+	  - Added support for encrypted filesytem images.
+	  - Added support for multiple filesystem images.
+	* scripts/live-bottom/01integrity_check:
+	  - Renamed /cdrom to /live_media.
+	* scripts/live-bottom/02etc_live_conf:
+	  - Added.
+	* scripts/live-bottom/05mountpoints:
+	  - Renamed /cdrom to /live_media.
+	  - Don't do anything if not required.
+	* scripts/live-bottom/10adduser:
+	  - Changed default password.
+	  - Disabling xscreensaver locking and copying ubiquity desktop only on
+	    ubuntu.
+	* scripts/live-bottom/14locales:
+	  - Added handling of locale bootparameter.
+	* scripts/live-bottom/15autologin:
+	  - Added workaround for using gdm default config.
+	* scripts/live-bottom/18hostname:
+	  - Renamed HOST to HOSTNAME.
+	* scripts/live-bottom/19keyboard:
+	  - Added handling of keyboard bootparameter.
+	* scripts/live-bottom/20xconfig:
+	  - Added handling of keyboard bootparameter.
+	  - Added handling of locale bootparameter.
+	* scripts/live-bottom/23networking:
+	  - Disabled loop over fixed network devices.
+	* scripts/live-bottom/24preseed:
+	  - Added handling of multiple preseeding files.
+	  - Removed locale handling.
+	* scripts/live-bottom/25configure_init:
+	  - Added handling of serial ttys.
+	* scripts/live-bottom/30accessibility:
+	  - Removed extra parsing of commandline.
+	* scripts/live-functions:
+	  - Added function to really export variables.
+	* scripts/live-helpers:
+	  - Added support for encrypted filesytem images.
+
+2007-05-06  Daniel Baumann  <daniel@debian.org>
+
+	* bin/casper-getty, casper-login, casper-preseed, casper-reconfigure,
+	  casper-snapshot:
+	  - Renamed to live-*.
+	* casper-md5check:
+	  - Moved to bin.
+	  - Renamed to live-md5check.
+	* casper.conf:
+	  - Moved to conf/live.conf.
+	* caspermon:
+	  - Removed.
+	* hooks/casper, scripts/casper, casper-bottom, casper-functions,
+	  casper-helpers, casper-premount:
+	  - Renamed to live*.
+	* bin/live-getty, live-login:
+	  - Reformated.
+	* conf/live.conf:
+	  - Reformated.
+	  - Setting Debian defaults.
+	* bin/live-snapshot, debian/dirs, debian/install, debian/rules,
+	  hooks/live, scripts/live:
+	  - Replaces casper directory and file names with live-initramfs
+	    directory and file names.
+	* debian/manpage:
+	  - Moved to manpages.
+	  - Renamed casper.7 to live-initramfs.7.
+	  - Renamed casper-snapshot.1 to live-snapshot.1.
+	* debian/init:
+	  - Changed activation parameter from boot=casper to boot=live.
+	* scripts/live-bottom/02_timezone:
+	  - Fixed wrong script description.
+	* Uploaded 1.87.2-1.
+
+2007-04-30  Daniel Baumann  <daniel@debian.org>
+
+	* Forked casper 1.87.
+	* COPYING:
+	  - Added.
+	* debian/control, debian/ubiquity-casper.install, ubiquity-hooks:
+	  - Removed ubiquity support.
+	* debian/changelog:
+	  - Moved old changelog to doc/ChangeLog.casper.
+	  - Added new changelog for live-initramfs.
+	* debian/casper.dirs, casper.init, casper.install, casper.manpages,
+	  casper.postinst:
+	  - Renamed, removed packagename prefix from filename.
+	* debian/compat, copyright, dirs, manpages:
+	  - Updated.
+	* debian/examples, links:
+	  - Added.
+	* debian/rules:
+	  - Updated.
+	  - Added upstream target.
+	* debian/control:
+	  - Updated.
+	  - Added depends to file.
+	  - Added conflicts/replaces to casper.
+	* debian/postinst:
+	  - Running 'update-initramfs' for all kernel versions instead of latest
+	    only.
+	* Uploaded 1.87.1-1.

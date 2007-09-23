@@ -30,7 +30,7 @@ mkdir "/root$install_dir"
 cp -a /tmp/driver-updates/*.deb "/root$install_dir/"
 
 # We cannot leave packages in a bad state. So if the install fails, remove
-# it. This will get caught in casper.log.
+# it. This will get caught in live.log.
 for deb in "/root$install_dir"/*; do
 	if ! chroot /root dpkg -i "$install_dir/$deb"; then
 		chroot /root dpkg -P "${deb%%_*}"
