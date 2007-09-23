@@ -33,15 +33,19 @@ else
 	udevtrigger
 fi
 
-for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*; do
-    [ -e $interface ] || continue
-    i="$(basename $interface)"
-    cat >> "$IFFILE" <<EOF
+if [ -z "${NETBOOT}" ] ; then
+
+	for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*; do
+		[ -e $interface ] || continue
+		i="$(basename $interface)"
+		cat >> "$IFFILE" <<EOF
 auto $i
 iface $i inet dhcp
 
 EOF
-done
+
+	done
+fi
 
 for i in eth0 eth1 eth2 ath0 wlan0; do
     [ ! -e /sys/class/net/$i ] || continue

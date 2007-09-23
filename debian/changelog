@@ -1,3 +1,10 @@
+casper (1.63+debian-2) unstable; urgency=low
+
+  * Working netboot support (Closes: #380506).
+  * Polished kernel parameters parsing a bit.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Sun, 13 Aug 2006 15:52:14 +0200
+
 casper (1.63+debian-1) unstable; urgency=low
 
   [Marco Amadori]
@@ -16,6 +23,10 @@ casper (1.63+debian-1) unstable; urgency=low
   * Added NFS netboot support (Closes: #380506).
   * Fixed /etc/inittab editing (Closes: #380488).
   * Do not try to eject cd if netbooted (Closes: #380502).
+
+  [Daniel Baumann]
+  * Minor debian/rules reordering.
+  * Changed "Section:" from "admin" to "misc".
 
  -- Marco Amadori <marco.amadori@gmail.com>  Sun, 30 Jul 2006 19:10:23 +0200
 

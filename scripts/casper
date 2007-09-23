@@ -7,12 +7,13 @@ export PATH=/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin
 mountpoint=/live_media
 
 # Will be mounted if found as copy on write instead of tmpfs
-persistence_pattern="casper-rw"
+root_persistence="casper-rw"
 
-# Each file found with this pattern will be mounted directly in the 
-# mountpoint extracted from file name "${other_mounts_pattern}<mountpoint>"
-other_mounts_pattern="casper-mount-"
-netboot=""
+# TODO
+## Each file found with this pattern will be mounted directly in the 
+## mountpoint extracted from file name "${other_mounts_pattern}<mountpoint>"
+#other_mounts_pattern="casper-mount-"
+home_persistence="home-rw"
 
 #overlay_method=unionfs
 #if [ "${DPKG_ARCH}" = "ia64" ] || [ "${DPKG_ARCH}" = "hppa" ] || [ "${DPKG_ARCH}" = "sparc" ]; then
@@ -28,6 +29,39 @@ mkdir -p $mountpoint
 [ -f /etc/casper.conf ] && . /etc/casper.conf
 
 export USERNAME USERFULLNAME HOST
+
+# looking for casper specifics options as kernel parameters
+for x in $(cat /proc/cmdline); do
+	case $x in
+		netboot*)
+			NETBOOT=${x#netboot=}
+			export NETBOOT
+			;;
+		toram)
+			TORAM=1
+			export TORAM
+			;;
+		show-cow)
+			SHOWCOW=1
+			export SHOWCOW
+			;;
+		persistent)
+			PERSISTENT=1
+			export PERSISTENT
+			;;
+	esac
+done
+
+# sort of compatibility with netboot.h from linux docs
+if [ -z "${NETBOOT}" ]; then
+	if [ "${ROOT}" == "/dev/nfs" ]; then
+		NETBOOT="nfs"
+		export NETBOOT
+	elif [ "${ROOT}" == "/dev/cifs" ]; then
+		NETBOOT="cifs"
+		export NETBOOT
+	fi
+fi
 
 is_casper_path() {
 	path=$1
@@ -91,7 +125,7 @@ mount_images_in_directory() {
 		match_files_in_dir "$directory/casper/*.dir"; then
 		setup_unionfs "$directory/casper" "$rootmnt"
 	else
-        :
+		:
 	fi
 }
 
@@ -177,10 +211,18 @@ where_is_mounted() {
 }
 
 copy_to_ram() {
-	copyform="$1"
-	copyto="${copyform}_swap"
+	copyfrom="$1"
 
-	size=$(du -ks ${copyform} | cut -f1)
+	if [ ! -z "${2}" ] ; then
+		# This will enable future rampersistence, todo yet
+		copyto="${2}"
+		moveit="False"
+	else
+		copyto="${copyfrom}_swap"
+		moveit="True"
+	fi
+
+	size=$(du -ks ${copyfrom} | cut -f1)
 	size=$(expr ${size} + ${size}/20 ) # Fixme: 5% more to be sure
 	needed_space=$(expr ${size} * 1024)
 	freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( cat /proc/meminfo | grep Cached | head -n 1 | awk '/Cached/{print $2}' - ))
@@ -193,10 +235,12 @@ copy_to_ram() {
 		[ "$quiet" != "y" ] && log_begin_msg "Copying live media to ram..."
 		mkdir "${copyto}"
 		mount -t tmpfs -o size=${size}k /dev/shm ${copyto}
-		cp -a ${copyform}/* ${copyto}
-		umount ${copyform}
-		mount -r -o move ${copyto} ${copyform}
-		rmdir ${copyto}
+		cp -a ${copyfrom}/* ${copyto} # "cp -a" from busybox also copies hidden files
+		umount ${copyfrom}
+		if [ "${moveit}" == "True" ]; then
+			mount -r -o move ${copyto} ${copyfrom}
+			rmdir ${copyto}
+		fi
 		[ "$quiet" != "y" ] && log_end_msg
 	fi
 }
@@ -231,55 +275,69 @@ find_cow_device() {
 }
 
 do_netmount() {
-	# Will mount a remote share and return the mountpoint
+	rc=1
 
-	modprobe -q nfs
-	# For DHCP
-	modprobe -q af_packet
+	modprobe -q af_packet # For DHCP
 
 	ipconfig ${DEVICE} /tmp/net-${DEVICE}.conf
-	if [ "x${NFSROOT}" = "xauto" ]; then
+
+	if [ "${NFSROOT}" = "auto" ]; then
 		NFSROOT=${ROOTSERVER}:${ROOTPATH}
 	fi
 
-	#choose NFS or CIFS mount 
-	if [ ${netboot} = "NFS"  ] ; then
-		echo $(do_nfsmount)
-	else
-		echo $(do_cifsmount)
+	[ "$quiet" != "y" ] && log_begin_msg "Trying netboot from ${NFSROOT}"
+	
+	if [ "${NETBOOT}" != "nfs" ] && do_cifsmount ; then
+		rc=0
+	elif do_nfsmount ; then
+		rc=0
 	fi
+
+	[ "$quiet" != "y" ] && log_end_msg
+	return ${rc}
 }
 
 do_nfsmount() {
-	if [ "x${NFSOPTS}" = "x" ]; then
+	rc=1
+	modprobe -q nfs
+	if [ -z "${NFSOPTS}" ]; then
 		NFSOPTS=""
 	fi
 
-	[ "$quiet" != "y" ] && log_begin_msg "Mounting NFS with nfsmount -o nolock -o ro ${NFSOPTS} ${NFSROOT} ${mountpoint}"
-	while true ; do 
-			nfsmount -o nolock -o ro ${NFSOPTS} "${NFSROOT}" "${mountpoint}" && break
+	[ "$quiet" != "y" ] && log_begin_msg "Trying nfsmount -o nolock -o ro ${NFSOPTS} ${NFSROOT} ${mountpoint}"
+	# FIXME: This for loop is an ugly HACK round an nfs bug
+	for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13; do
+		nfsmount -o nolock -o ro ${NFSOPTS} "${NFSROOT}" "${mountpoint}" && rc=0 && break
 		sleep 1
 	done
-	echo "${mountpoint}"
-	# FIXME: add error check
-	[ "$quiet" != "y" ] && log_end_msg
+	return ${rc}
 }
 
 do_cifsmount() {
-	NFSOPTS="-ouser=root,password="
+	rc=1
+	if [ -x "/sbin/mount.cifs" ]; then
+		if [ -z "${NFSOPTS}" ]; then
+			CIFSOPTS="-ouser=root,password="
+		else
+			CIFSOPTS="${NFSOPTS}"
+		fi
 
-	[ "$quiet" != "y" ] && log_begin_msg "Mounting using mount.cifs with ${NFSROOT} ${mountpoint} ${NFSOPTS}"
-	mount.cifs "${NFSROOT}" "${mountpoint}" "${NFSOPTS}" && echo "${mountpoint}"
-	# FIXME: add error check
-	[ "$quiet" != "y" ] && log_end_msg
+		[ "$quiet" != "y" ] && log_begin_msg "Trying mount.cifs ${NFSROOT} ${mountpoint} ${CIFSOPTS}"
+		modprobe -q cifs
+
+		if mount.cifs "${NFSROOT}" "${mountpoint}" "${CIFSOPTS}" ; then
+			rc=0
+		fi
+	fi
+	return ${rc}
 }
 
 setup_unionfs() {
 	image_directory="$1"
 	rootmnt="$2"
-	image_type="$3"
 
 	modprobe -qb unionfs
+
 	croot=""	# Should really be /casper, but run-init doesn't handle
 				# mount-points in subdirectories at all
 
@@ -312,7 +370,7 @@ setup_unionfs() {
 	cow_fstype="tmpfs"
 	
 	# Looking for "${root_persistence}" device or file
-	if grep -q persistent /proc/cmdline; then
+	if [ ! -z "${PERSISTENT}" ]; then
 		cowprobe=$(find_cow_device "${root_persistence}")
 		if [ -b "${cowprobe}" ]; then
 			cowdevice=${cowprobe}
@@ -324,19 +382,19 @@ setup_unionfs() {
 
 	mount ${cowdevice} -t ${cow_fstype} -o rw /cow || panic "Can not mount $cowdevice on /cow"
 	
-	mount -t unionfs -o dirs=/cow=rw:$rofsstring unionfs "$rootmnt"
+	mount -t unionfs -o dirs=/cow=rw:$rofsstring unionfs "$rootmnt" || panic "Unionfs mount failed"
 	
 	for d in ${rofslist}; do
 		mkdir -p "${rootmnt}/casper/${d}"
-		mount -o bind "${d}" "${rootmnt}/${d}"
-		case d in 
+		mount -o bind "${d}" "${rootmnt}/casper/${d}"
+		case d in
 			*.dir) ;; # do nothing
 			*) umount "${d}" ;;
 		esac
 	done
 
 	# Adding other custom mounts
-	if grep -q homepersistence /proc/cmdline; then
+	if [ ! -z "${PERSISTENT}" ]; then
 		homecow=$(find_cow_device "${home_persistence}" )
 		if [ -b "${homecow}" ]; then
 			mount ${homecow} -t $(get_fstype "${homecow}") -o rw "${rootmnt}/home"
@@ -345,7 +403,7 @@ setup_unionfs() {
 		fi
 	fi
 
-	if grep -q show-cow /proc/cmdline; then
+	if [ ! -z "${SHOWCOW}" ]; then
 		mkdir -p "$rootmnt/cow"
 		mount -o bind /cow "$rootmnt/cow"
 	fi
@@ -424,35 +482,31 @@ mountroot() {
 
 	set_usplash_timeout
 
-	if grep -q netboot /proc/cmdline; then
-		netboot="CIFS"
-		for x in $(cat /proc/cmdline); do
-			case $x in
-				netboot=*)
-					netboot=${x#netboot=}
-				;;
-			esac
-		done
-		livefs_root=$(do_netboot)
+	if [ ! -z "${NETBOOT}" ]; then
+		if do_netmount ; then
+			livefs_root="${mountpoint}"
+		else
+			panic "Unable to find a the network rootfs live file system"
+		fi
 	else
-		# Scan devices for the image
+		# Scan local devices for the image
 		for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13; do
 			livefs_root=$(find_livefs)
 			if [ "${livefs_root}" ]; then
 				break
 			fi
-			sleep 1
 		done
+
+		if [ "$?" -gt 0 ]; then
+			panic "Unable to find a medium containing a live file system"
+		fi
+			
+		if [ ! -z "${TORAM}" ]; then
+			copy_to_ram "${livefs_root}"
+		fi
 	fi
-		
-	if [ "$?" -gt 0 ]; then
-		panic "Unable to find a medium containing a live file system"
-	fi
-		
-	if grep -q toram /proc/cmdline; then
-		copy_to_ram "${livefs_root}"
-	fi
-	
+	sleep 1
+
 	mount_images_in_directory "$livefs_root" "$rootmnt"
 
 	log_end_msg
