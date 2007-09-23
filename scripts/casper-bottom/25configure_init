@@ -24,20 +24,19 @@ log_begin_msg "$DESCRIPTION"
 
 if [ -n "$USERNAME" ]; then
     if [ ! -z "${CASPERGETTY}" ]; then
-        # AUTOMATIC SERIAL CONSOLE #
-        defconsole=$(sed -e 's%.*console=%console=%' /proc/cmdline)
-        if echo "${defconsole}" | grep -qs console=ttyS; then
-            PORT=$(echo "${defconsole}" | \
-                sed -e's%^console=%%' -e's%,.*%%')
-            SPEED=$(echo "${defconsole}" | \
-                    sed -e 's%^console=ttyS[0-9]\+,%%' \
+       if echo "${DEFCONSOLE}" | grep -qs ttyS; then
+            # AUTOMATIC SERIAL CONSOLE #
+            PORT=$(echo "${DEFCONSOLE}" | \
+                sed -e 's%,.*%%')
+            SPEED=$(echo "${DEFCONSOLE}" | \
+                    sed -e 's%ttyS[0-9]\+,%%' \
                         -e's%\([0-9]\+\).*%\1%')
             if ! ( sed -n -e'/^[^#]/p' /root/etc/inittab | grep -qs ":respawn:/sbin/getty.*${PORT}" ) ; then
                 IDs="A B C D E F G H I J K L M N O P Q R S T Q U V V X Y Z 0 1 2 3 4 5 6 7 8 9" 
                 for ID1 in $IDs; do
                     for ID2 in $IDs; do
                         ID="${ID1}${ID2}"
-	                    if ! grep "^${ID}:" /etc/inittab ; then
+                        if ! grep "^${ID}:" /etc/inittab ; then
                             #make sure it is not already in use
                             break 2
                         fi
@@ -46,6 +45,9 @@ if [ -n "$USERNAME" ]; then
                 echo "${ID}:2345:respawn:/sbin/casper-getty -L ${PORT} ${SPEED} vt100" \
                 >>/root/etc/inittab
             fi
+        fi
+        if [ -f /root/etc/inittab ]; then
+             sed -i -e'/^[^#]/s%respawn:/sbin/getty%respawn:/sbin/casper-getty%' /root/etc/inittab
         fi
     else
         if [ -f /root/etc/inittab ]; then

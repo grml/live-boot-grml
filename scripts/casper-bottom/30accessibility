@@ -20,7 +20,7 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
-gconf_version=$(chroot /root /usr/bin/dpkg-query -W --showformat='${Version}' gconf-2 2>/dev/null) || gconf_version=""
+gconf_version=$(chroot /root /usr/bin/dpkg-query -W --showformat='${Version}' gconf2 2>/dev/null) || gconf_version=""
 
 gct() {
     if [ "$gconf_version" ]; then
@@ -45,8 +45,8 @@ for x in $(cat /proc/cmdline); do
                         gct -s -t string /apps/metacity/general/theme Atlanta
                         gct -s -t string /desktop/gnome/background/picture_filename ""
                         gct -s -t string /desktop/gnome/background/picture_options none
-                        gct "-s -t string /desktop/gnome/background/primary_color \#666666"
-                        gct "-s -t string /desktop/gnome/background/secondary_color \#7F7F7F"
+                        gct -s -t string /desktop/gnome/background/primary_color \#666666
+                        gct -s -t string /desktop/gnome/background/secondary_color \#7F7F7F
                         gct -s -t string /desktop/gnome/background/color_shading_type solid
                         gct -s -t int /desktop/gnome/peripherals/mouse/cursor_size 48
                         gct -s -t string /desktop/gnome/peripherals/mouse/cursor_theme whiteglass
@@ -56,9 +56,9 @@ for x in $(cat /proc/cmdline); do
                         # Moderate Visual Impairment
                         access=v2)
                         gct -s -t bool /desktop/gnome/interface/accessibility true
-                        gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats [gnopernicus]
-                        gct -s -t bool /apps/gnopernicus/srcore/mag_active true
-                        gct -s -t bool /apps/gnopernicus/srcore/sp_active false
+                        gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats [orca]
+                        #gct -s -t bool /apps/gnopernicus/srcore/mag_active true
+                        #gct -s -t bool /apps/gnopernicus/srcore/sp_active false
 
                         kderc_addtoprefixes /usr/share/kubuntu-default-settings/kde-profile/lesser-visual-impairment/,/usr/share/kubuntu-default-settings/kde-profile/moderate-visual-impairment/
                         ;;
@@ -66,9 +66,9 @@ for x in $(cat /proc/cmdline); do
                         access=v3)
                         gct -s -t bool /desktop/gnome/sound/enable_esd false
                         gct -s -t bool /desktop/gnome/interface/accessibility true
-                        gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats [gnopernicus]
-                        gct -s -t bool /apps/gnopernicus/srcore/sp_active true
-                        gct -s -t bool /apps/gnopernicus/srcore/mag_active false
+                        gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats [orca]
+                        #gct -s -t bool /apps/gnopernicus/srcore/sp_active true
+                        #gct -s -t bool /apps/gnopernicus/srcore/mag_active false
                         ;;
                         # Minor Motor Difficulties
                         access=m1)
@@ -86,11 +86,11 @@ for x in $(cat /proc/cmdline); do
                         # Motor Difficulties - pointing devices
                         access=m2)
                         gct -s -t bool /desktop/gnome/accessibility/keyboard/enable true
+			gct -s -t bool /desktop/gnome/interface/accessibility true
                         gct -s -t bool /desktop/gnome/accessibility/keyboard/stickykeys_enable true
                         gct -s -t bool /desktop/gnome/accessibility/keyboard/stickykeys_modifier_beep false
                         gct -s -t bool /desktop/accessibility/gnome/keyboard/stickykeys_two_key_off false
-                        gct -s -t bool /desktop/gnome/interface/accessibility true
-                        gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats gok
+                        gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats [onboard]
 
                         kderc_addtoprefixes /usr/share/kubuntu-default-settings/kde-profile/minor-motor-difficulties/,/usr/share/kubuntu-default-settings/kde-profile/motor-difficulties-pointing-devices/
                         ;;

@@ -1,5 +1,5 @@
 #!/bin/sh
 
-update-initramfs -u
+update-initramfs -ut -kall
 
 #DEBHELPER#

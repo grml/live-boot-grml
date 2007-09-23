@@ -24,7 +24,7 @@
 # On Debian systems, the complete text of the GNU General Public License
 # can be found in /usr/share/common-licenses/GPL file.
 
-PROGRAM="`basename ${1}`"
+PROGRAM="`basename ${0}`"
 VERSION=0.0.1
 
 # Source casper conf
@@ -101,10 +101,13 @@ Do_snapshot ()
 {
 	case "${TYPE}" in
 		squashfs)
-			mksquashfs "${COW}" "${DEST}" || exit 1
+			echo "./tmp/exclude_list" > /tmp/exclude_list
+			( cd "${COW}" && find . -name '*.wh.*' >> /tmp/exclude_list )
+			mksquashfs "${COW}" "${DEST}" -ef /tmp/exclude_list || exit 1
+			rm /tmp/exclude_list
 			;;
 		cpio)
-			(cd "${COW}" && find . | cpio --quiet -o -H newc | gzip -9 > "${DEST}") || exit 1
+			( cd "${COW}" && find . -path '*.wh.*' -prune -o -print0 | cpio --quiet -o0 -H newc | gzip -9c > "${DEST}" ) || exit 1
 			;;
 		ext2)
 			DU_DIM="`du -ks ${COW} | cut -f1`"
@@ -157,7 +160,8 @@ Is_same_mount ()
 Parse_args ()
 {
 	# Parse command line
-	ARGUMENTS="`getopt --longoptions cow:,destination:,output:,type:,help,usage,version --name=${PROGRAM} --options c:d:o:t:,h,u,v --shell sh -- ${@}`"
+	ARGS="${1}"
+	ARGUMENTS="`getopt --longoptions cow:,destination:,output:,type:,help,usage,version --name=${PROGRAM} --options c:d:o:t:,h,u,v --shell sh -- ${ARGS}`"
 
 	if [ "${?}" != "0" ]; then
 		echo "Terminating." >&2
@@ -201,7 +205,7 @@ Defaults ()
 		COW="${SNAP_COW}"
 	fi
 	if [ ! -d "${COW}" ]; then
-		Usage "Error: ${COW} is not a directory\nMaybe you booted with \"hide-cow\" as kernel parameter?"
+		Usage "Error: ${COW} is not a directory"
 	fi
 
 	case "${SNAP_TYPE}" in
@@ -214,6 +218,10 @@ Defaults ()
 			Usage "Error: unrecognized snapshot type"
 			;;
 	esac
+	
+	#if [ -d 
+	#if Is_same_mount 
+
 }
 
 Main ()

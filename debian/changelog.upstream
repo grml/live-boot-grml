@@ -1,3 +1,66 @@
+casper (1.77) edgy; urgency=low
+
+  * Honour console-setup/modelcode preseeding. Needed for Malone #66719,
+    #66774.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 20 Oct 2006 19:59:39 +0100
+
+casper (1.76) edgy; urgency=low
+
+  [ Colin Watson ]
+  * Copy access=m2 accessibility changes into the corresponding ubiquity
+    hook.
+  * Remove spurious quoting from accessibility script.
+  * Clear console-setup/layoutcode and console-setup/variantcode if they
+    aren't supplied on the command line.
+
+  [ Michael Vogt ]
+  * scripts/casper-bottom/35fix_language_selector:
+    - run fontconfig-voodoo if available to make sure that we have
+      optimal fontconfig settings for the CJK languages (lp: #49334)
+
+  [ Henrik Nilsen Omma ]
+  * Fix a few accessibility items that were out of date, changing
+    gnopernicus -> orca and gok -> onboard (the gok entry was missing some
+    brackets as well; patch from Malone #58836, closes: Malone #65861).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 16 Oct 2006 20:20:15 +0100
+
+casper (1.75) edgy; urgency=low
+
+  * Turn on accessibility in "Motor Difficulties - pointing devices" which
+    makes onboard start properly.  closes: Malone: #65861.
+
+ -- Tollef Fog Heen <tfheen@ubuntu.com>  Fri, 13 Oct 2006 14:12:10 +0200
+
+casper (1.74) edgy; urgency=low
+
+  [ Tollef Fog Heen ]
+  * Sync up ubiquity-hooks/30accessibility with
+    scripts/casper-bottom/30accessibility fixing spelling errors and
+    enabling accessibility in KDE.
+
+  [ Colin Watson ]
+  * Fix check for presence of gconf2 (closes: Malone #58836).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Wed, 11 Oct 2006 11:18:00 +0100
+
+casper (1.73) edgy; urgency=low
+
+  * Never run install-keymap or preseed debian-installer/keymap if
+    console-setup is detected, even if console-setup wasn't explicitly
+    preseeded. Contributes to Malone #60067.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Sat,  7 Oct 2006 01:56:20 +0100
+
+casper (1.72) edgy; urgency=low
+
+  * Force suspend and hibernate both off, since reconfiguring
+    gnome-power-manager kills usplash here.  Fixes Malone: #61535
+    completely.
+
+ -- Tollef Fog Heen <tfheen@ubuntu.com>  Fri,  6 Oct 2006 14:22:23 +0200
+
 casper (1.71) edgy; urgency=low
 
   * Use TEXT-URGENT in shutdown script to make sure we display the "please

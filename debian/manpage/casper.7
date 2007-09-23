@@ -18,24 +18,35 @@ This enable a special serial login shell (experimental).
 .BI "host=" HOSTNAME " , userfullname=" USERFULLNAME " , username=" USERNAME
 Those parameters lets you override values read from the config file.
 .TP
-.B "showmounts"
-Specifying this will make casper to show on "/" the ro filesystems (mostly compressed) on /casper. This is not enabled by default because could lead to problems by application like "mono" which store binary paths on installation.
+.BI "keyb=" KEYBOARD " | kbd-chooser/method=" KEYBOARD ";  console-setup/layoutcode=" LAYOUT ", console-setup/variantcode=" VARIANT
+Configure the running keyboard as specified, if this one misses casper behave as "keyb=us" was specified. (It will be interfered from "locale=" somewhere in the future). You could also specify layout and variant (no defaults).
 .TP
 .BI ip= IFACE,ADDRESS,NETMASK,GATEWAY [ :IFACE,ADDRESS,NETMASK,GATEWAY "]*"
 Let you specify the name(s) and the options of the interface(s) that should be configured at boot time. Do not specify it if you want to use dhcp (default).
 .TP
 .BR ip[= frommedia ]
 This way dhcp and static configuration is just skipped and the system will use the (must be) media-preconfigured /etc/network/interfaces instead.
-
+.TP
+.BI "locale=" LOCALE " | debian-installer/locale=" LOCALE
+Configure the running locale as specified, if not present the live-media rootfs configured locale will be used and if also this one misses casper behave as "locale=en_US.UTF-8" was specified.
+.TP
+.BI live-media= DEVICE " | bootfrom=" DEVICE
+If you specify one of this two equivalent forms, casper will try first to look on this device for the "/casper" directory where it should lie the read-only root filesystem, if it did not find it, the normal scan for block devices will be performed.
 .TP
 .BR "netboot[=" nfs "|" cifs ]
 This tells casper to look for a network mount, to be specified by parameter "nfsroot=" (with optional "nfsopts="), for the "/casper" dirs where root filesystem lies. With no args, will try cifs first, and if it fails nfs.
 .TP
 .B persistent
-Casper will look for persistent and snapshot partitions or files labeled "casper-rw", "home-rw", "casper-snap*", "home-snap*" and will try to, in order: mount as /cow the first, mount the second in /home, and just copy the contents of the latters in appropriate locations.
+Casper will look for persistent and snapshot partitions or files labeled "casper-rw", "home-rw", and files called "casper-sn*", "home-sn*" and will try to, in order: mount as /cow the first, mount the second in /home, and just copy the contents of the latters in appropriate locations (snapshots). Snapshots will be tried to be updated on reboot/shutdown. Look at casper-snapshot(1) for more informations.
+.TP
+.B "showmounts"
+Specifying this will make casper to show on "/" the ro filesystems (mostly compressed) on /casper. This is not enabled by default because could lead to problems by application like "mono" which store binary paths on installation.
+.TP
+.BI "todisk=" DEVICE 
+Adding this parameter, casper will try to copy to the specified device the whole read-only media before mounting the root filesystem, it could need a lot of free space, according to one used by the read-only media. Subsequent boots should then skip this step and just specify the "live-media=DEVICE" boot parameter with the same DEVICE used this time.
 .TP
 .B toram
-Adding this parameter, casper will try to copy to ram the whole read-only media before mounting the root filesystem(s), it could need a lot of ram, according to the space used by the read-only media.
+Adding this parameter, casper will try to copy to ram the whole read-only media before mounting the root filesystem, it could need a lot of ram, according to the space used by the read-only media.
 
 .SH FILES
 .B /etc/casper.conf

@@ -1,3 +1,26 @@
+casper (1.77+debian-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added snapshot persistence feature (copy on boot, sync on reboot) via
+    different ways: squashfs, cpio.gz, and block device filesystems.
+  * Added boot parameter "live-media=<device>" to force trying to boot from
+    a specified device.
+  * Added support for "todisk=<device>" to copy the live media to a
+    device filesystem, subsequent boots could use "live-media=<device>".
+  * Slightly polished locales and keyboards handling.
+  * Extendend manpages.
+  * Readded a missing "sleep 1", reworked how live_media is detected,
+    thanks to Bas Wijnen <wijnen@debian.org> for the reports.
+    (Closes: #394308, #394554).
+  * Reworked casper-getty system, thanks to Alex Owen (Closes: #394686).
+  * Postint now rebuild all initramfs.
+  * Casper now Recommends also squashfs-tools and genext2fs, maybe
+    needed by casper-snapshot.
+  * Lowered usplash requirements, since usplash 0.4 is not in debian
+    yet.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Sun, 22 Oct 2006 20:25:38 +0200
+
 casper (1.71+debian-1) unstable; urgency=low
 
   * New upstream release.
