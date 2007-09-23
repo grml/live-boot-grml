@@ -108,6 +108,15 @@ fs_size ()
     echo "${size}"
 }
 
+
+load_keymap()
+{
+	# Load custom keymap
+	if [ -x /bin/loadkeys -a -r /etc/boottime.kmap.gz ]; then
+		loadkeys /etc/boottime.kmap.gz
+	fi
+}
+
 setup_loop() {
     local fspath=$1
     local module=$2
@@ -130,6 +139,7 @@ setup_loop() {
             else
                 # Loop AES encryption
                 while true; do
+					     load_keymap
                     echo -n "Enter passphrase for ${fspath}: " >&6
                     read -s passphrase
                     echo "${passphrase}" > /tmp/passphrase

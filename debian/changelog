@@ -1,3 +1,10 @@
+casper (1.81+debian-4) unstable; urgency=low
+
+  * Added patch from Serkan Sakar <serkan.sakar@gmx.net> to allow local keymap
+    for use with encryption.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 11 Apr 2007 09:04:00 +0200
+
 casper (1.81+debian-3) unstable; urgency=low
 
   * Added depends to eject.

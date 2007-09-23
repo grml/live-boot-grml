@@ -75,6 +75,12 @@ manual_add_modules ohci1394
 # integrity check
 copy_exec /usr/lib/casper/casper-md5check /bin
 
+# allow to load custom keymap for using encryption
+if [ -x /bin/loadkeys ] && [ -r /etc/console/boottime.kmap.gz ]; then
+	copy_exec /bin/loadkeys /bin
+	cp /etc/console/boottime.kmap.gz $DESTDIR/etc/
+fi
+
 cp /usr/share/initramfs-tools/scripts/casper-functions $DESTDIR/scripts
 cp /usr/share/initramfs-tools/scripts/casper-helpers $DESTDIR/scripts
 
