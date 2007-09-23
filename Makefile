@@ -10,7 +10,7 @@ all: build
 test:
 	set -e; for SCRIPT in hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*; \
 	do \
-		sh -n $$SCRIPT || exit 1; \
+		sh -n $$SCRIPT; \
 	done
 
 build:
@@ -76,11 +76,11 @@ uninstall:
 	rm -f $(DESTDIR)/etc/live.conf
 
 	# Uninstalling live-md5check
-	rm -f $(DESTDIR)/usr/lib/live-initramfs
+	rm -rf $(DESTDIR)/usr/lib/live-initramfs
 
 	# Uninstalling executables
 	rm -f $(DESTDIR)/sbin/live-getty $(DESTDIR)/sbin/live-login $(DESTDIR)/sbin/live-snapshot
-	rm -f $(DESTDIR)/usr/share/live-initramfs
+	rm -rf $(DESTDIR)/usr/share/live-initramfs
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	rm -rf $(DESTDIR)/usr/share/initramfs-tools/scripts/live*
 
@@ -117,8 +117,8 @@ uninstall:
 update:
 	set -e; for MANPAGE in manpages/*.en.*; \
 	do \
-		sed -i	-e 's/2007\\-05\\-21/2007\\-05\\-28/' \
-			-e 's/1.87.4/1.87.5/' \
+		sed -i	-e 's/2007\\-06\\-04/2007\\-06\\-11/' \
+			-e 's/1.87.6/1.87.7/' \
 		$$MANPAGE; \
 	done
 
