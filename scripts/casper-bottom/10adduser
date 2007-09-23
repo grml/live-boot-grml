@@ -28,9 +28,7 @@ set passwd/username $USERNAME
 set passwd/user-uid 999
 EOF
 
-chroot /root /usr/bin/env -i HOME="/root" \
-       TERM="${TERM}" PATH="/usr/sbin:/usr/bin:/sbin:/bin" \
-       /usr/lib/user-setup/user-setup-apply > /dev/null
+chroot /root /usr/lib/user-setup/user-setup-apply > /dev/null
 
 # Clear out debconf database again to avoid confusing ubiquity later.
 chroot /root debconf-communicate -fnoninteractive casper > /dev/null <<EOF
@@ -42,21 +40,18 @@ set passwd/user-uid
 EOF
 
 if [ -f /root/etc/sudoers ]; then
-	if [ -x /sbin/udevplug ]; then 
-		# FIXME: ugly hack, admin is not present in debian so we do here ubuntu stuff
-		# XXX - awful hack to stop xscreensaver locking the screen (#7150)
-		echo 'RUNNING_UNDER_GDM="yes"' >> /root/etc/environment
-        grep -q '^%admin' /root/etc/sudoers && sed -i -e '/^%admin/s/ALL$/NOPASSWD: ALL/' /root/etc/sudoers || echo '%admin  ALL=(ALL) NOPASSWD: ALL' >> /root/etc/sudoers
-		for file in /usr/share/applications/ubiquity-gtkui.desktop /usr/share/applications/kde/ubiquity-kdeui.desktop; do
-		    if [ -f "/root/$file" ]; then
-		        chroot /root install -D -o $USERNAME -g $USERNAME $file /home/$USERNAME/Desktop/$(basename "$file")
-	        	break
-    		fi
-		done
-    else # We are in debian :-)
-        echo "${USERNAME}  ALL=(ALL) NOPASSWD: ALL" >> /root/etc/sudoers	    
-    fi
+    grep -q '^%admin' /root/etc/sudoers && sed -i -e '/^%admin/s/ALL$/NOPASSWD: ALL/' /root/etc/sudoers || echo '%admin  ALL=(ALL) NOPASSWD: ALL' >> /root/etc/sudoers
 fi
+
+# XXX - awful hack to stop xscreensaver locking the screen (#7150)
+echo 'RUNNING_UNDER_GDM="yes"' >> /root/etc/environment
+
+for file in /usr/share/applications/ubiquity-gtkui.desktop /usr/share/applications/kde/ubiquity-kdeui.desktop; do
+    if [ -f "/root/$file" ]; then
+        chroot /root install -D -o $USERNAME -g $USERNAME $file /home/$USERNAME/Desktop/$(basename "$file")
+        break
+    fi
+done
 
 if [ -L /root/home/$USERNAME/Examples ]; then
     chroot /root install -o $USERNAME -g $USERNAME -d /home/$USERNAME/Desktop/

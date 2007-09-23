@@ -1,3 +1,16 @@
+casper (1.61+debian-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Rebuild tarball without debian directory.
+  * Using dpatch for upstream modifications.
+  * Added patch for proper GDM autologin from Arnaud Cornet
+    <arnaud.cornet@gmail.com>.
+
+  [ Marco Amadori ]
+  * New upstream release (Resynced with 1.61, bzr 258).
+  * Usb discover patch from Malcom Gilles <live@ouabain.org>.
+ -- Marco Amadori <marco.amadori@gmail.com>  Tue, 18 Jul 2006 23:34:59 +0200
+
 casper (1.59+debian-1) unstable; urgency=low
 
   [ Daniel Baumann ]

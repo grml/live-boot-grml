@@ -20,10 +20,8 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
-if [ -x /root/usr/sbin/laptop-detect ]; then
-	if chroot /root /bin/sh -c /usr/sbin/laptop-detect; then
-	    casper-reconfigure /root gnome-panel-data
-	fi
+if chroot /root /bin/sh -c laptop-detect; then
+    casper-reconfigure /root gnome-panel-data
 fi
 
 panel_version=$(chroot /root /usr/bin/dpkg-query -W --showformat='${Version}' gnome-panel-data 2>/dev/null) || panel_version=""

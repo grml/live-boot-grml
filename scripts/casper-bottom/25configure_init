@@ -28,11 +28,9 @@ fi
 
 # This has the nice side effect of the cron.{daily,weekly,monthly} jobs in
 # /etc/crontab remaining disabled, yet also not run by anacron
-if [ -x /root/etc/init.d/anacron ]; then
-	for f in /root/etc/rc?.d/S??anacron; do
-    	mv ${f} $(dirname ${f})/K00anacron
-	done
-fi
+for f in /root/etc/rc?.d/S??anacron; do
+    mv ${f} ${f%/*}/K00anacron
+done
 
 # No point, really
 rm -f /root/etc/rc?.d/[SK]??postfix
@@ -42,8 +40,15 @@ rm -f /root/etc/rc?.d/K??hwclock.sh
 
 # Disable readahead since it doesn't play well with squashfs + unionfs
 # use chmod instead of mv to not trigger unionfs bugs.
-if [ -e /root/sbin/readahead-list ]; then
-	chmod -x /root/sbin/readahead-list
+chmod -x /root/sbin/readahead-list
+
+# Install shutdown script
+cp -a /lib/casper/shutdown /root/etc/init.d/casper-shutdown
+if [ -f /root/etc/rc0.d/S90halt ]; then
+    ln -s ../init.d/casper-shutdown /root/etc/rc0.d/S89casper
+fi
+if [ -f /root/etc/rc6.d/S90reboot ]; then
+    ln -s ../init.d/casper-shutdown /root/etc/rc6.d/S89casper
 fi
 
 log_end_msg

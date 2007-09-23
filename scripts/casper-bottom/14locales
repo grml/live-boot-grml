@@ -20,33 +20,18 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
-if [ -e /root/etc/default/locale ]; then
-	grep_file=/root/etc/default/locale
-	locale=$(grep 'LANG=' ${grep_file} | sed s/'LANG='// | tr -d '"' ) 
-elif [ -e /root/etc/environment ]; then # Old locales policy
-	grep_file=/root/etc/environment
-fi
-
-# commandline
+locale=en_US.UTF-8
 for x in $(cat /proc/cmdline); do
-	case $x in
-		debian-installer/locale=*)
-			locale=${x#debian-installer/locale=}
-			set_locale="true"
-			;;
-	esac
+                case $x in
+                        debian-installer/locale=*)
+                                locale=${x#debian-installer/locale=}
+                                ;;
+                esac
 done
 
-if [ -z "${locale}" ]; then
-	# Set a default one
-	locale=en_US.UTF-8
-	set_locale="true"
-fi
+LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 |sed -e 's, .*,,' -e q)
 
-if [ ! -z "${set_locale}" ]; then
-	LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 |sed -e 's, .*,,' -e q)
-	printf 'LANG="%s"\n' "${LANG}" >> "${grep_file}" 
-	chroot /root /usr/sbin/locale-gen "${LANG}"
-fi
+printf 'LANG="%s"\n' "${LANG}" >> /root/etc/environment
+chroot /root /usr/sbin/locale-gen "${LANG}"
 
 log_end_msg

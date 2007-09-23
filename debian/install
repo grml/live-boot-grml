@@ -1,0 +1,5 @@
+bin/casper-preseed		/usr/share/casper
+bin/casper-reconfigure		/usr/share/casper
+casper-md5check/casper-md5check	/usr/lib/casper
+hooks				/usr/share/initramfs-tools
+scripts				/usr/share/initramfs-tools

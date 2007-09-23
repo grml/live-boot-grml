@@ -20,6 +20,4 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
-if [ -e /root/etc/default/linux-restricted-modules-common ]; then
-	echo 'DISABLED_MODULES="fglrx nv"' >> /root/etc/default/linux-restricted-modules-common
-fi
+echo 'DISABLED_MODULES="fglrx nv"' >> /root/etc/default/linux-restricted-modules-common

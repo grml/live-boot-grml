@@ -18,16 +18,9 @@ esac
 
 . /usr/share/initramfs-tools/hook-functions
 
-
+# cloop is needed
+manual_add_modules cloop
 manual_add_modules unionfs
-
-# Needed for devmapper
-if [ -e /sbin/dmsetup ]; then
-	manual_add_modules cloop
-	copy_exec /sbin/blockdev /sbin
-	copy_exec /sbin/dmsetup /sbin
-	manual_add_modules dm-snapshot
-fi
 
 # We need losetup
 copy_exec /sbin/losetup /sbin
@@ -37,25 +30,16 @@ mkdir -p ${DESTDIR}/lib/casper
 copy_exec /usr/share/casper/casper-reconfigure /bin
 copy_exec /usr/share/casper/casper-preseed /bin
 
-# Ubuntu or Debian test
-if [ -x /sbin/udevplug ]; then
-	mkdir -p ${DESTDIR}/lib/udev
-	copy_exec /lib/udev/cdrom_id /lib/udev
-	copy_exec /lib/udev/vol_id /lib/udev
-	copy_exec /lib/udev/path_id /lib/udev
-else
-	copy_exec /sbin/udevtrigger /sbin
-fi
-
+mkdir -p ${DESTDIR}/lib/udev
+copy_exec /lib/udev/cdrom_id /lib/udev
+copy_exec /lib/udev/vol_id /lib/udev
+copy_exec /lib/udev/path_id /lib/udev
 copy_exec /usr/bin/udevinfo /bin
 
-# cifs boot 
-if [ -x /sbin/mount.cifs ]; then
-	copy_exec /sbin/mount.cifs /sbin
-	for x in cifs; do
-		manual_add_modules ${x}
-	done
-fi
+# Needed for devmapper
+copy_exec /sbin/blockdev /sbin
+copy_exec /sbin/dmsetup /sbin
+manual_add_modules dm-snapshot
 
 # squashfs
 manual_add_modules squashfs

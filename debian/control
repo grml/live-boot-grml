@@ -3,14 +3,14 @@ Section: admin
 Priority: optional
 Maintainer: Marco Amadori <marco.amadori@gmail.com>
 Uploaders: Daniel Baumann <daniel@debian.org>
-Build-Depends: debhelper (>= 4)
+Build-Depends: debhelper (>= 4), dpatch
 Standards-Version: 3.7.2
 
 Package: casper
-Section: admin
 Architecture: any
 Depends: initramfs-tools (>= 0.40), user-setup
 Conflicts: usplash (<< 0.1-30)
+Recommends: live-package
 Suggests: dmsetup
 Description: Debian Live initramfs generator
  Casper provides an initramfs generator suited for booting a Debian Live systems

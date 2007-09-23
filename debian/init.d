@@ -2,7 +2,7 @@
 
 grep -qs boot=casper /proc/cmdline || exit 0
 
-# Try to cache everything we're likely to need after ejecting. This
+# Try to cache everything we're likely to need after ejecting.  This
 # is fragile and simple-minded, but our options are limited.
 cache_path() {
     path="$1"
@@ -25,10 +25,10 @@ for path in $(which halt) $(which reboot) /etc/rc?.d /etc/default; do
     cache_path "$path"
 done
 
-eject -p -m /live_media >/dev/null 2>&1
+eject -p -m /cdrom >/dev/null 2>&1
 
 # XXX - i18n
-echo -n "Please remove the disc (if any), close the tray (if any) and press ENTER: "
+echo -n "Please remove the disc, close the tray (if any) and press ENTER: "
 if [ -x /sbin/usplash_write ]; then
     /sbin/usplash_write "TIMEOUT 0"
     /sbin/usplash_write "TEXT Please remove the disc, close the tray (if any)"

@@ -1,0 +1,586 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 01-conglomeration.dpatch
+##
+## DP: Needs to be broken out.
+
+@DPATCH@
+
+diff -Naur casper-1.61+debian.orig/bin/casper-reconfigure casper-1.61+debian/bin/casper-reconfigure
+--- casper-1.61+debian.orig/bin/casper-reconfigure	2006-05-11 19:03:29.000000000 +0000
++++ casper-1.61+debian/bin/casper-reconfigure	2006-07-19 17:38:18.000000000 +0000
+@@ -47,6 +47,6 @@
+     exit 0
+ fi
+ 
+-runcommandinroot "$root" dpkg-reconfigure -fnoninteractive --no-reload "$package"
++runcommandinroot "$root" dpkg-reconfigure -fnoninteractive --no-reload -phigh "$package"
+ 
+ exit 0
+diff -Naur casper-1.61+debian.orig/casper.conf casper-1.61+debian/casper.conf
+--- casper-1.61+debian.orig/casper.conf	2006-05-02 12:16:55.000000000 +0000
++++ casper-1.61+debian/casper.conf	2006-07-19 17:38:18.000000000 +0000
+@@ -3,7 +3,7 @@
+ # Supported variables are:
+ # USERNAME, USERFULLNAME, HOST
+ 
+-export USERNAME="ubuntu"
+-export USERFULLNAME="Custom LiveCD user"
+-export HOST="ubuntu"
++export USERNAME="debian"
++export USERFULLNAME="Debian Live user"
++export HOST="debian"
+ 
+diff -Naur casper-1.61+debian.orig/hooks/casper casper-1.61+debian/hooks/casper
+--- casper-1.61+debian.orig/hooks/casper	2006-06-15 09:04:08.000000000 +0000
++++ casper-1.61+debian/hooks/casper	2006-07-19 17:38:18.000000000 +0000
+@@ -18,10 +18,17 @@
+ 
+ . /usr/share/initramfs-tools/hook-functions
+ 
+-# cloop is needed
+-manual_add_modules cloop
++
+ manual_add_modules unionfs
+ 
++# Needed for devmapper
++if [ -e /sbin/dmsetup ]; then
++	manual_add_modules cloop
++	copy_exec /sbin/blockdev /sbin
++	copy_exec /sbin/dmsetup /sbin
++	manual_add_modules dm-snapshot
++fi
++
+ # We need losetup
+ copy_exec /sbin/losetup /sbin
+ 
+@@ -30,16 +37,25 @@
+ copy_exec /usr/share/casper/casper-reconfigure /bin
+ copy_exec /usr/share/casper/casper-preseed /bin
+ 
+-mkdir -p ${DESTDIR}/lib/udev
+-copy_exec /lib/udev/cdrom_id /lib/udev
+-copy_exec /lib/udev/vol_id /lib/udev
+-copy_exec /lib/udev/path_id /lib/udev
++# Ubuntu or Debian test
++if [ -x /sbin/udevplug ]; then
++	mkdir -p ${DESTDIR}/lib/udev
++	copy_exec /lib/udev/cdrom_id /lib/udev
++	copy_exec /lib/udev/vol_id /lib/udev
++	copy_exec /lib/udev/path_id /lib/udev
++else
++	copy_exec /sbin/udevtrigger /sbin
++fi
++
+ copy_exec /usr/bin/udevinfo /bin
+ 
+-# Needed for devmapper
+-copy_exec /sbin/blockdev /sbin
+-copy_exec /sbin/dmsetup /sbin
+-manual_add_modules dm-snapshot
++# cifs boot 
++if [ -x /sbin/mount.cifs ]; then
++	copy_exec /sbin/mount.cifs /sbin
++	for x in cifs; do
++		manual_add_modules ${x}
++	done
++fi
+ 
+ # squashfs
+ manual_add_modules squashfs
+diff -Naur casper-1.61+debian.orig/scripts/casper casper-1.61+debian/scripts/casper
+--- casper-1.61+debian.orig/scripts/casper	2006-07-17 10:53:28.000000000 +0000
++++ casper-1.61+debian/scripts/casper	2006-07-19 17:38:18.000000000 +0000
+@@ -4,7 +4,9 @@
+ 
+ export PATH=/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+ 
+-mountpoint=/cdrom
++mountpoint=/live_media
++root_persistence="casper-rw"
++home_persistence="home-rw"
+ 
+ mkdir -p $mountpoint
+ 
+@@ -13,15 +15,15 @@
+     overlay_method=devmapper
+ fi
+ 
+-USERNAME=ubuntu
+-USERFULLNAME="Ubuntu LiveCD user"
+-HOST=ubuntu
++USERNAME=debian
++USERFULLNAME="Debian Live user"
++HOST=debian
+ 
+ [ -f /etc/casper.conf ] && . /etc/casper.conf
+ 
+ export USERNAME USERFULLNAME HOST
+ 
+-casper_path() {
++casper_path() { # Fixme: uglyness
+     path=$1
+     if [ -e "$path/casper/filesystem.cloop" ]; then
+         echo "$path/casper/filesystem.cloop"
+@@ -29,6 +31,12 @@
+     elif [ -e "$path/casper/filesystem.squashfs" ]; then
+         echo "$path/casper/filesystem.squashfs"
+         return 0
++    elif [ -e "$path/casper/filesystem.ext2" ]; then
++        echo "$path/casper/filesystem.ext2"
++        return 0
++    elif [ -e "$path/casper/filesystem.xfs" ]; then
++        echo "$path/casper/filesystem.xfs"
++        return 0
+     fi
+     return 1
+ }
+@@ -49,7 +57,7 @@
+             *.cloop)
+                 echo $(setup_loop "$1" "cloop" "/sys/block/cloop*")
+ 			;;
+-            *.squashfs)
++            *.squashfs|*.ext2|*.xfs)
+                 echo $(setup_loop "$1" "loop" "/sys/block/loop*")
+                 ;;
+             *)
+@@ -78,8 +86,12 @@
+     local module=$2
+     local pattern=$3
+ 
+-    modprobe -Qb "$module"
+-    udevplug -W
++    modprobe -qb "$module"
++    if [ -x /sbin/udevplug ]; then
++        udevplug -W
++    else
++        udevtrigger
++    fi
+  
+     for loopdev in $pattern; do
+         if [ "$(cat $loopdev/size)" -eq 0 ]; then
+@@ -107,7 +119,7 @@
+     backdev="$1"
+     rootmnt="$2"
+ 
+-    modprobe -Qb dm-mod
++    modprobe -qb dm-mod
+     COW_DEVICE=/dev/ram1
+     COW_NAME="casper-cow"
+ 
+@@ -143,82 +155,137 @@
+     return 1
+ }
+ 
+-find_cow_device() {
+-    for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop); do
+-        for dev in $(subdevices "${sysblock}"); do
+-            devname=$(sys2dev "${dev}")
+-            if [ "$(/lib/udev/vol_id -l $devname 2>/dev/null)" = "casper-rw" ]; then
+-                echo "$devname"
+-                return
+-            elif [ "$(get_fstype ${devname})" = "vfat" ]; then
+-                mkdir -p /cow-backing
+-                if where_is_mounted ${devname} > /dev/null; then
+-                    mount -o remount,rw ${devname} $(where_is_mounted ${devname}) || panic "Remounting failed"
+-                    mount -o bind $(where_is_mounted ${devname}) /cow-backing || panic "Cannot bind-mount"
+-                else
+-                    mount -t $(get_fstype "${devname}") -o rw "${devname}" /cow-backing || panic "Cannot mount $devname on /cow-backing"
+-                fi
++copy_to_ram() {
++	copyto="${mountpoint}_swap"
+ 
+-                if [ -e "/cow-backing/casper-rw" ]; then
+-                    echo $(setup_loop "/cow-backing/casper-rw" "loop" "/sys/block/loop*")
+-                    return 0
+-                else
+-                    umount /cow-backing
+-                fi
+-            fi
+-            
+-        done
+-    done
+-    return 1    
++	size=$(du -ks ${mountpoint} | cut -f1)
++	size=$(expr ${size} + ${size}/20 ) # Fixme: 5% more to be sure
++	needed_space=$(expr ${size} * 1024)
++	freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( cat /proc/meminfo | grep Cached | head -n 1 | awk '/Cached/{print $2}' - ))
++	
++	if [ ! ${freespace} -lt ${needed_space}  ] ; then
++		[ "$quiet" != "y" ] && log_begin_msg "Not enough free memory to copy to ram"
++		[ "$quiet" != "y" ] && log_end_msg
++		return
++	else
++		[ "$quiet" != "y" ] && log_begin_msg "Copying live media to ram..."
++		mkdir "${copyto}"
++		mount -t tmpfs -o size=${size}k /dev/shm ${copyto}
++		cp -a ${mountpoint}/* ${copyto}
++		umount ${mountpoint}
++		mount -r -o move ${copyto} ${mountpoint}
++		rmdir ${copyto}
++		[ "$quiet" != "y" ] && log_end_msg
++	fi
++}
++
++find_cow_device() {
++	pers_label="${1}"
++	cow_backing="/${pers_label}-backing"
++	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop); do
++		for dev in $(subdevices "${sysblock}"); do
++			devname=$(sys2dev "${dev}")
++			if [ "$(/lib/udev/vol_id -l $devname 2>/dev/null)" = "${pers_label}" ]; then
++				echo "$devname"
++				return
++			elif [ "$(get_fstype ${devname})" = "vfat" ]; then
++				mkdir -p "${cow_backing}"
++				if where_is_mounted ${devname} > /dev/null; then
++					mount -o remount,rw ${devname} $(where_is_mounted ${devname}) || panic "Remounting failed"
++					mount -o bind $(where_is_mounted ${devname}) ${cow_backing} || panic "Cannot bind-mount"
++				else
++					mount -t $(get_fstype "${devname}") -o rw "${devname}" ${cow_backing} || panic "Cannot mount $devname on /cow-backing"
++				fi
++
++				if [ -e "${cow_backing}/${pers_label}" ]; then
++					echo $(setup_loop "${cow_backing}/${pers_label}" "loop" "/sys/block/loop*")
++					return 0
++				else
++					umount ${cow_backing}
++				fi
++			fi
++		done
++	done
++}
++
++do_netmount() {
++	rofsmnt="$1"
++	# adapted from NFS filesystem mounting
++
++	modprobe -q cifs
++	# For DHCP
++	modprobe -q af_packet
++
++	ipconfig ${DEVICE} /tmp/net-${DEVICE}.conf
++	if [ "x${NFSROOT}" = "xauto" ]; then
++		NFSROOT=${ROOTSERVER}:${ROOTPATH}
++	fi
++
++	NFSOPTS="-ouser=root,password="
++
++	[ "$quiet" != "y" ] && log_begin_msg "Mounting using mount.cifs with ${NFSROOT} ${rofsmnt} ${NFSOPTS}"
++	mount.cifs "${NFSROOT}" "${rofsmnt}" "${NFSOPTS}" 
++	[ "$quiet" != "y" ] && log_end_msg
+ }
+ 
+ setup_unionfs() {
+ 	backdev="$1"
+ 	rootmnt="$2"
+-        modprobe -Qb unionfs
+-        mkdir -p /cow
++	modprobe -qb unionfs
++	mkdir -p /cow
++	cowdevice="tmpfs"
++	cow_fstype="tmpfs"
++	# Looking for "${root_persistence}" device or file
++	if grep -q persistent /proc/cmdline; then
++		cowprobe=$(find_cow_device "${root_persistence}")
++		if [ -b "${cowprobe}" ]; then
++			cowdevice=${cowprobe}
++			cow_fstype=$(get_fstype "${cowprobe}")
++		else
++			[ "$quiet" != "y" ] &&	log_begin_msg "Unable to find the persistent medium"
++		fi
++	fi
+ 
+-        if grep -q persistent /proc/cmdline; then
+-            i=0
+-            # We love udev and the kernel!
+-            while [ "$i" -lt 300 ]; do
+-                cowdevice=$(find_cow_device) 
+-                if [ -b "$cowdevice" ]; then
+-                    mount -t $(get_fstype "$cowdevice") -o rw "$cowdevice" /cow || panic "Can not mount $cowdevice on /cow"
+-                    break
+-                fi
+-                sleep 5
+-#                sleep 0.1
+-                i=$(( $i + 1 ))
+-            done
+-        else
+-            mount -t tmpfs tmpfs /cow
+-        fi
++	mount ${cowdevice} -t ${cow_fstype} -o rw /cow || panic "Can not mount $cowdevice on /cow"
+ 
+ 	mkdir -p /rofs
+-    if [ "$(get_fstype $backdev)" = "unknown" ]; then
+-        panic "Unknown file system type on $backdev"
+-    fi
+-	mount -t $(get_fstype "$backdev") -o ro "$backdev" /rofs || panic "Can not mount $backdev on /rofs"
+-
++	if grep -q netboot /proc/cmdline; then
++		do_netmount /rofs || panic "Can not mount netroot on /rofs"
++	else
++		if [ "$(get_fstype $backdev)" = "unknown" ]; then
++			panic "Unknown file system type on $backdev"
++		fi
++		mount -t $(get_fstype "$backdev") -o ro "$backdev" /rofs || panic "Can not mount $backdev on /rofs"
++	fi
++	
+ 	mount -t unionfs -o dirs=/cow=rw:/rofs=ro unionfs "$rootmnt"
+-        if grep -q show-cow /proc/cmdline; then
+-            mkdir -p "$rootmnt/cow"
+-            mount -o bind /cow "$rootmnt/cow"
+-        fi
+-        mkdir -p "$rootmnt/rofs"
+-        mount -o bind /rofs "$rootmnt/rofs"
++	if grep -q show-cow /proc/cmdline; then
++		mkdir -p "$rootmnt/cow"
++		mount -o bind /cow "$rootmnt/cow"
++	fi
++	mkdir -p "$rootmnt/rofs"
++	mount -o bind /rofs "$rootmnt/rofs"
++
++	# Adding home persitence
++	if grep -q homepersistence /proc/cmdline; then
++		homecow=$(find_cow_device "${home_persistence}" )
++		if [ -b "${homecow}" ]; then
++			mount ${homecow} -t $(get_fstype "${homecow}") -o rw "${rootmnt}/home"
++		else 
++			[ "$quiet" != "y" ] &&  log_begin_msg "Unable to find the persistent home medium"
++		fi
++	fi
+ }
+ 
+ is_usb_device() {
+     sysfs_path="${1#/sys}"
+-    if /lib/udev/path_id "${sysfs_path}" | grep -q "ID_PATH=usb"; then
++    if /lib/udev/path_id "${sysfs_path}" | grep -q "ID_PATH=(usb|pci-[^-]*-usb)"; then
+         return 0
+     fi
+     return 1
+ }
+ 
+-find_cd() {
++find_live() {
+ 	mounted=
+         for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram); do
+             devname=$(sys2dev "${sysblock}")
+@@ -283,18 +350,26 @@
+     set_usplash_timeout
+ 
+     for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13; do
+-        live_image=$(find_cd)
++        live_image=$(find_live)
+         if [ "${live_image}" ]; then
+             break
+         fi
+         sleep 1
+     done
+     if [ "$?" -gt 0 ]; then
+-        panic "Unable to find a CD-ROM containing a live file system"
++        panic "Unable to find a medium containing a live file system"
+     fi
+     
++	if grep -q toram /proc/cmdline; then
++		copy_to_ram
++	fi
++
+     setup_cow "$overlay_method" "$(get_backing_device $live_image)" "$rootmnt"
+ 
++	# show it on new rootfs
++	mkdir ${rootmnt}/${mountpoint}
++	mount -o bind ${mountpoint} ${rootmnt}/${mountpoint}
++
+     log_end_msg
+ 
+     maybe_break casper-bottom
+diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/01integrity_check casper-1.61+debian/scripts/casper-bottom/01integrity_check
+--- casper-1.61+debian.orig/scripts/casper-bottom/01integrity_check	2006-04-21 14:08:09.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/01integrity_check	2006-07-19 17:38:18.000000000 +0000
+@@ -15,4 +15,4 @@
+        ;;
+ esac
+ 
+-grep integrity-check /proc/cmdline && casper-md5check /cdrom /cdrom/md5sum.txt < /dev/tty8
++grep integrity-check /proc/cmdline && casper-md5check /live_media /live_media/md5sum.txt < /dev/tty8
+diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/10adduser casper-1.61+debian/scripts/casper-bottom/10adduser
+--- casper-1.61+debian.orig/scripts/casper-bottom/10adduser	2006-05-11 11:35:21.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/10adduser	2006-07-19 17:38:18.000000000 +0000
+@@ -28,7 +28,9 @@
+ set passwd/user-uid 999
+ EOF
+ 
+-chroot /root /usr/lib/user-setup/user-setup-apply > /dev/null
++chroot /root /usr/bin/env -i HOME="/root" \
++       TERM="${TERM}" PATH="/usr/sbin:/usr/bin:/sbin:/bin" \
++       /usr/lib/user-setup/user-setup-apply > /dev/null
+ 
+ # Clear out debconf database again to avoid confusing ubiquity later.
+ chroot /root debconf-communicate -fnoninteractive casper > /dev/null <<EOF
+@@ -40,18 +42,21 @@
+ EOF
+ 
+ if [ -f /root/etc/sudoers ]; then
+-    grep -q '^%admin' /root/etc/sudoers && sed -i -e '/^%admin/s/ALL$/NOPASSWD: ALL/' /root/etc/sudoers || echo '%admin  ALL=(ALL) NOPASSWD: ALL' >> /root/etc/sudoers
+-fi
+-
+-# XXX - awful hack to stop xscreensaver locking the screen (#7150)
+-echo 'RUNNING_UNDER_GDM="yes"' >> /root/etc/environment
+-
+-for file in /usr/share/applications/ubiquity-gtkui.desktop /usr/share/applications/kde/ubiquity-kdeui.desktop; do
+-    if [ -f "/root/$file" ]; then
+-        chroot /root install -D -o $USERNAME -g $USERNAME $file /home/$USERNAME/Desktop/$(basename "$file")
+-        break
++	if [ -x /sbin/udevplug ]; then 
++		# FIXME: ugly hack, admin is not present in debian so we do here ubuntu stuff
++		# XXX - awful hack to stop xscreensaver locking the screen (#7150)
++		echo 'RUNNING_UNDER_GDM="yes"' >> /root/etc/environment
++        grep -q '^%admin' /root/etc/sudoers && sed -i -e '/^%admin/s/ALL$/NOPASSWD: ALL/' /root/etc/sudoers || echo '%admin  ALL=(ALL) NOPASSWD: ALL' >> /root/etc/sudoers
++		for file in /usr/share/applications/ubiquity-gtkui.desktop /usr/share/applications/kde/ubiquity-kdeui.desktop; do
++		    if [ -f "/root/$file" ]; then
++		        chroot /root install -D -o $USERNAME -g $USERNAME $file /home/$USERNAME/Desktop/$(basename "$file")
++	        	break
++    		fi
++		done
++    else # We are in debian :-)
++        echo "${USERNAME}  ALL=(ALL) NOPASSWD: ALL" >> /root/etc/sudoers	    
+     fi
+-done
++fi
+ 
+ if [ -L /root/home/$USERNAME/Examples ]; then
+     chroot /root install -o $USERNAME -g $USERNAME -d /home/$USERNAME/Desktop/
+diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/14locales casper-1.61+debian/scripts/casper-bottom/14locales
+--- casper-1.61+debian.orig/scripts/casper-bottom/14locales	2006-05-16 10:45:27.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/14locales	2006-07-19 17:38:18.000000000 +0000
+@@ -20,18 +20,33 @@
+ 
+ log_begin_msg "$DESCRIPTION"
+ 
+-locale=en_US.UTF-8
++if [ -e /root/etc/default/locale ]; then
++	grep_file=/root/etc/default/locale
++	locale=$(grep 'LANG=' ${grep_file} | sed s/'LANG='// | tr -d '"' ) 
++elif [ -e /root/etc/environment ]; then # Old locales policy
++	grep_file=/root/etc/environment
++fi
++
++# commandline
+ for x in $(cat /proc/cmdline); do
+-                case $x in
+-                        debian-installer/locale=*)
+-                                locale=${x#debian-installer/locale=}
+-                                ;;
+-                esac
++	case $x in
++		debian-installer/locale=*)
++			locale=${x#debian-installer/locale=}
++			set_locale="true"
++			;;
++	esac
+ done
+ 
+-LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 |sed -e 's, .*,,' -e q)
++if [ -z "${locale}" ]; then
++	# Set a default one
++	locale=en_US.UTF-8
++	set_locale="true"
++fi
+ 
+-printf 'LANG="%s"\n' "${LANG}" >> /root/etc/environment
+-chroot /root /usr/sbin/locale-gen "${LANG}"
++if [ ! -z "${set_locale}" ]; then
++	LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 |sed -e 's, .*,,' -e q)
++	printf 'LANG="%s"\n' "${LANG}" >> "${grep_file}" 
++	chroot /root /usr/sbin/locale-gen "${LANG}"
++fi
+ 
+ log_end_msg
+diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/15autologin casper-1.61+debian/scripts/casper-bottom/15autologin
+--- casper-1.61+debian.orig/scripts/casper-bottom/15autologin	2006-05-11 10:06:07.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/15autologin	2006-07-19 17:48:50.000000000 +0000
+@@ -27,6 +27,8 @@
+ fi
+ 
+ if chroot /root [ -f ${GDMCONF} ]; then
++    # true hack ! -- nohar
++    chroot /root cp /usr/share/gdm/defaults.conf /etc/gdm/gdm.conf
+     # Configure GDM autologin
+     chroot /root sed -i \
+         -e "s/^AutomaticLoginEnable=.*\$/AutomaticLoginEnable=true/" \
+diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/22gnome_panel_data casper-1.61+debian/scripts/casper-bottom/22gnome_panel_data
+--- casper-1.61+debian.orig/scripts/casper-bottom/22gnome_panel_data	2006-05-11 10:05:55.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/22gnome_panel_data	2006-07-19 17:38:18.000000000 +0000
+@@ -20,8 +20,10 @@
+ 
+ log_begin_msg "$DESCRIPTION"
+ 
+-if chroot /root /bin/sh -c laptop-detect; then
+-    casper-reconfigure /root gnome-panel-data
++if [ -x /root/usr/sbin/laptop-detect ]; then
++	if chroot /root /bin/sh -c /usr/sbin/laptop-detect; then
++	    casper-reconfigure /root gnome-panel-data
++	fi
+ fi
+ 
+ panel_version=$(chroot /root /usr/bin/dpkg-query -W --showformat='${Version}' gnome-panel-data 2>/dev/null) || panel_version=""
+diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/23networking casper-1.61+debian/scripts/casper-bottom/23networking
+--- casper-1.61+debian.orig/scripts/casper-bottom/23networking	2006-05-11 10:05:11.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/23networking	2006-07-19 17:38:18.000000000 +0000
+@@ -27,7 +27,11 @@
+ 
+ EOF
+ 
+-udevplug -Bpci -Iclass="0x02*"
++if [ -x /sbin/udevplug ]; then
++	udevplug -Bpci -Iclass="0x02*"
++else
++	udevtrigger
++fi
+ 
+ for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*; do
+     [ -e $interface ] || continue
+diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/25configure_init casper-1.61+debian/scripts/casper-bottom/25configure_init
+--- casper-1.61+debian.orig/scripts/casper-bottom/25configure_init	2006-06-15 09:08:14.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/25configure_init	2006-07-19 17:38:18.000000000 +0000
+@@ -28,9 +28,11 @@
+ 
+ # This has the nice side effect of the cron.{daily,weekly,monthly} jobs in
+ # /etc/crontab remaining disabled, yet also not run by anacron
+-for f in /root/etc/rc?.d/S??anacron; do
+-    mv ${f} ${f%/*}/K00anacron
+-done
++if [ -x /root/etc/init.d/anacron ]; then
++	for f in /root/etc/rc?.d/S??anacron; do
++    	mv ${f} $(dirname ${f})/K00anacron
++	done
++fi
+ 
+ # No point, really
+ rm -f /root/etc/rc?.d/[SK]??postfix
+@@ -40,15 +42,8 @@
+ 
+ # Disable readahead since it doesn't play well with squashfs + unionfs
+ # use chmod instead of mv to not trigger unionfs bugs.
+-chmod -x /root/sbin/readahead-list
+-
+-# Install shutdown script
+-cp -a /lib/casper/shutdown /root/etc/init.d/casper-shutdown
+-if [ -f /root/etc/rc0.d/S90halt ]; then
+-    ln -s ../init.d/casper-shutdown /root/etc/rc0.d/S89casper
+-fi
+-if [ -f /root/etc/rc6.d/S90reboot ]; then
+-    ln -s ../init.d/casper-shutdown /root/etc/rc6.d/S89casper
++if [ -e /root/sbin/readahead-list ]; then
++	chmod -x /root/sbin/readahead-list
+ fi
+ 
+ log_end_msg
+diff -Naur casper-1.61+debian.orig/scripts/casper-bottom/33disable_binary_drivers casper-1.61+debian/scripts/casper-bottom/33disable_binary_drivers
+--- casper-1.61+debian.orig/scripts/casper-bottom/33disable_binary_drivers	2006-05-13 08:13:22.000000000 +0000
++++ casper-1.61+debian/scripts/casper-bottom/33disable_binary_drivers	2006-07-19 17:38:18.000000000 +0000
+@@ -20,4 +20,6 @@
+ 
+ log_begin_msg "$DESCRIPTION"
+ 
+-echo 'DISABLED_MODULES="fglrx nv"' >> /root/etc/default/linux-restricted-modules-common
++if [ -e /root/etc/default/linux-restricted-modules-common ]; then
++	echo 'DISABLED_MODULES="fglrx nv"' >> /root/etc/default/linux-restricted-modules-common
++fi

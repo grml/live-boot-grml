@@ -3,38 +3,37 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-VERSION:=$(shell dpkg-parsechangelog |sed -n -e '/^Version:/s/^Version: //p')
-DEB_BUILD_PROG:=dpkg-buildpackage -us -uc -rfakeroot
+include /usr/share/dpatch/dpatch.make
 
-upstream:
-	cd .. && bzr branch http://mammadori.homeip.net/bzr/casper-debian || exit 0
-	rm .bzr -rf
-	find . -type d -name .svn -exec rm -rf {} \; || exit 0
-
-build: build-stamp
+build: patch-stamp build-stamp
 build-stamp:
 	dh_testdir
 
+	# Building package
 	$(MAKE) -C casper-md5check
 
 	touch build-stamp
 
-clean:
+clean: unpatch
 	dh_testdir
-	rm -f build-stamp
+	rm -f patch-stamp build-stamp
 
+	# Cleaning package
 	-$(MAKE) -C casper-md5check clean
 
 	dh_clean
 
 install: build
 	dh_testdir
+	dh_testroot
 	dh_clean -k
 	dh_installdirs
 	dh_install
 
-	install -m755 casper-md5check/casper-md5check debian/casper/usr/lib/casper
-	install -D -m 644 debian/casper.lintian debian/casper/usr/share/lintian/overrides/casper
+	# Installing lintian override
+	install -D -m 0644 debian/lintian debian/casper/usr/share/lintian/overrides/casper
+
+	# Fixing permission
 	chmod 0755 debian/casper/usr/share/initramfs-tools/scripts/casper
 
 binary-indep: build install
@@ -42,9 +41,10 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_installdocs
-	dh_installinit -r --no-start -- start 89 0 6 .
 	dh_installchangelogs debian/changelog.upstream
+	dh_installdocs
+	dh_installexamples
+	dh_installinit -r --no-start -- start 89 0 6 .
 	dh_link
 	dh_strip
 	dh_compress

@@ -47,6 +47,6 @@ if [ -z "$version" ]; then
     exit 0
 fi
 
-runcommandinroot "$root" dpkg-reconfigure -fnoninteractive --no-reload -phigh "$package"
+runcommandinroot "$root" dpkg-reconfigure -fnoninteractive --no-reload "$package"
 
 exit 0

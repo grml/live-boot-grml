@@ -2,9 +2,9 @@
 
 # set -e
 
-mountpoint=/live_media
-root_persistence="casper-rw"
-home_persistence="home-rw"
+export PATH=/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+
+mountpoint=/cdrom
 
 mkdir -p $mountpoint
 
@@ -13,27 +13,21 @@ if [ "${DPKG_ARCH}" = "ia64" ] || [ "${DPKG_ARCH}" = "hppa" ] || [ "${DPKG_ARCH}
     overlay_method=devmapper
 fi
 
-USERNAME=debian
-USERFULLNAME="Debian Live user"
-HOST=debian
+USERNAME=ubuntu
+USERFULLNAME="Ubuntu LiveCD user"
+HOST=ubuntu
 
 [ -f /etc/casper.conf ] && . /etc/casper.conf
 
 export USERNAME USERFULLNAME HOST
 
-casper_path() { # Fixme: uglyness
+casper_path() {
     path=$1
     if [ -e "$path/casper/filesystem.cloop" ]; then
         echo "$path/casper/filesystem.cloop"
         return 0
     elif [ -e "$path/casper/filesystem.squashfs" ]; then
         echo "$path/casper/filesystem.squashfs"
-        return 0
-    elif [ -e "$path/casper/filesystem.ext2" ]; then
-        echo "$path/casper/filesystem.ext2"
-        return 0
-    elif [ -e "$path/casper/filesystem.xfs" ]; then
-        echo "$path/casper/filesystem.xfs"
         return 0
     fi
     return 1
@@ -55,7 +49,7 @@ get_backing_device() {
             *.cloop)
                 echo $(setup_loop "$1" "cloop" "/sys/block/cloop*")
 			;;
-            *.squashfs|*.ext2|*.xfs)
+            *.squashfs)
                 echo $(setup_loop "$1" "loop" "/sys/block/loop*")
                 ;;
             *)
@@ -84,12 +78,8 @@ setup_loop() {
     local module=$2
     local pattern=$3
 
-    modprobe -qb "$module"
-    if [ -x /sbin/udevplug ]; then
-        udevplug -W
-    else
-        udevtrigger
-    fi
+    modprobe -Qb "$module"
+    udevplug -W
  
     for loopdev in $pattern; do
         if [ "$(cat $loopdev/size)" -eq 0 ]; then
@@ -117,7 +107,7 @@ setup_devmapper() {
     backdev="$1"
     rootmnt="$2"
 
-    modprobe -qb dm-mod
+    modprobe -Qb dm-mod
     COW_DEVICE=/dev/ram1
     COW_NAME="casper-cow"
 
@@ -153,126 +143,71 @@ where_is_mounted() {
     return 1
 }
 
-copy_to_ram() {
-	copyto="${mountpoint}_swap"
-
-	size=$(du -ks ${mountpoint} | cut -f1)
-	size=$(expr ${size} + ${size}/20 ) # Fixme: 5% more to be sure
-	needed_space=$(expr ${size} * 1024)
-	freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( cat /proc/meminfo | grep Cached | head -n 1 | awk '/Cached/{print $2}' - ))
-	
-	if [ ! ${freespace} -lt ${needed_space}  ] ; then
-		[ "$quiet" != "y" ] && log_begin_msg "Not enough free memory to copy to ram"
-		[ "$quiet" != "y" ] && log_end_msg
-		return
-	else
-		[ "$quiet" != "y" ] && log_begin_msg "Copying live media to ram..."
-		mkdir "${copyto}"
-		mount -t tmpfs -o size=${size}k /dev/shm ${copyto}
-		cp -a ${mountpoint}/* ${copyto}
-		umount ${mountpoint}
-		mount -r -o move ${copyto} ${mountpoint}
-		rmdir ${copyto}
-		[ "$quiet" != "y" ] && log_end_msg
-	fi
-}
-
 find_cow_device() {
-	pers_label="${1}"
-	cow_backing="/${pers_label}-backing"
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop); do
-		for dev in $(subdevices "${sysblock}"); do
-			devname=$(sys2dev "${dev}")
-			if [ "$(/lib/udev/vol_id -l $devname 2>/dev/null)" = "${pers_label}" ]; then
-				echo "$devname"
-				return
-			elif [ "$(get_fstype ${devname})" = "vfat" ]; then
-				mkdir -p "${cow_backing}"
-				if where_is_mounted ${devname} > /dev/null; then
-					mount -o remount,rw ${devname} $(where_is_mounted ${devname}) || panic "Remounting failed"
-					mount -o bind $(where_is_mounted ${devname}) ${cow_backing} || panic "Cannot bind-mount"
-				else
-					mount -t $(get_fstype "${devname}") -o rw "${devname}" ${cow_backing} || panic "Cannot mount $devname on /cow-backing"
-				fi
+    for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop); do
+        for dev in $(subdevices "${sysblock}"); do
+            devname=$(sys2dev "${dev}")
+            if [ "$(/lib/udev/vol_id -l $devname 2>/dev/null)" = "casper-rw" ]; then
+                echo "$devname"
+                return
+            elif [ "$(get_fstype ${devname})" = "vfat" ]; then
+                mkdir -p /cow-backing
+                if where_is_mounted ${devname} > /dev/null; then
+                    mount -o remount,rw ${devname} $(where_is_mounted ${devname}) || panic "Remounting failed"
+                    mount -o bind $(where_is_mounted ${devname}) /cow-backing || panic "Cannot bind-mount"
+                else
+                    mount -t $(get_fstype "${devname}") -o rw "${devname}" /cow-backing || panic "Cannot mount $devname on /cow-backing"
+                fi
 
-				if [ -e "${cow_backing}/${pers_label}" ]; then
-					echo $(setup_loop "${cow_backing}/${pers_label}" "loop" "/sys/block/loop*")
-					return 0
-				else
-					umount ${cow_backing}
-				fi
-			fi
-		done
-	done
-}
-
-do_netmount() {
-	rofsmnt="$1"
-	# adapted from NFS filesystem mounting
-
-	modprobe -q cifs
-	# For DHCP
-	modprobe -q af_packet
-
-	ipconfig ${DEVICE} /tmp/net-${DEVICE}.conf
-	if [ "x${NFSROOT}" = "xauto" ]; then
-		NFSROOT=${ROOTSERVER}:${ROOTPATH}
-	fi
-
-	NFSOPTS="-ouser=root,password="
-
-	[ "$quiet" != "y" ] && log_begin_msg "Mounting using mount.cifs with ${NFSROOT} ${rofsmnt} ${NFSOPTS}"
-	mount.cifs "${NFSROOT}" "${rofsmnt}" "${NFSOPTS}" 
-	[ "$quiet" != "y" ] && log_end_msg
+                if [ -e "/cow-backing/casper-rw" ]; then
+                    echo $(setup_loop "/cow-backing/casper-rw" "loop" "/sys/block/loop*")
+                    return 0
+                else
+                    umount /cow-backing
+                fi
+            fi
+            
+        done
+    done
+    return 1    
 }
 
 setup_unionfs() {
 	backdev="$1"
 	rootmnt="$2"
-	modprobe -qb unionfs
-	mkdir -p /cow
-	cowdevice="tmpfs"
-	cow_fstype="tmpfs"
-	# Looking for "${root_persistence}" device or file
-	if grep -q persistent /proc/cmdline; then
-		cowprobe=$(find_cow_device "${root_persistence}")
-		if [ -b "${cowprobe}" ]; then
-			cowdevice=${cowprobe}
-			cow_fstype=$(get_fstype "${cowprobe}")
-		else
-			[ "$quiet" != "y" ] &&	log_begin_msg "Unable to find the persistent medium"
-		fi
-	fi
+        modprobe -Qb unionfs
+        mkdir -p /cow
 
-	mount ${cowdevice} -t ${cow_fstype} -o rw /cow || panic "Can not mount $cowdevice on /cow"
+        if grep -q persistent /proc/cmdline; then
+            i=0
+            # We love udev and the kernel!
+            while [ "$i" -lt 300 ]; do
+                cowdevice=$(find_cow_device) 
+                if [ -b "$cowdevice" ]; then
+                    mount -t $(get_fstype "$cowdevice") -o rw "$cowdevice" /cow || panic "Can not mount $cowdevice on /cow"
+                    break
+                fi
+                sleep 5
+#                sleep 0.1
+                i=$(( $i + 1 ))
+            done
+        else
+            mount -t tmpfs tmpfs /cow
+        fi
 
 	mkdir -p /rofs
-	if grep -q netboot /proc/cmdline; then
-		do_netmount /rofs || panic "Can not mount netroot on /rofs"
-	else
-		if [ "$(get_fstype $backdev)" = "unknown" ]; then
-			panic "Unknown file system type on $backdev"
-		fi
-		mount -t $(get_fstype "$backdev") -o ro "$backdev" /rofs || panic "Can not mount $backdev on /rofs"
-	fi
-	
-	mount -t unionfs -o dirs=/cow=rw:/rofs=ro unionfs "$rootmnt"
-	if grep -q show-cow /proc/cmdline; then
-		mkdir -p "$rootmnt/cow"
-		mount -o bind /cow "$rootmnt/cow"
-	fi
-	mkdir -p "$rootmnt/rofs"
-	mount -o bind /rofs "$rootmnt/rofs"
+    if [ "$(get_fstype $backdev)" = "unknown" ]; then
+        panic "Unknown file system type on $backdev"
+    fi
+	mount -t $(get_fstype "$backdev") -o ro "$backdev" /rofs || panic "Can not mount $backdev on /rofs"
 
-	# Adding home persitence
-	if grep -q homepersistence /proc/cmdline; then
-		homecow=$(find_cow_device "${home_persistence}" )
-		if [ -b "${homecow}" ]; then
-			mount ${homecow} -t $(get_fstype "${homecow}") -o rw "${rootmnt}/home"
-		else 
-			[ "$quiet" != "y" ] &&  log_begin_msg "Unable to find the persistent home medium"
-		fi
-	fi
+	mount -t unionfs -o dirs=/cow=rw:/rofs=ro unionfs "$rootmnt"
+        if grep -q show-cow /proc/cmdline; then
+            mkdir -p "$rootmnt/cow"
+            mount -o bind /cow "$rootmnt/cow"
+        fi
+        mkdir -p "$rootmnt/rofs"
+        mount -o bind /rofs "$rootmnt/rofs"
 }
 
 is_usb_device() {
@@ -283,7 +218,7 @@ is_usb_device() {
     return 1
 }
 
-find_live() {
+find_cd() {
 	mounted=
         for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram); do
             devname=$(sys2dev "${sysblock}")
@@ -348,32 +283,24 @@ mountroot() {
     set_usplash_timeout
 
     for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13; do
-        live_image=$(find_live)
+        live_image=$(find_cd)
         if [ "${live_image}" ]; then
             break
         fi
         sleep 1
     done
     if [ "$?" -gt 0 ]; then
-        panic "Unable to find a medium containing a live file system"
+        panic "Unable to find a CD-ROM containing a live file system"
     fi
     
-	if grep -q toram /proc/cmdline; then
-		copy_to_ram
-	fi
-
     setup_cow "$overlay_method" "$(get_backing_device $live_image)" "$rootmnt"
-
-	# show it on new rootfs
-	mkdir ${rootmnt}/${mountpoint}
-	mount -o bind ${mountpoint} ${rootmnt}/${mountpoint}
 
     log_end_msg
 
     maybe_break casper-bottom
     [ "$quiet" != "y" ] && log_begin_msg "Running /scripts/casper-bottom"
 
-    PATH=/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:$PATH run_scripts /scripts/casper-bottom
+    run_scripts /scripts/casper-bottom
     [ "$quiet" != "y" ] && log_end_msg
 
     exec 1>&6 6>&-
