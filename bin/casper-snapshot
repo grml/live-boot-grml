@@ -1,0 +1,226 @@
+#!/bin/sh
+
+# casper-snapshot - utility to do Debian Live systems snapshots
+#
+#   This program mount a /tmpfs under ~/Desktop and save the /cow
+#   filesystem in it for reusing in another session.
+#
+# Copyright (C) 2006 Marco Amadori <marco.amadori@gmail.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+#
+# On Debian systems, the complete text of the GNU General Public License
+# can be found in /usr/share/common-licenses/GPL file.
+
+PROGRAM="`basename ${1}`"
+VERSION=0.0.1
+
+# Source casper conf
+if [ -e /etc/casper.conf ]; then
+	. /etc/casper.conf
+else
+	USERNAME=`cat /etc/passwd | grep "999" | cut -f1 -d ':'`
+fi
+
+Header ()
+{
+	echo "${PROGRAM} - utility to do Debian Live snapshots"
+	echo
+	echo "Usage: ${PROGRAM} [-c|--cow DIRECTORY] [-d|--dest DIRECTORY] [-o|--output FILE] [-t|--type TYPE]"
+	echo "Usage: ${PROGRAM} [-h|--help]"
+	echo "Usage: ${PROGRAM} [-u|--usage]"
+	echo "Usage: ${PROGRAM} [-v|--version]"
+}
+
+Usage ()
+{
+	MESSAGE=${1}
+	Header
+	echo
+	echo "Try \"${PROGRAM} --help\" for more information."
+	if [ ! -z "${MESSAGE}" ]; then
+		echo -e "${MESSAGE}"
+		exit 1
+	else
+		exit 0
+	fi
+}
+
+Help ()
+{
+	Header
+	echo
+	echo "Options:"
+	echo "  -c, --cow: specifies the copy on write directory (default: /cow)."
+	echo "  -d, --destination: specifies the output snapshot directory (default: /home/\$USERNAME/Desktop/casper-snapshot)."
+	echo "  -o, --output: specifies the output image file (default: $type dependent)."
+	echo "  -t,--type: specifies the snapshot type between \'squashfs\', \'ext2\' or \'cpio\'.gz archive (default: cpio)"
+	exit 0
+}
+
+Version ()
+{
+	echo "${PROGRAM}, version ${VERSION}"
+	echo
+	echo "Copyright (C) 2006 Marco Amadori <marco.amadori@gmail.com>"
+	echo
+	echo "This program is free software; you can redistribute it and/or modify"
+	echo "it under the terms of the GNU General Public License as published by"
+	echo "the Free Software Foundation; either version 2 of the License, or"
+	echo "(at your option) any later version."
+	echo
+	echo "This program is distributed in the hope that it will be useful,"
+	echo "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+	echo "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the"
+	echo "GNU General Public License for more details."
+	echo
+	echo "You should have received a copy of the GNU General Public License"
+	echo "along with this program; if not, write to the Free Software"
+	echo "Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA"
+	echo
+	echo "On Debian systems, the complete text of the GNU General Public License"
+	echo "can be found in /usr/share/common-licenses/GPL file."
+	echo
+	echo "Homepage: <http://live.debian.net/>"
+	exit 0
+}
+
+Do_snapshot ()
+{
+	case "${TYPE}" in
+		squashfs)
+			mksquashfs "${COW}" "${DEST}" || exit 1
+			;;
+		cpio)
+			(cd "${COW}" && find . | cpio --quiet -o -H newc | gzip -9 > "${DEST}") || exit 1
+			;;
+		ext2)
+			DU_DIM="`du -ks ${COW} | cut -f1`"
+			REAL_DIM="`expr ${DU_DIM} + ${DU_DIM} / 20`" # Just 5% more to be sure, need something more sophistcated here...
+			genext2fs --size-in-blocks=${REAL_DIM} --reserved-blocks=0 --root="${COW}" "${DEST}" || exit 1
+			;;
+		*)
+			echo "Internal error."
+			exit 1
+			;;
+	esac
+}
+
+Lastline()
+{
+	while read lines ; do
+		line=${lines}
+	done
+	echo "${line}"
+}
+
+Base_path ()
+{
+	testpath="${1}"
+	mounts="`awk '{print $2}' /proc/mounts`"
+	testpath="`realpath ${testpath}`"
+
+	while true ; do
+		if echo "${mounts}" | grep -qs "^${testpath}" ; then
+			set -- `echo "${mounts}" | grep "^${testpath}" | Lastline`
+			echo ${1}
+			break
+		else
+			testpath=`dirname $testpath`
+		fi
+	done
+}
+
+Is_same_mount ()
+{
+	dir1="`Base_path ${1}`"
+	dir2="`Base_path ${2}`"
+	if [ "${dir1}" == "${dir2}" ]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+Parse_args ()
+{
+	# Parse command line
+	ARGUMENTS="`getopt --longoptions cow:,destination:,output:,type:,help,usage,version --name=${PROGRAM} --options c:d:o:t:,h,u,v --shell sh -- ${@}`"
+
+	if [ "${?}" != "0" ]; then
+		echo "Terminating." >&2
+		exit 1
+	fi
+
+	eval set -- "${ARGUMENTS}"
+
+	while true; do
+		case "${1}" in
+			-c|--cow)
+				SNAP_COW="${2}"; shift 2 ;;
+			-d|--destination)
+				SNAP_DEST="${2}"; shift 2 ;;
+			-o|--output)
+				SNAP_OUTPUT="${2}"; shift 2 ;;
+			-t|--type)
+				SNAP_TYPE="${2}"; shift 2 ;;
+			-h|--help)
+				Help; shift ;;
+			-u|--usage)
+				Usage ; shift ;;
+			-v|--version)
+				Version; shift ;;
+			--)
+				shift; break ;;
+			*)
+				echo "Internal error."; exit 1 ;;
+		esac
+	done
+}
+
+Defaults ()
+{
+	DEF_COW="/cow"
+
+	# Bad options handling
+	if [ -z "${SNAP_COW}" ]; then
+		COW="${DEF_COW}"
+	else
+		COW="${SNAP_COW}"
+	fi
+	if [ ! -d "${COW}" ]; then
+		Usage "Error: ${COW} is not a directory\nMaybe you booted with \"hide-cow\" as kernel parameter?"
+	fi
+
+	case "${SNAP_TYPE}" in
+		"cpio"|"squashfs"|"ext2")
+			TYPE="${SNAP_TYPE}"
+			;;
+		"")
+			TYPE="cpio" ;;
+		*)
+			Usage "Error: unrecognized snapshot type"
+			;;
+	esac
+}
+
+Main ()
+{
+	Parse_args "${@}"
+	Defaults
+	Do_snapshot
+}
+
+Main "${@}"

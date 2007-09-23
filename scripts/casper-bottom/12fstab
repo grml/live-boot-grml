@@ -4,7 +4,7 @@ PREREQ=""
 DESCRIPTION="Configuring fstab..."
 FSTAB=/root/etc/fstab
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {

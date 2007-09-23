@@ -84,4 +84,6 @@ manual_add_modules ohci1394
 # integrity check
 copy_exec /usr/lib/casper/casper-md5check /bin
 
+cp /usr/share/initramfs-tools/scripts/casper-functions $DESTDIR/scripts
+
 auto_add_modules net

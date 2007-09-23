@@ -3,7 +3,7 @@
 PREREQ=""
 DESCRIPTION="Configuring screensaver..."
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {

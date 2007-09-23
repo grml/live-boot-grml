@@ -3,7 +3,7 @@
 PREREQ=""
 DESCRIPTION="Adding live session user..."
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {

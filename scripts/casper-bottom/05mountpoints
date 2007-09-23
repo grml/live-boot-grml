@@ -3,7 +3,7 @@
 PREREQ=""
 DESCRIPTION="Moving mount points..."
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {

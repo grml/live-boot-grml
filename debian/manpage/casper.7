@@ -1,4 +1,4 @@
-.TH CASPER 7 "Mon,  25 Sep 2006" "1.68" "Initramfs-tools hook"
+.TH CASPER 7 "Thu,  28 Sep 2006" "1.69" "Initramfs-tools hook"
 
 .SH NAME
 casper \- an hook for initramfs-tools to boot live systems.
@@ -8,15 +8,18 @@ casper \- an hook for initramfs-tools to boot live systems.
 As kernel parameter boot prompt.
 
 .SH DESCRIPTION
-Casper is an hook for initramfs-tools used to boot live systems like those created by make-live, this includes the Debian-Live isos, netboot tarballs, and usb stick image and Ubuntu live cds. At boot time it will look for a (often read only) media containing a "/casper" directory where root filesystems (often squashfs compressed) lies and create, using unionfs, a writable environment for debian like systems to boot from.
+Casper is an hook for initramfs-tools used to generate initramfs able to boot live systems like those created by make-live, this includes the Debian-Live isos, netboot tarballs, and usb stick image and Ubuntu live cds. At boot time it will look for a (often read-only) media containing a "/casper" directory where root filesystems (often squashfs compressed) lies and create, using unionfs, a writable environment for debian like systems to boot from.
 
 .SH RECOGNIZED BOOT OPTIONS
+.TP
+.B casper-getty
+This enable a special serial login shell (experimental).
 .TP
 .BI "host=" HOSTNAME " , userfullname=" USERFULLNAME " , username=" USERNAME
 Those parameters lets you override values read from the config file.
 .TP
-.B casper-getty
-This enable a special serial login shell (experimental).
+.B "showmounts"
+Specifying this will make casper to show on "/" the ro filesystems (mostly compressed) on /casper. This is not enabled by default because could lead to problems by application like "mono" which store binary paths on installation.
 .TP
 .BI ip= IFACE,ADDRESS,NETMASK,GATEWAY [ :IFACE,ADDRESS,NETMASK,GATEWAY "]*"
 Let you specify the name(s) and the options of the interface(s) that should be configured at boot time. Do not specify it if you want to use dhcp (default).
@@ -32,7 +35,7 @@ This tells casper to look for a network mount, to be specified by parameter "nfs
 Casper will look for persistent and snapshot partitions or files labeled "casper-rw", "home-rw", "casper-snap*", "home-snap*" and will try to, in order: mount as /cow the first, mount the second in /home, and just copy the contents of the latters in appropriate locations.
 .TP
 .B toram
-Adding this parameter, casper will try to copy to ram the whole read-only media before mounting the root filesystem(s), it could need a lot of ram, according to the space used by the read only media.
+Adding this parameter, casper will try to copy to ram the whole read-only media before mounting the root filesystem(s), it could need a lot of ram, according to the space used by the read-only media.
 
 .SH FILES
 .B /etc/casper.conf
@@ -46,10 +49,10 @@ works fully on amd64, i386 and ppc, it should too on other archs.
 Debian Live project <http://live.debian.net/>
 
 .SH SEE ALSO
-.BR initramfs-tools(8), make-live(8), make-live.conf(8)
+.BR casper-snapshot(1), initramfs-tools(8), make-live(1), make-live.conf(5)
 
 .SH AUTHOR
-casper was written by Tollen Fog Heen <tfheen@canonical.com>, Matt Zimmerman <mdz@canonical.com>, and Marco Amadori <marco.amadori@gmail.com>,
+casper was written by Tollen Fog Heen <tfheen@canonical.com>, Matt Zimmerman <mdz@canonical.com>, and Marco Amadori <marco.amadori@gmail.com>.
 .TP
-This manual was written by Marco Amadori <marco.amadori@gmail.com>,
+This manual page was written by Marco Amadori <marco.amadori@gmail.com>,
 for the Debian project (but may be used by others).

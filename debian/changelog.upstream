@@ -1,8 +1,39 @@
-casper (1.69) UNRELEASED; urgency=low
+casper (1.71) edgy; urgency=low
 
+  * Use TEXT-URGENT in shutdown script to make sure we display the "please
+    remove disc and press enter" text.  Malone: #61533
+  * Increase usplash timeout since "TIMEOUT 0" no longer means "spin
+    forever".
+  * Don't move-mount all the squashfs-es into / since that confuses mono
+    (and some other apps too).  Malone: #62756
+  * Disable kwallet by default.  Malone: #47743
+  * Add -n to language selector to make it not whine about
+    not-fully-installed langpacks.  Malone. #37568
+  * Override definition of log_end_msg in casper-functions.  Make sure all
+    casper-bottom scripts use this.
+  * Pulsate bar in casper-top and casper-bottom.  Malone: #61535
+
+ -- Tollef Fog Heen <tfheen@ubuntu.com>  Wed,  4 Oct 2006 09:52:06 +0200
+
+casper (1.70) edgy; urgency=low
+
+  * Check for new file= alias as well as preseed/file= (closes: Malone
+    #63145).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Wed,  4 Oct 2006 08:59:53 +0100
+
+casper (1.69) edgy; urgency=low
+
+  [ Tollef Fog Heen ]
   * Use grep -E in scripts/casper. Malone: #57620
+  * Fix syntax error in accessibility script
 
- -- Tollef Fog Heen <tfheen@ubuntu.com>  Mon, 25 Sep 2006 14:54:57 +0200
+  [ Colin Watson ]
+  * Run 'sh -n' over everything in build target to avoid future syntax
+    errors.
+  * Fix check for /etc/default/console-setup (closes: Malone #62775).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon,  2 Oct 2006 10:58:19 +0100
 
 casper (1.68) edgy; urgency=low
 

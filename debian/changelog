@@ -1,3 +1,11 @@
+casper (1.71+debian-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added experimental casper-snapshot script and manpage.
+  * Tagged for debtags project.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Thu, 28 Sep 2006 16:04:54 +0200
+
 casper (1.68+debian-3) unstable; urgency=low
 
   * Really add casper manpage (Closes: #389867).

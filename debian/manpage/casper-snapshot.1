@@ -1,0 +1,55 @@
+.TH "CASPER-SNAPSHOT" 1 "Thu,  28 Sep 2006" "0.0.1" "User commands"
+
+.SH NAME
+casper-snapshot \- a simple script to ease persistence usage.
+
+.SH SYNOPSIS
+.B casper-snapshot
+.RB [\| \-c \||\| \-\-cow
+.IR DIRECTORY \|]
+.RB [\| \-d \||\| \-\-destination
+.IR DIRECTORY \||\| FILE \|]
+.RB [\| \-o \||\| \-\-output
+.IR FILE \|]
+.RB [\| \-t \||\| \-\-type
+.IR TYPE \|]
+.PP
+.B make-live
+.RB \-h \||\| \-\-help
+.br
+.B make-live
+.RB \-u \||\| \-\-usage
+.br
+.B make-live
+.RB \-v \||\| \-\-version
+
+.SH DESCRIPTION
+Casper-snapshot is a script useful to build the right types of persistent image files supported by casper.
+
+.SH OPTIONS
+.TP
+.BI "\-c, \-\-cow" DIRECTORY
+specifies the input directory to be cloned in the image file.
+This parameters often does not need to be specified as the default of "/cow" for it should be right for most uses, however it could be handy to specify "/home" and type ext2 for the type to prepare an image file suited to be directly mounted by casper as home.
+.TP
+.BI "\-d, \-\-destination" DIRECTORY
+.TP
+.BI "\-o, \-\-output" FILE
+.TP
+.BI "\-t, \-\-type" TYPE
+
+.SH BUGS
+.B casper-snapshot
+Time (and BTS) will tell.
+
+.SH HOMEPAGE
+Debian Live project <http://live.debian.net/>
+
+.SH SEE ALSO
+.BR casper(7)
+
+.SH AUTHOR
+casper-snapshot was written Marco Amadori <marco.amadori@gmail.com>.
+.TP
+This manual page was written by Marco Amadori <marco.amadori@gmail.com>,
+for the Debian project (but may be used by others).

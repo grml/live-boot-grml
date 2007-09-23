@@ -12,6 +12,7 @@ Depends: initramfs-tools (>= 0.40), user-setup, sudo
 Conflicts: usplash (<< 0.4-27)
 Recommends: live-package
 Suggests: dmsetup
+Tag: admin::boot, admin::filesystem, implemented-in::shell, protocol::smb, role::plugin, scope::utility, special::completely-tagged, works-with-format::iso9660
 Description: Debian Live initramfs generator
  Casper provides an initramfs generator suited for booting a Debian Live systems
  from read only media. Useful to build live CDs.

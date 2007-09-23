@@ -29,28 +29,28 @@ fi
 # looking for casper specifics options as kernel parameters
 for x in $(cat /proc/cmdline); do
     case $x in
-    	userfullname*)
-	    export USERFULLNAME=${x#userfullname=} 
-	    export CASPERCONF="changed"
-	    ;;
-    	host*)
-	    export HOST=${x#host=} 
-	    export CASPERCONF="changed"
-	    ;;
-    	username*)
-	    export USERNAME=${x#username=} 
-	    export CASPERCONF="changed"
-	    ;;
+        userfullname*)
+            export USERFULLNAME=${x#userfullname=} 
+            export CASPERCONF="changed"
+            ;;
+        host*)
+            export HOST=${x#host=} 
+            export CASPERCONF="changed"
+            ;;
+        username*)
+            export USERNAME=${x#username=} 
+            export CASPERCONF="changed"
+            ;;
         netboot*)
             export NETBOOT=${x#netboot=} ;;
         toram)
             export TORAM=1 ;;
-        hide-cow)
-            export HIDECOW=1 ;;
+        showmounts)
+            export SHOWMOUNTS=1 ;;
         persistent)
             export PERSISTENT=1 ;;
         ip*)
-            STATICIP=${x#ip=} 
+            STATICIP=${x#ip=}
             if [ "${STATICIP}" == "" ]; then
                 STATICIP="frommedia"
             fi
@@ -228,7 +228,7 @@ copy_to_ram() {
     size=$(expr ${size} + ${size}/20 ) # Fixme: 5% more to be sure
     needed_space=$(expr ${size} * 1024)
     freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( cat /proc/meminfo | grep Cached | head -n 1 | awk '/Cached/{print $2}' - ))
-    
+
     if [ ! ${freespace} -lt ${needed_space}  ] ; then
         [ "$quiet" != "y" ] && log_begin_msg "Not enough free memory to copy to ram"
         [ "$quiet" != "y" ] && log_end_msg
@@ -288,7 +288,7 @@ do_netmount() {
     fi
 
     [ "$quiet" != "y" ] && log_begin_msg "Trying netboot from ${NFSROOT}"
-    
+
     if [ "${NETBOOT}" != "nfs" ] && do_cifsmount ; then
         rc=0
     elif do_nfsmount ; then
@@ -342,9 +342,12 @@ setup_unionfs() {
 
     modprobe "${MP_QUIET}" -b unionfs
 
-    # run-init can't deal with this, but we're going to move all of these
-    # away before it runs anyway.
-    croot="/casper"
+    # run-init can't deal with images in a subdir, but we're going to
+    # move all of these away before it runs anyway.  No, we're not,
+    # put them in / since move-mounting them into / breaks mono and
+    # some other apps.
+
+    croot="/"
 
     # Let's just mount the read-only file systems first
     rofsstring=""
@@ -393,20 +396,9 @@ setup_unionfs() {
 
     mount ${cowdevice} -t ${cow_fstype} -o rw /cow || panic "Can not mount $cowdevice on /cow"
 
-    # Look for a snapshot to copy
-    
-
     mount -t unionfs -o dirs=/cow=rw:$rofsstring unionfs "$rootmnt" || panic "Unionfs mount failed"
 
-    for d in ${rofslist}; do
-        mkdir -p "${rootmnt}/casper/${d##*/}"
-        case d in
-            *.dir) # do nothing # mount -o bind "${d}" "${rootmnt}/casper/${d##*/}"
-                ;;
-            *) mount -o move "${d}" "${rootmnt}/casper/${d##*/}"
-                ;;
-        esac
-    done
+    # Look for a snapshot to copy
 
     # Adding other custom mounts
     if [ ! -z "${PERSISTENT}" ]; then
@@ -418,10 +410,21 @@ setup_unionfs() {
         fi
     fi
 
-    if [ -z "${HIDECOW}" ]; then
-        mkdir -p "$rootmnt/cow"
-        mount -o bind /cow "$rootmnt/cow"
+    if [ ! -z "${SHOWMOUNTS}" ]; then
+        for d in ${rofslist}; do
+            mkdir -p "${rootmnt}/casper/${d##*/}"
+            case d in
+                *.dir) # do nothing # mount -o bind "${d}" "${rootmnt}/casper/${d##*/}"
+                    ;;
+                *) mount -o move "${d}" "${rootmnt}/casper/${d##*/}"
+                    ;;
+            esac
+        done
     fi
+
+    # shows cow fs on /cow for use by casper-snapshot
+    mkdir -p "$rootmnt/cow"
+    mount -o bind /cow "$rootmnt/cow"
 }
 
 is_usb_device() {
@@ -463,16 +466,22 @@ find_livefs() {
             done
         elif [ "${fstype}" = "squashfs" ||  \
                 "${fstype}" = "ext2" ]; then
-        
+
             # This is an ugly hack situation, the block device has
             # an image directly on it.  It's hopefully
             # casper, so take it and run with it.
-        
+
             ln -s "${devname}" "${devname}.${fstype}"
             echo "${devname}.${fstype}"
             return
         fi
     done
+}
+
+pulsate() {
+    if [ -x /sbin/usplash_write ]; then
+        /sbin/usplash_write "PULSATE"
+    fi
 }
 
 set_usplash_timeout() {
@@ -486,9 +495,10 @@ mountroot() {
     exec 7>&2
     exec > casper.log
     exec 2>&1
-    
+
     set_usplash_timeout
     [ "$quiet" != "y" ] && log_begin_msg "Running /scripts/casper-premount"
+    pulsate
     run_scripts /scripts/casper-premount
     [ "$quiet" != "y" ] && log_end_msg
 
@@ -515,7 +525,7 @@ mountroot() {
         if [ "$?" -gt 0 ]; then
             panic "Unable to find a medium containing a live file system"
         fi
-            
+
         if [ ! -z "${TORAM}" ]; then
             copy_to_ram "${livefs_root}"
         fi
@@ -529,6 +539,7 @@ mountroot() {
     maybe_break casper-bottom
     [ "$quiet" != "y" ] && log_begin_msg "Running /scripts/casper-bottom"
 
+    pulsate
     run_scripts /scripts/casper-bottom
     [ "$quiet" != "y" ] && log_end_msg
 

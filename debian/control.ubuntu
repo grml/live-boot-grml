@@ -11,6 +11,7 @@ Section: misc
 Priority: extra
 Depends: initramfs-tools (>= 0.40ubuntu11), dmsetup, user-setup, sudo
 Conflicts: usplash (<< 0.4-27)
+Tag: admin::boot, admin::filesystem, implemented-in::shell, protocol::smb, role::plugin, scope::utility, special::completely-tagged, works-with-format::iso9660
 Description: Run a "live" preinstalled system from read-only media
 
 Package: ubiquity-casper
@@ -19,6 +20,7 @@ Depends: laptop-detect, sudo
 Conflicts: espresso-casper
 Replaces: espresso-casper
 Enhances: ubiquity
+Tag: admin::boot, admin::filesystem, implemented-in::shell, protocol::smb, role::plugin, scope::utility, special::completely-tagged, works-with-format::iso9660
 Description: Configuration hooks for live installer
  This package provides hook scripts for the Ubiquity live installer that
  repeat some pieces of configuration done by the live system boot process in

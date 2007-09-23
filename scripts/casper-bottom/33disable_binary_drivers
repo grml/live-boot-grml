@@ -3,7 +3,7 @@
 PREREQ=""
 DESCRIPTION="Configuring some drivers..."
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {
@@ -23,3 +23,5 @@ log_begin_msg "$DESCRIPTION"
 if [ -e /root/etc/default/linux-restricted-modules-common ]; then
     echo 'DISABLED_MODULES="fglrx nv"' >> /root/etc/default/linux-restricted-modules-common
 fi
+
+log_end_msg

@@ -3,7 +3,7 @@
 PREREQ=""
 DESCRIPTION="Setting up init..."
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {
