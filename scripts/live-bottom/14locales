@@ -20,65 +20,84 @@ esac
 
 # live-initramfs header
 
+if [ -n "${NOLOCALES}" ]
+then
+	exit 0
+fi
+
 . /scripts/live-functions
 
 log_begin_msg "Setting up locales..."
 
 # live-initramfs script
 
-if [ -e /root/etc/default/locale ]; then
-    grep_file=/root/etc/default/locale
-elif [ -e /root/etc/environment ]; then # Old locales policy
-    grep_file=/root/etc/environment
+if [ -e /root/etc/default/locale ]
+then
+	grep_file=/root/etc/default/locale
+elif [ -e /root/etc/environment ]
+then
+	# Old locales policy
+	grep_file=/root/etc/environment
 fi
 
-if [ -n "${grep_file}" ]; then
-    # use rootfs configured locale
-    locale=$(grep -s 'LANG=' ${grep_file} | sed s/'LANG='// | tr -d '"' )
+if [ -n "${grep_file}" ]
+then
+	# use rootfs configured locale
+	locale=$(grep -s 'LANG=' ${grep_file} | sed s/'LANG='// | tr -d '"' )
 else
-    grep_file=/root/etc/default/locale
+	grep_file=/root/etc/default/locale
 fi
 
-if [ -n "${LOCALE}" ]; then
-    locale="${LOCALE}"
-    set_locale="true"
+if [ -n "${LOCALE}" ]
+then
+	locale="${LOCALE}"
+	set_locale="true"
 fi
 
-if [ -z "${locale}" ]; then
-    # Set a default one
-    locale=en_US.UTF-8
-    set_locale="true"
+if [ -z "${locale}" ]
+then
+	# Set a default one
+	locale=en_US.UTF-8
+	set_locale="true"
 fi
 
-if [ "${set_locale}" ]; then
-    if echo "${locale}" | grep -sqE '^[[:lower:]]{2}$' ; then
-        # input is like "locale=it", so we will convert and setup also the keyboard if not already set
-        if [ -z "${KBD}" ]; then
-            # FIXME: look if this keyb is supported
-            KBD="${locale}"
-            really_export KBD
-        fi
-        uploc=$(echo "${locale}" | tr '[a-z]' '[A-Z]')
-        locale="${locale}_${uploc}.UTF-8"
-    fi
-    LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 |sed -e 's, .*,,' -e q)
-    if [ -z "${LANG}" ]; then
-        log_warning_message "Locale ${locale} is unsupported."
-        locale="en_US.UTF-8"
-        LANG="${locale}"
-    fi
+if [ "${set_locale}" ]
+then
+	if echo "${locale}" | grep -sqE '^[[:lower:]]{2}$'
+	then
+		# input is like "locale=it", so we will convert and setup also the keyboard if not already set
+		if [ -z "${KBD}" ]
+		then
+			# FIXME: look if this keyb is supported
+			KBD="${locale}"
+			really_export KBD
+		fi
 
-    really_export LANG
+		uploc=$(echo "${locale}" | tr '[a-z]' '[A-Z]')
+		locale="${locale}_${uploc}.UTF-8"
+	fi
 
-    if [ "${BUILD_SYSTEM}" = "Ubuntu" ]; then
-        printf 'LANG="%s"\n' "${LANG}" > "${grep_file}"
-        chroot /root /usr/sbin/locale-gen "${LANG}"
-        live-preseed /root debian-installer/locale "${locale}"
-    else
-        printf 'LANG=%s\n' "${LANG}" > "${grep_file}"
-        printf '%s UTF-8\n' "${LANG}" > /root/etc/locale.gen
-        chroot /root /usr/sbin/locale-gen
-    fi
+	LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 | sed -e 's, .*,,' -e q)
+
+	if [ -z "${LANG}" ]
+	then
+		log_warning_message "Locale ${locale} is unsupported."
+		locale="en_US.UTF-8"
+		LANG="${locale}"
+	fi
+
+	really_export LANG
+
+	if [ "${BUILD_SYSTEM}" = "Ubuntu" ]
+	then
+		printf 'LANG="%s"\n' "${LANG}" > "${grep_file}"
+		chroot /root /usr/sbin/locale-gen "${LANG}"
+		live-preseed /root debian-installer/locale "${locale}"
+	else
+		printf 'LANG=%s\n' "${LANG}" > "${grep_file}"
+		printf '%s UTF-8\n' "${LANG}" > /root/etc/locale.gen
+		chroot /root /usr/sbin/locale-gen
+	fi
 fi
 
 log_end_msg

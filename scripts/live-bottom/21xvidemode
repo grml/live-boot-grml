@@ -20,6 +20,11 @@ esac
 
 # live-initramfs header
 
+if [ -n "${NOXAUTOCONFIG}" ]
+then
+	exit 0
+fi
+
 . /scripts/live-functions
 
 log_begin_msg "Configuring X kludges..."

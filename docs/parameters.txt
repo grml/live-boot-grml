@@ -1,13 +1,14 @@
 Boot Parameters for Debian Live
 -------------------------------
 
-Updated for live-initramfs 1.96.3-1 on 2007-07-30.
+Updated for live-initramfs 1.99.2-1 on 2007-09-10.
 
 These options (can be combined) work from the bootloader prompt:
 
 live access=ACCESS
 live console=TTY,SPEED
 live debug
+live fetch=URL
 live hostname=HOSTNAME
 live username=USER
 live userfullname=USERFULLNAME
@@ -35,6 +36,8 @@ live nofastboot
 live nopersistent
 live nosudo
 live noswap
+live nouser
+live noxautoconfig
 live persistent
 live {preseed/file|file}=FILE
 live package/question=VALUE

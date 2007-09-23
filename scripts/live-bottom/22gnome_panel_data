@@ -20,22 +20,30 @@ esac
 
 # live-initramfs header
 
-. /scripts/live-functions
+if [ -n "${NOGNOMEPANEL}" ]
+then
+	exit 0
+fi
 
+. /scripts/live-functions
 
 log_begin_msg "Configuring gnome-panel-data..."
 
 # live-initramfs script
 
-if [ -x /root/usr/sbin/laptop-detect ]; then
-	if chroot /root laptop-detect; then
-	    live-reconfigure /root gnome-panel-data
+if [ -x /root/usr/sbin/laptop-detect ]
+then
+	if chroot /root laptop-detect
+	then
+		live-reconfigure /root gnome-panel-data
 	fi
 fi
 
 panel_version=$(chroot /root /usr/bin/dpkg-query -W --showformat='${Version}' gnome-panel-data 2>/dev/null) || panel_version=""
-if [ -n "$panel_version" ]; then
-    chroot /root sudo -u "$USERNAME" gconftool-2 -s -t bool /apps/panel/global/disable_lock_screen true
+
+if [ -n "$panel_version" ]
+then
+	chroot /root sudo -u "$USERNAME" gconftool-2 -s -t bool /apps/panel/global/disable_lock_screen true
 fi
 
 log_end_msg

@@ -22,6 +22,11 @@ esac
 
 . /scripts/live-functions
 
+if [ -n "${NOFSTAB}" ]
+then
+	exit 0
+fi
+
 log_begin_msg "Configuring fstab..."
 
 # live-initramfs script

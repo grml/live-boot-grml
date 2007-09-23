@@ -26,11 +26,11 @@ log_begin_msg "Preconfiguring /etc/modules..."
 
 # live-initramfs script
 
-case "$DPKG_ARCH" in
 # load the right modules
-powerpc|ppc64)
-        echo snd_powermac >> /root/etc/modules
-	;;
+case "$DPKG_ARCH" in
+	powerpc|ppc64)
+		echo snd_powermac >> /root/etc/modules
+		;;
 esac
 
 log_end_msg

@@ -1,3 +1,11 @@
+live-initramfs (1.99.2-1) unstable; urgency=medium
+
+  * New upstream release:
+    - Contains patch from Jim Paris <jim@jtan.com> to fix wrong ipconfig usage
+      (Closes: #440235).
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 10 Sep 2007 00:00:00 +0200
+
 live-initramfs (1.99.1-1) unstable; urgency=medium
 
   * New upstream release.
