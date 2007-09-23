@@ -1,0 +1,81 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+# Looking in which build system we are
+BUILD_SYSTEM := $(shell lsb_release --short --id)
+
+upstream:
+	# Needs: subversion
+	cd .. && svn co svn://svn.debian.org/debian-live/dists/trunk/live-initramfs || true
+	find . -type d -name .svn | xargs rm -rf
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+
+	# Checking scripts
+	for SCRIPT in bin/* scripts/casper scripts/casper-bottom/*; \
+	do \
+		sh -n $$SCRIPT || exit 1; \
+	done
+
+	# Setting BUILD_SYSTEM in the binary package
+	sed -i -e 's/\(BUILD_SYSTEM="\).*"/\1'$(BUILD_SYSTEM)'"/g' casper.conf
+
+	# Building package
+	CFLAGS="$(CFLAGS)" $(MAKE) -C casper-md5check
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+
+	# Cleaning package
+	$(MAKE) -C casper-md5check clean
+
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	# Installing package
+	install -m 0755 casper-md5check/casper-md5check debian/live-initramfs/usr/lib/casper
+	install -m 0644 casper.conf debian/live-initramfs/etc/casper.conf
+
+binary-indep: build install
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs doc/ChangeLog
+	dh_installdocs doc/ChangeLog.casper
+	dh_installexamples
+	dh_install
+	dh_installinit --no-restart-on-upgrade --no-start -- start 89 0 6 .
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

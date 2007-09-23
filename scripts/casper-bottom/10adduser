@@ -1,0 +1,66 @@
+#!/bin/sh
+
+PREREQ=""
+DESCRIPTION="Adding live session user..."
+
+. /scripts/casper-functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+# U6aMy0wojraho is just a blank password
+chroot /root debconf-communicate -fnoninteractive casper > /dev/null <<EOF
+set passwd/root-password-crypted *
+set passwd/user-password-crypted U6aMy0wojraho
+set passwd/user-fullname $USERFULLNAME 
+set passwd/username $USERNAME
+set passwd/user-uid 999
+EOF
+
+chroot /root /usr/lib/user-setup/user-setup-apply > /dev/null
+
+# Clear out debconf database again to avoid confusing ubiquity later.
+chroot /root debconf-communicate -fnoninteractive casper > /dev/null <<EOF
+set passwd/root-password-crypted
+set passwd/user-password-crypted
+set passwd/user-fullname
+set passwd/username
+set passwd/user-uid
+EOF
+
+if [ -f /root/etc/sudoers ]; then
+    if [ "${BUILD_SYSTEM}" = "Ubuntu" ]; then
+        grep -q '^%admin' /root/etc/sudoers && sed -i -e '/^%admin/s/ALL$/NOPASSWD: ALL/' /root/etc/sudoers || echo '%admin  ALL=(ALL) NOPASSWD: ALL' >> /root/etc/sudoers
+    elif [ "${BUILD_SYSTEM}" = "Debian" ]; then
+		echo "${USERNAME}  ALL=(ALL) NOPASSWD: ALL" >> /root/etc/sudoers
+    fi
+fi
+
+# XXX - awful hack to stop xscreensaver locking the screen (#7150)
+echo 'RUNNING_UNDER_GDM="yes"' >> /root/etc/environment
+
+for file in /usr/share/applications/ubiquity-gtkui.desktop /usr/share/applications/kde/ubiquity-kdeui.desktop; do
+    if [ -f "/root/$file" ]; then
+        chroot /root install -D -o $USERNAME -g $USERNAME $file /home/$USERNAME/Desktop/$(basename "$file")
+        break
+    fi
+done
+
+if [ -L /root/home/$USERNAME/Examples ]; then
+    chroot /root install -o $USERNAME -g $USERNAME -d /home/$USERNAME/Desktop/
+    mv /root/home/$USERNAME/Examples /root/home/$USERNAME/Desktop/
+fi
+
+log_end_msg

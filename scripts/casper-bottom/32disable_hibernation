@@ -1,0 +1,36 @@
+#!/bin/sh
+
+PREREQ=""
+DESCRIPTION="Configuring power management..."
+
+. /scripts/casper-functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+
+gpm_version=$(chroot /root /usr/bin/dpkg-query -W --showformat='${Version}' gnome-power-manager 2>/dev/null) || panel_version=""
+if [ -n "$gpm_version" ]; then
+#    casper-reconfigure /root gnome-power-manager
+    chroot /root sudo -u "$USERNAME" gconftool-2 -s -t bool /apps/gnome-power-manager/can_hibernate false
+    chroot /root sudo -u "$USERNAME" gconftool-2 -s -t bool /apps/gnome-power-manager/can_suspend false
+fi
+
+if [ -d /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config ]; then
+    echo "disableSuspend=1" >> /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config/power-managerrc
+    echo "disableHibernate=1" >> /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config/power-managerrc
+fi
+
+log_end_msg

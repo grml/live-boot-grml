@@ -1,0 +1,70 @@
+#!/bin/sh
+
+PREREQ=""
+DESCRIPTION="Setting up console keyboard..."
+
+. /scripts/casper-functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+kbd=us
+cslayout=
+csvariant=
+csmodel=
+
+for x in $(cat /proc/cmdline); do
+        case $x in
+                kbd-chooser/method=*)
+                        kbd=${x#kbd-chooser/method=}
+                        ;;
+                console-setup/layoutcode=*)
+                        cslayout=${x#console-setup/layoutcode=}
+                        ;;
+                console-setup/variantcode=*)
+                        csvariant=${x#console-setup/variantcode=}
+                        ;;
+                console-setup/modelcode=*)
+                        csmodel=${x#console-setup/modelcode=}
+                        ;;
+        esac
+done
+
+if [ -x /root/bin/setupcon ] && [ -f /root/etc/default/console-setup ]; then
+        if [ "$cslayout" ]; then
+                chroot /root sed -i "s/^XKBLAYOUT=.*/XKBLAYOUT=\"$cslayout\"/" \
+                        /etc/default/console-setup
+                if [ "$csvariant" ]; then
+                        chroot /root sed -i "s/^XKBVARIANT=.*/XKBVARIANT=\"$csvariant\"/" \
+                                /etc/default/console-setup
+                else
+                        casper-preseed /root console-setup/variantcode '' false
+                fi
+                if [ "$csmodel" ]; then
+                        chroot /root sed -i "s/^XKBMODEL=.*/XKBMODEL=\"$csmodel\"/" \
+                                /etc/default/console-setup
+                else
+                        casper-preseed /root console-setup/modelcode '' false
+                fi
+        else
+                casper-preseed /root console-setup/layoutcode '' false
+                casper-preseed /root console-setup/variantcode '' false
+                casper-preseed /root console-setup/modelcode '' false
+        fi
+else
+        chroot /root /usr/sbin/install-keymap $kbd
+        casper-preseed /root debian-installer/keymap "$kbd"
+fi
+log_end_msg

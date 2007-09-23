@@ -1,0 +1,5 @@
+live-initramfs (1.87.1-1) unstable; urgency=low
+
+  * Initial release, forking casper.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 30 Apr 2007 00:00:00 +0200

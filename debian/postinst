@@ -1,0 +1,5 @@
+#!/bin/sh
+
+update-initramfs -k all -u
+
+#DEBHELPER#

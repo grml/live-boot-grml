@@ -1,0 +1,30 @@
+#! /bin/sh
+
+PREREQ=""
+DESCRIPTION="Preconfiguring /etc/modules..."
+
+. /scripts/casper-functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+case "$DPKG_ARCH" in
+# load the right modules
+powerpc|ppc64)
+        echo snd_powermac >> /root/etc/modules
+	;;
+esac
+
+log_end_msg

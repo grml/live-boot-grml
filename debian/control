@@ -1,0 +1,21 @@
+Source: live-initramfs
+Section: misc
+Priority: optional
+Maintainer: Debian Live <debian-live-devel@lists.alioth.debian.org>
+Uploaders: Daniel Baumann <daniel@debian.org>
+Build-Depends: debhelper (>= 5), lsb-release
+Standards-Version: 3.7.2
+XS-Vcs-Svn: svn://svn.debian.org/debian-live/dists/trunk/live-initramfs/
+
+Package: live-initramfs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, dmsetup, eject, file, initramfs-tools, sudo, user-setup
+Conflicts: casper, usplash (<< 0.4-43)
+Replaces: casper
+Description: Debian Live (alternative) initramfs generator
+ live-initramfs provides an initramfs generator suited for booting Debian Live
+ systems from read-only media.
+ .
+  Homepage: <http://debian-live.alioth.debian.org/>
+ .
+ live-initramfs is a fork of casper.

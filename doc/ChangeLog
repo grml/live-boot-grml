@@ -1,0 +1,28 @@
+2007-04-30  Daniel Baumann  <daniel@debian.org>
+
+	* Forked casper 1.87.
+	* COPYING:
+	  - Added.
+	* debian/control, debian/ubiquity-casper.install, ubiquity-hooks:
+	  - Removed ubiquity support.
+	* debian/changelog:
+	  - Moved old changelog to doc/ChangeLog.casper.
+	  - Added new changelog for live-initramfs.
+	* debian/casper.dirs, casper.init, casper.install, casper.manpages,
+	  casper.postinst:
+	  - Renamed, removed packagename prefix from filename.
+	* debian/compat, copyright, dirs, manpages:
+	  - Updated.
+	* debian/examples, links:
+	  - Added.
+	* debian/rules:
+	  - Updated.
+	  - Added upstream target.
+	* debian/control:
+	  - Updated.
+	  - Added depends to file.
+	  - Added conflicts/replaces to casper.
+	* debian/postinst:
+	  - Running 'update-initramfs' for all kernel versions instead of
+	    latest only.
+	* Uploaded 1.87.1-1.
