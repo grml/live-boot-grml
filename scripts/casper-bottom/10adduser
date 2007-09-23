@@ -20,28 +20,16 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
-if [ "${BUILD_SYSTEM}" == "Debian" ]; then
-    user_crypted="8Ab05sVQ4LLps" # as in `echo "live" | mkpasswd -s`
-else
-    user_crypted="U6aMy0wojraho" # "ubuntu"
-fi
-
 # U6aMy0wojraho is just a blank password
 chroot /root debconf-communicate -fnoninteractive casper > /dev/null <<EOF
 set passwd/root-password-crypted *
-set passwd/user-password-crypted ${user_crypted}
-set passwd/user-fullname $USERFULLNAME
+set passwd/user-password-crypted U6aMy0wojraho
+set passwd/user-fullname $USERFULLNAME 
 set passwd/username $USERNAME
 set passwd/user-uid 999
 EOF
 
-if [ "${BUILD_SYSTEM}" == "Debian" ]; then
-    chroot /root /usr/bin/env -i HOME="/root" \
-        TERM="${TERM}" PATH="/usr/sbin:/usr/bin:/sbin:/bin" \
-        /usr/lib/user-setup/user-setup-apply > /dev/null
-else
-    chroot /root /usr/lib/user-setup/user-setup-apply > /dev/null
-fi
+chroot /root /usr/lib/user-setup/user-setup-apply > /dev/null
 
 # Clear out debconf database again to avoid confusing ubiquity later.
 chroot /root debconf-communicate -fnoninteractive casper > /dev/null <<EOF
@@ -53,20 +41,22 @@ set passwd/user-uid
 EOF
 
 if [ -f /root/etc/sudoers ]; then
-    if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
-        # XXX - awful hack to stop xscreensaver locking the screen (#7150)
-        echo 'RUNNING_UNDER_GDM="yes"' >> /root/etc/environment
+    if [ "${BUILD_SYSTEM}" = "Ubuntu" ]; then
         grep -q '^%admin' /root/etc/sudoers && sed -i -e '/^%admin/s/ALL$/NOPASSWD: ALL/' /root/etc/sudoers || echo '%admin  ALL=(ALL) NOPASSWD: ALL' >> /root/etc/sudoers
-        for file in /usr/share/applications/ubiquity-gtkui.desktop /usr/share/applications/kde/ubiquity-kdeui.desktop; do
-            if [ -f "/root/$file" ]; then
-                chroot /root install -D -o $USERNAME -g $USERNAME $file /home/$USERNAME/Desktop/$(basename "$file")
-                break
-            fi
-        done
-    else # We are in debian :-)
-        echo "${USERNAME}  ALL=(ALL) NOPASSWD: ALL" >> /root/etc/sudoers	    
+    elif [ "${BUILD_SYSTEM}" = "Debian" ]; then
+		echo "${USERNAME}  ALL=(ALL) NOPASSWD: ALL" >> /root/etc/sudoers
     fi
 fi
+
+# XXX - awful hack to stop xscreensaver locking the screen (#7150)
+echo 'RUNNING_UNDER_GDM="yes"' >> /root/etc/environment
+
+for file in /usr/share/applications/ubiquity-gtkui.desktop /usr/share/applications/kde/ubiquity-kdeui.desktop; do
+    if [ -f "/root/$file" ]; then
+        chroot /root install -D -o $USERNAME -g $USERNAME $file /home/$USERNAME/Desktop/$(basename "$file")
+        break
+    fi
+done
 
 if [ -L /root/home/$USERNAME/Examples ]; then
     chroot /root install -o $USERNAME -g $USERNAME -d /home/$USERNAME/Desktop/

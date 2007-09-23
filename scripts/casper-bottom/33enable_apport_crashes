@@ -1,0 +1,28 @@
+#!/bin/sh
+
+PREREQ=""
+DESCRIPTION="Enabling notifications about program crashes..."
+
+. /scripts/casper-functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+update_notifier_version=$(chroot /root dpkg-query -W --showformat='${Version}' update-notifier 2>/dev/null) || update_notifier_version=""
+if [ -n "$update_notifier_version" ]; then
+    chroot /root sudo -u "$USERNAME" gconftool-2 -t bool -s /apps/update-notifier/show_apport_crashes true
+fi
+
+log_end_msg

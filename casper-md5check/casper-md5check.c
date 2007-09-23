@@ -255,7 +255,11 @@ int main(int argc, char **argv) {
     free(checksum);
     free(checkfile);
   }
-  usplash_urgent(pipe_fd, "Check finished, %d checksums failed", failed);
+  if (failed) {
+    usplash_urgent(pipe_fd, "Check finished: errors found in %d files!", failed);
+  } else {
+    usplash_urgent(pipe_fd, "Check finished: no errors found");
+  }
   usplash_urgent(pipe_fd, "Press any key to reboot your system");
   usplash_timeout(pipe_fd, 86400);
   set_nocanonical_tty(0);

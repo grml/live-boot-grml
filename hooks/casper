@@ -18,12 +18,6 @@ esac
 
 . /usr/share/initramfs-tools/hook-functions
 
-if [ -e /etc/casper.conf ]; then
-    . /etc/casper.conf
-    mkdir -p ${DESTDIR}/etc
-    cp /etc/casper.conf ${DESTDIR}/etc
-fi
-
 manual_add_modules unionfs
 
 # We need losetup
@@ -34,17 +28,12 @@ mkdir -p ${DESTDIR}/lib/casper
 copy_exec /usr/share/casper/casper-reconfigure /bin
 copy_exec /usr/share/casper/casper-preseed /bin
 
-if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
-    mkdir -p ${DESTDIR}/lib/udev
-    copy_exec /lib/udev/cdrom_id /lib/udev
-    copy_exec /lib/udev/vol_id /lib/udev
-    copy_exec /lib/udev/path_id /lib/udev
-fi
-
-copy_exec /sbin/udevtrigger /sbin
-copy_exec /sbin/udevsettle /sbin
-
+mkdir -p ${DESTDIR}/lib/udev
+copy_exec /lib/udev/cdrom_id /lib/udev
+copy_exec /lib/udev/vol_id /lib/udev
+copy_exec /lib/udev/path_id /lib/udev
 copy_exec /usr/bin/udevinfo /bin
+copy_exec /usr/bin/eject /bin
 
 # cifs boot
 if [ -x /sbin/mount.cifs ]; then
@@ -75,14 +64,12 @@ manual_add_modules ohci1394
 # integrity check
 copy_exec /usr/lib/casper/casper-md5check /bin
 
-# allow to load custom keymap for using encryption
-if [ -x /bin/loadkeys ] && [ -r /etc/console/boottime.kmap.gz ]; then
-	copy_exec /bin/loadkeys /bin
-	cp /etc/console/boottime.kmap.gz $DESTDIR/etc/
-fi
-
 cp /usr/share/initramfs-tools/scripts/casper-functions $DESTDIR/scripts
 cp /usr/share/initramfs-tools/scripts/casper-helpers $DESTDIR/scripts
 
 auto_add_modules net
 
+if [ -e /etc/casper.conf ]; then
+    mkdir -p ${DESTDIR}/etc
+    cp /etc/casper.conf ${DESTDIR}/etc
+fi

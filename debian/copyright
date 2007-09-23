@@ -1,38 +1,23 @@
-This package was first debianized by Matt Zimmerman <mdz@canonical.com> on
-Wed,  5 Jan 2005 14:30:28 -0800.
+This package was debianized by Daniel Baumann <daniel@debian.org> on
+Mon, 30 Apr 2007 00:00:00 +0200.
 
-Upstream Authors: Marco Amadori <marco.amadori@gmail.com>,
-		  Tollef Fog Heen <tfheen@canonical.com>,
-		  Matt Zimmerman <mdz@canonical.com>.
+It was downloaded from:
 
-License (casper-md5check/md5.c, casper-md5check/md5,h}):
+	<http://debian-live.alioth.debian.org/>
 
-	Copyright (C) 1999-2002 Aladdin Enterprises
-	All rights reserved.
+Upstream contact:
 
-	This software is provided 'as-is', without any express or implied
-	warranty.  In no event will the authors be held liable for any damages
-	arising from the use of this software.
+	Debian Live <debian-live-devel@lists.alioth.debian.org>
 
-	Permission is granted to anyone to use this software for any purpose,
-	including commercial applications, and to alter it and redistribute it
-	freely, subject to the following restrictions:
+License:
 
-	1. The origin of this software must not be misrepresented; you must not
-	   claim that you wrote the original software. If you use this software
-	   in a product, an acknowledgment in the product documentation would be
-	   appreciated but is not required.
+	live-initramfs is a fork of casper <http://packages.ubuntu.com/casper/>.
+	casper was originally written by Tollef Fog Heen <tfheen@canonical.com>
+	and Matt Zimmerman <mdz@canonical.com>.
 
-	2. Altered source versions must be plainly marked as such, and must not
-	   be misrepresented as being the original software.
-
-	3. This notice may not be removed or altered from any source
-	   distribution.
-
-License (everything else):
-
-	Copyright (C) 2006 Marco Amadori <marco.amadori@gmail.com>
-	Copyright (C) 2005-2006 Canonical Ltd. <http://www.cannonical.com/>
+	Copyright (C) 2005-2007 Canonical Ltd. <http://www.cannonical.com/>
+	Copyright (C) 2006-2007 Marco Amadori <marco.amadori@gmail.com>
+	Copyright (C) 2007 Daniel Baumann <daniel@debian.org>
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -48,5 +33,32 @@ License (everything else):
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
-On Debian and Ubuntu systems, the complete text of the GNU General Public License
+On Debian systems, the complete text of the GNU General Public License
 can be found in /usr/share/common-licenses/GPL file.
+
+License (casper-md5check/md5.c, casper-md5check/md5,h):
+
+	Copyright (C) 1999-2002 Aladdin Enterprises
+	All rights reserved.
+
+	This software is provided 'as-is', without any express or implied
+	warranty.  In no event will the authors be held liable for any damages
+	arising from the use of this software.
+
+	Permission is granted to anyone to use this software for any purpose,
+	including commercial applications, and to alter it and redistribute it
+	freely, subject to the following restrictions:
+
+	1. The origin of this software must not be misrepresented; you must not
+	claim that you wrote the original software. If you use this software in
+	a product, an acknowledgment in the product documentation would be
+	appreciated but is not required.
+
+	2. Altered source versions must be plainly marked as such, and must not
+	be misrepresented as being the original software.
+
+	3. This notice may not be removed or altered from any source
+	distribution.
+
+The Debian packaging is (C) 2007, Daniel Baumann <daniel@debian.org> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.

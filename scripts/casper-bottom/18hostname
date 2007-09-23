@@ -20,10 +20,10 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
-echo "$HOSTNAME" > /root/etc/hostname
+echo "$HOST" > /root/etc/hostname
 cat > /root/etc/hosts <<EOF
 127.0.0.1 localhost
-127.0.1.1 $HOSTNAME
+127.0.1.1 $HOST
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback

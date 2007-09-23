@@ -1,6 +1,0 @@
-#! /bin/sh
-set -e
-
-casper-reconfigure /target gnome-power-manager
-
-exit 0

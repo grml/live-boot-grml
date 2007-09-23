@@ -1,101 +1,81 @@
-#! /usr/bin/make -f
+#!/usr/bin/make -f
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
 # Looking in which build system we are
 BUILD_SYSTEM := $(shell lsb_release --short --id)
+
+upstream:
+	# Needs: subversion
+	cd .. && svn co svn://svn.debian.org/debian-live/dists/trunk/live-initramfs || true
+	find . -type d -name .svn | xargs rm -rf
 
 build: build-stamp
 build-stamp:
 	dh_testdir
 
+	# Checking scripts
+	for SCRIPT in bin/* scripts/casper scripts/casper-bottom/*; \
+	do \
+		sh -n $$SCRIPT || exit 1; \
+	done
+
 	# Setting BUILD_SYSTEM in the binary package
 	sed -i -e 's/\(BUILD_SYSTEM="\).*"/\1'$(BUILD_SYSTEM)'"/g' casper.conf
-ifeq ($(BUILD_SYSTEM),Ubuntu)
-	cp debian/control.ubuntu debian/control
-else
-	cp debian/control.debian debian/control
-endif
 
 	# Building package
-	$(MAKE) -C casper-md5check
-	set -e; \
-	for x in bin/* scripts/casper scripts/casper-bottom/* \
-	         ubiquity-hooks/*; do \
-		sh -n $$x; \
-	done
+	CFLAGS="$(CFLAGS)" $(MAKE) -C casper-md5check
 
 	touch build-stamp
 
 clean:
-
 	dh_testdir
+	dh_testroot
 	rm -f build-stamp
 
 	# Cleaning package
-	-$(MAKE) -C casper-md5check clean
+	$(MAKE) -C casper-md5check clean
 
-	# Putting back default files
-	cp -f debian/control.debian debian/control
-	sed -i -e 's/\(BUILD_SYSTEM="\).*"/\1'Debian'"/g' casper.conf
-	
 	dh_clean
 
-
 install: build
-
 	dh_testdir
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
-	dh_install
 
-	# Install md5check
-	install -m 0755 casper-md5check/casper-md5check debian/casper/usr/lib/casper
-
-	# Fixing permissions
-	chmod 0755 debian/casper/usr/share/initramfs-tools/scripts/casper
-	
-	# Temporary Fixing permissions (until upstream merge)
-	chmod 0755 debian/casper/usr/share/initramfs-tools/scripts/casper-bottom/02etc_casper_conf
-
-	# Install casper.conf
-	install -m 0644 casper.conf debian/casper/etc/casper.conf
+	# Installing package
+	install -m 0755 casper-md5check/casper-md5check debian/live-initramfs/usr/lib/casper
+	install -m 0644 casper.conf debian/live-initramfs/etc/casper.conf
 
 binary-indep: build install
-ifneq ($(BUILD_SYSTEM),Debian)
-	# Conditionally build Ubiquity 
-	dh_testdir
-	dh_testroot
-	dh_installexamples -i
-	dh_installdocs -i
-	dh_installchangelogs -i
-	dh_compress -i
-	dh_fixperms -i
-	dh_installdeb -i
-	dh_gencontrol -i
-	dh_md5sums -i
-	dh_builddeb -i
-endif
 
 binary-arch: build install
-
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs -a
-	dh_installdocs -a
-	dh_installman -a
-	dh_installexamples -a
-	dh_installinit -a -r --no-start -- start 89 0 6 .
-	dh_link -a
-	dh_strip -a
-	dh_compress -a
-	dh_fixperms -a
-	dh_installdeb -a
-	dh_gencontrol -a
-	dh_md5sums -a
-	dh_builddeb -a
+	dh_installchangelogs doc/ChangeLog
+	dh_installdocs doc/ChangeLog.casper
+	dh_installexamples
+	dh_install
+	dh_installinit --no-restart-on-upgrade --no-start -- start 89 0 6 .
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
 
-binary: binary-arch binary-indep
+binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install

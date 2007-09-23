@@ -61,14 +61,13 @@ else
         # on startup by ifup script - otherwise our root fs might be disconnected!
         method="manual"
     fi
-
     # iterate the physical interfaces and add them to the interfaces list
     for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*; do
         [ -e $interface ] || continue
         i="$(basename $interface)"
         cat >> "$IFFILE" <<EOF
 auto $i
-iface $i inet ${method}
+iface $i inet $method
 
 EOF
     done
@@ -95,5 +94,14 @@ EOF
         cat /root/etc/resolv.conf >> /root/var/log/netboot.config
     fi
 fi
+
+for i in eth0 eth1 eth2 ath0 wlan0; do
+    grep -q "iface $i" $IFFILE && continue
+    cat >> "$IFFILE" <<EOF
+auto $i
+iface $i inet dhcp
+
+EOF
+done
 
 log_end_msg

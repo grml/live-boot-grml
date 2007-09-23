@@ -108,21 +108,11 @@ fs_size ()
     echo "${size}"
 }
 
-
-load_keymap()
-{
-	# Load custom keymap
-	if [ -x /bin/loadkeys -a -r /etc/boottime.kmap.gz ]; then
-		loadkeys /etc/boottime.kmap.gz
-	fi
-}
-
 setup_loop() {
     local fspath=$1
     local module=$2
     local pattern=$3
     local offset=$4
-    local encryption=$5
 
     modprobe ${MP_QUIET} -b "$module"
     udevsettle
@@ -130,35 +120,10 @@ setup_loop() {
     for loopdev in $pattern; do
         if [ "$(cat $loopdev/size)" -eq 0 ]; then
             dev=$(sys2dev "${loopdev}")
-            options=''
-            if [ 0 -lt "${offset}" ]; then
-                options="${options} -o ${offset}"
-            fi
-            if [ -z "${encryption}" ]; then
-                losetup ${options} "${dev}" "${fspath}"
+            if [ -n "$offset" ]; then
+                losetup -o "$offset" "$dev" "$fspath"
             else
-                # Loop AES encryption
-                while true; do
-					     load_keymap
-                    echo -n "Enter passphrase for ${fspath}: " >&6
-                    read -s passphrase
-                    echo "${passphrase}" > /tmp/passphrase
-                    exec 9</tmp/passphrase
-                    /sbin/losetup ${options} -e "${encryption}" -p 9 "${dev}" "${fspath}"
-                    error=$?
-                    exec 9<&-
-                    rm -f /tmp/passphrase
-                    if [ 0 -eq ${error} ]; then
-                        unset error
-                        break
-                    fi
-                    echo -n "Something went wrong... Retry? [YES/no] " >&6
-                    read answer
-                    if [ 'no' = "${answer}" ]; then
-                        unset answer
-                        break
-                    fi
-                done
+                losetup "$dev" "$fspath"
             fi
             echo "$dev"
             return 0

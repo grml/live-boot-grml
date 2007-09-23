@@ -20,16 +20,29 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
-if [ -f "/root/${LOCATION}" ]; then
-    chroot /root debconf-set-selections < "/root/${LOCATION}"
-fi
+location=
+for x in $(cat /proc/cmdline); do
+	case $x in
+		preseed/file=*)
+			location="${x#preseed/file=}"
+			;;
+		file=*)
+			location="${x#file=}"
+			;;
+		*/*=*)
+			question="${x%%=*}"
+			value="${x#*=}"
+			casper-preseed /root "$question" "$value"
+			;;
+		locale=*)
+			value="${x#*=}"
+			casper-preseed /root debian-installer/locale "$value"
+			;;
+	esac
+done
 
-if [ -n "${PRESEEDS}" ]; then
-    for preseed in ${PRESEEDS}; do
-    	question="${preseed%%=*}"
-		value="${preseed#*=}"
-		casper-preseed /root "${question}" "${value}"
-	done
+if [ "$location" ]; then
+	chroot /root debconf-set-selections < "/root$location"
 fi
 
 log_end_msg
