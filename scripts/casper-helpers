@@ -110,6 +110,7 @@ setup_loop() {
     local fspath=$1
     local module=$2
     local pattern=$3
+    local offset=$4
 
     modprobe "${MP_QUIET}" -b "$module"
     udevsettle
@@ -117,7 +118,11 @@ setup_loop() {
     for loopdev in $pattern; do
         if [ "$(cat $loopdev/size)" -eq 0 ]; then
             dev=$(sys2dev "${loopdev}")
-            losetup "$dev" "$fspath"
+            if [ -n "$offset" ]; then
+                losetup -o "$offset" "$dev" "$fspath"
+            else
+                losetup "$dev" "$fspath"
+            fi
             echo "$dev"
             return 0
         fi

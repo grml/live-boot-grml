@@ -208,7 +208,7 @@ Mount_device ()
 		mkdir -p "${MOUNTP}"
 	fi
 
-	if [ -n "${dev}" ]; then
+	if [ -z "${dev}" ]; then
 		# create a temp
 		mount -t tmpfs -o rw tmpfs "${MOUNTP}"
 		if [ ! -L /home/$USERNAME/Desktop/casper-snapshot ]; then

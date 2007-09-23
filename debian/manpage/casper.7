@@ -30,11 +30,14 @@ Let you specify the name(s) and the options of the interface(s) that should be c
 .BR ip[= frommedia ]
 If this variable is set, dhcp and static configuration are just skipped and the system will use the (must be) media-preconfigured /etc/network/interfaces instead.
 .TP
-.BI "locale=" LOCALE " | debian-installer/locale=" LOCALE
-Configure the running locale as specified, if not present the live-media rootfs configured locale will be used and if also this one misses casper behave as "locale=en_US.UTF-8" was specified. If only 2 lowercase letter are specified (like "it"), the "maybe wanted" locale is generated (like it:IT.UTF-8), in this case if also "keyb=" is unspecified is set with those 2 lowercase letters (keyb=it).
-.TP
 .BI "{live-media|bootfrom}=" DEVICE
 If you specify one of this two equivalent forms, casper will first try to find this device for the "/casper" directory where the read-only root filesystem should reside. If it did not find something usable, the normal scan for block devices is performed.
+.TP
+.BI "live-media-offset=" BYTES
+This way you could tell casper that your image starts at offset BYTES in the above specified or autodiscovered device, this could be useful to hide the debian-live iso or image inside another iso or image, to create "clean" images.
+.TP
+.BI "locale=" LOCALE " | debian-installer/locale=" LOCALE
+Configure the running locale as specified, if not present the live-media rootfs configured locale will be used and if also this one misses casper behave as "locale=en_US.UTF-8" was specified. If only 2 lowercase letter are specified (like "it"), the "maybe wanted" locale is generated (like it:IT.UTF-8), in this case if also "keyb=" is unspecified is set with those 2 lowercase letters (keyb=it).
 .TP
 .BR "netboot[=" nfs "|" cifs ]
 This tells casper to perform a network mount. The parameter "nfsroot=" (with optional "nfsopts="), should specify where is the location of the root filesystem.  With no args, will try cifs first, and if it fails nfs.

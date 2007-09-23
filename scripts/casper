@@ -73,6 +73,8 @@ parse_cmdline ()
                 export LIVEMEDIA=${x#*=} ;;
             live-media-timeout=*)
                 export LIVEMEDIA_TIMEOUT=${x#live-media-timeout=} ;;
+            live-media-offset=*)
+                export LIVEMEDIA_OFFSET=${x#live-media-offset=} ;;
             locale=*|debian-installer/locale=*)
                 export LOCALE=${x#*=} ;;
             keyb=*|kbd-chooser/method=*)
@@ -224,7 +226,7 @@ do_netmount() {
 
     modprobe "${MP_QUIET}" af_packet # For DHCP
 
-    ipconfig ${DEVICE} /tmp/net-${DEVICE}.conf
+    ipconfig ${DEVICE} /tmp/net-${DEVICE}.conf | tee /netboot.config
 
     if [ "${NFSROOT}" = "auto" ]; then
         NFSROOT=${ROOTSERVER}:${ROOTPATH}
@@ -482,6 +484,12 @@ check_dev ()
     if [ -z "${devname}" ]; then
         devname=$(sys2dev "${sysdev}")
     fi
+
+    if [ -n "${LIVEMEDIA_OFFSET}" ]; then
+        loopdevname=$(setup_loop "${devname}" "loop" "/sys/block/loop*" "${LIVEMEDIA_OFFSET}")
+        devname="${loopdevname}" 
+    fi
+
     fstype=$(get_fstype "${devname}")
     if is_supported_fs ${fstype}; then
         mount -t ${fstype} -o ro "${devname}" $mountpoint || continue
@@ -491,6 +499,10 @@ check_dev ()
         else
             umount $mountpoint
         fi
+    fi
+
+    if [ -n "${LIVEMEDIA_OFFSET}" ]; then
+        losetup -d "${loopdevname}"
     fi
     return 1
 }

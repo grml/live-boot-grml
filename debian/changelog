@@ -1,3 +1,12 @@
+casper (1.77+debian-6) unstable; urgency=medium
+
+  * Improved snapshots features (even still experimental).
+  * Added "live-media-offset=BYTES" boot param, to enable "hiding"
+    feature, thanks to Sebastien Raveau <sebastien.raveau@epita.fr>.
+  * Now it creates /etc/resolv.conf if netbooted.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Fri,  1 Dec 2006 17:43:30 +0100
+
 casper (1.77+debian-5) unstable; urgency=low
 
   * Fixed preseeding locale and keyboard's variant and options.
