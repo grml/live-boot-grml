@@ -1,3 +1,10 @@
+casper (1.79+debian-3) unstable; urgency=low
+
+  * Fix DEFCONSOLE for autoserial console, thanks to
+    "Alex Owen" <r.alex.owen@gmail.com>.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Sun,  4 Feb 2007 20:12:08 +0100
+
 casper (1.79+debian-2) unstable; urgency=low
 
   * It now depends also on "file" (Closes: #409308).
