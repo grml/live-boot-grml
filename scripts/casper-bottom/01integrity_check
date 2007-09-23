@@ -1,0 +1,18 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+grep integrity-check /proc/cmdline && casper-md5check /live_media /live_media/md5sum.txt < /dev/tty8

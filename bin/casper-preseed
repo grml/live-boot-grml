@@ -1,0 +1,17 @@
+#! /bin/sh
+set -e
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+root="$1"
+question="$2"
+value="$3"
+
+if ! (echo "SET $question $value"; echo "FSET $question seen true") | chroot "$1" debconf-communicate -fnoninteractive casper >/dev/null; then
+	chroot "$1" debconf-communicate -fnoninteractive casper >/dev/null <<EOF
+REGISTER debian-installer/dummy $question
+SET $question $value
+FSET $question seen true
+EOF
+fi
+
+exit 0

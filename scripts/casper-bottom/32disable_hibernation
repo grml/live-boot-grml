@@ -1,0 +1,35 @@
+#!/bin/sh
+
+PREREQ=""
+DESCRIPTION="Configuring power management..."
+
+. /scripts/functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+
+gpm_version=$(chroot /root /usr/bin/dpkg-query -W --showformat='${Version}' gnome-power-manager 2>/dev/null) || panel_version=""
+if [ -n "$gpm_version" ]; then
+    casper-reconfigure /root gnome-power-manager
+    chroot /root su $USERNAME -- gconftool-2 -s -t bool /apps/gnome-power-manager/can_hibernate false
+fi
+
+if [ -f /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config/kcmlaptoprc ]; then
+    sed -i s/EnableHibernate=true/EnableHibernate=false/ \
+        /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config/kcmlaptoprc
+fi
+
+log_end_msg

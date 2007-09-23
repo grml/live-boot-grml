@@ -1,0 +1,4 @@
+bin/casper-reconfigure	usr/share/casper
+bin/casper-preseed	usr/share/casper
+hooks			usr/share/initramfs-tools
+scripts			usr/share/initramfs-tools

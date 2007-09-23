@@ -1,0 +1,31 @@
+casper (1.59+debian-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Upload to unstable (Closes: #354539).
+
+  [ Marco Amadori ]
+  * Added possibility to set locale on chroot, not only at runtime.
+  * Removed "persistent" wait.
+  * Fixed persistence lock and added "homepersistence" boot parameter.
+  * Updated locales handling to latest debian policy.
+  * Cleanups
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 22 Jun 2006 06:21:00 +0200
+
+casper (1.59+debian-0) UNRELEASED; urgency=low
+
+  * Added "toram" boot parameter.
+  * Extendend fs support to ext2 and xfs file image.
+  * Changed debian-inexistant "-Q" modprobe option with "-q".
+  * Removed ubiquity code.
+  * USERNAME and HOST defaulted to "debian".
+  * Preliminary netboot (cifs) patch by  
+    "Jason D. Clinton" <me@jasonclinton.com>
+  * Lowered dependence of dmsetup code (now only Suggests).
+  * Checks for replacing "udevplug" (ubuntu-only) with "udevtrigger".
+  * Reworked xorg and anacron patches from  
+    Frederic Lehobey <Frederic.Lehobey@free.fr>.
+  * scripts/casper-bottom/10adduser: configuring only the $USERNAME for sudo
+      instead of group 'admin'.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Fri, 16 Jun 2006 11:01:48 +0200

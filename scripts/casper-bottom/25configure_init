@@ -1,0 +1,51 @@
+#!/bin/sh
+
+PREREQ=""
+DESCRIPTION="Setting up init..."
+
+. /scripts/functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+# Arrange for shells on virtual consoles, rather than login prompts
+
+if [ -n "$USERNAME" ]; then
+    sed -i -e "s|^\([^:]*:[^:]*:[^:]*\):.*getty.*\<\(tty[0-9]*\).*$|\1:/bin/login -f $USERNAME </dev/\2 >/dev/\2 2>\&1|" /root/etc/inittab
+fi
+
+# This has the nice side effect of the cron.{daily,weekly,monthly} jobs in
+# /etc/crontab remaining disabled, yet also not run by anacron
+if [ -x /root/etc/init.d/anacron ]; then
+	for f in /root/etc/rc?.d/S??anacron; do
+    	mv ${f} $(dirname ${f})/K00anacron
+	done
+fi
+
+# No point, really
+rm -f /root/etc/rc?.d/[SK]??postfix
+
+# Avoid clobbering the user's clock
+rm -f /root/etc/rc?.d/K??hwclock.sh
+
+# Disable readahead since it doesn't play well with squashfs + unionfs
+# use chmod instead of mv to not trigger unionfs bugs.
+if [ -e /root/sbin/readahead-list ]; then
+	chmod -x /root/sbin/readahead-list
+fi
+
+log_end_msg
+
+exit 0
