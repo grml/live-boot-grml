@@ -1,0 +1,29 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+ 
+if [ -f /etc/casper.conf ] ; then 
+	cp -p /etc/casper.conf /root/etc/casper.conf
+else
+	cat <<EOF >/root/etc/casper.conf
+export USERNAME="$USERNAME"
+export USERFULLNAME="$USERFULLNAME"
+export HOST="$HOST"
+EOF
+
+fi
+

@@ -1,3 +1,22 @@
+casper (1.65) edgy; urgency=low
+
+  * Update to call udevsettle/udevtrigger instead of udevplug
+
+ -- Tollef Fog Heen <tfheen@ubuntu.com>  Mon, 21 Aug 2006 19:37:58 +0200
+
+casper (1.64) edgy; urgency=low
+
+  * Fix moving of squashfs mount points so that /proc/mounts in the
+    installed system refers to them correctly (closes: Malone #55019). As a
+    bonus, this lets us mount them on subdirectories of /casper/ right from
+    the start.
+  * Treat locale= as equivalent to debian-installer/locale= (closes: Malone
+    #53444).
+  * Fix ubiquity-hooks/30accessibility not to use log_end_msg, and to chroot
+    to /target instead of /root (closes: Malone #53277).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu,  3 Aug 2006 14:00:22 +0100
+
 casper (1.63) edgy; urgency=low
 
   [ Tollef Fog Heen ]

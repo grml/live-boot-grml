@@ -38,14 +38,14 @@ copy_exec /usr/share/casper/casper-reconfigure /bin
 copy_exec /usr/share/casper/casper-preseed /bin
 
 # Ubuntu or Debian test
-if [ -x /sbin/udevplug ]; then
-	mkdir -p ${DESTDIR}/lib/udev
-	copy_exec /lib/udev/cdrom_id /lib/udev
-	copy_exec /lib/udev/vol_id /lib/udev
-	copy_exec /lib/udev/path_id /lib/udev
-else
-	copy_exec /sbin/udevtrigger /sbin
-fi
+#	mkdir -p ${DESTDIR}/lib/udev
+#	copy_exec /lib/udev/cdrom_id /lib/udev
+#	copy_exec /lib/udev/vol_id /lib/udev
+#	copy_exec /lib/udev/path_id /lib/udev
+# FIXME: add lsb check for ubuntu
+copy_exec /sbin/udevtrigger /sbin
+copy_exec /sbin/udevsettle /sbin
+
 
 copy_exec /usr/bin/udevinfo /bin
 

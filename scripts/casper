@@ -32,389 +32,379 @@ export USERNAME USERFULLNAME HOST
 
 # looking for casper specifics options as kernel parameters
 for x in $(cat /proc/cmdline); do
-	case $x in
-		netboot*)
-			NETBOOT=${x#netboot=}
-			export NETBOOT
-			;;
-		toram)
-			TORAM=1
-			export TORAM
-			;;
-		show-cow)
-			SHOWCOW=1
-			export SHOWCOW
-			;;
-		persistent)
-			PERSISTENT=1
-			export PERSISTENT
-			;;
-	esac
+    case $x in
+        netboot*)
+            export NETBOOT=${x#netboot=} ;;
+        toram)
+            export TORAM=1 ;;
+        show-cow)
+            export SHOWCOW=1 ;;
+        persistent)
+            export PERSISTENT=1 ;;
+        casper-getty)
+            export CASPERGETTY=1 ;;
+    esac
 done
 
 # sort of compatibility with netboot.h from linux docs
 if [ -z "${NETBOOT}" ]; then
-	if [ "${ROOT}" == "/dev/nfs" ]; then
-		NETBOOT="nfs"
-		export NETBOOT
-	elif [ "${ROOT}" == "/dev/cifs" ]; then
-		NETBOOT="cifs"
-		export NETBOOT
-	fi
+    if [ "${ROOT}" == "/dev/nfs" ]; then
+        NETBOOT="nfs"
+        export NETBOOT
+    elif [ "${ROOT}" == "/dev/cifs" ]; then
+        NETBOOT="cifs"
+        export NETBOOT
+    fi
 fi
 
 is_casper_path() {
-	path=$1
-	if [ -d "$path/casper" ]; then
-		if [ "$(echo $path/casper/*.cloop)" != "$path/casper/*.cloop" ] ||
-			[ "$(echo $path/casper/*.squashfs)" != "$path/casper/*.squashfs" ] ||
-			[ "$(echo $path/casper/*.ext2)" != "$path/casper/*.ext2" ] ||
-			[ "$(echo $path/casper/*.dir)" != "$path/casper/*.dir" ]; then
-			return 0
-		fi
-	fi
-	return 1
+    path=$1
+    if [ -d "$path/casper" ]; then
+        if [ "$(echo $path/casper/*.cloop)" != "$path/casper/*.cloop" ] ||
+            [ "$(echo $path/casper/*.squashfs)" != "$path/casper/*.squashfs" ] ||
+            [ "$(echo $path/casper/*.ext2)" != "$path/casper/*.ext2" ] ||
+            [ "$(echo $path/casper/*.dir)" != "$path/casper/*.dir" ]; then
+            return 0
+        fi
+    fi
+    return 1
 }
 
 subdevices() {
-	sysblock=$1
-	r=""
-	for dev in "${sysblock}" "${sysblock}"/*; do
-		if [ -e "${dev}/dev" ]; then
-			r="${r} ${dev}"
-		fi
-	done
-	echo ${r}
+    sysblock=$1
+    r=""
+    for dev in "${sysblock}" "${sysblock}"/*; do
+        if [ -e "${dev}/dev" ]; then
+            r="${r} ${dev}"
+        fi
+    done
+    echo ${r}
 }
 
 get_backing_device() {
-	case "$1" in
-		*.cloop)
-			echo $(setup_loop "$1" "cloop" "/sys/block/cloop*")
-			;;
-		*.squashfs|*.ext2)
-			echo $(setup_loop "$1" "loop" "/sys/block/loop*")
-			;;
-		*.dir)
-			echo "directory"
-			;;
-		*)
-			panic "Unrecognized casper filesystem: $1"
-			;;
-	esac
+    case "$1" in
+        *.cloop)
+            echo $(setup_loop "$1" "cloop" "/sys/block/cloop*")
+            ;;
+        *.squashfs|*.ext2)
+            echo $(setup_loop "$1" "loop" "/sys/block/loop*")
+            ;;
+        *.dir)
+            echo "directory"
+            ;;
+        *)
+            panic "Unrecognized casper filesystem: $1"
+            ;;
+    esac
 }
 
 match_files_in_dir() {
-	# Does any files match pattern $1 ?
+    # Does any files match pattern $1 ?
 
-	local pattern="$1"
-	if [ "$(echo $pattern)" != "$pattern" ]; then
-		return 0
-	fi
-	return 1
+    local pattern="$1"
+    if [ "$(echo $pattern)" != "$pattern" ]; then
+        return 0
+    fi
+    return 1
 }
 
 mount_images_in_directory() {
-	directory="$1"
-	rootmnt="$2"
-	if match_files_in_dir "$directory/casper/*.cloop"; then
-		# Let's hope there's just one matching *.cloop... FIXME
-		setup_devmapper $(get_backing_device "$directory/casper/*.cloop") "$rootmnt"
-	elif match_files_in_dir "$directory/casper/*.squashfs" || 
-		match_files_in_dir "$directory/casper/*.ext2" ||
-		match_files_in_dir "$directory/casper/*.dir"; then
-		setup_unionfs "$directory/casper" "$rootmnt"
-	else
-		:
-	fi
+    directory="$1"
+    rootmnt="$2"
+    if match_files_in_dir "$directory/casper/*.cloop"; then
+        # Let's hope there's just one matching *.cloop... FIXME
+        setup_devmapper $(get_backing_device "$directory/casper/*.cloop") "$rootmnt"
+    elif match_files_in_dir "$directory/casper/*.squashfs" || 
+        match_files_in_dir "$directory/casper/*.ext2" ||
+        match_files_in_dir "$directory/casper/*.dir"; then
+        setup_unionfs "$directory/casper" "$rootmnt"
+    else
+        :
+    fi
 }
 
 sys2dev() {
-	sysdev=${1#/sys}
-	echo "/dev/$(udevinfo -q name -p ${sysdev} 2>/dev/null|| echo ${sysdev##*/})"
+    sysdev=${1#/sys}
+    echo "/dev/$(udevinfo -q name -p ${sysdev} 2>/dev/null|| echo ${sysdev##*/})"
 }
 
 setup_loop() {
-	local fspath=$1
-	local module=$2
-	local pattern=$3
+    local fspath=$1
+    local module=$2
+    local pattern=$3
 
-	modprobe -qb "$module"
-	if [ -x /sbin/udevplug ]; then
-		udevplug -W
-	else
-		udevtrigger
-	fi
+    modprobe -qb "$module"
+    udevsettle
 
-	for loopdev in $pattern; do
-		if [ "$(cat $loopdev/size)" -eq 0 ]; then
-			dev=$(sys2dev "${loopdev}")
-			losetup "$dev" "$fspath"
-			echo "$dev"
-			return 0
-		fi
-	done
-	panic "No loop devices available"
+    for loopdev in $pattern; do
+        if [ "$(cat $loopdev/size)" -eq 0 ]; then
+            dev=$(sys2dev "${loopdev}")
+            losetup "$dev" "$fspath"
+            echo "$dev"
+            return 0
+        fi
+    done
+    panic "No loop devices available"
 }
 
 get_fstype() {
-	#FIXME# one use of this function expects "unknown" another does not!
-	# which is it???
-	local FSTYPE
-	local FSSIZE
-	eval $(fstype < $1)
-	if [ "$FSTYPE" != "unknown" ]; then
-		echo $FSTYPE
-		return 0
-	fi
-	/lib/udev/vol_id -t $1 2>/dev/null
+    #FIXME# one use of this function expects "unknown" another does not!
+    # which is it???
+    local FSTYPE
+    local FSSIZE
+    eval $(fstype < $1)
+    if [ "$FSTYPE" != "unknown" ]; then
+        echo $FSTYPE
+        return 0
+    fi
+    /lib/udev/vol_id -t $1 2>/dev/null
 }
 
 setup_devmapper() {
-	backdev="$1"
-	rootmnt="$2"
+    backdev="$1"
+    rootmnt="$2"
 
-	modprobe -qb dm-mod
-	COW_DEVICE=/dev/ram1
-	COW_NAME="casper-cow"
+    modprobe -qb dm-mod
+    COW_DEVICE=/dev/ram1
+    COW_NAME="casper-cow"
 
-	BACKING_FILE_SIZE=$(blockdev --getsize "$backdev")
-	MAX_COW_SIZE=$(blockdev --getsize "$COW_DEVICE")
-	CHUNK_SIZE=8 # sectors
+    BACKING_FILE_SIZE=$(blockdev --getsize "$backdev")
+    MAX_COW_SIZE=$(blockdev --getsize "$COW_DEVICE")
+    CHUNK_SIZE=8 # sectors
 
-	if [ -z "$COW_SIZE" -o "$COW_SIZE" -gt "$MAX_COW_SIZE" ]; then
-		COW_SIZE=$MAX_COW_SIZE
-	fi
+    if [ -z "$COW_SIZE" -o "$COW_SIZE" -gt "$MAX_COW_SIZE" ]; then
+        COW_SIZE=$MAX_COW_SIZE
+    fi
 
-	echo "0 $COW_SIZE linear $COW_DEVICE 0" | dmsetup create $COW_NAME
+    echo "0 $COW_SIZE linear $COW_DEVICE 0" | dmsetup create $COW_NAME
 
-	echo "0 $BACKING_FILE_SIZE snapshot $backdev /dev/mapper/$COW_NAME p $CHUNK_SIZE" | \
-		dmsetup create casper-snapshot
-	if [ "$(get_fstype $backdev)" = "unknown" ]; then
-		panic "Unknown file system type on $backdev"
-	fi
-	mount -t $(get_fstype "$backdev") /dev/mapper/casper-snapshot $rootmnt || panic "Can not mount /dev/mapper/casper/snapshot on $rootmnt"
+    echo "0 $BACKING_FILE_SIZE snapshot $backdev /dev/mapper/$COW_NAME p $CHUNK_SIZE" | \
+        dmsetup create casper-snapshot
+    if [ "$(get_fstype $backdev)" = "unknown" ]; then
+        panic "Unknown file system type on $backdev"
+    fi
+    mount -t $(get_fstype "$backdev") /dev/mapper/casper-snapshot $rootmnt || panic "Can not mount /dev/mapper/casper/snapshot on $rootmnt"
 
-	mkdir -p "$rootmnt/rofs"
-	echo "0 $BACKING_FILE_SIZE linear $backdev 0" | dmsetup create casper-backing
-	mount -t $(get_fstype "$backdev") /dev/mapper/casper-backing "$rootmnt/rofs"
+    mkdir -p "$rootmnt/rofs"
+    echo "0 $BACKING_FILE_SIZE linear $backdev 0" | dmsetup create casper-backing
+    mount -t $(get_fstype "$backdev") /dev/mapper/casper-backing "$rootmnt/rofs"
 }
 
 where_is_mounted() {
-	device=$1
-	if grep -q "^$device " /proc/mounts; then
-		grep "^$device " /proc/mounts | read d mountpoint rest
-		echo $mountpoint
-		return 0
-	fi
-	return 1
+    device=$1
+    if grep -q "^$device " /proc/mounts; then
+        grep "^$device " /proc/mounts | read d mountpoint rest
+        echo $mountpoint
+        return 0
+    fi
+    return 1
 }
 
 copy_to_ram() {
-	copyfrom="$1"
+    copyfrom="$1"
 
-	if [ ! -z "${2}" ] ; then
-		# This will enable future rampersistence, todo yet
-		copyto="${2}"
-		moveit="False"
-	else
-		copyto="${copyfrom}_swap"
-		moveit="True"
-	fi
+    if [ ! -z "${2}" ] ; then
+        # This will enable future rampersistence, todo yet
+        copyto="${2}"
+        moveit="False"
+    else
+        copyto="${copyfrom}_swap"
+        moveit="True"
+    fi
 
-	size=$(du -ks ${copyfrom} | cut -f1)
-	size=$(expr ${size} + ${size}/20 ) # Fixme: 5% more to be sure
-	needed_space=$(expr ${size} * 1024)
-	freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( cat /proc/meminfo | grep Cached | head -n 1 | awk '/Cached/{print $2}' - ))
-	
-	if [ ! ${freespace} -lt ${needed_space}  ] ; then
-		[ "$quiet" != "y" ] && log_begin_msg "Not enough free memory to copy to ram"
-		[ "$quiet" != "y" ] && log_end_msg
-		return
-	else
-		[ "$quiet" != "y" ] && log_begin_msg "Copying live media to ram..."
-		mkdir "${copyto}"
-		mount -t tmpfs -o size=${size}k /dev/shm ${copyto}
-		cp -a ${copyfrom}/* ${copyto} # "cp -a" from busybox also copies hidden files
-		umount ${copyfrom}
-		if [ "${moveit}" == "True" ]; then
-			mount -r -o move ${copyto} ${copyfrom}
-			rmdir ${copyto}
-		fi
-		[ "$quiet" != "y" ] && log_end_msg
-	fi
+    size=$(du -ks ${copyfrom} | cut -f1)
+    size=$(expr ${size} + ${size}/20 ) # Fixme: 5% more to be sure
+    needed_space=$(expr ${size} * 1024)
+    freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( cat /proc/meminfo | grep Cached | head -n 1 | awk '/Cached/{print $2}' - ))
+    
+    if [ ! ${freespace} -lt ${needed_space}  ] ; then
+        [ "$quiet" != "y" ] && log_begin_msg "Not enough free memory to copy to ram"
+        [ "$quiet" != "y" ] && log_end_msg
+        return
+    else
+        [ "$quiet" != "y" ] && log_begin_msg "Copying live media to ram..."
+        mkdir "${copyto}"
+        mount -t tmpfs -o size=${size}k /dev/shm ${copyto}
+        cp -a ${copyfrom}/* ${copyto} # "cp -a" from busybox also copies hidden files
+        umount ${copyfrom}
+        if [ "${moveit}" == "True" ]; then
+            mount -r -o move ${copyto} ${copyfrom}
+            rmdir ${copyto}
+        fi
+        [ "$quiet" != "y" ] && log_end_msg
+    fi
 }
 
 find_cow_device() {
-	pers_label="${1}"
-	cow_backing="/${pers_label}-backing"
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop); do
-		for dev in $(subdevices "${sysblock}"); do
-			devname=$(sys2dev "${dev}")
-			if [ "$(/lib/udev/vol_id -l $devname 2>/dev/null)" = "${pers_label}" ]; then
-				echo "$devname"
-				return
-			elif [ "$(get_fstype ${devname})" = "vfat" ]; then
-				mkdir -p "${cow_backing}"
-				if where_is_mounted ${devname} > /dev/null; then
-					mount -o remount,rw ${devname} $(where_is_mounted ${devname}) || panic "Remounting failed"
-					mount -o bind $(where_is_mounted ${devname}) ${cow_backing} || panic "Cannot bind-mount"
-				else
-					mount -t $(get_fstype "${devname}") -o rw "${devname}" ${cow_backing} || panic "Cannot mount $devname on /cow-backing"
-				fi
+    pers_label="${1}"
+    cow_backing="/${pers_label}-backing"
+    for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop); do
+        for dev in $(subdevices "${sysblock}"); do
+            devname=$(sys2dev "${dev}")
+            if [ "$(/lib/udev/vol_id -l $devname 2>/dev/null)" = "${pers_label}" ]; then
+                echo "$devname"
+                return
+            elif [ "$(get_fstype ${devname})" = "vfat" ]; then
+                mkdir -p "${cow_backing}"
+                if where_is_mounted ${devname} > /dev/null; then
+                    mount -o remount,rw ${devname} $(where_is_mounted ${devname}) || panic "Remounting failed"
+                    mount -o bind $(where_is_mounted ${devname}) ${cow_backing} || panic "Cannot bind-mount"
+                else
+                    mount -t $(get_fstype "${devname}") -o rw "${devname}" ${cow_backing} || panic "Cannot mount $devname on /cow-backing"
+                fi
 
-				if [ -e "${cow_backing}/${pers_label}" ]; then
-					echo $(setup_loop "${cow_backing}/${pers_label}" "loop" "/sys/block/loop*")
-					return 0
-				else
-					umount ${cow_backing}
-				fi
-			fi
-		done
-	done
+                if [ -e "${cow_backing}/${pers_label}" ]; then
+                    echo $(setup_loop "${cow_backing}/${pers_label}" "loop" "/sys/block/loop*")
+                    return 0
+                else
+                    umount ${cow_backing}
+                fi
+            fi
+        done
+    done
 }
 
 do_netmount() {
-	rc=1
+    rc=1
 
-	modprobe -q af_packet # For DHCP
+    modprobe -q af_packet # For DHCP
 
-	ipconfig ${DEVICE} /tmp/net-${DEVICE}.conf
+    ipconfig ${DEVICE} /tmp/net-${DEVICE}.conf
 
-	if [ "${NFSROOT}" = "auto" ]; then
-		NFSROOT=${ROOTSERVER}:${ROOTPATH}
-	fi
+    if [ "${NFSROOT}" = "auto" ]; then
+        NFSROOT=${ROOTSERVER}:${ROOTPATH}
+    fi
 
-	[ "$quiet" != "y" ] && log_begin_msg "Trying netboot from ${NFSROOT}"
-	
-	if [ "${NETBOOT}" != "nfs" ] && do_cifsmount ; then
-		rc=0
-	elif do_nfsmount ; then
-		NETBOOT=nfs
-		export NETBOOT
-		rc=0
-	fi
+    [ "$quiet" != "y" ] && log_begin_msg "Trying netboot from ${NFSROOT}"
+    
+    if [ "${NETBOOT}" != "nfs" ] && do_cifsmount ; then
+        rc=0
+    elif do_nfsmount ; then
+        NETBOOT="nfs"
+        export NETBOOT
+        rc=0
+    fi
 
-	[ "$quiet" != "y" ] && log_end_msg
-	return ${rc}
+    [ "$quiet" != "y" ] && log_end_msg
+    return ${rc}
 }
 
 do_nfsmount() {
-	rc=1
-	modprobe -q nfs
-	if [ -z "${NFSOPTS}" ]; then
-		NFSOPTS=""
-	fi
+    rc=1
+    modprobe -q nfs
+    if [ -z "${NFSOPTS}" ]; then
+        NFSOPTS=""
+    fi
 
-	[ "$quiet" != "y" ] && log_begin_msg "Trying nfsmount -o nolock -o ro ${NFSOPTS} ${NFSROOT} ${mountpoint}"
-	# FIXME: This for loop is an ugly HACK round an nfs bug
-	for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13; do
-		nfsmount -o nolock -o ro ${NFSOPTS} "${NFSROOT}" "${mountpoint}" && rc=0 && break
-		sleep 1
-	done
-	return ${rc}
+    [ "$quiet" != "y" ] && log_begin_msg "Trying nfsmount -o nolock -o ro ${NFSOPTS} ${NFSROOT} ${mountpoint}"
+    # FIXME: This for loop is an ugly HACK round an nfs bug
+    for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13; do
+        nfsmount -o nolock -o ro ${NFSOPTS} "${NFSROOT}" "${mountpoint}" && rc=0 && break
+        sleep 1
+    done
+    return ${rc}
 }
 
 do_cifsmount() {
-	rc=1
-	if [ -x "/sbin/mount.cifs" ]; then
-		if [ -z "${NFSOPTS}" ]; then
-			CIFSOPTS="-ouser=root,password="
-		else
-			CIFSOPTS="${NFSOPTS}"
-		fi
+    rc=1
+    if [ -x "/sbin/mount.cifs" ]; then
+        if [ -z "${NFSOPTS}" ]; then
+            CIFSOPTS="-ouser=root,password="
+        else
+            CIFSOPTS="${NFSOPTS}"
+        fi
 
-		[ "$quiet" != "y" ] && log_begin_msg "Trying mount.cifs ${NFSROOT} ${mountpoint} ${CIFSOPTS}"
-		modprobe -q cifs
+        [ "$quiet" != "y" ] && log_begin_msg "Trying mount.cifs ${NFSROOT} ${mountpoint} ${CIFSOPTS}"
+        modprobe -q cifs
 
-		if mount.cifs "${NFSROOT}" "${mountpoint}" "${CIFSOPTS}" ; then
-			rc=0
-		fi
-	fi
-	return ${rc}
+        if mount.cifs "${NFSROOT}" "${mountpoint}" "${CIFSOPTS}" ; then
+            rc=0
+        fi
+    fi
+    return ${rc}
 }
 
 setup_unionfs() {
-	image_directory="$1"
-	rootmnt="$2"
+    image_directory="$1"
+    rootmnt="$2"
 
-	modprobe -qb unionfs
+    modprobe -qb unionfs
 
-	croot=""	# Should really be /casper, but run-init doesn't handle
-				# mount-points in subdirectories at all
+    # run-init can't deal with this, but we're going to move all of these
+    # away before it runs anyway.
+    croot="/casper"
 
-	# Let's just mount the read-only file systems first
-	rofsstring=""
-	rofslist=""
-	if [ ${NETBOOT} == "nfs" ] ; then
-		roopt="nfsro" # go aroung a bug in nfs-unionfs locking
-	else
-		roopt="ro"
-	fi
+    # Let's just mount the read-only file systems first
+    rofsstring=""
+    rofslist=""
+    if [ "${NETBOOT}" == "nfs" ] ; then
+        roopt="nfsro" # go aroung a bug in nfs-unionfs locking
+    else
+        roopt="ro"
+    fi
 
-	mkdir -p "${croot}"
-	for image_type in "ext2" "squashfs" "dir" ; do
-		for image in "${image_directory}"/*."${image_type}"; do
-			imagename=$(basename "${image}")
-			if [ -d "${image}" ]; then
-				# it is a plain directory: do nothing
-				rofsstring="${image}=${roopt}:${rofsstring}"
-				rofslist="${image} ${rofslist}"
-			elif [ -f "${image}" ]; then
-				backdev=$(get_backing_device "$image")
-				fstype=$(get_fstype "${backdev}")
-				if [ "${fstype}" = "unknown" ]; then
-					panic "Unknown file system type on ${backdev} (${image})"
-				fi
-				mkdir -p "${croot}/${imagename}"
-				mount -t "${fstype}" -o ro "${backdev}" "${croot}/${imagename}" || panic "Can not mount $backdev ($image) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
-			fi
-		done
-	done
-	rofsstring=${rofsstring%:}
+    mkdir -p "${croot}"
+    for image_type in "ext2" "squashfs" "dir" ; do
+        for image in "${image_directory}"/*."${image_type}"; do
+            imagename=$(basename "${image}")
+            if [ -d "${image}" ]; then
+                # it is a plain directory: do nothing
+                rofsstring="${image}=${roopt}:${rofsstring}"
+                rofslist="${image} ${rofslist}"
+            elif [ -f "${image}" ]; then
+                backdev=$(get_backing_device "$image")
+                fstype=$(get_fstype "${backdev}")
+                if [ "${fstype}" = "unknown" ]; then
+                    panic "Unknown file system type on ${backdev} (${image})"
+                fi
+                mkdir -p "${croot}/${imagename}"
+                mount -t "${fstype}" -o ro "${backdev}" "${croot}/${imagename}" || panic "Can not mount $backdev ($image) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
+            fi
+        done
+    done
+    rofsstring=${rofsstring%:}
 
-	mkdir -p /cow
-	cowdevice="tmpfs"
-	cow_fstype="tmpfs"
-	
-	# Looking for "${root_persistence}" device or file
-	if [ ! -z "${PERSISTENT}" ]; then
-		cowprobe=$(find_cow_device "${root_persistence}")
-		if [ -b "${cowprobe}" ]; then
-			cowdevice=${cowprobe}
-			cow_fstype=$(get_fstype "${cowprobe}")
-		else
-			[ "$quiet" != "y" ] &&	log_begin_msg "Unable to find the persistent medium"
-		fi
-	fi
+    mkdir -p /cow
+    cowdevice="tmpfs"
+    cow_fstype="tmpfs"
+    
+    # Looking for "${root_persistence}" device or file
+    if [ ! -z "${PERSISTENT}" ]; then
+        cowprobe=$(find_cow_device "${root_persistence}")
+        if [ -b "${cowprobe}" ]; then
+            cowdevice=${cowprobe}
+            cow_fstype=$(get_fstype "${cowprobe}")
+        else
+            [ "$quiet" != "y" ] &&    log_begin_msg "Unable to find the persistent medium"
+        fi
+    fi
 
-	mount ${cowdevice} -t ${cow_fstype} -o rw /cow || panic "Can not mount $cowdevice on /cow"
-	
-	mount -t unionfs -o dirs=/cow=rw:$rofsstring unionfs "$rootmnt" || panic "Unionfs mount failed"
-	
-	for d in ${rofslist}; do
-		mkdir -p "${rootmnt}/casper/${d}"
-		mount -o bind "${d}" "${rootmnt}/casper/${d}"
-		case d in
-			*.dir) ;; # do nothing
-			*) umount "${d}" ;;
-		esac
-	done
+    mount ${cowdevice} -t ${cow_fstype} -o rw /cow || panic "Can not mount $cowdevice on /cow"
+    
+    mount -t unionfs -o dirs=/cow=rw:$rofsstring unionfs "$rootmnt" || panic "Unionfs mount failed"
+    
+    for d in ${rofslist}; do
+        mkdir -p "${rootmnt}/casper/${d##*/}"
+        case d in
+            *.dir) mount -o bind "${d}" "${rootmnt}/casper/${d##*/}" ;;
+            *) mount -o move "${d}" "${rootmnt}/casper/${d##*/}" ;;
+        esac
+    done
 
-	# Adding other custom mounts
-	if [ ! -z "${PERSISTENT}" ]; then
-		homecow=$(find_cow_device "${home_persistence}" )
-		if [ -b "${homecow}" ]; then
-			mount ${homecow} -t $(get_fstype "${homecow}") -o rw "${rootmnt}/home"
-		else 
-			[ "$quiet" != "y" ] &&  log_begin_msg "Unable to find the persistent home medium"
-		fi
-	fi
+    # Adding other custom mounts
+    if [ ! -z "${PERSISTENT}" ]; then
+        homecow=$(find_cow_device "${home_persistence}" )
+        if [ -b "${homecow}" ]; then
+            mount ${homecow} -t $(get_fstype "${homecow}") -o rw "${rootmnt}/home"
+        else 
+            [ "$quiet" != "y" ] &&  log_begin_msg "Unable to find the persistent home medium"
+        fi
+    fi
 
-	if [ ! -z "${SHOWCOW}" ]; then
-		mkdir -p "$rootmnt/cow"
-		mount -o bind /cow "$rootmnt/cow"
-	fi
+    if [ ! -z "${SHOWCOW}" ]; then
+        mkdir -p "$rootmnt/cow"
+        mount -o bind /cow "$rootmnt/cow"
+    fi
 }
 
 is_usb_device() {
@@ -426,106 +416,106 @@ is_usb_device() {
 }
 
 find_livefs() {
-	mounted=
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram); do
-		devname=$(sys2dev "${sysblock}")
-		fstype=$(get_fstype "${devname}")
-		if /lib/udev/cdrom_id ${devname} > /dev/null; then
-			mount -t ${fstype} -o ro "$devname" $mountpoint || continue
-			if is_casper_path $mountpoint; then
-				echo $mountpoint
-				return
-			else
-				umount $mountpoint
-			fi
-		elif is_usb_device "$sysblock"; then
-			for dev in $(subdevices "${sysblock}"); do
-				devname=$(sys2dev "${dev}")
-				fstype=$(get_fstype "${devname}")
-				case ${fstype} in
-					vfat|iso9660|udf)
-						mount -t ${fstype} -o ro "${devname}" $mountpoint || continue
-						if is_casper_path $mountpoint; then
-							echo $mountpoint
-							return
-						else
-							umount $mountpoint
-						fi
-						;;
-				esac
-			done
-		elif [ "${fstype}" = "squashfs" ||  \
-				"${fstype}" = "ext2" ]; then
-		
-			# This is an ugly hack situation, the block device has
-			# an image directly on it.  It's hopefully
-			# casper, so take it and run with it.
-		
-			ln -s "${devname}" "${devname}.${fstype}"
-			echo "${devname}.${fstype}"
-			return
-		fi
-	done
+    mounted=
+    for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram); do
+        devname=$(sys2dev "${sysblock}")
+        fstype=$(get_fstype "${devname}")
+        if /lib/udev/cdrom_id ${devname} > /dev/null; then
+            mount -t ${fstype} -o ro "$devname" $mountpoint || continue
+            if is_casper_path $mountpoint; then
+                echo $mountpoint
+                return
+            else
+                umount $mountpoint
+            fi
+        elif is_usb_device "$sysblock"; then
+            for dev in $(subdevices "${sysblock}"); do
+                devname=$(sys2dev "${dev}")
+                fstype=$(get_fstype "${devname}")
+                case ${fstype} in
+                    vfat|iso9660|udf)
+                        mount -t ${fstype} -o ro "${devname}" $mountpoint || continue
+                        if is_casper_path $mountpoint; then
+                            echo $mountpoint
+                            return
+                        else
+                            umount $mountpoint
+                        fi
+                        ;;
+                esac
+            done
+        elif [ "${fstype}" = "squashfs" ||  \
+                "${fstype}" = "ext2" ]; then
+        
+            # This is an ugly hack situation, the block device has
+            # an image directly on it.  It's hopefully
+            # casper, so take it and run with it.
+        
+            ln -s "${devname}" "${devname}.${fstype}"
+            echo "${devname}.${fstype}"
+            return
+        fi
+    done
 }
 
 set_usplash_timeout() {
-	if [ -x /sbin/usplash_write ]; then
-		/sbin/usplash_write "TIMEOUT 120"
-	fi
+    if [ -x /sbin/usplash_write ]; then
+        /sbin/usplash_write "TIMEOUT 120"
+    fi
 }
 
 mountroot() {
-	exec 6>&1
-	exec 7>&2
-	exec > casper.log
-	exec 2>&1
-	
-	set_usplash_timeout
-	[ "$quiet" != "y" ] && log_begin_msg "Running /scripts/casper-premount"
-	run_scripts /scripts/casper-premount
-	[ "$quiet" != "y" ] && log_end_msg
+    exec 6>&1
+    exec 7>&2
+    exec > casper.log
+    exec 2>&1
+    
+    set_usplash_timeout
+    [ "$quiet" != "y" ] && log_begin_msg "Running /scripts/casper-premount"
+    run_scripts /scripts/casper-premount
+    [ "$quiet" != "y" ] && log_end_msg
 
-	# Needed here too because some things (*cough* udev *cough*)
-	# changes the timeout
+    # Needed here too because some things (*cough* udev *cough*)
+    # changes the timeout
 
-	set_usplash_timeout
+    set_usplash_timeout
 
-	if [ ! -z "${NETBOOT}" ]; then
-		if do_netmount ; then
-			livefs_root="${mountpoint}"
-		else
-			panic "Unable to find a the network rootfs live file system"
-		fi
-	else
-		# Scan local devices for the image
-		for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13; do
-			livefs_root=$(find_livefs)
-			if [ "${livefs_root}" ]; then
-				break
-			fi
-		done
+    if [ ! -z "${NETBOOT}" ]; then
+        if do_netmount ; then
+            livefs_root="${mountpoint}"
+        else
+            panic "Unable to find a the network rootfs live file system"
+        fi
+    else
+        # Scan local devices for the image
+        for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13; do
+            livefs_root=$(find_livefs)
+            if [ "${livefs_root}" ]; then
+                break
+            fi
+        done
 
-		if [ "$?" -gt 0 ]; then
-			panic "Unable to find a medium containing a live file system"
-		fi
-			
-		if [ ! -z "${TORAM}" ]; then
-			copy_to_ram "${livefs_root}"
-		fi
-	fi
-	sleep 1
+        if [ "$?" -gt 0 ]; then
+            panic "Unable to find a medium containing a live file system"
+        fi
+            
+        if [ ! -z "${TORAM}" ]; then
+            copy_to_ram "${livefs_root}"
+        fi
+    fi
+    sleep 1
 
-	mount_images_in_directory "$livefs_root" "$rootmnt"
+    mount_images_in_directory "$livefs_root" "$rootmnt"
 
-	log_end_msg
+    log_end_msg
 
-	maybe_break casper-bottom
-	[ "$quiet" != "y" ] && log_begin_msg "Running /scripts/casper-bottom"
+    maybe_break casper-bottom
+    [ "$quiet" != "y" ] && log_begin_msg "Running /scripts/casper-bottom"
 
-	run_scripts /scripts/casper-bottom
-	[ "$quiet" != "y" ] && log_end_msg
+    run_scripts /scripts/casper-bottom
+    [ "$quiet" != "y" ] && log_end_msg
 
-	exec 1>&6 6>&-
-	exec 2>&7 7>&-
-	cp casper.log "${rootmnt}/var/log/"
+    exec 1>&6 6>&-
+    exec 2>&7 7>&-
+    cp casper.log "${rootmnt}/var/log/"
 }

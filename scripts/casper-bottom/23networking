@@ -27,14 +27,9 @@ iface lo inet loopback
 
 EOF
 
-if [ -x /sbin/udevplug ]; then
-	udevplug -Bpci -Iclass="0x02*"
-else
-	udevtrigger
-fi
+udevtrigger  
 
 if [ -z "${NETBOOT}" ] ; then
-
 	for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*; do
 		[ -e $interface ] || continue
 		i="$(basename $interface)"
