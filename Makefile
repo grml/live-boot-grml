@@ -116,12 +116,12 @@ uninstall:
 	rm -f $(DESTDIR)/usr/share/man/man7/live-login.7.gz
 
 update:
-	set -e; for MANPAGE in manpages/*.en.*; \
+	set -e; for FILE in docs/parameters.txt manpages/*.en.*; \
 	do \
-		sed -i	-e 's/2007\\-07\\-02/2007\\-07\\-09/' \
-			-e 's/02.07.2007/09.07.2007/' \
-			-e 's/1.91.3/1.91.4/' \
-		$$MANPAGE; \
+		sed -i	-e 's/2007\\-07\\-16/2007\\-07\\-23/' \
+			-e 's/16.07.2007/23.07.2007/' \
+			-e 's/1.91.5/1.91.6/' \
+		$$FILE; \
 	done
 
 clean:

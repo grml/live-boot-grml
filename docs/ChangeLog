@@ -1,3 +1,12 @@
+2007-07-18  Daniel Baumann  <daniel@debian.org>
+
+	* docs/parameters.txt:
+	  - Added values for vga parameter.
+	* scripts/live:
+	  - Added patch from Thomas Lange <lange@informatik.uni-koeln.de> to
+	    respect rootserver name from dhcp.
+	* Uploaded 1.91.5-1.
+
 2007-07-12  Daniel Baumann  <daniel@debian.org>
 
 	* bin/live-snapshot, scripts/live:
