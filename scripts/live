@@ -397,6 +397,14 @@ do_netmount() {
         NFSROOT=${ROOTSERVER}:${ROOTPATH}
     fi
 
+    # source relevant ipconfig output
+    . /tmp/net-${DEVICE}.conf
+    export HOSTNAME
+
+    if [ "${NFSROOT#*:}" = "$NFSROOT" ]; then
+	NFSROOT=${ROOTSERVER}:${NFSROOT}
+    fi
+
     [ "$quiet" != "y" ] && log_begin_msg "Trying netboot from ${NFSROOT}"
 
     if [ "${NETBOOT}" != "nfs" ] && do_cifsmount ; then
