@@ -1,24 +1,30 @@
-#! /bin/sh
+#!/bin/sh
+
+#set -e
+
+# initramfs-tools header
 
 PREREQ=""
-DESCRIPTION="Loading preseed file..."
+
+prereqs()
+{
+	echo "${PREREQ}"
+}
+
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
+esac
+
+# live-initramfs header
 
 . /scripts/live-functions
 
-prereqs ()
-{
-	echo "$PREREQ"
-}
+log_begin_msg "Loading preseed file..."
 
-case $1 in
-# get pre-requisites
-prereqs)
-	prereqs
-	exit 0
-	;;
-esac
-
-log_begin_msg "$DESCRIPTION"
+# live-initramfs script
 
 if [ -f "/root/${LOCATION}" ]; then
     chroot /root debconf-set-selections < "/root/${LOCATION}"

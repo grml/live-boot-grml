@@ -1,26 +1,35 @@
 #!/bin/sh
 
-PREREQ=""
-DESCRIPTION="Setting up init..."
+#set -e
 
-. /scripts/live-functions
+# initramfs-tools header
+
+PREREQ=""
 
 prereqs()
 {
-       echo "$PREREQ"
+	echo "${PREREQ}"
 }
 
-case $1 in
-# get pre-requisites
-prereqs)
-       prereqs
-       exit 0
-       ;;
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
 esac
 
-log_begin_msg "$DESCRIPTION"
+# live-initramfs header
+
+. /scripts/live-functions
+
+log_begin_msg "Setting up init..."
+
+# live-initramfs script
 
 # Arrange for shells on virtual consoles, rather than login prompts
+
+if [ -z "${NOAUTOLOGIN}" ]
+then
 
 if [ -n "$USERNAME" ]; then
     if [ ! -z "${LIVE_GETTY}" ]; then
@@ -59,6 +68,8 @@ if [ -n "$USERNAME" ]; then
             done
         fi
      fi
+fi
+
 fi
 
 # This has the nice side effect of the cron.{daily,weekly,monthly} jobs in

@@ -1,27 +1,34 @@
 #!/bin/sh
 
-PREREQ=""
-DESCRIPTION="Setting up swap..."
-FSTAB=/root/etc/fstab
+#set -e
 
-. /scripts/live-functions
+# initramfs-tools header
+
+PREREQ=""
 
 prereqs()
 {
-       echo "$PREREQ"
+	echo "${PREREQ}"
 }
 
-case $1 in
-# get pre-requisites
-prereqs)
-       prereqs
-       exit 0
-       ;;
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
 esac
 
-log_begin_msg "$DESCRIPTION"
+# live-initramfs header
 
-if [ -n "${SWAPOFF}" ]
+. /scripts/live-functions
+
+log_begin_msg "Setting up swap..."
+
+# live-initramfs script
+
+FSTAB=/root/etc/fstab
+
+if [ -n "${NOSWAP}" ]
 then
     exit 0
 fi

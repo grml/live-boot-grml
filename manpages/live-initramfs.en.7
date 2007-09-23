@@ -1,4 +1,4 @@
-.TH LIVE\-INITRAMFS 7 "2007\-05\-14" "1.81.3" "live\-initramfs"
+.TH LIVE\-INITRAMFS 7 "2007\-05\-21" "1.87.4" "live\-initramfs"
 
 .SH NAME
 live\-initramfs \- Debian Live initramfs generator
@@ -46,16 +46,22 @@ Configure the running locale as specified, if not present the live\-media rootfs
 Instead of using the default optional file "order.lst" (see below) another file could be specified without the extension ".lst"; it should be placed on "/live" directory of the live medium.
 .IP "\fBnetboot\fR[=nfs|cifs]" 4
 This tells live\-initramfs to perform a network mount. The parameter "nfsroot=" (with optional "nfsopts="), should specify where is the location of the root filesystem.  With no args, will try cifs first, and if it fails nfs.
+.IP "\fBnoautologin\fR" 4
+This parameter disables the automatic terminal login only, not touching gdk/kdm.
+.IP "\fBnoxautologin\fR" 4
+This parameter disables the automatic login of gdm/kdm only, not touching terminals.
+.IP "\fBnopersistent\fR" 4
+disables the "persistent" feature, useful if the bootloader (like syslinux) has been installed with persistent enabled.
+.IP "\fBnosudo\fR" 4
+This parameter disables the automatic configuration of sudo.
+.IP "\fBnoswap\fR" 4
+This parameter disables usage of local swap partitions.
 .IP "\fBpersistent\fR" 4
 live\-initramfs will look for persistent and snapshot partitions or files labeled "live\-rw", "home\-rw", and files called "live\-sn*", "home\-sn*" and will try to, in order: mount as /cow the first, mount the second in /home, and just copy the contents of the latter in appropriate locations (snapshots). Snapshots will be tried to be updated on reboot/shutdown. Look at \fIlive\-snapshot\fR(1) for more informations.
-.IP "\fBnopersistent\fR" 4
-disables the above mentioned "persistent" feature, useful if the bootloader (like syslinux) has been installed with persistent enabled.
 .IP "\fBquickreboot\fR" 4
 This option causes live\-initramfs to reboot without attempting to eject the media and without asking the user to remove the boot media.
 .IP "\fBshowmounts\fR" 4
 This parameter will make live\-initramfs to show on "/" the ro filesystems (mostly compressed) on "/live". This is not enabled by default because could lead to problems by applications like "mono" which store binary paths on installation.
-.IP "\fBswapoff\fR" 4
-This parameter disables usage of local swap partitions.
 .IP "\fBtodisk=\fR\fIDEVICE" 4
 Adding this parameter, live\-initramfs will try to copy the entire read\-only media to the specified device before mounting the root filesystem. It probably needs a lot of free space. Subsequent boots should then skip this step and just specify the "live\-media=DEVICE" boot parameter with the same DEVICE used this time.
 .IP "\fBtoram\fR" 4

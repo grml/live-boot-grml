@@ -1,24 +1,30 @@
 #!/bin/sh
 
-PREREQ=""
-DESCRIPTION="Configuring X kludges..."
+#set -e
 
-. /scripts/live-functions
+# initramfs-tools header
+
+PREREQ=""
 
 prereqs()
 {
-       echo "$PREREQ"
+	echo "${PREREQ}"
 }
 
-case $1 in
-# get pre-requisites
-prereqs)
-       prereqs
-       exit 0
-       ;;
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
 esac
 
-log_begin_msg "$DESCRIPTION"
+# live-initramfs header
+
+. /scripts/live-functions
+
+log_begin_msg "Configuring X kludges..."
+
+# live-initramfs script
 
 if [ -n "$XVIDEOMODE" ]
 then

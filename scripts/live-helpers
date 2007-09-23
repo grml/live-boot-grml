@@ -204,7 +204,7 @@ find_cow_device() {
 }
 
 find_files()
-# return the first of $filenames found on vfat and ext2 devices
+# return the first of $filenames found on vfat and ext2/ext3 devices
 # FIXME: merge with above function
 {
     filenames="${1}"
@@ -213,7 +213,7 @@ find_files()
         for dev in $(subdevices "${sysblock}"); do
             devname=$(sys2dev "${dev}")
             devfstype="$(get_fstype ${devname})"
-            if [ "${devfstype}" = "vfat" ] ||  [ "${devfstype}" = "ext2" ] ; then # FIXME: all supported block devices should be scanned
+            if [ "${devfstype}" = "vfat" ] ||  [ "${devfstype}" = "ext2" ] || [ "${devfstype}" = "ext3" ]; then # FIXME: all supported block devices should be scanned
                 mkdir -p "${snap_backing}"
                 try_mount "${devname}" "${snap_backing}" "ro"
                 for filename in ${filenames}; do

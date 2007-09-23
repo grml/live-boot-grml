@@ -1,29 +1,35 @@
 #!/bin/sh
 
-PREREQ=""
-DESCRIPTION="Moving mount points..."
+#set -e
 
-. /scripts/live-functions
+# initramfs-tools header
+
+PREREQ=""
 
 prereqs()
 {
-       echo "$PREREQ"
+	echo "${PREREQ}"
 }
 
-case $1 in
-# get pre-requisites
-prereqs)
-       prereqs
-       exit 0
-       ;;
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
 esac
 
-log_begin_msg "$DESCRIPTION"
+# live-initramfs header
+
+. /scripts/live-functions
+
+log_begin_msg "Moving mount points..."
+
+# live-initramfs script
 
 # Move to the new root filesystem so that programs there can get at it.
 if [ ! -d /root/live_media ]; then
     mkdir -p /root/live_media
-    mount -n -o move /live_media /root/live_media
+    mount -n --move /live_media /root/live_media
 fi
 
 log_end_msg
