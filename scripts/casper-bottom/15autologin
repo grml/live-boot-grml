@@ -27,6 +27,8 @@ else
 fi
 
 if chroot /root [ -f ${GDMCONF} ]; then
+	# true hack ! -- nohar
+    chroot /root cp /usr/share/gdm/defaults.conf /etc/gdm/gdm.conf
     # Configure GDM autologin
     chroot /root sed -i \
         -e "s/^AutomaticLoginEnable=.*\$/AutomaticLoginEnable=true/" \

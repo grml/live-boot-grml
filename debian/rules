@@ -8,7 +8,7 @@ include /usr/share/dpatch/dpatch.make
 build: patch-stamp build-stamp
 build-stamp:
 	dh_testdir
-
+	
 	# Building package
 	$(MAKE) -C casper-md5check
 
@@ -30,11 +30,14 @@ install: build
 	dh_installdirs
 	dh_install
 
-	# Installing lintian override
-	install -D -m 0644 debian/lintian debian/casper/usr/share/lintian/overrides/casper
+	# Install md5check
+	install -m 0755 casper-md5check/casper-md5check debian/casper/usr/lib/casper
 
 	# Fixing permission
 	chmod 0755 debian/casper/usr/share/initramfs-tools/scripts/casper
+
+	# Installing lintian override
+	install -D -m 0644 debian/lintian debian/casper/usr/share/lintian/overrides/casper
 
 binary-indep: build install
 

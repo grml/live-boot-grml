@@ -27,7 +27,11 @@ iface lo inet loopback
 
 EOF
 
-udevplug -Bpci -Iclass="0x02*"
+if [ -x /sbin/udevplug ]; then
+	udevplug -Bpci -Iclass="0x02*"
+else
+	udevtrigger
+fi
 
 for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*; do
     [ -e $interface ] || continue

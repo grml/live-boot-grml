@@ -1,3 +1,24 @@
+casper (1.63+debian-1) unstable; urgency=low
+
+  [Marco Amadori]
+  * New upstream release.
+  * Fixed upstream changelog.
+  * Really fixed the user password issue, now really "debian".
+  * Reincluded casper-md5ckeck in debian/rules and 05mountpoints in
+    script/casper-bottom.
+  * Rewrote netboot support now will support all types of rootfs file images
+    (not only plain dirs) like cd/dvd one.
+  * Included a fix for USB by Davide Natalini <davide.natalini@studio.unibo.it>
+  * Included support for plain directory as RO rootfs.
+  * Removed xfs support (not implemented in make-live, maybe useless).
+
+  [Alex Owen]
+  * Added NFS netboot support (Closes: #380506).
+  * Fixed /etc/inittab editing (Closes: #380488).
+  * Do not try to eject cd if netbooted (Closes: #380502).
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Sun, 30 Jul 2006 19:10:23 +0200
+
 casper (1.61+debian-2) unstable; urgency=low
 
   * Set password for user to 'debian'.

@@ -23,14 +23,16 @@ log_begin_msg "$DESCRIPTION"
 # Arrange for shells on virtual consoles, rather than login prompts
 
 if [ -n "$USERNAME" ]; then
-    sed -i -e "s|^\([^:]*:[^:]*:[^:]*\):.*getty.*\<\(tty[0-9]*\).*$|\1:/bin/login -f $USERNAME </dev/\2 >/dev/\2 2>\&1|" /root/etc/inittab
+    sed -i -e "s|^\([^:]*:[^:]*:[^:]*\):.*getty.*\<\(tty[0-9].*\).*$|\1:/bin/login -f $USERNAME </dev/\2 >/dev/\2 2>\&1|" /root/etc/inittab
 fi
 
 # This has the nice side effect of the cron.{daily,weekly,monthly} jobs in
 # /etc/crontab remaining disabled, yet also not run by anacron
-for f in /root/etc/rc?.d/S??anacron; do
-    mv ${f} ${f%/*}/K00anacron
-done
+if [ -x /root/etc/init.d/anacron ]; then
+    for f in /root/etc/rc?.d/S??anacron; do
+        mv ${f} ${f%/*}/K00anacron
+    done
+fi
 
 # No point, really
 rm -f /root/etc/rc?.d/[SK]??postfix
@@ -40,15 +42,8 @@ rm -f /root/etc/rc?.d/K??hwclock.sh
 
 # Disable readahead since it doesn't play well with squashfs + unionfs
 # use chmod instead of mv to not trigger unionfs bugs.
-chmod -x /root/sbin/readahead-list
-
-# Install shutdown script
-cp -a /lib/casper/shutdown /root/etc/init.d/casper-shutdown
-if [ -f /root/etc/rc0.d/S90halt ]; then
-    ln -s ../init.d/casper-shutdown /root/etc/rc0.d/S89casper
-fi
-if [ -f /root/etc/rc6.d/S90reboot ]; then
-    ln -s ../init.d/casper-shutdown /root/etc/rc6.d/S89casper
+if [ -e /root/sbin/readahead-list ]; then
+    chmod -x /root/sbin/readahead-list
 fi
 
 log_end_msg

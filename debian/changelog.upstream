@@ -1,3 +1,32 @@
+casper (1.63) edgy; urgency=low
+
+  [ Tollef Fog Heen ]
+  * Change "Live CD user" to "live session user" in the adduser script.
+    Malone #46882
+  * Only disable l-r-m and anacron if they are installed.
+  * Make sure laptop-detect is installed before trying to call it.
+  * Do not install init script from the initramfs any more.  It should
+    have rc.d links already in the squashfs.
+  * Minor build system fixes.
+  * Remove ubuntu-specific branding from the default casper.
+  * Install default configuration file and make it end up in the
+    initramfs.
+    terms.
+  * Add stacked file system support
+
+  [ Marco Amadori ]
+  * Added possibility to set locale on chroot, not only at runtime.
+  * Updated 14locales to latest debian policy.
+  * Wait for persistent devices for 30 seconds, not 1500.
+  * Make sure that readahead-list is installed before chmod -x'ing it.
+  * Only copy devmapper relevant files if devmapper is installed. 
+  * Get rid of CD references and replace with medium or other appropriate.
+
+  [ Malcolm Gilles ]
+  * USB devices can have ID_PATH with pci-*-usb, too.
+
+ -- Tollef Fog Heen <tfheen@ubuntu.com>  Tue, 18 Jul 2006 10:20:51 +0200
+
 casper (1.61) edgy; urgency=low
 
   * Move PATH setting to top of casper script to avoid silliness where
