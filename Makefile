@@ -106,12 +106,12 @@ uninstall:
 	rm -f $(DESTDIR)/usr/share/man/man7/live-login.7.gz
 
 update:
-	set -e; for FILE in docs/parameters.txt manpages/*.en.*; \
+	set -e; for FILE in docs/parameters.txt; \
 	do \
-		sed -i	-e 's/2007\\-09\\-17/2007\\-09\\-24/' \
-			-e 's/2007-09-17/2007-09-24/' \
-			-e 's/17.09.2007/24.09.2007/' \
-			-e 's/1.102.1/1.102.2/' \
+		sed -i	-e 's/2007\\-09\\-24/2007\\-10\\-01/' \
+			-e 's/2007-09-24/2007-10-01/' \
+			-e 's/24.09.2007/01.10.2007/' \
+			-e 's/1.102.2/1.102.3/' \
 		$$FILE; \
 	done
 
