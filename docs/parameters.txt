@@ -1,7 +1,7 @@
 Boot Parameters for Debian Live
 -------------------------------
 
-Updated for live-initramfs 1.91.6-1 on 2007-07-23.
+Updated for live-initramfs 1.95.1-1 on 2007-07-30.
 
 These options (can be combined) work from the syslinux bootprompt:
 
@@ -23,6 +23,7 @@ live live-getty
 live {live-media|bootfrom}=DEVICE
 live {live-media-encryption|encryption}=TYPE
 live live-media-offset=BYTES
+live live-media-path=PATH
 live live-media-timeout=SECONDS
 live {locale|debian-installer/locale}=LOCALE
 live module=NAME

@@ -29,12 +29,14 @@ log_begin_msg "Setting up automatic login..."
 if [ -z "${NOXAUTOLOGIN}" ]
 then
 
+# chroot needed to handle symlinks correctly
 if chroot /root [ -f /etc/gdm/gdm-cdd.conf ]; then
     GDMCONF=/etc/gdm/gdm-cdd.conf
 else
     GDMCONF=/etc/gdm/gdm.conf
 fi
 
+# chroot needed to handle symlinks correctly
 if chroot /root [ -f ${GDMCONF} ]; then
     if [ "${BUILD_SYSTEM}" = "Debian" ]; then
         # true hack ! -- nohar
