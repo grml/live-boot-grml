@@ -20,4 +20,7 @@ esac
 
 # live-initramfs script
 
-grep integrity-check /proc/cmdline && live-md5check /live/image /live/image/md5sum.txt < /dev/tty8
+grep -qs integrity-check /proc/cmdline || exit 0
+
+cd /live/image
+md5sum -c md5sum.txt < /dev/tty8

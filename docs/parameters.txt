@@ -1,7 +1,7 @@
 Boot Parameters for Debian Live
 -------------------------------
 
-Updated for live-initramfs 1.91.5-1 on 2007-07-23.
+Updated for live-initramfs 1.91.6-1 on 2007-07-23.
 
 These options (can be combined) work from the syslinux bootprompt:
 
@@ -43,6 +43,7 @@ live timezone=TIMEZONE
 live todisk=DEVICE
 live toram
 live union=unionfs|aufs
+live utc=yes|no
 live xdebconf
 live xvideomode=RESOLUTION
 

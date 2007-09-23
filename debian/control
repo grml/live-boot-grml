@@ -9,8 +9,8 @@ XS-Vcs-Svn: svn://svn.debian.org/debian-live/dists/trunk/live-initramfs/
 XS-VCS-Browse: http://svn.debian.org/wsvn/debian-live/dists/trunk/live-initramfs/
 
 Package: live-initramfs
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, file, initramfs-tools, sudo, user-setup
+Architecture: all
+Depends: ${misc:Depends}, file, initramfs-tools, sudo, user-setup
 Recommends: eject, live-initscripts
 Suggests: genext2fs, squashfs-tools
 Conflicts: casper

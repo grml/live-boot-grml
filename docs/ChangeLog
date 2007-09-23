@@ -1,3 +1,20 @@
+2007-07-26  Daniel Baumann  <daniel@debian.org>
+
+	* bin/live-md5check:
+	  - Removed, using standard md5sum which makes the md5 check slower,
+	    doesn't integrate well with usplash yet, but it makes live-initramfs
+	    architecture independent now.
+	* scripts/live:
+	  - Fixed typo.
+	  - Added live-media-path as suggested by Jordi Pujol
+	    <jordi_pujol@telefonica.net>.
+
+2007-07-19  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/live, scripts/live-bottom/02_timezone:
+	  - Added utc boot parameter as suggested by Vladimir Stavrinov
+	    <vs@inist.ru>
+
 2007-07-18  Daniel Baumann  <daniel@debian.org>
 
 	* docs/parameters.txt:
