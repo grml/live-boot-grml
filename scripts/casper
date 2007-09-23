@@ -29,6 +29,7 @@ fi
 
 parse_cmdline ()
 {
+    PRESEEDS=
     # looking for casper specifics options as kernel parameters
     for x in $(cat /proc/cmdline); do
         case $x in
@@ -46,14 +47,20 @@ parse_cmdline ()
                 ;;
             netboot*)
                 export NETBOOT=${x#netboot=} ;;
+            access=*)
+                export ACCESS=${x#access=} ;;
+            xdebconf)
+                export XDEBCONF="Yes" ;;
             toram)
-                export TORAM=1 ;;
+                export TORAM="Yes" ;;
             todisk=*)
                 export TODISK=${x#todisk=} ;;
             showmounts)
-                export SHOWMOUNTS=1 ;;
+                export SHOWMOUNTS="Yes" ;;
             persistent)
-                export PERSISTENT=1 ;;
+                export PERSISTENT="Yes" ;;
+            nopersistent)
+                export PERSISTENT="" ;;
             ip*)
                 STATICIP=${x#ip=}
                 if [ "${STATICIP}" == "" ]; then
@@ -62,28 +69,31 @@ parse_cmdline ()
                 export STATICIP ;;
             casper-getty)
                 export CASPERGETTY=1 ;;
-            console=*)
-                export DEFCONSOLE=$(sed -e 's%.*console=%console=%' /proc/cmdline) ;;
-            bootfrom=*)
-                export LIVEMEDIA=${x#bootfrom=} ;;
-            live-media=*)
-                export LIVEMEDIA=${x#live-media=} ;;
+            bootfrom=*|live-media=*)
+                export LIVEMEDIA=${x#*=} ;;
             live-media-timeout=*)
                 export LIVEMEDIA_TIMEOUT=${x#live-media-timeout=} ;;
-            debian-installer/locale=*)
-                export LOCALE=${x#debian-installer/locale=} ;;
-            locale=*)
-                export LOCALE=${x#locale=} ;;
-            kbd-chooser/method=*)
-                export KBD=${x#kbd-chooser/method=} ;;
-            keyb=*)
-                export KBD=${x#keyb=} ;;
-            console-setup/layoutcode=*)
-                export CSLAYOUT=${x#console-setup/layoutcode=} ;;
-            console-setup/variantcode=*)
-                export CSVARIANT=${x#console-setup/variantcode=} ;;
-            console-setup/modelcode=*)
-                export CSMODEL=${x#console-setup/modelcode=} ;;
+            locale=*|debian-installer/locale=*)
+                export LOCALE=${x#*=} ;;
+            keyb=*|kbd-chooser/method=*)
+                export KBD=${x#*=} ;;
+            klayout=*|console-setup/layoutcode=*)
+                export KLAYOUT=${x#*=} ;;
+            koptions=*)
+                export KOPTIONS=${x#koptions=} ;;
+            kvariant=*|console-setup/variantcode=*)
+                export KVARIANT=${x#*=} ;;
+            kmodel=*|console-setup/modelcode=*)
+                export KMODEL=${x#*=} ;;
+            preseed/file=*|file=*)
+                export LOCATION="${x#*=}" ;;
+            */*=*)
+                question="${x%%=*}"
+                value="${x#*=}"
+                PRESEEDS="${PRESEEDS}\"${question}=${value}\" "
+                ;;
+            console=*)
+                export DEFCONSOLE=$(sed -e 's%.*console=%console=%' /proc/cmdline) ;;
         esac
     done
 
@@ -601,12 +611,6 @@ mountroot() {
     run_scripts /scripts/casper-bottom
     [ "$quiet" != "y" ] && log_end_msg
 
-    if [ -f /casper.vars ]; then
-        echo "Casper vars:"
-        cat /casper.vars
-    fi
-
-    echo "Casper Log:"
     exec 1>&6 6>&-
     exec 2>&7 7>&-
     cp casper.log "${rootmnt}/var/log/"

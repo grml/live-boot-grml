@@ -53,13 +53,12 @@ fi
 # Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
 . /lib/lsb/init-functions
 
-# Some defaults:
-MOUNTP="/mnt/casper-snapshot"
-COW="/cow"
+MOUNTP=""
+COW=""
 DEV=""
-DEST="${MOUNTP}/casper-sn.cpio.gz"
-TYPE="cpio"
-DESKTOP_LINK=/home/$USERNAME/Desktop/casper-snapshot
+DEST=""
+TYPE=""
+DESKTOP_LINK=""
 
 Header ()
 {
@@ -95,7 +94,7 @@ Help ()
 	echo "  -d, --device: specifies the output snapshot device (default: none)."
 	echo "  -o, --output: specifies the output image file (default: $type dependent)."
     echo "  -r, --resync-string: internally used to resync previous made snapshots."
-	echo "  -t,--type: specifies the snapshot type between \'squashfs\', \'ext2\' or \'cpio\'.gz archive (default: cpio)"
+	echo "  -t, --type: specifies the snapshot type between \"squashfs\", \"ext2\" or \"cpio\".gz archive (default: cpio)"
     echo -e "\nLook at casper-snapshot(1) man page for more information."
 	exit 0
 }
@@ -224,6 +223,13 @@ Mount_device ()
 
 Defaults ()
 {
+	MOUNTP="/mnt/casper-snapshot"
+	COW="/cow"
+	DEV=""
+	DEST="${MOUNTP}/casper-sn.cpio.gz"
+	TYPE="cpio"
+	DESKTOP_LINK=/home/$USERNAME/Desktop/casper-snapshot
+
 	if [ -n "${SNAP_RSTRING}" ]; then
 		COW=$(echo "${SNAP_RSTRING}" | cut -f1 -d ':')
 		DEV=$(echo "${SNAP_RSTRING}" | cut -f2 -d ':')
@@ -264,13 +270,13 @@ Defaults ()
 		#if Is_same_mount 
 	fi
 
-	Mount_device $DEV
-	DEST="${MOUNTP}/${DEST}"
-
 	# check vars
 	if [ ! -d "${COW}" ]; then
 		Usage "Error: ${COW} is not a directory"
 	fi
+
+	Mount_device $DEV
+
 }
 
 Clean ()

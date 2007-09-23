@@ -30,27 +30,28 @@ casper-snapshot \- a simple script to ease persistence usage.
 .RB \-v \||\| \-\-version
 
 .SH DESCRIPTION
-Casper-snapshot is a script useful to build the right types of persistent image files supported by casper, it is also used on exit by the casper init script to resync the boot-found snapshots devices.
+Casper-snapshot is a script which can be used to build the right types of persistent image files supported by casper. It is also used on exit by the casper init script to resync the boot-found snapshots devices.
 
 .SH OPTIONS
 .TP
 .BI "\-c, \-\-cow" DIRECTORY
 specifies the input directory to be cloned in the image file.
-This parameters often does not need to be specified as the default of "/cow" for it should be right for most uses, however it could be handy to specify "/home" and type ext2 for the type to prepare an image file suited to be directly mounted by casper as home.
+Its default value "/cow" should be right for most uses. However it could be handy to specify "/home" and type ext2 for the type to prepare an image file suited to be directly mounted by casper as home.
 .TP
 .BI "\-d, \-\-device" DEVICE
-the device on where the media which the snapshot/persistence file/partition will be put. If not specified a tmpfs will be used and linked on user's desktop to move it where he/her wants. If the device has not a filesystem on it, an ext2 fs will be created in it and labeled like --output options or with a sane default.
+sets the device where the media which the snapshot/persistence file/partition will be put. If it is not specified, a tmpfs will be used and linked to the user's desktop to move it where it is needed. If the device has no filesystem, an ext2 fs will be automatically created and labelled according to the values specified after the "--output" value or with a sane default.
 .TP
 .BI "\-e, \-\-exclude\-list" FILE
-you could pass a list of filenames/path that should not be saved. This exclude list will be remebered on the target snapshotting media for reuse.
+a file containing a list of filenames/paths that should not be saved. This exclude list will be remebered on the target snapshot media for reuse.
 .TP
 .BI "\-o, \-\-output" FILE
-the filename/label to be used for the output file/partition, if left blank it could search for a proper file on the device or use the whole partition.
+the filename/label used for the output file/partition. If left blank, casper-snapshot will search for a proper file on the device or use the whole partition.
 .TP
 .BI "\-r, \-\-resync\-string" STRING
 internally used on resyncs.
 .TP
 .BI "\-t, \-\-type" TYPE
+Type could be one of "cpio", "squashfs" or "ext2".
 
 .SH BUGS
 .B casper-snapshot

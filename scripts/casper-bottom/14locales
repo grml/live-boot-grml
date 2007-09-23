@@ -69,6 +69,7 @@ if [ "${set_locale}" ]; then
     if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
         printf 'LANG="%s"\n' "${LANG}" > "${grep_file}"
         chroot /root /usr/sbin/locale-gen "${LANG}"
+        casper-preseed /root debian-installer/locale "${locale}"
     else
         printf 'LANG=%s\n' "${LANG}" > "${grep_file}"
         printf '%s UTF-8\n' "${LANG}" > /root/etc/locale.gen

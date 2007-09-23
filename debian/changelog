@@ -1,3 +1,14 @@
+casper (1.77+debian-5) unstable; urgency=low
+
+  * Fixed preseeding locale and keyboard's variant and options.
+  * Reorganized scans of /proc/cmdline.
+  * Improved manpages, thanks to Oliver Osburg for syntax corrections.
+  * Added "nopersistent" boot option to disable the "persistent" boot param.
+  * Added "xdebconf" boot option, that uses xdebconfigurator on the
+    rootfs to configure X (experimental).
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Mon, 20 Nov 2006 22:12:18 +0100
+
 casper (1.77+debian-4) unstable; urgency=medium
 
   * Removed -phigh from casper-reconfigure, not needed anymore.
