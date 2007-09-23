@@ -32,119 +32,226 @@ fi
 
 parse_cmdline ()
 {
-    PRESEEDS=
-    # looking for live-initramfs specifics options as kernel parameters
-    for x in $(cat /proc/cmdline); do
-        case $x in
-            userfullname=*)
-                export USERFULLNAME=${x#userfullname=}
-                export LIVECONF="changed"
-                ;;
-            hostname=*)
-                export HOSTNAME=${x#hostname=}
-                export LIVECONF="changed"
-                ;;
-            username=*)
-                export USERNAME=${x#username=}
-                export LIVECONF="changed"
-                ;;
-            netboot*)
-                export NETBOOT=${x#netboot=} ;;
-            access=*)
-                export ACCESS=${x#access=} ;;
-            xdebconf)
-                export XDEBCONF="Yes" ;;
-	    xvideomode=*)
-	        export XVIDEOMODE="${x#xvideomode=}" ;;
-            toram)
-                export TORAM="Yes" ;;
-            todisk=*)
-                export TODISK=${x#todisk=} ;;
-	    noswap)
-	        export NOSWAP="Yes" ;;
-	    noautologin)
-	    	export NOAUTOLOGIN="Yes" ;;
-	    noxautologin)
-	    	export NOXAUTOLOGIN="Yes" ;;
-	    nosudo)
-	    	export NOSUDO="Yes" ;;
-            showmounts)
-                export SHOWMOUNTS="Yes" ;;
-            persistent)
-                export PERSISTENT="Yes" ;;
-            nopersistent)
-                export PERSISTENT="" ;;
-            ip*)
-                STATICIP=${x#ip=}
-                if [ "${STATICIP}" = "" ]; then
-                    STATICIP="frommedia"
-                fi
-                export STATICIP ;;
-            live-getty)
-                export LIVE_GETTY=1 ;;
-            bootfrom=*|live-media=*)
-                export LIVE_MEDIA=${x#*=} ;;
-            live-media-encryption=*|encryption=*)
-                export LIVE_MEDIA_ENCRYPTION=${x#*=} ;;
-            live-media-timeout=*)
-                export LIVE_MEDIA_TIMEOUT=${x#live-media-timeout=} ;;
-            live-media-offset=*)
-                export LIVE_MEDIA_OFFSET=${x#live-media-offset=} ;;
-            locale=*|debian-installer/locale=*)
-                export LOCALE=${x#*=} ;;
-            keyb=*|kbd-chooser/method=*)
-                export KBD=${x#*=} ;;
-            klayout=*|console-setup/layoutcode=*)
-                export KLAYOUT=${x#*=} ;;
-            koptions=*)
-                export KOPTIONS=${x#koptions=} ;;
-            kvariant=*|console-setup/variantcode=*)
-                export KVARIANT=${x#*=} ;;
-            kmodel=*|console-setup/modelcode=*)
-                export KMODEL=${x#*=} ;;
-            module=*)
-                export MODULE=${x#module=} ;;
-            preseed/file=*|file=*)
-                export LOCATION="${x#*=}" ;;
-	    upgrade)
-	    	export UPGRADE="Yes" ;;
-            */*=*)
-                question="${x%%=*}"
-                value="${x#*=}"
-                PRESEEDS="${PRESEEDS}\"${question}=${value}\" "
-                ;;
-            console=*)
-                export DEFCONSOLE="${x#*=}" ;;
-        esac
-    done
+	PRESEEDS=
 
-    # sort of compatibility with netboot.h from linux docs
-    if [ -z "${NETBOOT}" ]; then
-        if [ "${ROOT}" = "/dev/nfs" ]; then
-            NETBOOT="nfs"
-            export NETBOOT
-        elif [ "${ROOT}" = "/dev/cifs" ]; then
-            NETBOOT="cifs"
-            export NETBOOT
-        fi
-    fi
+	# looking for live-initramfs specifics options as kernel parameters
 
-    if [ -z "${MODULE}" ]; then
-        MODULE=order
-    fi
+	for x in $(cat /proc/cmdline)
+	do
+		case $x in
+			access=*)
+				ACCESS=${x#access=}
+				export ACCESS
+				;;
+
+			console=*)
+				DEFCONSOLE="${x#*=}"
+				export DEFCONFSOLE
+				;;
+
+			hostname=*)
+				HOSTNAME=${x#hostname=}
+				LIVECONF="changed"
+				export HOSTNAME LIVECONF
+				;;
+
+			username=*)
+				USERNAME=${x#username=}
+				LIVECONF="changed"
+				export USERNAME LIVECONF
+				;;
+
+			userfullname=*)
+				USERFULLNAME=${x#userfullname=}
+				LIVECONF="changed"
+				export USERFULLNAME LIVECONF
+				;;
+
+			ip*)
+				STATICIP=${x#ip=}
+
+				if [ -z "${STATICIP}" ]
+				then
+					STATICIP="frommedia"
+				fi
+
+				export STATICIP
+				;;
+
+			keyb=*|kbd-chooser/method=*)
+				KBD=${x#*=}
+				export KBD
+				;;
+
+			klayout=*|console-setup/layoutcode=*)
+				KLAYOUT=${x#*=}
+				export KLAYOUT
+				;;
+
+			kvariant=*|console-setup/variantcode=*)
+				KVARIANT=${x#*=}
+				export KVARIANT
+				;;
+
+			kmodel=*|console-setup/modelcode=*)
+				KMODEL=${x#*=}
+				;;
+
+			koptions=*)
+				KOPTIONS=${x#koptions=}
+				;;
+
+			live-getty)
+				LIVE_GETTY=1
+				export LIVE_GETTY
+				;;
+
+			live-media=*|bootfrom=*)
+				LIVE_MEDIA=${x#*=}
+				export LIVE_MEDIA
+				;;
+
+			live-media-encryption=*|encryption=*)
+				LIVE_MEDIA_ENCRYPTION=${x#*=}
+				export LIVE_MEDIA_ENCRYPTION
+				;;
+
+			live-media-offset=*)
+				LIVE_MEDIA_OFFSET=${x#live-media-offset=}
+				export LIVE_MEDIA_OFFSET
+				;;
+
+			live-media-timeout=*)
+				LIVE_MEDIA_TIMEOUT=${x#live-media-timeout=}
+				export LIVE_MEDIA_TIMEOUT
+				;;
+
+			locale=*|debian-installer/locale=*)
+				LOCALE=${x#*=}
+				export LOCALE
+				;;
+
+			module=*)
+				MODULE=${x#module=}
+				export MODULE
+				;;
+
+			netboot*)
+				NETBOOT=${x#netboot=}
+				export NETBOOT
+				;;
+
+			nfsopts=)
+				NFSOPTS=${x#nfsopts=}
+				export NFSOPTS
+				;;
+
+			noautologin)
+				NOAUTOLOGIN="Yes"
+				export NOAUTOLOGIN
+				;;
+
+			noxautologin)
+				NOXAUTOLOGIN="Yes"
+				export NOXAUTOLOGIN
+				;;
+
+			nopersistent)
+				PERSISTENT=""
+				export PERSISTENT
+				;;
+
+			nosudo)
+				NOSUDO="Yes"
+				export NOSUDO
+				;;
+
+			noswap)
+				NOSWAP="Yes"
+				export NOSWAP
+				;;
+
+			persistent)
+				PERSISTENT="Yes"
+				export PERSISTENT
+				;;
+
+			preseed/file=*|file=*)
+				LOCATION="${x#*=}"
+				export LOCATION
+				;;
+
+			*/*=*)
+				question="${x%%=*}"
+				value="${x#*=}"
+				PRESEEDS="${PRESEEDS}\"${question}=${value}\" "
+
+				export PRESEEDS
+				;;
+
+			showmounts)
+				SHOWMOUNTS="Yes"
+				export SHOWMOUNTS
+				;;
+
+			todisk=*)
+				TODISK=${x#todisk=}
+				export TODISK
+				;;
+
+			toram)
+				TORAM="Yes"
+				export TORAM
+				;;
+
+			xdebconf)
+				XDEBCONF="Yes"
+				export XDEBCONF
+				;;
+
+			xvideomode=*)
+				XVIDEOMODE="${x#xvideomode=}"
+				export XVIDEOMODE
+				;;
+		esac
+	done
+
+	# sort of compatibility with netboot.h from linux docs
+	if [ -z "${NETBOOT}" ]
+	then
+		if [ "${ROOT}" = "/dev/nfs" ]
+		then
+			NETBOOT="nfs"
+			export NETBOOT
+		elif [ "${ROOT}" = "/dev/cifs" ]
+		then
+			NETBOOT="cifs"
+			export NETBOOT
+		fi
+	fi
+
+	if [ -z "${MODULE}" ]
+	then
+		MODULE="filesystem"
+	fi
 }
 
-is_live_path() {
-    path=$1
-    if [ -d "$path/live" ]; then
-        if [ "$(echo $path/live/*.squashfs)" != "$path/live/*.squashfs" ] ||
-            [ "$(echo $path/live/*.ext2)" != "$path/live/*.ext2" ] ||
-            [ "$(echo $path/live/*.ext3)" != "$path/live/*.ext3" ] ||
-            [ "$(echo $path/live/*.dir)" != "$path/live/*.dir" ]; then
-            return 0
-        fi
-    fi
-    return 1
+is_live_path()
+{
+	DIRECTORY="${1}"
+
+	if [ -d "${DIRECTORY}"/live ]
+	then
+		for FILESYSTEM in squashfs ext2 ext3 xfs dir
+		do
+			if [ "`echo ${DIRECTORY}/live/*.${FILESYSTEM}`" != "${DIRECTORY}/live/*.${FILESYSTEM}" ]
+			then
+				return 0
+			fi
+		done
+	fi
+
+	return 1
 }
 
 get_backing_device() {
@@ -431,23 +538,35 @@ setup_unionfs() {
         roopt="ro"
     fi
 
-    # Read image names from ${MODULE}.lst if it exists
-    if [ -e "${image_directory}/${MODULE}.lst" ]; then
-        for image in $(cat "${image_directory}/${MODULE}.lst"); do
-            image_string="${image_string} ${image_directory}/${image}";
-        done
-    else
-        # If ${MODULE}.lst does not exist, create a list of images
-        for image_type in "ext2" "ext3" "squashfs" "dir"; do
-            for image in "${image_directory}"/*."${image_type}"; do
-	        if [ -e "${image}" ]; then
-		    image_string="${image_string} ${image}";
-		fi
-            done
-        done
-        # Now sort the list
-        image_string=$(echo ${image_string} | sed -e 's/ /\n/g' | sort )
-    fi
+	# Read image names from ${MODULE}.module if it exists
+	if [ -e "${image_directory}/filesystem.${MODULE}.module" ]
+	then
+		for IMAGE in `cat ${image_directory}/filesystem.${MODULE}.module`
+		do
+			image_string="${image_string} ${image_directory}/${image}"
+		done
+	elif [ -e "${image_directory}/${MODULE}.module" ]
+	then
+		for IMAGE in `cat ${image_directory}/${MODULE}.module`
+		do
+			image_string="${image_string} ${image_directory}/${image}"
+		done
+	else
+		# ${MODULE}.module does not exist, create a list of images
+		for FILESYSTEM in squashfs ext2 ext3 xfs dir
+		do
+			for IMAGE in "${image_directory}"/*."${FILESYSTEM}"
+			do
+				if [ -e "${IMAGE}" ]
+				then
+					image_string="${image_string} ${IMAGE}"
+				fi
+			done
+		done
+
+		# Now sort the list
+		image_string="`echo ${image_string} | sed -e 's/ /\n/g' | sort `"
+	fi
 
     mkdir -p "${croot}"
     for image in ${image_string}; do
