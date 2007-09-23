@@ -1,9 +1,9 @@
 Boot Parameters for Debian Live
 -------------------------------
 
-Updated for live-initramfs 1.95.2-1 on 2007-07-30.
+Updated for live-initramfs 1.95.3-1 on 2007-07-30.
 
-These options (can be combined) work from the syslinux bootprompt:
+These options (can be combined) work from the bootloader prompt:
 
 live access=ACCESS
 live console=TTY,SPEED
