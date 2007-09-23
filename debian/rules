@@ -13,6 +13,7 @@ build-stamp:
 
 	# Building package
 	$(MAKE)
+	cd manpages && make && cd ..
 
 	touch build-stamp
 
@@ -23,6 +24,7 @@ clean:
 
 	# Cleaning package
 	$(MAKE) clean
+	cd manpages && make clean && cd ..
 
 	dh_clean
 
