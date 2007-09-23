@@ -11,7 +11,7 @@ XS-VCS-Browse: http://svn.debian.org/wsvn/debian-live/dists/trunk/live-initramfs
 Package: live-initramfs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, file, initramfs-tools, sudo, user-setup
-Recommends: eject, live-sysvinit
+Recommends: eject, live-initscripts
 Suggests: genext2fs, squashfs-tools
 Conflicts: casper (<< 1.87)
 Replaces: casper

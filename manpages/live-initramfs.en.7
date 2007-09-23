@@ -1,4 +1,4 @@
-.TH LIVE\-INITRAMFS 7 "2007\-06\-25" "1.91.2" "live\-initramfs"
+.TH LIVE\-INITRAMFS 7 "2007\-07\-02" "1.91.3" "live\-initramfs"
 
 .SH NAME
 live\-initramfs \- Debian Live initramfs hook
@@ -26,8 +26,8 @@ Set the default console to be used with the "live\-getty" option. Example: "cons
 Those parameters lets you override values read from the config file.
 .IP "\fBintegrity\-check\fR" 4
 If specified, an MD5 sum is calculated on the live media during boot and compared to the value found in md5sum.txt found in the root directory of the live media.
-.IP "\fBip=\fR\fIIFACE,ADDRESS,NETMASK,GATEWAY [:IFACE,ADDRESS,NETMASK,GATEWAY]\fR*" 4
-Let you specify the name(s) and the options of the interface(s) that should be configured at boot time. Do not specify this if you want to use dhcp (default). It will be changed in a future release to mimick official kernel boot param specification.
+.IP "\fBip=\fR\fI[CLIENT_IP]:[SERVER_IP]:[GATEWAY_IP]:[NETMASK]:[HOSTNAME]:[DEVICE]:[AUTOCONF] [,[CLIENT_IP]:[SERVER_IP]:[GATEWAY_IP]:[NETMASK]:[HOSTNAME]:[DEVICE]:[AUTOCONF]]\fR*" 4
+Let you specify the name(s) and the options of the interface(s) that should be configured at boot time. Do not specify this if you want to use dhcp (default). It will be changed in a future release to mimick official kernel boot param specification (e.g. ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp).
 .IP "\fBip\fR[=frommedia]" 4
 If this variable is set, dhcp and static configuration are just skipped and the system will use the (must be) media\-preconfigured /etc/network/interfaces instead.
 .IP "\fB{keyb|kbd\-chooser/method}=\fR\fIKEYBOARD\fR, \fB{klayout|console\-setup/layoutcode}=\fR\fILAYOUT\fR, \fB{kvariant|console\-setup/variantcode}=\fR\fIVARIANT\fR, \fB{kmodel|console\-setup/modelcode}=\fR\fICODE\fR, \fBkoptions=\fR\fIOPTIONS\fR" 4
@@ -54,6 +54,8 @@ This lets you specify custom nfs options.
 This parameter disables the automatic terminal login only, not touching gdk/kdm.
 .IP "\fBnoxautologin\fR" 4
 This parameter disables the automatic login of gdm/kdm only, not touching terminals.
+.IP "\fBnofastboot\fR" 4
+This parameter disables the default disabling of filesystem checks in /etc/fstab. If you have static filesystems on your harddisk and you want them to be checked at boot time, use this parameter, otherwise they are skipped.
 .IP "\fBnopersistent\fR" 4
 disables the "persistent" feature, useful if the bootloader (like syslinux) has been installed with persistent enabled.
 .IP "\fBnosudo\fR" 4
@@ -70,10 +72,14 @@ All debian installed packages could be preseeded from command\-line that way, be
 This option causes live\-initramfs to reboot without attempting to eject the media and without asking the user to remove the boot media.
 .IP "\fBshowmounts\fR" 4
 This parameter will make live\-initramfs to show on "/" the ro filesystems (mostly compressed) on "/live". This is not enabled by default because could lead to problems by applications like "mono" which store binary paths on installation.
+.IP "\fBtimezone=\fR\fITIMEZONE" 4
+By default, timezone is set to UTC. Using the timezone parameter, you can set it to your local zone, e.g. Europe/Zurich.
 .IP "\fBtodisk=\fR\fIDEVICE" 4
 Adding this parameter, live\-initramfs will try to copy the entire read\-only media to the specified device before mounting the root filesystem. It probably needs a lot of free space. Subsequent boots should then skip this step and just specify the "live\-media=DEVICE" boot parameter with the same DEVICE used this time.
 .IP "\fBtoram\fR" 4
 Adding this parameter, live\-initramfs will try to copy the whole read\-only media to the computer's RAM before mounting the root filesystem. This could need a lot of ram, according to the space used by the read\-only media.
+.IP "\fBunion=\fRunionfs|aufs" 4
+By default, live-initramfs uses unionfs. With this parameter, you can switch to aufs.
 .IP "\fBxdebconf\fR" 4
 uses xdebconfigurator, if present on the rootfs, to configure X instead of the standard procedure (experimental).
 .IP "\fBxvideomode=\fR\fIRESOLUTION\fR" 4
@@ -93,7 +99,7 @@ This optional file (inside the live media) contains a list of white\-space or ca
 .PP
 \fIlive\-helper\fR(7)
 .PP
-\fIlive\-sysvinit\fR(7)
+\fIlive\-initscripts\fR(7)
 .PP
 \fIlive\-webhelper\fR(7)
 
