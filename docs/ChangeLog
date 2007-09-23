@@ -1,3 +1,12 @@
+2007-06-08  Daniel Baumann  <daniel@debian.org>
+
+	* Merging changes from casper 1.88.
+	* Merging changes from casper 1.90.
+	* hooks/live:
+	  - Added force loading of ide-generic module. It is required on some
+	    systems to boot (reported as needed also for some qemu versions).
+	* Uploaded 1.90.1-1.
+
 2007-06-04  Daniel Baumann  <daniel@debian.org>
 
 	* Uploaded 1.87.6-1.
