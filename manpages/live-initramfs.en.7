@@ -1,4 +1,4 @@
-.TH LIVE\-INITRAMFS 7 "2007\-07\-16" "1.91.5" "live\-initramfs"
+.TH LIVE\-INITRAMFS 7 "2007\-07\-23" "1.91.6" "live\-initramfs"
 
 .SH NAME
 live\-initramfs \- Debian Live initramfs hook
@@ -42,6 +42,8 @@ If you specify one of this two equivalent forms, live\-initramfs will first try 
 live\-initramfs will mount the encrypted rootfs TYPE, asking the passphrase, useful to build paranoid live systems :\-). TYPE supported so far are "aes" for loop\-aes encryption type.
 .IP "\fBlive\-media\-offset=\fR\fIBYTES\fR" 4
 This way you could tell live\-initramfs that your image starts at offset BYTES in the above specified or autodiscovered device, this could be useful to hide the Debian Live iso or image inside another iso or image, to create "clean" images.
+.IP "\fBlive\-media\-path=\fR\fIPATH\fR" 4
+Sets the path to the live filesystem on the medium. By default, it is set to '/live' and you should not change that unless you have customized your media accordingly.
 .IP "\fBlive\-media\-timeout=\fR\fISECONDS\fR" 4
 Set the timeout in seconds for the device specified by "live\-media=" to become ready before giving up.
 .IP "\fB{locale|debian\-installer/locale}=\fR\fILOCALE\fR" 4
@@ -82,6 +84,8 @@ Adding this parameter, live\-initramfs will try to copy the entire read\-only me
 Adding this parameter, live\-initramfs will try to copy the whole read\-only media to the computer's RAM before mounting the root filesystem. This could need a lot of ram, according to the space used by the read\-only media.
 .IP "\fBunion=\fRunionfs|aufs" 4
 By default, live-initramfs uses unionfs. With this parameter, you can switch to aufs.
+.IP "\fButc=\fRyes|no" 4
+By default, Debian systems do assume that the hardware clock is set to UTC. You can change or explicitly set it with this parameter.
 .IP "\fBxdebconf\fR" 4
 uses xdebconfigurator, if present on the rootfs, to configure X instead of the standard procedure (experimental).
 .IP "\fBxvideomode=\fR\fIRESOLUTION\fR" 4

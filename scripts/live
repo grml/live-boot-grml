@@ -8,6 +8,7 @@ echo "/root/lib" >> /etc/ld.so.conf
 echo "/root/usr/lib" >> /etc/ld.so.conf
 
 mountpoint=/live/image
+LIVE_MEDIA_PATH="/live"
 
 root_persistence="live-rw"
 home_persistence="home-rw"
@@ -74,7 +75,7 @@ parse_cmdline ()
 				export USERFULLNAME LIVECONF
 				;;
 
-			ip*)
+			ip=*)
 				STATICIP=${x#ip=}
 
 				if [ -z "${STATICIP}" ]
@@ -130,6 +131,11 @@ parse_cmdline ()
 				export LIVE_MEDIA_OFFSET
 				;;
 
+			live-media-path=*)
+				LIVE_MEDIA_PATH="${x#live-media-path=}"
+				export LIVE_MEDIA_PATH
+				;;
+
 			live-media-timeout=*)
 				LIVE_MEDIA_TIMEOUT=${x#live-media-timeout=}
 				export LIVE_MEDIA_TIMEOUT
@@ -145,7 +151,7 @@ parse_cmdline ()
 				export MODULE
 				;;
 
-			netboot*)
+			netboot=*)
 				NETBOOT=${x#netboot=}
 				export NETBOOT
 				;;
@@ -228,6 +234,11 @@ parse_cmdline ()
 				export UNIONTYPE
 				;;
 
+			utc=*)
+				UTC="${x#utc=}"
+				export UTC
+				;;
+
 			xdebconf)
 				XDEBCONF="Yes"
 				export XDEBCONF
@@ -271,11 +282,11 @@ is_live_path()
 {
 	DIRECTORY="${1}"
 
-	if [ -d "${DIRECTORY}"/live ]
+	if [ -d "${DIRECTORY}"/"${LIVE_MEDIA_PATH}" ]
 	then
 		for FILESYSTEM in squashfs ext2 ext3 xfs dir
 		do
-			if [ "`echo ${DIRECTORY}/live/*.${FILESYSTEM}`" != "${DIRECTORY}/live/*.${FILESYSTEM}" ]
+			if [ "`echo ${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM}`" != "${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM}" ]
 			then
 				return 0
 			fi
@@ -312,11 +323,11 @@ match_files_in_dir() {
 mount_images_in_directory() {
     directory="$1"
     rootmnt="$2"
-    if match_files_in_dir "$directory/live/*.squashfs" ||
-        match_files_in_dir "$directory/live/*.ext2" ||
-        match_files_in_dir "$directory/live/*.ext3" ||
-        match_files_in_dir "$directory/live/*.dir"; then
-        setup_unionfs "$directory/live" "$rootmnt"
+    if match_files_in_dir "$directory/${LIVE_MEDIA_PATH}/*.squashfs" ||
+        match_files_in_dir "$directory/${LIVE_MEDIA_PATH}/*.ext2" ||
+        match_files_in_dir "$directory/${LIVE_MEDIA_PATH}/*.ext3" ||
+        match_files_in_dir "$directory/${LIVE_MEDIA_PATH}/*.dir"; then
+        setup_unionfs "$directory/${LIVE_MEDIA_PATH}" "$rootmnt"
     else
         :
     fi
@@ -401,7 +412,7 @@ do_netmount() {
     . /tmp/net-${DEVICE}.conf
     export HOSTNAME
 
-    if [ "${NFSROOT#*:}" = "$NFSROOT" ]; then
+    if [ "${NFSROOT#*:}" = "$NFSROOT" ] && [ "$NETBOOT" != "cifs" ]; then
 	NFSROOT=${ROOTSERVER}:${NFSROOT}
     fi
 

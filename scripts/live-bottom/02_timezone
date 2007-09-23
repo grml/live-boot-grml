@@ -40,6 +40,11 @@ set tzdata/Areas Etc
 set tzdata/Zones/Etc UTC
 EOF
     cp -f /root/usr/share/zoneinfo/UTC /root/etc/localtime
-fi   
+fi
+
+if [ -n "${UTC}" ]
+then
+	sed -i -e "s/UTC=.*/UTC=${UTC}/" /root/etc/default/rcS
+fi
 
 log_end_msg
