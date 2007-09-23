@@ -1,3 +1,11 @@
+casper (1.103) gutsy; urgency=low
+
+  * Disable anacron harder so that it doesn't get started by battery events.
+  * Don't write out DHCP network interface stanzas if network-manager is
+    installed (LP: #139403).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Wed, 19 Sep 2007 12:52:21 +0100
+
 casper (1.102) gutsy; urgency=low
 
   * Rename 42disable_cups_apparmor to 42disable_apparmor and remove AppArmor's
