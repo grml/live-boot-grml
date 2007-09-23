@@ -7,7 +7,7 @@ TRANSLATIONS="it"
 all: build
 
 test:
-	set -e; for SCRIPT in hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*; \
+	set -e; for SCRIPT in bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*; \
 	do \
 		sh -n $$SCRIPT; \
 	done
@@ -108,9 +108,9 @@ uninstall:
 update:
 	set -e; for FILE in docs/parameters.txt manpages/*.en.*; \
 	do \
-		sed -i	-e 's/2007\\-07\\-30/2007\\-08\\-06/' \
-			-e 's/30.07.2007/06.08.2007/' \
-			-e 's/1.95.1/1.95.2/' \
+		sed -i	-e 's/2007\\-08\\-13/2007\\-08\\-20/' \
+			-e 's/13.08.2007/20.08.2007/' \
+			-e 's/1.95.3/1.95.4/' \
 		$$FILE; \
 	done
 
