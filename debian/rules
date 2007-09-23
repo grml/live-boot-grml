@@ -1,4 +1,4 @@
-#!/usr/bin/make -f
+#! /usr/bin/make -f
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -12,10 +12,10 @@ build-stamp:
 
 	# Setting BUILD_SYSTEM in the binary package
 	sed -i -e 's/\(BUILD_SYSTEM="\).*"/\1'$(BUILD_SYSTEM)'"/g' casper.conf
-ifeq ($(BUILD_SYSTEM),Debian)
-	cp debian/control.debian debian/control
-else
+ifeq ($(BUILD_SYSTEM),Ubuntu)
 	cp debian/control.ubuntu debian/control
+else
+	cp debian/control.debian debian/control
 endif
 
 	# Building package
@@ -83,11 +83,7 @@ binary-arch: build install
 
 	dh_testdir
 	dh_testroot
-ifeq ($(BUILD_SYSTEM),Debian)
-	dh_installchangelogs -a debian/changelog.upstream
-else
 	dh_installchangelogs -a
-endif
 	dh_installdocs -a
 	dh_installman -a
 	dh_installexamples -a

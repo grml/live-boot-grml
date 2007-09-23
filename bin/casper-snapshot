@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /bin/bash
 
 # casper-snapshot - utility to manage Debian Live systems snapshots
 #
@@ -25,7 +25,7 @@
 # On Debian systems, the complete text of the GNU General Public License
 # can be found in /usr/share/common-licenses/GPL file.
 
-PROGRAM="`basename ${0}`"
+PROGRAM="`basename $0`"
 VERSION=0.0.1
 
 
@@ -152,8 +152,8 @@ Do_snapshot ()
 
 Is_same_mount ()
 {
-	dir1="`Base_path ${1}`"
-	dir2="`Base_path ${2}`"
+	dir1="`Base_path $1`"
+	dir2="`Base_path $2`"
 	if [ "${dir1}" == "${dir2}" ]; then
 		return 0
 	else
@@ -164,10 +164,10 @@ Is_same_mount ()
 Parse_args ()
 {
 	# Parse command line
-	ARGS="${1}"
+	ARGS="$1"
 	ARGUMENTS="`getopt --longoptions cow:,device:,output,resync-string:,type:,help,usage,version --name=${PROGRAM} --options c:d:o:t:r:,h,u,v --shell sh -- ${ARGS}`"
 
-	if [ "${?}" != "0" ]; then
+	if [ "$?" != "0" ]; then
 		echo "Terminating." >&2
 		exit 1
 	fi
@@ -175,17 +175,17 @@ Parse_args ()
 	eval set -- "${ARGUMENTS}"
 
 	while true; do
-		case "${1}" in
+		case "$1" in
 			-c|--cow)
-				SNAP_COW="${2}"; shift 2 ;;
+				SNAP_COW="$2"; shift 2 ;;
 			-d|--device)
-				SNAP_DEV="${2}"; shift 2 ;;
+				SNAP_DEV="$2"; shift 2 ;;
 			-o|--output)
-				SNAP_OUTPUT="${2}"; shift 2 ;;
+				SNAP_OUTPUT="$2"; shift 2 ;;
 			-t|--type)
-				SNAP_TYPE="${2}"; shift 2 ;;
+				SNAP_TYPE="$2"; shift 2 ;;
 			-r|--resync-string)
-				SNAP_RSTRING="${2}"; break ;;
+				SNAP_RSTRING="$2"; break ;;
 			-h|--help)
 				Help; shift ;;
 			-u|--usage)
@@ -202,7 +202,7 @@ Parse_args ()
 
 Mount_device ()
 {
-	dev="${1}"
+	dev="$1"
 
 	if [ ! -d "${MOUNTP}" ]; then
 		mkdir -p "${MOUNTP}"
@@ -290,10 +290,10 @@ Clean ()
 
 Main ()
 {
-	Parse_args "${@}"
+	Parse_args "$@"
 	Defaults
 	Do_snapshot
 	Clean
 }
 
-Main "${@}"
+Main "$@"

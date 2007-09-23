@@ -14,7 +14,7 @@ home_snapshot_label="home-sn"
 USERNAME="casper"
 USERFULLNAME="Live session user"
 HOSTNAME="live"
-BUILD_SYSTEM="Debian"
+BUILD_SYSTEM="Custom"
 
 mkdir -p $mountpoint
 
@@ -87,6 +87,8 @@ parse_cmdline ()
                 export KVARIANT=${x#*=} ;;
             kmodel=*|console-setup/modelcode=*)
                 export KMODEL=${x#*=} ;;
+            module=*)
+                export MODULE=${x#module=} ;;
             preseed/file=*|file=*)
                 export LOCATION="${x#*=}" ;;
             */*=*)
@@ -108,6 +110,10 @@ parse_cmdline ()
             NETBOOT="cifs"
             export NETBOOT
         fi
+    fi
+
+    if [ -z "${MODULE}" ]; then
+        MODULE=order
     fi
 }
 
@@ -167,8 +173,7 @@ is_nice_device() {
     return 1
 }
 
-is_supported_fs ()
-{
+is_supported_fs () {
     # FIXME: do something better like the scan of supported filesystems
     fstype="${1}"
     case ${fstype} in
@@ -398,31 +403,48 @@ setup_unionfs() {
     # Let's just mount the read-only file systems first
     rofsstring=""
     rofslist=""
-    if [ "${NETBOOT}" == "nfs" ] ; then
+    if [ "${NETBOOT}" = "nfs" ] ; then
         roopt="nfsro" # go aroung a bug in nfs-unionfs locking
     else
         roopt="ro"
     fi
 
-    mkdir -p "${croot}"
-    for image_type in "ext2" "squashfs" "dir" ; do
-        for image in "${image_directory}"/*."${image_type}"; do
-            imagename=$(basename "${image}")
-            if [ -d "${image}" ]; then
-                # it is a plain directory: do nothing
-                rofsstring="${image}=${roopt}:${rofsstring}"
-                rofslist="${image} ${rofslist}"
-            elif [ -f "${image}" ]; then
-                backdev=$(get_backing_device "$image")
-                fstype=$(get_fstype "${backdev}")
-                if [ "${fstype}" = "unknown" ]; then
-                    panic "Unknown file system type on ${backdev} (${image})"
-                fi
-                mkdir -p "${croot}/${imagename}"
-                mount -t "${fstype}" -o ro "${backdev}" "${croot}/${imagename}" || panic "Can not mount $backdev ($image) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
-            fi
+    # Read image names from ${MODULE}.lst if it exists
+    if [ -e "${image_directory}/${MODULE}.lst" ]; then
+        for image in $(cat "${image_directory}/${MODULE}.lst"); do
+            image_string="${image_string} ${image_directory}/${image}";
         done
+    else
+        # If ${MODULE}.lst does not exist, create a list of images
+        for image_type in "ext2" "squashfs" "dir"; do
+            for image in "${image_directory}"/*."${image_type}"; do
+	        if [ -e "${image}" ]; then
+		    image_string="${image_string} ${image}";
+		fi
+            done
+        done
+        # Now sort the list
+        image_string=$(echo ${image_string} | sed -e 's/ /\n/g' | sort )
+    fi
+
+    mkdir -p "${croot}"
+    for image in ${image_string}; do
+        imagename=$(basename "${image}")
+        if [ -d "${image}" ]; then
+            # it is a plain directory: do nothing
+            rofsstring="${image}=${roopt}:${rofsstring}"
+            rofslist="${image} ${rofslist}"
+        elif [ -f "${image}" ]; then
+            backdev=$(get_backing_device "$image")
+            fstype=$(get_fstype "${backdev}")
+            if [ "${fstype}" = "unknown" ]; then
+                panic "Unknown file system type on ${backdev} (${image})"
+            fi
+            mkdir -p "${croot}/${imagename}"
+            mount -t "${fstype}" -o ro "${backdev}" "${croot}/${imagename}" || panic "Can not mount $backdev ($image) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
+        fi
     done
+
     rofsstring=${rofsstring%:}
 
     mkdir -p /cow
@@ -602,15 +624,15 @@ mountroot() {
         panic "Unable to find a medium containing a live file system"
     fi
 
-    if [ -n "${TORAM}" ]; then
+    if [ "${TORAM}" ]; then
         live_dest="ram"
-    elif [ -n "${TODISK}" ]; then
+    elif [ "${TODISK}" ]; then
         live_dest="${TODISK}"
     fi
-    if [ -n "${live_dest}" ]; then
-        [ "$quiet" != "y" ] && log_begin_msg "Copying live_media to ${live_dest}"
+    if [ "${live_dest}" ]; then
+        log_begin_msg "Copying live_media to ${live_dest}"
         copy_live_to "${livefs_root}" "${live_dest}"
-        [ "$quiet" != "y" ] && log_end_msg
+        log_end_msg
     fi
 
     mount_images_in_directory "${livefs_root}" "${rootmnt}"

@@ -1,7 +1,7 @@
-#!/bin/sh
+#! /bin/sh
 
 autologin=1
-for opt in $* ; do
+for opt in "$@" ; do
         if [ "$opt" = "-l" -o "$opt" = "-n" ] ; then
                 autologin=0
         fi

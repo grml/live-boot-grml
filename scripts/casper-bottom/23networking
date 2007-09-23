@@ -21,7 +21,7 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
-if [ "${STATICIP}" == "frommedia" -a -e  "$IFFILE" ] ; then
+if [ "${STATICIP}" = "frommedia" -a -e  "$IFFILE" ] ; then
     # will use existent /etc/network/interfaces
     log_end_msg
     exit 0
@@ -33,11 +33,7 @@ iface lo inet loopback
 
 EOF
 
-if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
-    udevtrigger -Bpci -Iclass="0x02*"
-else
-    udevtrigger
-fi
+udevtrigger
 udevsettle
 
 if [ -z "${NETBOOT}" -a -n "${STATICIP}" -a "${STATICIP}" != "frommedia" ]; then
@@ -71,8 +67,8 @@ else
         [ -e $interface ] || continue
         i="$(basename $interface)"
         cat >> "$IFFILE" <<EOF
-auto ${i}
-iface ${i} inet ${method}
+auto $i
+iface $i inet ${method}
 
 EOF
     done

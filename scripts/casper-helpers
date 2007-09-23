@@ -1,9 +1,11 @@
 ## Casper helper functions, used by casper on boot and by casper-snapshot
 
-if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
+if [ "${BUILD_SYSTEM}" = "Ubuntu" ]; then
     MP_QUIET="-Q"
-else
+elif [ "${BUILD_SYSTEM}" = "Debian" ]; then
     MP_QUIET="-q"
+else
+    MP_QUIET=""
 fi
 
 if [ ! -x "/bin/fstype" ]; then
@@ -112,7 +114,7 @@ setup_loop() {
     local pattern=$3
     local offset=$4
 
-    modprobe "${MP_QUIET}" -b "$module"
+    modprobe ${MP_QUIET} -b "$module"
     udevsettle
 
     for loopdev in $pattern; do

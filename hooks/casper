@@ -18,14 +18,13 @@ esac
 
 . /usr/share/initramfs-tools/hook-functions
 
-manual_add_modules unionfs
-
-# Copy in casper.conf
 if [ -e /etc/casper.conf ]; then
     . /etc/casper.conf
     mkdir -p ${DESTDIR}/etc
     cp /etc/casper.conf ${DESTDIR}/etc
 fi
+
+manual_add_modules unionfs
 
 # We need losetup
 copy_exec /sbin/losetup /sbin
@@ -80,3 +79,4 @@ cp /usr/share/initramfs-tools/scripts/casper-functions $DESTDIR/scripts
 cp /usr/share/initramfs-tools/scripts/casper-helpers $DESTDIR/scripts
 
 auto_add_modules net
+

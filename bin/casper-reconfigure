@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 
 set -e
 export PATH=/usr/bin:/usr/sbin:/sbin:/bin
@@ -48,6 +48,5 @@ if [ -z "$version" ]; then
 fi
 
 runcommandinroot "$root" dpkg-reconfigure -fnoninteractive --no-reload "$package"
-
 
 exit 0

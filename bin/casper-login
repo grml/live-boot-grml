@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 
 USERNAME=root
 [ -f /etc/casper.conf ] && . /etc/casper.conf
