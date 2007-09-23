@@ -1,3 +1,10 @@
+casper (1.63+debian-3) unstable; urgency=low
+
+  * Really do not try to eject cd if netbooted.
+  * Fixed unionfs ro param in case of nfs netboot (Closes: 383346).
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Wed, 16 Aug 2006 20:10:11 +0200
+
 casper (1.63+debian-2) unstable; urgency=low
 
   * Working netboot support (Closes: #380506).

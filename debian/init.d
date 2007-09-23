@@ -1,5 +1,10 @@
 #! /bin/sh
 
+# check for netboot
+if grep -qs netboot /proc/cmdline || grep -qsi root=/dev/nfs /proc/cmdline  || grep -qsi root=/dev/cifs /proc/cmdline ; then
+	exit 0
+fi
+
 grep -qs boot=casper /proc/cmdline || exit 0
 
 # Try to cache everything we're likely to need after ejecting.  This

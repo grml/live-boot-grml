@@ -290,6 +290,8 @@ do_netmount() {
 	if [ "${NETBOOT}" != "nfs" ] && do_cifsmount ; then
 		rc=0
 	elif do_nfsmount ; then
+		NETBOOT=nfs
+		export NETBOOT
 		rc=0
 	fi
 
@@ -344,14 +346,20 @@ setup_unionfs() {
 	# Let's just mount the read-only file systems first
 	rofsstring=""
 	rofslist=""
+	if [ ${NETBOOT} == "nfs" ] ; then
+		roopt="nfsro" # go aroung a bug in nfs-unionfs locking
+	else
+		roopt="ro"
+	fi
+
 	mkdir -p "${croot}"
 	for image_type in "ext2" "squashfs" "dir" ; do
 		for image in "${image_directory}"/*."${image_type}"; do
 			imagename=$(basename "${image}")
 			if [ -d "${image}" ]; then
 				# it is a plain directory: do nothing
+				rofsstring="${image}=${roopt}:${rofsstring}"
 				rofslist="${image} ${rofslist}"
-				rofsstring="${image}=ro:${rofsstring}"
 			elif [ -f "${image}" ]; then
 				backdev=$(get_backing_device "$image")
 				fstype=$(get_fstype "${backdev}")
@@ -359,7 +367,7 @@ setup_unionfs() {
 					panic "Unknown file system type on ${backdev} (${image})"
 				fi
 				mkdir -p "${croot}/${imagename}"
-				mount -t "${fstype}" -o ro "${backdev}" "${croot}/${imagename}" || panic "Can not mount $backdev ($image) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=ro:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
+				mount -t "${fstype}" -o ro "${backdev}" "${croot}/${imagename}" || panic "Can not mount $backdev ($image) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
 			fi
 		done
 	done

@@ -3,7 +3,7 @@ Section: misc
 Priority: optional
 Maintainer: Marco Amadori <marco.amadori@gmail.com>
 Uploaders: Daniel Baumann <daniel@debian.org>
-Build-Depends: debhelper (>= 4), dpatch
+Build-Depends: debhelper (>= 4)
 Standards-Version: 3.7.2
 
 Package: casper
