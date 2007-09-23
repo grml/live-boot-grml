@@ -83,6 +83,7 @@ manual_add_modules nls_utf8
 manual_add_modules vfat
 
 # Hardware: cdrom
+force_load ide-generic
 manual_add_modules ide-cd
 manual_add_modules ohci1394
 manual_add_modules sbp2
