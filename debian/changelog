@@ -1,12 +1,9 @@
-casper (1.77+debian-7) testing; urgency=medium
+casper (1.79+debian-1) unstable; urgency=low
 
-  * Backported two 1 line fixes (both serious bugs) from casper-1.79+debian-1
-    and casper-1.79+debian-3:
-    - It now depends also on "file" (Closes: #409308).
-    - Fix DEFCONSOLE for autoserial console, thanks to
-        "Alex Owen" <r.alex.owen@gmail.com>.
+  * New Upstream release.
+  * Reverted: "Mount the first squashfs as /rofs."
 
- -- Marco Amadori <marco.amadori@gmail.com>  Thu,  8 Feb 2007 11:19:46 +0100
+ -- Marco Amadori <marco.amadori@gmail.com>  Tue, 16 Jan 2007 12:12:34 +0100
 
 casper (1.77+debian-6) unstable; urgency=medium
 

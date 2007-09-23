@@ -33,7 +33,12 @@ iface lo inet loopback
 
 EOF
 
-udevtrigger
+if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
+    udevtrigger -Bpci -Iclass="0x02*"
+else
+    udevtrigger
+fi
+udevsettle
 
 if [ -z "${NETBOOT}" -a -n "${STATICIP}" -a "${STATICIP}" != "frommedia" ]; then
     parsed=$(echo "${STATICIP}" | sed -e 's/:/ /g')

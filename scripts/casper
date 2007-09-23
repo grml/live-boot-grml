@@ -95,7 +95,7 @@ parse_cmdline ()
                 PRESEEDS="${PRESEEDS}\"${question}=${value}\" "
                 ;;
             console=*)
-                export DEFCONSOLE="${x#*=}" ;;
+                export DEFCONSOLE=$(sed -e 's%.*console=%console=%' /proc/cmdline) ;;
         esac
     done
 
@@ -426,6 +426,7 @@ setup_unionfs() {
     rofsstring=${rofsstring%:}
 
     mkdir -p /cow
+
     cowdevice="tmpfs"
     cow_fstype="tmpfs"
 

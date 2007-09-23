@@ -43,7 +43,7 @@ package="$2"
 version=$(runcommandinroot "$root" dpkg-query -W --showformat='${Version}' "$package" 2>/dev/null) || version=""
 
 if [ -z "$version" ]; then
-    echo "$0: package '$package' is not installed"
+    echo >&2 "$0: package '$package' is not installed"
     exit 0
 fi
 
