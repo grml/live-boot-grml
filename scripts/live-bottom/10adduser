@@ -108,4 +108,8 @@ if [ -L /root/home/$USERNAME/Examples ]; then
     mv /root/home/$USERNAME/Examples /root/home/$USERNAME/Desktop/
 fi
 
+if [ -f "/root/usr/share/apps/khelpcenter/plugins/kubuntu/about-kubuntu.desktop.tobemoved" ]; then
+    chroot /root install -D -o $USERNAME -g $USERNAME /root/usr/share/apps/khelpcenter/plugins/kubuntu/about-kubuntu.desktop.tobemoved /home/$USERNAME/Desktop/about-kubuntu.desktop
+fi
+
 log_end_msg
