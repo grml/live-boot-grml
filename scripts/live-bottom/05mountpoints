@@ -21,7 +21,9 @@ esac
 log_begin_msg "$DESCRIPTION"
 
 # Move to the new root filesystem so that programs there can get at it.
-mkdir -p /root/cdrom
-mount -n -o move /cdrom /root/cdrom
+if [ ! -d /root/live_media ]; then
+    mkdir -p /root/live_media
+    mount -n -o move /live_media /root/live_media
+fi
 
 log_end_msg

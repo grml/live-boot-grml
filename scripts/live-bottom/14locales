@@ -33,19 +33,10 @@ else
     grep_file=/root/etc/default/locale
 fi
 
-# commandline
-for x in $(cat /proc/cmdline); do
-    case $x in
-        debian-installer/locale=*)
-			locale=${x#debian-installer/locale=}
-			set_locale="true"
-			;;
-		locale=*)
-			locale=${x#locale=}
-			set_locale="true"
-            ;;
-    esac
-done
+if [ -n "${LOCALE}" ]; then
+    locale="${LOCALE}"
+    set_locale="true"
+fi
 
 if [ -z "${locale}" ]; then
     # Set a default one
@@ -54,10 +45,34 @@ if [ -z "${locale}" ]; then
 fi
 
 if [ "${set_locale}" ]; then
+    if echo "${locale}" | grep -sqE '^[[:lower:]]{2}$' ; then
+        # input is like "locale=it", so we will convert and setup also the keyboard if not already set
+        if [ -z "${KBD}" ]; then
+            # FIXME: look if this keyb is supported
+            KBD="${locale}"
+            really_export KBD
+        fi
+        uploc=$(echo "${locale}" | tr '[a-z]' '[A-Z]')
+        locale="${locale}_${uploc}.UTF-8"
+    fi
     LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 |sed -e 's, .*,,' -e q)
-    printf 'LANG="%s"\n' "${LANG}" >> "${grep_file}"
-    printf '%s UTF-8\n' "${LANG}" > /root/etc/locale.gen
-    chroot /root /usr/sbin/locale-gen "${LANG}"
+    if [ -z "${LANG}" ]; then
+        log_warning_message "Locale ${locale} is unsupported."
+        locale="en_US.UTF-8"
+        LANG="${locale}"
+    fi
+
+    really_export LANG
+
+    if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
+        printf 'LANG="%s"\n' "${LANG}" > "${grep_file}"
+        chroot /root /usr/sbin/locale-gen "${LANG}"
+        live-preseed /root debian-installer/locale "${locale}"
+    else
+        printf 'LANG=%s\n' "${LANG}" > "${grep_file}"
+        printf '%s UTF-8\n' "${LANG}" > /root/etc/locale.gen
+        chroot /root /usr/sbin/locale-gen
+    fi
 fi
 
 log_end_msg

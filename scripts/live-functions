@@ -1,5 +1,6 @@
 
 . /scripts/functions
+. /live.vars
 
 # Override this so we don't call PROGRESS
 log_end_msg()
@@ -18,4 +19,17 @@ log_wait_msg()
 		read nunya < /dev/.initramfs/usplash_outfifo
 	fi
 	_log_msg "Waiting: $@ ..."
+}
+
+really_export ()
+{
+    STRING="${1}"
+    VALUE="$(eval echo -n \${$STRING})"
+
+    if [ -f /live.vars ] && cat /live.vars | grep -sq "export ${STRING}" ; then
+        sed -i -e 's/\('${STRING}'=\).*$/\1'${VALUE}'/' /live.vars
+    else
+        echo "export ${STRING}=\"${VALUE}\"" >> /live.vars
+    fi
+    eval export "${STRING}"="${VALUE}"
 }

@@ -6,16 +6,24 @@ Uploaders: Daniel Baumann <daniel@debian.org>
 Build-Depends: debhelper (>= 5), lsb-release
 Standards-Version: 3.7.2
 XS-Vcs-Svn: svn://svn.debian.org/debian-live/dists/trunk/live-initramfs/
+XS-VCS-Browse: http://svn.debian.org/wsvn/debian-live/dists/trunk/live-initramfs/
 
 Package: live-initramfs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, dmsetup, eject, file, initramfs-tools, sudo, user-setup
+Depends: ${shlibs:Depends}, ${misc:Depends}, eject, file, initramfs-tools, sudo, user-setup
+Suggests: genext2fs, squashfs-tools
 Conflicts: casper, usplash (<< 0.4-43)
 Replaces: casper
-Description: Debian Live (alternative) initramfs generator
- live-initramfs provides an initramfs generator suited for booting Debian Live
- systems from read-only media.
+Description: Debian Live initramfs generator
+ live-initramfs is a hook for the initramfs-tools, used to generate a initramfs
+ capable to boot live systems, such as those created by live-helper. This
+ includes the Debian Live isos, netboot tarballs, and usb stick images.
+ .
+ At boot time it will look for a (read-only) media containing a "/live"
+ directory where a root filesystems (often a compressed filesystem image like
+ squashfs) is stored. If found, it will create a writable environment, using
+ unionfs, for Debian like systems to boot from.
  .
   Homepage: <http://debian-live.alioth.debian.org/>
  .
- live-initramfs is a fork of casper.
+ live-initramfs is a fork of casper <http://packages.ubuntu.com/casper/>.

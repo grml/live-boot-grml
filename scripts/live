@@ -7,17 +7,22 @@ export PATH=/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin
 echo "/root/lib" >> /etc/ld.so.conf
 echo "/root/usr/lib" >> /etc/ld.so.conf
 
-mountpoint=/cdrom
+mountpoint=/live_media
+
+root_persistence="live-rw"
+home_persistence="home-rw"
+root_snapshot_label="live-sn"
+home_snapshot_label="home-sn"
 
 USERNAME=user
-USERFULLNAME="Live session user"
-HOST=live
+USERFULLNAME="Live user"
+HOSTNAME=host
 BUILD_SYSTEM=Custom
 
 mkdir -p $mountpoint
 
 [ -f /etc/live.conf ] && . /etc/live.conf
-export USERNAME USERFULLNAME HOST BUILD_SYSTEM
+export USERNAME USERFULLNAME HOSTNAME BUILD_SYSTEM
 
 . /scripts/live-helpers
 
@@ -25,7 +30,103 @@ if [ ! -f /live.vars ]; then
     touch /live.vars
 fi
 
-is_casper_path() {
+parse_cmdline ()
+{
+    PRESEEDS=
+    # looking for live-initramfs specifics options as kernel parameters
+    for x in $(cat /proc/cmdline); do
+        case $x in
+            userfullname=*)
+                export USERFULLNAME=${x#userfullname=}
+                export LIVECONF="changed"
+                ;;
+            hostname=*)
+                export HOSTNAME=${x#hostname=}
+                export LIVECONF="changed"
+                ;;
+            username=*)
+                export USERNAME=${x#username=}
+                export LIVECONF="changed"
+                ;;
+            netboot*)
+                export NETBOOT=${x#netboot=} ;;
+            access=*)
+                export ACCESS=${x#access=} ;;
+            xdebconf)
+                export XDEBCONF="Yes" ;;
+	    xvideomode=*)
+	        export XVIDEOMODE="${x#xvideomode=}" ;;
+            toram)
+                export TORAM="Yes" ;;
+            todisk=*)
+                export TODISK=${x#todisk=} ;;
+	    swapoff)
+	        export SWAPOFF="Yes" ;;
+            showmounts)
+                export SHOWMOUNTS="Yes" ;;
+            persistent)
+                export PERSISTENT="Yes" ;;
+            nopersistent)
+                export PERSISTENT="" ;;
+            ip*)
+                STATICIP=${x#ip=}
+                if [ "${STATICIP}" == "" ]; then
+                    STATICIP="frommedia"
+                fi
+                export STATICIP ;;
+            live-getty)
+                export LIVE_GETTY=1 ;;
+            bootfrom=*|live-media=*)
+                export LIVE_MEDIA=${x#*=} ;;
+            live-media-encryption=*|encryption=*)
+                export LIVE_MEDIA_ENCRYPTION=${x#*=} ;;
+            live-media-timeout=*)
+                export LIVE_MEDIA_TIMEOUT=${x#live-media-timeout=} ;;
+            live-media-offset=*)
+                export LIVE_MEDIA_OFFSET=${x#live-media-offset=} ;;
+            locale=*|debian-installer/locale=*)
+                export LOCALE=${x#*=} ;;
+            keyb=*|kbd-chooser/method=*)
+                export KBD=${x#*=} ;;
+            klayout=*|console-setup/layoutcode=*)
+                export KLAYOUT=${x#*=} ;;
+            koptions=*)
+                export KOPTIONS=${x#koptions=} ;;
+            kvariant=*|console-setup/variantcode=*)
+                export KVARIANT=${x#*=} ;;
+            kmodel=*|console-setup/modelcode=*)
+                export KMODEL=${x#*=} ;;
+            module=*)
+                export MODULE=${x#module=} ;;
+            preseed/file=*|file=*)
+                export LOCATION="${x#*=}" ;;
+            */*=*)
+                question="${x%%=*}"
+                value="${x#*=}"
+                PRESEEDS="${PRESEEDS}\"${question}=${value}\" "
+                ;;
+            console=*)
+                export DEFCONSOLE="${x#*=}" ;;
+        esac
+    done
+
+    # sort of compatibility with netboot.h from linux docs
+    if [ -z "${NETBOOT}" ]; then
+        if [ "${ROOT}" == "/dev/nfs" ]; then
+            NETBOOT="nfs"
+            export NETBOOT
+        elif [ "${ROOT}" == "/dev/cifs" ]; then
+            NETBOOT="cifs"
+            export NETBOOT
+        fi
+    fi
+
+    if [ -z "${MODULE}" ]; then
+        MODULE=order
+    fi
+}
+
+is_live_path() {
     path=$1
     if [ -d "$path/live" ]; then
         if [ "$(echo $path/live/*.squashfs)" != "$path/live/*.squashfs" ] ||
@@ -40,7 +141,7 @@ is_casper_path() {
 get_backing_device() {
     case "$1" in
         *.squashfs|*.ext2)
-            echo $(setup_loop "$1" "loop" "/sys/block/loop*")
+            echo $(setup_loop "$1" "loop" "/sys/block/loop*" '0' "${LIVE_MEDIA_ENCRYPTION}")
             ;;
         *.dir)
             echo "directory"
@@ -243,7 +344,7 @@ do_snap_copy ()
 try_snap ()
 {
     # Look for $snap_label.* in block devices and copy the contents to $snap_mount
-    #   and remember the device and filename for resync on exit in casper.init
+    #   and remember the device and filename for resync on exit in live-initramfs.init
 
     snap_label="${1}"
     snap_mount="${2}"
@@ -320,24 +421,40 @@ setup_unionfs() {
         roopt="ro"
     fi
 
-    mkdir -p "${croot}"
-    for image_type in "ext2" "squashfs" "dir" ; do
-        for image in "${image_directory}"/*."${image_type}"; do
-            imagename=$(basename "${image}")
-            if [ -d "${image}" ]; then
-                # it is a plain directory: do nothing
-                rofsstring="${image}=${roopt}:${rofsstring}"
-                rofslist="${image} ${rofslist}"
-            elif [ -f "${image}" ]; then
-                backdev=$(get_backing_device "$image")
-                fstype=$(get_fstype "${backdev}")
-                if [ "${fstype}" = "unknown" ]; then
-                    panic "Unknown file system type on ${backdev} (${image})"
-                fi
-                mkdir -p "${croot}/${imagename}"
-                mount -t "${fstype}" -o ro "${backdev}" "${croot}/${imagename}" || panic "Can not mount $backdev ($image) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
-            fi
+    # Read image names from ${MODULE}.lst if it exists
+    if [ -e "${image_directory}/${MODULE}.lst" ]; then
+        for image in $(cat "${image_directory}/${MODULE}.lst"); do
+            image_string="${image_string} ${image_directory}/${image}";
         done
+    else
+        # If ${MODULE}.lst does not exist, create a list of images
+        for image_type in "ext2" "squashfs" "dir"; do
+            for image in "${image_directory}"/*."${image_type}"; do
+	        if [ -e "${image}" ]; then
+		    image_string="${image_string} ${image}";
+		fi
+            done
+        done
+        # Now sort the list
+        image_string=$(echo ${image_string} | sed -e 's/ /\n/g' | sort )
+    fi
+
+    mkdir -p "${croot}"
+    for image in ${image_string}; do
+        imagename=$(basename "${image}")
+        if [ -d "${image}" ]; then
+            # it is a plain directory: do nothing
+            rofsstring="${image}=${roopt}:${rofsstring}"
+            rofslist="${image} ${rofslist}"
+        elif [ -f "${image}" ]; then
+            backdev=$(get_backing_device "$image")
+            fstype=$(get_fstype "${backdev}")
+            if [ "${fstype}" = "unknown" ]; then
+                panic "Unknown file system type on ${backdev} (${image})"
+             fi
+            mkdir -p "${croot}/${imagename}"
+            mount -t "${fstype}" -o ro "${backdev}" "${croot}/${imagename}" || panic "Can not mount $backdev ($image) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
+        fi
     done
     rofsstring=${rofsstring%:}
 
@@ -386,17 +503,11 @@ setup_unionfs() {
                     ;;
             esac
         done
-        # shows cow fs on /cow for use by live-snapshot
-        mkdir -p "${rootmnt}/cow"
-        mount -o bind /cow "${rootmnt}/cow"
     fi
 
-    # move the first mount; no head in busybox-initramfs
-    for d in $(mount -t squashfs | cut -d\  -f 3); do
-        mkdir -p "${rootmnt}/rofs"
-        mount -o move "${d}" "${rootmnt}/rofs"
-        break
-    done
+    # shows cow fs on /cow for use by live-snapshot
+    mkdir -p "${rootmnt}/cow"
+    mount -o bind /cow "${rootmnt}/cow"
 }
 
 check_dev ()
@@ -407,15 +518,15 @@ check_dev ()
         devname=$(sys2dev "${sysdev}")
     fi
 
-    if [ -n "${LIVEMEDIA_OFFSET}" ]; then
-        loopdevname=$(setup_loop "${devname}" "loop" "/sys/block/loop*" "${LIVEMEDIA_OFFSET}")
-        devname="${loopdevname}" 
+    if [ -n "${LIVE_MEDIA_OFFSET}" ]; then
+        loopdevname=$(setup_loop "${devname}" "loop" "/sys/block/loop*" "${LIVE_MEDIA_OFFSET}" '')
+        devname="${loopdevname}"
     fi
 
     fstype=$(get_fstype "${devname}")
     if is_supported_fs ${fstype}; then
         mount -t ${fstype} -o ro "${devname}" $mountpoint || continue
-        if is_casper_path $mountpoint; then
+        if is_live_path $mountpoint; then
             echo $mountpoint
             return 0
         else
@@ -423,7 +534,7 @@ check_dev ()
         fi
     fi
 
-    if [ -n "${LIVEMEDIA_OFFSET}" ]; then
+    if [ -n "${LIVE_MEDIA_OFFSET}" ]; then
         losetup -d "${loopdevname}"
     fi
     return 1
@@ -432,14 +543,14 @@ check_dev ()
 find_livefs() {
     timeout="${1}"
     # first look at the one specified in the command line
-    if [ ! -z "${LIVEMEDIA}" ]; then
-        if check_dev "null" "${LIVEMEDIA}"; then
+    if [ ! -z "${LIVE_MEDIA}" ]; then
+        if check_dev "null" "${LIVE_MEDIA}"; then
             return 0
         fi
     fi
     # don't start autodetection before timeout has expired
-    if [ -n "${LIVEMEDIA_TIMEOUT}" ]; then
-        if [ "${timeout}" -lt "${LIVEMEDIA_TIMEOUT}" ]; then
+    if [ -n "${LIVE_MEDIA_TIMEOUT}" ]; then
+        if [ "${timeout}" -lt "${LIVE_MEDIA_TIMEOUT}" ]; then
             return 1
         fi
     fi
@@ -462,7 +573,7 @@ find_livefs() {
                 "${fstype}" = "ext2" ]; then
             # This is an ugly hack situation, the block device has
             # an image directly on it.  It's hopefully
-            # casper, so take it and run with it.
+            # live-initramfs, so take it and run with it.
             ln -s "${devname}" "${devname}.${fstype}"
             echo "${devname}.${fstype}"
             return 0
@@ -489,6 +600,8 @@ mountroot() {
     exec > live.log
     exec 2>&1
 
+    parse_cmdline
+
     set_usplash_timeout
     [ "$quiet" != "y" ] && log_begin_msg "Running /scripts/live-premount"
     pulsate
@@ -508,9 +621,9 @@ mountroot() {
         fi
     else
         # Scan local devices for the image
-        for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13; do
+        for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19; do
             livefs_root=$(find_livefs $i)
-            if [ "${livefs_root}" ]; then
+            if [ -n "${livefs_root}" ]; then
                 break
             fi
             sleep 1
