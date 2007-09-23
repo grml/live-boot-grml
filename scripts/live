@@ -7,7 +7,7 @@ export PATH=/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin
 echo "/root/lib" >> /etc/ld.so.conf
 echo "/root/usr/lib" >> /etc/ld.so.conf
 
-mountpoint=/live_media
+mountpoint=/live/image
 
 root_persistence="live-rw"
 home_persistence="home-rw"
@@ -47,6 +47,13 @@ parse_cmdline ()
 			console=*)
 				DEFCONSOLE="${x#*=}"
 				export DEFCONFSOLE
+				;;
+
+			debug)
+				DEBUG="Yes"
+				export DEBUG
+
+				set -x
 				;;
 
 			hostname=*)
@@ -143,7 +150,7 @@ parse_cmdline ()
 				export NETBOOT
 				;;
 
-			nfsopts=)
+			nfsopts=*)
 				NFSOPTS=${x#nfsopts=}
 				export NFSOPTS
 				;;
@@ -201,7 +208,7 @@ parse_cmdline ()
 				export SHOWMOUNTS
 				;;
 
-		       timezone=*)
+			timezone=*)
 				TIMEZONE="${x#timezone=}"
 				export TIMEZONE
 				;;
@@ -659,8 +666,8 @@ setup_unionfs() {
     fi
 
     # shows cow fs on /cow for use by live-snapshot
-    mkdir -p "${rootmnt}/cow"
-    mount -o bind /cow "${rootmnt}/cow"
+    mkdir -p "${rootmnt}/live/cow"
+    mount -o bind /cow "${rootmnt}/live/cow"
 }
 
 check_dev ()
@@ -793,7 +800,7 @@ mountroot() {
         live_dest="${TODISK}"
     fi
     if [ "${live_dest}" ]; then
-        log_begin_msg "Copying live_media to ${live_dest}"
+        log_begin_msg "Copying live media to ${live_dest}"
         copy_live_to "${livefs_root}" "${live_dest}"
         log_end_msg
     fi

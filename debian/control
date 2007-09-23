@@ -13,7 +13,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, file, initramfs-tools, sudo, user-setup
 Recommends: eject, live-initscripts
 Suggests: genext2fs, squashfs-tools
-Conflicts: casper (<< 1.87)
+Conflicts: casper
 Replaces: casper
 Description: Debian Live initramfs hook
  live-initramfs is a hook for the initramfs-tools, used to generate a initramfs
@@ -31,13 +31,3 @@ Description: Debian Live initramfs hook
   Homepage: <http://debian-live.alioth.debian.org/>
  .
  live-initramfs is a fork of casper <http://packages.ubuntu.com/casper/>.
-
-Package: casper
-Architecture: all
-Depends: live-initramfs
-Description: Debian Live initramfs hook (transitional package)
- Package to ease upgrading from older casper package to the new live-initramfs
- package.
- .
- This package can be purged at anytime once the live-initramfs package has been
- installed.

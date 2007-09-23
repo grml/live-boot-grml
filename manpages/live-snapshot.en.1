@@ -1,4 +1,4 @@
-.TH LIVE\-SNAPSHOT 1 "2007\-07\-02" "1.91.3" "live\-initramfs"
+.TH LIVE\-SNAPSHOT 1 "2007\-07\-09" "1.91.4" "live\-initramfs"
 
 .SH NAME
 live\-snapshot \- a simple script to ease persistence usage
@@ -35,7 +35,7 @@ live\-snapshot is a script which can be used to build the right types of persist
 .SH OPTIONS
 .IP "\fB\-c, \-\-cow\fR \fIDIRECTORY\fR" 4
 specifies the input directory to be cloned in the image file.
-Its default value "/cow" should be right for most uses. However it could be handy to specify "/home" and type ext2 for the type to prepare an image file suited to be directly mounted by live-initramfs as home.
+Its default value "/live/cow" should be right for most uses. However it could be handy to specify "/home" and type ext2 for the type to prepare an image file suited to be directly mounted by live-initramfs as home.
 .IP "\fB\-d, \-\-device\fR \fIDEVICE\fR" 4
 sets the device where the media which the snapshot/persistence file/partition will be put. If it is not specified, a tmpfs will be used and linked to the user's desktop to move it where it is needed. If the device has no filesystem, an ext2 fs will be automatically created and labelled according to the values specified after the "--output" value or with a sane default.
 .IP "\fB\-e, \-\-exclude\-list\fR \fIFILE\fR" 4
