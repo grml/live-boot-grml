@@ -3,7 +3,7 @@ Section: misc
 Priority: optional
 Maintainer: Debian Live <debian-live-maint@lists.alioth.debian.org>
 Uploaders: Daniel Baumann <daniel@debian.org>
-Build-Depends: debhelper (>= 5), lsb-release, asciidoc, xsltproc, docbook-xsl
+Build-Depends: debhelper (>= 5), asciidoc, docbook-xsl, lsb-release, xsltproc
 Standards-Version: 3.7.2
 XS-Upstream-Depends: git-core
 XS-Vcs-Git: git://git.debian.org/git/users/daniel/live-initramfs.git
