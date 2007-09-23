@@ -1,3 +1,9 @@
+live-initramfs (1.95.2-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon,  6 Aug 2007 00:00:00 +0200
+
 live-initramfs (1.95.1-1) unstable; urgency=medium
 
   * New upstream release.
