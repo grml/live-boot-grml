@@ -1,3 +1,11 @@
+casper (1.79+debian-2) unstable; urgency=low
+
+  * It now depends also on "file" (Closes: #409308).
+  * Fixed LIVEMEDIA_TIMEOUT values (Closes: #409300).
+    Thanks for both to Jonathan Hall <flimzy@flimzy.com>.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Sat,  3 Feb 2007 18:29:20 +0100
+
 casper (1.79+debian-1) unstable; urgency=low
 
   * New Upstream release.
