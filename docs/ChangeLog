@@ -1,3 +1,17 @@
+2007-06-17  Daniel Baumann  <daniel@debiann.org>
+
+	* Added patch from Thomas Lange <lange@informatik.uni-koeln.de> to
+	  properly load ide-generic after udev.
+
+2007-06-15  Daniel Baumann  <daniel@debian.org>
+
+	* Merging changes from casper 1.91.
+
+2007-06-14  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/live-bottom/18hostname:
+	 - Appending to /etc/hosts to not overwrite custom settings.
+
 2007-06-08  Daniel Baumann  <daniel@debian.org>
 
 	* Merging changes from casper 1.88.
