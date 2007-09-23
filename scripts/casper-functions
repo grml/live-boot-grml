@@ -1,12 +1,25 @@
 
 . /scripts/functions
+. /casper.vars
 
 # Override this so we don't call PROGRESS
 log_end_msg()
 {
-	if [ -x /sbin/usplash_write ]; then
-		/sbin/usplash_write "SUCCESS ok"
-	fi
-	_log_msg "Done."
+    if [ -x /sbin/usplash_write ]; then
+        /sbin/usplash_write "SUCCESS ok"
+    fi
+    _log_msg "Done."
 }
 
+really_export ()
+{
+    STRING="${1}"
+    VALUE="$(eval echo -n \${$STRING})"
+
+    if [ -f /casper.vars ] && cat /casper.vars | grep -sq "export ${STRING}" ; then
+        sed -i -e 's/\('${STRING}'=\).*$/\1'${VALUE}'/' /casper.vars
+    else
+        echo "export ${STRING}=\"${VALUE}\"" >> /casper.vars
+    fi
+    eval export "${STRING}"="${VALUE}"
+}

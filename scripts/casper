@@ -23,6 +23,10 @@ export USERNAME USERFULLNAME HOSTNAME BUILD_SYSTEM
 
 . /scripts/casper-helpers
 
+if [ ! -f /casper.vars ]; then
+    touch /casper.vars
+fi
+
 parse_cmdline ()
 {
     # looking for casper specifics options as kernel parameters
@@ -64,6 +68,8 @@ parse_cmdline ()
                 export LIVEMEDIA=${x#bootfrom=} ;;
             live-media=*)
                 export LIVEMEDIA=${x#live-media=} ;;
+            live-media-timeout=*)
+                export LIVEMEDIA_TIMEOUT=${x#live-media-timeout=} ;;
             debian-installer/locale=*)
                 export LOCALE=${x#debian-installer/locale=} ;;
             locale=*)
@@ -480,10 +486,17 @@ check_dev ()
 }
 
 find_livefs() {
+    timeout="${1}"
     # first look at the one specified in the command line
     if [ ! -z "${LIVEMEDIA}" ]; then
         if check_dev "null" "${LIVEMEDIA}"; then
             return 0
+        fi
+    fi
+    # don't start autodetection before timeout has expired
+    if [ -n "${LIVEMEDIA_TIMEOUT}" ]; then
+        if [ "${timeout}" -lt "${LIVEMEDIA_TIMEOUT}" ]; then
+            return 1
         fi
     fi
     # or do the scan of block devices
@@ -501,7 +514,7 @@ find_livefs() {
                 fi
             done
         elif [ "${fstype}" = "squashfs" -o \
-                "${fstype}" = "ext3" ] -o \
+                "${fstype}" = "ext3" -o \
                 "${fstype}" = "ext2" ]; then
             # This is an ugly hack situation, the block device has
             # an image directly on it.  It's hopefully
@@ -554,8 +567,8 @@ mountroot() {
     else
         # Scan local devices for the image
         for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13; do
-            livefs_root=$(find_livefs)
-            if [ ! -z "${livefs_root}" ]; then
+            livefs_root=$(find_livefs $i)
+            if [ -n "${livefs_root}" ]; then
                 break
             fi
             sleep 1
@@ -588,6 +601,12 @@ mountroot() {
     run_scripts /scripts/casper-bottom
     [ "$quiet" != "y" ] && log_end_msg
 
+    if [ -f /casper.vars ]; then
+        echo "Casper vars:"
+        cat /casper.vars
+    fi
+
+    echo "Casper Log:"
     exec 1>&6 6>&-
     exec 2>&7 7>&-
     cp casper.log "${rootmnt}/var/log/"

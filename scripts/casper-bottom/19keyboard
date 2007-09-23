@@ -20,7 +20,7 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
-kbd=us
+kbd=
 cslayout=
 csvariant=
 csmodel=
@@ -28,7 +28,12 @@ csmodel=
 # commandline
 if [ -n "${KBD}" ]; then
     kbd="${KBD}"
+else
+    kbd=us
 fi
+
+really_export kbd
+
 if [ -n "${CSLAYOUT}" ]; then
     cslayout="${CSLAYOUT}"
 fi

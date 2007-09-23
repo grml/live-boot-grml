@@ -1,3 +1,17 @@
+casper (1.77+debian-4) unstable; urgency=medium
+
+  * Removed -phigh from casper-reconfigure, not needed anymore.
+  * Fixed netboot /etc/network/interfaces generation, thanks to Hadar
+    <whadar@gmail.com>.
+  * Fixed X keyboard setup. Thanks to <ascii_77@yahoo.fr> for the idea.
+  * Fixed keyboard setup.
+  * Allow commandline-device to show up late, thanks to Bas Wijnen
+    <wijnen@debian.org> for the code and the care (Closes: #397320).
+  * Urgency is set to medium to try reaching Etch with important
+    features/bugfixes.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Mon,  6 Nov 2006 19:00:29 +0100
+
 casper (1.77+debian-3) unstable; urgency=medium
 
   * Fixed "todisk=" parsing.

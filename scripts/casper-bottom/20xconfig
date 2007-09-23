@@ -5,6 +5,7 @@ DESCRIPTION="Configuring X..."
 
 . /scripts/casper-functions
 
+
 prereqs()
 {
        echo "$PREREQ"
@@ -26,28 +27,20 @@ if [ "$TERM_TYPE" = "serial" ]; then
     exit 0
 fi
 
-locale=en_US.UTF-8
-
-for x in $(cat /proc/cmdline); do
-                case $x in
-                        debian-installer/locale=*)
-                                locale=${x#debian-installer/locale=}
-                                ;;
-                        locale=*)
-                                locale=${x#locale=}
-                                ;;
-                esac
-done
-
 mount -n -o bind /sys /root/sys
 mount -n -o bind /proc /root/proc
 
-chroot /root debconf-communicate -fnoninteractive casper > /dev/null <<EOF
+if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
+    chroot /root debconf-communicate -fnoninteractive casper > /dev/null <<EOF
 set xserver-xorg/autodetect_keyboard true
 fset xserver-xorg/autodetect_keyboard seen true
 EOF
+else
+    # d-i code not present, so:
+    echo "set xserver-xorg/config/inputdevice/keyboard/layout ${kbd}" | chroot /root debconf-communicate -fnoninteractive casper > /dev/null
+fi
 
-DEBUG_XORG_PACKAGE=1 DEBUG_XORG_DEBCONF=1 LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 | sed -e 's, .*,,' -e q) casper-reconfigure /root xserver-xorg
+DEBUG_XORG_PACKAGE=1 DEBUG_XORG_DEBCONF=1 casper-reconfigure /root xserver-xorg
 umount /root/sys
 umount /root/proc
 
