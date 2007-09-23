@@ -170,6 +170,11 @@ Arguments ()
 				export NOACCESSIBILITY
 				;;
 
+			noapparmor)
+				NOAPPARMOR="Yes"
+				export NOAPPARMOR
+				;;
+
 			noaptcdrom)
 				NOAPTCDROM="Yes"
 				export NOAPTCDROM
