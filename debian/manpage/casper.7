@@ -42,6 +42,9 @@ If this variable is set, dhcp and static configuration are just skipped and the 
 .BI "{live-media|bootfrom}=" DEVICE
 If you specify one of this two equivalent forms, casper will first try to find this device for the "/casper" directory where the read-only root filesystem should reside. If it did not find something usable, the normal scan for block devices is performed.
 .TP
+.BI "{live-media-encryption|encryption}=" TYPE
+Casper will mount the encrypted rootfs TYPE, asking the passphrase, useful to build paranoid live systems :-). TYPE supported so far are "aes" for loop-aes encryption type.
+.TP
 .BI "live-media-offset=" BYTES
 This way you could tell casper that your image starts at offset BYTES in the above specified or autodiscovered device, this could be useful to hide the debian-live iso or image inside another iso or image, to create "clean" images.
 .TP
@@ -62,6 +65,9 @@ Casper will look for persistent and snapshot partitions or files labeled "casper
 .TP
 .B nopersistent
 disables the above mentioned "persistent" feature, useful if the bootloader (like syslinux) has been installed with persistent enabled.
+.TP
+.B quickreboot
+This option causes casper to reboot without attempting to eject the media and without asking the user to remove the boot media.
 .TP
 .B "showmounts"
 This parameter will make casper to show on "/" the ro filesystems (mostly compressed) on /casper. This is not enabled by default because could lead to problems by applications like "mono" which store binary paths on installation.

@@ -1,3 +1,16 @@
+casper (1.81+debian-2) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Applied patch from Sebastian Raveau <sebastien.raveau@epita.fr> to
+    add support for filesystem images encrypted with loop-aes.
+
+  [ Marco Amadori ]
+  * Added a "quickreboot" boot parameter, that prevent casper to eject the
+    media, useful for remote rebooting of a casper system, thanks to
+    Jonathan Hall <flimzy@flimzy.com> for the patch.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Fri, 16 Feb 2007 17:26:58 +0100
+
 casper (1.81+debian-1) unstable; urgency=low
 
   * New upstream release.

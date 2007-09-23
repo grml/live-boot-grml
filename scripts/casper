@@ -71,6 +71,8 @@ parse_cmdline ()
                 export CASPERGETTY=1 ;;
             bootfrom=*|live-media=*)
                 export LIVEMEDIA=${x#*=} ;;
+            live-media-encryption=*|encryption=*)
+                export LIVEMEDIA_ENCRYPTION=${x#*=} ;;
             live-media-timeout=*)
                 export LIVEMEDIA_TIMEOUT=${x#live-media-timeout=} ;;
             live-media-offset=*)
@@ -132,7 +134,7 @@ is_casper_path() {
 get_backing_device() {
     case "$1" in
         *.squashfs|*.ext2)
-            echo $(setup_loop "$1" "loop" "/sys/block/loop*")
+            echo $(setup_loop "$1" "loop" "/sys/block/loop*" '0' "${LIVEMEDIA_ENCRYPTION}")
             ;;
         *.dir)
             echo "directory"
@@ -509,7 +511,7 @@ check_dev ()
     fi
 
     if [ -n "${LIVEMEDIA_OFFSET}" ]; then
-        loopdevname=$(setup_loop "${devname}" "loop" "/sys/block/loop*" "${LIVEMEDIA_OFFSET}")
+        loopdevname=$(setup_loop "${devname}" "loop" "/sys/block/loop*" "${LIVEMEDIA_OFFSET}" '')
         devname="${loopdevname}" 
     fi
 
