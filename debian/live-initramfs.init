@@ -81,7 +81,10 @@ do_stop ()
     done
 
     if [ -z ${QUICKREBOOT} ]; then
-	eject -p -m /live_media >/dev/null 2>&1
+	if [ -x /usr/bin/eject ]
+	then
+		eject -p -m /live_media >/dev/null 2>&1
+	fi
 
 	# XXX - i18n
 	echo "Please remove the disc and close the tray (if any) then press ENTER: "

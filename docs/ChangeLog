@@ -1,7 +1,31 @@
+2007-06-25  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/live:
+	  - Added missing nfsopts boot parameter.
+	  - Changed default module name from 'order' to 'filesystem'.
+	  - Changed module extension from '.lst' to '.module'.
+	  - Check not just for $MODULE.module, but also
+	    filesystem.$MODULE.module
+	  - Cleaned up parse_cmdline and is_live_path functions.
+	* debian/control, debian/live-initramfs.init,
+	  scripts/live-premount/10driver_updates:
+	  - Moving eject to recommends.
+	  - Added checks for eject existence.
+	* Uploaded 1.91.2-1.
+
+2007-06-17  Daniel Baumann  <daniel@debian.org>
+
+	* debian/live-initramfs.postinst:
+	  - Made update-initramfs call conditional as suggested by Thomas Lange
+	    <lange@informatik.uni-koeln.de>.
+	* debian/live-initramfs.postrm:
+	  - Added update-initramfs call to cleanup.
+
 2007-06-17  Daniel Baumann  <daniel@debiann.org>
 
 	* Added patch from Thomas Lange <lange@informatik.uni-koeln.de> to
 	  properly load ide-generic after udev.
+	* Uploaded 1.91.1-1.
 
 2007-06-15  Daniel Baumann  <daniel@debian.org>
 
