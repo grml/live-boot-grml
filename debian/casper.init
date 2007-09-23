@@ -1,11 +1,35 @@
 #! /bin/sh
+### BEGIN INIT INFO
+# Provides:          casper
+# Required-Start:    $syslog
+# Required-Stop:     $syslog
+# Should-Start:      $local_fs
+# Should-Stop:       $local_fs
+# Default-Start:     1 2 3 4 5
+# Default-Stop:      0 6
+# Short-Description: Casper init script
+# Description:       Does the proper shutdown in a casper booted system.
+### END INIT INFO
 
-# check for netboot
-if grep -qs netboot /proc/cmdline || grep -qsi root=/dev/nfs /proc/cmdline  || grep -qsi root=/dev/cifs /proc/cmdline ; then
-	exit 0
-fi
+# Author: Tollef Fog Heen <tfheen@canonical.com>
+#         Marco Amadori <marco.amadori@gmail.com>
+#
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+NAME=casper
+SCRIPTNAME=/etc/init.d/$NAME
 
+# Exit if system was not booted by casper
 grep -qs boot=casper /proc/cmdline || exit 0
+
+# Read configuration variable file if it is present
+[ -r /etc/$NAME.conf ] && . /etc/$NAME.conf
+
+# Load the VERBOSE setting and other rcS variables
+[ -f /etc/default/rcS ] && . /etc/default/rcS
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
+. /lib/lsb/init-functions
 
 # Try to cache everything we're likely to need after ejecting.  This
 # is fragile and simple-minded, but our options are limited.
@@ -26,20 +50,43 @@ cache_path() {
     fi
 }
 
-for path in $(which halt) $(which reboot) /etc/rc?.d /etc/default; do
-    cache_path "$path"
-done
+do_stop ()
+{
+	# check for netboot
+	if [ ! -z "${NETBOOT}" ] || grep -qs netboot /proc/cmdline || grep -qsi root=/dev/nfs /proc/cmdline  || grep -qsi root=/dev/cifs /proc/cmdline ; then
+		return 0
+	fi
 
-eject -p -m /live_media >/dev/null 2>&1
+	for path in $(which halt) $(which reboot) /etc/rc?.d /etc/default; do
+		cache_path "$path"
+	done
 
-# XXX - i18n
-echo -n "Please remove the disc and close the tray (if any) then press ENTER: "
-if [ -x /sbin/usplash_write ]; then
-    /sbin/usplash_write "TIMEOUT 0"
-    /sbin/usplash_write "TEXT Please remove the disc, close the tray (if any)"
-    /sbin/usplash_write "TEXT and press ENTER to continue"
-fi
+	eject -p -m /live_media >/dev/null 2>&1
 
-read x < /dev/console
+	# XXX - i18n
+	echo -n "Please remove the disc and close the tray (if any) then press ENTER: "
+	if [ -x /sbin/usplash_write ]; then
+		/sbin/usplash_write "TIMEOUT 0"
+		/sbin/usplash_write "TEXT Please remove the disc, close the tray (if any)"
+		/sbin/usplash_write "TEXT and press ENTER to continue"
+	fi
 
-exit 0
+	read x < /dev/console
+}
+
+case "$1" in
+	start|restart|reload|force-reload|status)
+		;;
+	stop)
+		do_stop
+		case "$?" in
+			0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+			2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+		esac
+		;;
+	*)
+		echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+		exit 3
+		;;
+esac
+

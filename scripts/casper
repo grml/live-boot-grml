@@ -49,8 +49,8 @@ for x in $(cat /proc/cmdline); do
             export HIDECOW=1 ;;
         persistent)
             export PERSISTENT=1 ;;
-        staticip*)
-            STATICIP=${x#staticip=} 
+        ip*)
+            STATICIP=${x#ip=} 
             if [ "${STATICIP}" == "" ]; then
                 STATICIP="frommedia"
             fi

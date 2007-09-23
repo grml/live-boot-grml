@@ -52,7 +52,6 @@ for x in $(cat /proc/cmdline); do
                         gct -s -t string /desktop/gnome/peripherals/mouse/cursor_theme whiteglass
 
                         kderc_addtoprefixes /usr/share/kubuntu-default-settings/kde-profile/lesser-visual-impairment/
-                        fi
                         ;;
                         # Moderate Visual Impairment
                         access=v2)

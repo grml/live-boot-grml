@@ -1,3 +1,9 @@
+casper (1.69) UNRELEASED; urgency=low
+
+  * Use grep -E in scripts/casper. Malone: #57620
+
+ -- Tollef Fog Heen <tfheen@ubuntu.com>  Mon, 25 Sep 2006 14:54:57 +0200
+
 casper (1.68) edgy; urgency=low
 
   * Honour console-setup/layoutcode and console-setup/variantcode preseeding
