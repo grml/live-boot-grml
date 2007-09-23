@@ -1,3 +1,10 @@
+casper (1.81+debian-3) unstable; urgency=low
+
+  * Added depends to eject.
+  * Removed recommends to live-package.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 21 Mar 2007 00:30:00 +0100
+
 casper (1.81+debian-2) unstable; urgency=low
 
   [ Daniel Baumann ]
