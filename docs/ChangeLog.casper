@@ -1,3 +1,10 @@
+casper (1.104) gutsy; urgency=low
+
+  * casper-md5check: Fall back to text output if opening the usplash FIFO
+    fails (LP: #131209).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 20 Sep 2007 01:07:45 +0100
+
 casper (1.103) gutsy; urgency=low
 
   * Disable anacron harder so that it doesn't get started by battery events.
