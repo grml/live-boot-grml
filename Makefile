@@ -117,8 +117,8 @@ uninstall:
 update:
 	set -e; for MANPAGE in manpages/*.en.*; \
 	do \
-		sed -i	-e 's/2007\\-05\\-14/2007\\-05\\-21/' \
-			-e 's/1.87.3/1.87.4/' \
+		sed -i	-e 's/2007\\-05\\-21/2007\\-05\\-28/' \
+			-e 's/1.87.4/1.87.5/' \
 		$$MANPAGE; \
 	done
 

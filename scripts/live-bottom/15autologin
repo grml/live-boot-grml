@@ -36,7 +36,7 @@ else
 fi
 
 if chroot /root [ -f ${GDMCONF} ]; then
-    if [ "${BUILD_SYSTEM}" == "Debian" ]; then
+    if [ "${BUILD_SYSTEM}" = "Debian" ]; then
         # true hack ! -- nohar
         chroot /root cp /usr/share/gdm/defaults.conf /etc/gdm/gdm.conf
     fi

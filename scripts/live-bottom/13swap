@@ -20,6 +20,11 @@ esac
 
 # live-initramfs header
 
+if [ -n "${NOSWAP}" ]
+then
+	exit 0
+fi
+
 . /scripts/live-functions
 
 log_begin_msg "Setting up swap..."
@@ -27,11 +32,6 @@ log_begin_msg "Setting up swap..."
 # live-initramfs script
 
 FSTAB=/root/etc/fstab
-
-if [ -n "${NOSWAP}" ]
-then
-    exit 0
-fi
 
 devices=""
 for device in /dev/[hs]d[a-z][0-9]*; do

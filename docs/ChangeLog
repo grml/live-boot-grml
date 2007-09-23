@@ -1,4 +1,18 @@
-2007-06-18  Daniel Baumann  <daniel@debian.org>
+2007-05-24  Daniel Baumann  <daniel@debian.org>
+
+	* debian/control:
+	  - Added casper transitional package.
+	  - Removed usplash conflicts.
+	* scripts/live-bottom/42apt_upgrade:
+	  - Added, idea taken from Kais webconverger.
+	* Uploaded 1.87.5-1.
+
+2007-05-23  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/*:
+	  - Minor code cleanup.
+
+2007-05-18  Daniel Baumann  <daniel@debian.org>
 
 	* scripts/live, scripts/live-bottom/05mountpoints:
 	  - Replaced 'mount -o move' with 'mount --move'.
@@ -15,8 +29,9 @@
 	    terminal login.
 	* bin/live-snapshot, scripts/live, scripts/live-helpers:
 	  - Also recognize ext3, but treat it like ext2.
+	* Uploaded 1.87.4-1.
 
-2007-06-12  Daniel Baumann  <daniel@debian.org>
+2007-05-12  Daniel Baumann  <daniel@debian.org>
 
 	* scripts/live-bottom/*:
 	  - Added generic header.
