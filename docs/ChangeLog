@@ -1,3 +1,26 @@
+2007-06-18  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/live, scripts/live-bottom/05mountpoints:
+	  - Replaced 'mount -o move' with 'mount --move'.
+	* scripts/live, scripts/live-bottom/10adduser:
+	  - Added check for 'nosudo' bootparameter to disable automatic
+	    sudo configuration.
+	* scripts/live, scripts/live-bottom/13swap:
+	  - Renamed 'swapoff' parameter to 'noswap'.
+	* scripts/live, scripts/live-bottom/15autologin:
+	  - Added check for 'noxautologin' bootparameter to disable automatic
+	    gdm/kdm login.
+	* scripts/live, scripts/live-bottom/25configure_init:
+	  - Added check for 'noautologin' bootparameter to disable automatic
+	    terminal login.
+	* bin/live-snapshot, scripts/live, scripts/live-helpers:
+	  - Also recognize ext3, but treat it like ext2.
+
+2007-06-12  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/live-bottom/*:
+	  - Added generic header.
+
 2007-05-12  Daniel Baumann  <daniel@debian.org>
 
 	* scripts/live:
