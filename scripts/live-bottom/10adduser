@@ -26,7 +26,7 @@ log_begin_msg "Adding live session user..."
 
 # live-initramfs script
 
-if [ "${BUILD_SYSTEM}" == "Debian" ]; then
+if [ "${BUILD_SYSTEM}" = "Debian" ]; then
     user_crypted="8Ab05sVQ4LLps" # as in `echo "live" | mkpasswd -s`
 else
     user_crypted="U6aMy0wojraho" # "ubuntu"
@@ -41,7 +41,7 @@ set passwd/username $USERNAME
 set passwd/user-uid 999
 EOF
 
-if [ "${BUILD_SYSTEM}" == "Debian" ]; then
+if [ "${BUILD_SYSTEM}" = "Debian" ]; then
     chroot /root /usr/bin/env -i HOME="/root" \
         TERM="${TERM}" PATH="/usr/sbin:/usr/bin:/sbin:/bin" \
         /usr/lib/user-setup/user-setup-apply > /dev/null
@@ -62,7 +62,7 @@ if [ -z "${NOSUDO}" ]
 then
 
 if [ -f /root/etc/sudoers ]; then
-    if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
+    if [ "${BUILD_SYSTEM}" = "Ubuntu" ]; then
         grep -q '^%admin' /root/etc/sudoers && sed -i -e '/^%admin/s/ALL$/NOPASSWD: ALL/' /root/etc/sudoers || echo '%admin  ALL=(ALL) NOPASSWD: ALL' >> /root/etc/sudoers
 
 	# XXX - awful hack to stop xscreensaver locking the screen (#7150)

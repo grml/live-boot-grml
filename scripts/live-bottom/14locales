@@ -70,7 +70,7 @@ if [ "${set_locale}" ]; then
 
     really_export LANG
 
-    if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
+    if [ "${BUILD_SYSTEM}" = "Ubuntu" ]; then
         printf 'LANG="%s"\n' "${LANG}" > "${grep_file}"
         chroot /root /usr/sbin/locale-gen "${LANG}"
         live-preseed /root debian-installer/locale "${locale}"

@@ -1,7 +1,7 @@
-.TH LIVE\-INITRAMFS 7 "2007\-05\-21" "1.87.4" "live\-initramfs"
+.TH LIVE\-INITRAMFS 7 "2007\-05\-28" "1.87.5" "live\-initramfs"
 
 .SH NAME
-live\-initramfs \- Debian Live initramfs generator
+live\-initramfs \- Debian Live initramfs hook
 
 .SH SYNOPSIS
 .B BOOT=live
@@ -70,6 +70,8 @@ Adding this parameter, live\-initramfs will try to copy the whole read\-only med
 A path to a file present on the rootfs could be used to preseed debconf database.
 .IP "\fBpackage/question=\fR\fIVALUE\fR" 4
 All debian installed packages could be preseeded from command\-line that way, beware of blanks spaces, they will interfere with parsing, use a preseed file in this case.
+.IP "\fBupgrade\fR" 4
+performes a apt-get update/apt-get upgrace cycle while booting (experimental).
 .IP "\fBxdebconf\fR" 4
 uses xdebconfigurator, if present on the rootfs, to configure X instead of the standard procedure (experimental).
 .IP "\fBxvideomode=\fR\fIRESOLUTION\fR" 4

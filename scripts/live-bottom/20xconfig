@@ -43,7 +43,7 @@ if [ -n "${XDEBCONF}" -a -x /root/usr/sbin/xdebconfigurator ]; then
     chroot /root /usr/sbin/xdebconfigurator
 fi
 
-if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
+if [ "${BUILD_SYSTEM}" = "Ubuntu" ]; then
     chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null <<EOF
 set xserver-xorg/autodetect_keyboard true
 fset xserver-xorg/autodetect_keyboard seen true
