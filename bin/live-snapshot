@@ -25,7 +25,7 @@
 # On Debian systems, the complete text of the GNU General Public License
 # can be found in /usr/share/common-licenses/GPL-2 file.
 
-PROGRAM="`basename $0`"
+PROGRAM="$(basename $0)"
 VERSION=0.0.1
 
 # Source live conf
@@ -150,8 +150,8 @@ Do_snapshot ()
 			;;
 
 		ext2|ext3)
-			DU_DIM="`du -ks ${COW} | cut -f1`"
-			REAL_DIM="`expr ${DU_DIM} + ${DU_DIM} / 20`" # Just 5% more to be sure, need something more sophistcated here...
+			DU_DIM="$(du -ks ${COW} | cut -f1)"
+			REAL_DIM="$(expr ${DU_DIM} + ${DU_DIM} / 20)" # Just 5% more to be sure, need something more sophistcated here...
 			genext2fs --size-in-blocks=${REAL_DIM} --reserved-blocks=0 --root="${COW}" "${DEST}" || exit 1
 			;;
 
@@ -164,8 +164,8 @@ Do_snapshot ()
 
 Is_same_mount ()
 {
-	dir1="`Base_path $1`"
-	dir2="`Base_path $2`"
+	dir1="$(Base_path $1)"
+	dir2="$(Base_path $2)"
 
 	if [ "${dir1}" = "${dir2}" ]
 	then
@@ -179,7 +179,7 @@ Parse_args ()
 {
 	# Parse command line
 	ARGS="$1"
-	ARGUMENTS="`getopt --longoptions cow:,device:,output,resync-string:,type:,help,usage,version --name=${PROGRAM} --options c:d:o:t:r:,h,u,v --shell sh -- ${ARGS}`"
+	ARGUMENTS="$(getopt --longoptions cow:,device:,output,resync-string:,type:,help,usage,version --name=${PROGRAM} --options c:d:o:t:r:,h,u,v --shell sh -- ${ARGS})"
 
 	if [ "$?" != "0" ]
 	then

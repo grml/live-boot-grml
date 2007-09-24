@@ -89,11 +89,11 @@ base_path ()
 	do
 		if echo "${mounts}" | grep -qs "^${testpath}"
 		then
-			set -- `echo "${mounts}" | grep "^${testpath}" | lastline`
+			set -- $(echo "${mounts}" | grep "^${testpath}" | lastline)
 			echo ${1}
 			break
 		else
-			testpath=`dirname $testpath`
+			testpath=$(dirname $testpath)
 		fi
 	done
 }

@@ -33,7 +33,7 @@ log_begin_msg "Adding live session user..."
 
 if [ "${BUILD_SYSTEM}" = "Debian" ]
 then
-	user_crypted="8Ab05sVQ4LLps" # as in `echo "live" | mkpasswd -s`
+	user_crypted="8Ab05sVQ4LLps" # as in $(echo "live" | mkpasswd -s)
 else
 	user_crypted="U6aMy0wojraho" # "ubuntu"
 fi
