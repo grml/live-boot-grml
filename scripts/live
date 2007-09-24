@@ -36,7 +36,7 @@ Arguments ()
 {
 	PRESEEDS=""
 
-	for ARGUMENT in `cat /proc/cmdline`
+	for ARGUMENT in $(cat /proc/cmdline)
 	do
 		case "${ARGUMENT}" in
 			access=*)
@@ -419,7 +419,7 @@ is_live_path ()
 	then
 		for FILESYSTEM in squashfs ext2 ext3 xfs dir
 		do
-			if [ "`echo ${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM}`" != "${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM}" ]
+			if [ "$(echo ${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM})" != "${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM}" ]
 			then
 				return 0
 			fi
@@ -631,7 +631,7 @@ do_netmount ()
 do_httpmount ()
 {
 	rc=1
-	extension=`echo "${FETCH}" | sed 's/\(.*\)\.\(.*\)/\2/'`
+	extension=$(echo "${FETCH}" | sed 's/\(.*\)\.\(.*\)/\2/')
 
 	case "${extension}" in
 		squashfs|tgz|tar)
@@ -838,7 +838,7 @@ setup_unionfs ()
 	# Let's just mount the read-only file systems first
 	rofsstring=""
 	rofslist=""
-	minor_kernel_version=`uname -r|cut -c 5-|sed 's/[^0-9].*//'`
+	minor_kernel_version=$(uname -r|cut -c 5-|sed 's/[^0-9].*//')
 
 	if [ "${NETBOOT}" = "nfs" ] && [ "${minor_kernel_version}" -lt 22 ]
 	then
@@ -851,13 +851,13 @@ setup_unionfs ()
 	# Read image names from ${MODULE}.module if it exists
 	if [ -e "${image_directory}/filesystem.${MODULE}.module" ]
 	then
-		for IMAGE in `cat ${image_directory}/filesystem.${MODULE}.module`
+		for IMAGE in $(cat ${image_directory}/filesystem.${MODULE}.module)
 		do
 			image_string="${image_string} ${image_directory}/${image}"
 		done
 	elif [ -e "${image_directory}/${MODULE}.module" ]
 	then
-		for IMAGE in `cat ${image_directory}/${MODULE}.module`
+		for IMAGE in $(cat ${image_directory}/${MODULE}.module)
 		do
 			image_string="${image_string} ${image_directory}/${image}"
 		done
@@ -875,7 +875,7 @@ setup_unionfs ()
 		done
 
 		# Now sort the list
-		image_string="`echo ${image_string} | sed -e 's/ /\n/g' | sort `"
+		image_string="$(echo ${image_string} | sed -e 's/ /\n/g' | sort )"
 	fi
 
 	[ -n "${MODULETORAMFILE}" ] && image_string="${image_directory}/$(basename ${MODULETORAMFILE})"
