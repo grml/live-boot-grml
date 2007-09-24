@@ -43,8 +43,8 @@ chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << 
 set passwd/make-user true
 set passwd/root-password-crypted *
 set passwd/user-password-crypted ${user_crypted}
-set passwd/user-fullname $USERFULLNAME
-set passwd/username $USERNAME
+set passwd/user-fullname ${USERFULLNAME}
+set passwd/username ${USERNAME}
 set passwd/user-uid 999
 EOF
 
@@ -80,9 +80,9 @@ then
 
 			for file in /usr/share/applications/ubiquity-gtkui.desktop /usr/share/applications/kde/ubiquity-kdeui.desktop
 			do
-				if [ -f "/root/$file" ]
+				if [ -f "/root/${file}" ]
 				then
-					chroot /root install -D -o $USERNAME -g $USERNAME $file /home/$USERNAME/Desktop/$(basename "$file")
+					chroot /root install -D -o ${USERNAME} -g ${USERNAME} ${file} /home/${USERNAME}/Desktop/$(basename "${file}")
 					break
 				fi
 			done
@@ -112,15 +112,15 @@ EOF
 	fi
 fi
 
-if [ -L /root/home/$USERNAME/Examples ]
+if [ -L /root/home/${USERNAME}/Examples ]
 then
-	chroot /root install -o $USERNAME -g $USERNAME -d /home/$USERNAME/Desktop/
-	mv /root/home/$USERNAME/Examples /root/home/$USERNAME/Desktop/
+	chroot /root install -o ${USERNAME} -g ${USERNAME} -d /home/${USERNAME}/Desktop/
+	mv /root/home/${USERNAME}/Examples /root/home/${USERNAME}/Desktop/
 fi
 
 if [ -f "/root/usr/share/apps/khelpcenter/plugins/kubuntu/about-kubuntu.desktop.tobemoved" ]
 then
-	chroot /root install -D -o $USERNAME -g $USERNAME /usr/share/apps/khelpcenter/plugins/kubuntu/about-kubuntu.desktop.tobemoved /home/$USERNAME/Desktop/about-kubuntu.desktop
+	chroot /root install -D -o ${USERNAME} -g ${USERNAME} /usr/share/apps/khelpcenter/plugins/kubuntu/about-kubuntu.desktop.tobemoved /home/${USERNAME}/Desktop/about-kubuntu.desktop
 fi
 
 log_end_msg

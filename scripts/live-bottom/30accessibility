@@ -35,9 +35,9 @@ gconf_version=$(chroot /root /usr/bin/dpkg-query -W --showformat='${Version}' gc
 
 gct ()
 {
-	if [ "$gconf_version" ]
+	if [ "${gconf_version}" ]
 	then
-		chroot /root sudo -u "$USERNAME" gconftool-2 "$@"
+		chroot /root sudo -u "${USERNAME}" gconftool-2 "${@}"
 	fi
 }
 

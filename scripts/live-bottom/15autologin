@@ -51,9 +51,9 @@ then
 	# Configure GDM autologin
 	chroot /root \
 	sed -i -e "s/^AutomaticLoginEnable=.*\$/AutomaticLoginEnable=true/" \
-	       -e "s/^AutomaticLogin=.*\$/AutomaticLogin=$USERNAME/" \
+	       -e "s/^AutomaticLogin=.*\$/AutomaticLogin=${USERNAME}/" \
 	       -e "s/^TimedLoginEnable=.*\$/TimedLoginEnable=true/" \
-	       -e "s/^TimedLogin=.*\$/TimedLogin=$USERNAME/" \
+	       -e "s/^TimedLogin=.*\$/TimedLogin=${USERNAME}/" \
 	       -e "s/^TimedLoginDelay=.*\$/TimedLoginDelay=10/" \
 	${GDMCONF}
 fi
@@ -62,7 +62,7 @@ if [ -f /root/etc/kde3/kdm/kdmrc ]
 then
 	# Configure KDM autologin
 	sed -i -r -e "s/^#?AutoLoginEnable=.*\$/AutoLoginEnable=true/" \
-		  -e "s/^#?AutoLoginUser=.*\$/AutoLoginUser=$USERNAME/" \
+		  -e "s/^#?AutoLoginUser=.*\$/AutoLoginUser=${USERNAME}/" \
 		  -e "s/^#?AutoReLogin=.*\$/AutoReLogin=true/" \
 	/root/etc/kde3/kdm/kdmrc
 fi

@@ -25,7 +25,7 @@ sys2dev ()
 
 subdevices ()
 {
-	sysblock=$1
+	sysblock=${1}
 	r=""
 
 	for dev in "${sysblock}" "${sysblock}"/*
@@ -44,25 +44,25 @@ get_fstype ()
 	local FSTYPE
 	local FSSIZE
 
-	eval $(fstype < $1)
+	eval $(fstype < ${1})
 
-	if [ "$FSTYPE" != "unknown" ]
+	if [ "${FSTYPE}" != "unknown" ]
 	then
-		echo $FSTYPE
+		echo ${FSTYPE}
 		return 0
 	fi
 
-	/lib/udev/vol_id -t $1 2>/dev/null
+	/lib/udev/vol_id -t ${1} 2>/dev/null
 }
 
 where_is_mounted ()
 {
-	device=$1
+	device=${1}
 
-	if grep -q "^$device " /proc/mounts
+	if grep -q "^${device} " /proc/mounts
 	then
-		grep "^$device " /proc/mounts | read d mountpoint rest
-		echo $mountpoint
+		grep "^${device} " /proc/mounts | read d mountpoint rest
+		echo ${mountpoint}
 		return 0
 	fi
 
@@ -101,7 +101,7 @@ base_path ()
 fs_size ()
 {
 	# Returns used/free fs kbytes + 5% more
-	# You could pass a block device as $1 or the mount point as $2
+	# You could pass a block device as ${1} or the mount point as ${2}
 
 	dev="${1}"
 	mountp="${2}"
@@ -111,7 +111,7 @@ fs_size ()
 	then
 		mountp=$(where_is_mounted "${dev}")
 
-		if [ "$?" -gt 0 ]
+		if [ "${?}" -gt 0 ]
 		then
 			mountp="/mnt/tmp_fs_size"
 
@@ -151,18 +151,18 @@ load_keymap ()
 
 setup_loop ()
 {
-	local fspath=$1
-	local module=$2
-	local pattern=$3
-	local offset=$4
-	local encryption=$5
+	local fspath=${1}
+	local module=${2}
+	local pattern=${3}
+	local offset=${4}
+	local encryption=${5}
 
-	modprobe ${MP_QUIET} -b "$module"
+	modprobe ${MP_QUIET} -b "${module}"
 	udevsettle
 
-	for loopdev in $pattern
+	for loopdev in ${pattern}
 	do
-		if [ "$(cat $loopdev/size)" -eq 0 ]
+		if [ "$(cat ${loopdev}/size)" -eq 0 ]
 		then
 			dev=$(sys2dev "${loopdev}")
 			options=''
@@ -186,7 +186,7 @@ setup_loop ()
 					echo "${passphrase}" > /tmp/passphrase
 					exec 9</tmp/passphrase
 					/sbin/losetup ${options} -e "${encryption}" -p 9 "${dev}" "${fspath}"
-					error=$?
+					error=${?}
 					exec 9<&-
 					rm -f /tmp/passphrase
 
@@ -207,7 +207,7 @@ setup_loop ()
 				done
 			fi
 
-			echo "$dev"
+			echo "${dev}"
 			return 0
 		fi
 	done
@@ -241,9 +241,9 @@ find_cow_device ()
 		do
 			devname=$(sys2dev "${dev}")
 
-			if [ "$(/lib/udev/vol_id -l $devname 2>/dev/null)" = "${pers_label}" ]
+			if [ "$(/lib/udev/vol_id -l ${devname} 2>/dev/null)" = "${pers_label}" ]
 			then
-				echo "$devname"
+				echo "${devname}"
 				return
 			elif [ "$(get_fstype ${devname})" = "vfat" ]
 			then
@@ -265,7 +265,7 @@ find_cow_device ()
 
 find_files ()
 {
-	# return the first of $filenames found on vfat and ext2/ext3 devices
+	# return the first of ${filenames} found on vfat and ext2/ext3 devices
 	# FIXME: merge with above function
 
 	filenames="${1}"

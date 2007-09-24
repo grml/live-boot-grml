@@ -63,22 +63,22 @@ fi
 
 if [ -x /root/bin/setupcon ] && [ -f /root/etc/default/console-setup ]
 then
-	if [ "$cslayout" ]
+	if [ "${cslayout}" ]
 	then
-		chroot /root sed -i "s/^XKBLAYOUT=.*/XKBLAYOUT=\"$cslayout\"/" \
+		chroot /root sed -i "s/^XKBLAYOUT=.*/XKBLAYOUT=\"${cslayout}\"/" \
 		/etc/default/console-setup
 
-		if [ "$csvariant" ]
+		if [ "${csvariant}" ]
 		then
-			chroot /root sed -i "s/^XKBVARIANT=.*/XKBVARIANT=\"$csvariant\"/" \
+			chroot /root sed -i "s/^XKBVARIANT=.*/XKBVARIANT=\"${csvariant}\"/" \
 			/etc/default/console-setup
 		else
 			live-preseed /root console-setup/variantcode '' false
 		fi
 
-		if [ "$csmodel" ]
+		if [ "${csmodel}" ]
 		then
-			chroot /root sed -i "s/^XKBMODEL=.*/XKBMODEL=\"$csmodel\"/" \
+			chroot /root sed -i "s/^XKBMODEL=.*/XKBMODEL=\"${csmodel}\"/" \
 			/etc/default/console-setup
 		else
 			live-preseed /root console-setup/modelcode '' false
@@ -91,9 +91,9 @@ then
 
 	sed -i 's/CONSOLE_SCREEN=$/CONSOLE_SCREEN=setupcon/; t END; b; : END; n; b END' /root/etc/init.d/usplash
 else
-	chroot /root /usr/sbin/install-keymap $kbd
-	live-preseed /root debian-installer/keymap "$kbd"
-	live-preseed /root kbd-chooser/method "$kbd"
+	chroot /root /usr/sbin/install-keymap ${kbd}
+	live-preseed /root debian-installer/keymap "${kbd}"
+	live-preseed /root kbd-chooser/method "${kbd}"
 fi
 
 log_end_msg

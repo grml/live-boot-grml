@@ -33,18 +33,18 @@ log_begin_msg "Installing driver updates..."
 
 install_dir=/var/cache/driver-updates
 
-mkdir "/root$install_dir"
-cp -a /tmp/driver-updates/*.deb "/root$install_dir/"
+mkdir "/root${install_dir}"
+cp -a /tmp/driver-updates/*.deb "/root${install_dir}/"
 
 # We cannot leave packages in a bad state. So if the install fails, remove
 # it. This will get caught in live.log.
-for deb in "/root$install_dir"/*
+for deb in "/root${install_dir}"/*
 do
-	[ -f "$deb" ] || continue
+	[ -f "${deb}" ] || continue
 
 	debbase="${deb##*/}"
 
-	if ! chroot /root dpkg -i "$install_dir/$debbase"
+	if ! chroot /root dpkg -i "${install_dir}/${debbase}"
 	then
 		chroot /root dpkg -P "${debbase%%_*}"
 	fi

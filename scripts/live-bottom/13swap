@@ -36,25 +36,25 @@ devices=""
 
 for device in /dev/[hs]d[a-z][0-9]*
 do
-	if ! [ -b "$device" ]
+	if ! [ -b "${device}" ]
 	then
 		continue
 	fi
 
-	magic=$(/bin/dd if="$device" bs=4086 skip=1 count=1 2>/dev/null | /bin/dd bs=10 count=1 2>/dev/null) || continue
+	magic=$(/bin/dd if="${device}" bs=4086 skip=1 count=1 2>/dev/null | /bin/dd bs=10 count=1 2>/dev/null) || continue
 
-	if [ "$magic" = "SWAPSPACE2" -o "$magic" = "SWAP-SPACE" ]
+	if [ "${magic}" = "SWAPSPACE2" -o "${magic}" = "SWAP-SPACE" ]
 	then
-		#log "Found $device"
-		devices="$devices $device"
+		#log "Found ${device}"
+		devices="${devices} ${device}"
 	fi
 done
 
-for device in $devices
+for device in ${devices}
 do
 
-cat >> $FSTAB << EOF
-$device swap swap defaults 0 0
+cat >> ${FSTAB} << EOF
+${device} swap swap defaults 0 0
 EOF
 
 done

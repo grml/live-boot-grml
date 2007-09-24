@@ -37,8 +37,8 @@ then
 	zone="$(echo ${TIMEZONE} | cut -f2 -d '/')"
 
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
-set tzdata/Areas $area
-set tzdata/Zones/$area $zone
+set tzdata/Areas ${area}
+set tzdata/Zones/${area} ${zone}
 EOF
 
 	cp -f /root/usr/share/zoneinfo/${area}/${zone} /root/etc/localtime

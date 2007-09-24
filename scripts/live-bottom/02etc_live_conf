@@ -41,9 +41,9 @@ then
 else
 
 cat > /root/etc/live.conf << EOF
-export USERNAME="$USERNAME"
-export USERFULLNAME="$USERFULLNAME"
-export HOSTNAME="$HOSTNAME"
+export USERNAME="${USERNAME}"
+export USERFULLNAME="${USERFULLNAME}"
+export HOSTNAME="${HOSTNAME}"
 EOF
 
 fi
