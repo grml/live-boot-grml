@@ -37,30 +37,30 @@ grep -qs boot=live /proc/cmdline || exit 0
 # Try to cache everything we're likely to need after ejecting.  This
 # is fragile and simple-minded, but our options are limited.
 cache_path() {
-    path="$1"
+    path="${1}"
 
-    if [ -d "$path" ]; then
-        find "$path" -type f | xargs cat > /dev/null 2>&1
-    elif [ -f "$path" ]; then
-        if [ -x "$path" ]; then
-            if file "$path" | grep -q 'dynamically linked'; then
-                for lib in $(ldd "$path" | awk '{ print $3 }'); do
-                    cache_path "$lib"
+    if [ -d "${path}" ]; then
+        find "${path}" -type f | xargs cat > /dev/null 2>&1
+    elif [ -f "${path}" ]; then
+        if [ -x "${path}" ]; then
+            if file "${path}" | grep -q 'dynamically linked'; then
+                for lib in $(ldd "${path}" | awk '{ print $3 }'); do
+                    cache_path "${lib}"
                 done
             fi
         fi
-        cat "$path" >/dev/null 2>&1
+        cat "${path}" >/dev/null 2>&1
     fi
 }
 
 do_stop ()
 {
     if [ ! -z "${ROOTSNAP}" ]; then
-        $DO_SNAPSHOT --resync-string="${ROOTSNAP}"
+        ${DO_SNAPSHOT} --resync-string="${ROOTSNAP}"
     fi
 
     if [ ! -z "${HOMESNAP}" ]; then
-        $DO_SNAPSHOT --resync-string="${HOMESNAP}"
+        ${DO_SNAPSHOT} --resync-string="${HOMESNAP}"
     fi
 
     # check for netboot
@@ -69,11 +69,11 @@ do_stop ()
     fi
 
     for path in $(which halt) $(which reboot) /etc/rc?.d /etc/default; do
-        cache_path "$path"
+        cache_path "${path}"
     done
 
     for x in $(cat /proc/cmdline); do
-	case $x in
+	case ${x} in
 	    quickreboot)
 		QUICKREBOOT="Yes"
 	    ;;
@@ -98,20 +98,20 @@ do_stop ()
     fi
 }
 
-case "$1" in
+case "${1}" in
     start|restart|reload|force-reload|status)
-        [ "$VERBOSE" != no ] && log_end_msg 0
+        [ "${VERBOSE}" != no ] && log_end_msg 0
         ;;
     stop)
         log_begin_msg "${NAME} is resyncing snapshots and caching reboot files..."
         do_stop
-        case "$?" in
-            0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-            2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+        case "${?}" in
+            0|1) [ "${VERBOSE}" != no ] && log_end_msg 0 ;;
+            2) [ "${VERBOSE}" != no ] && log_end_msg 1 ;;
         esac
         ;;
     *)
-        log_success_msg "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+        log_success_msg "Usage: ${SCRIPTNAME} {start|stop|restart|force-reload}" >&2
         exit 3
         ;;
 esac

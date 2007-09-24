@@ -33,7 +33,7 @@ log_begin_msg "Configuring fstab..."
 
 FSTAB=/root/etc/fstab
 
-cat >> $FSTAB << EOF
+cat >> ${FSTAB} << EOF
 ${UNIONTYPE} / ${UNIONTYPE} rw 0 0
 tmpfs /tmp tmpfs nosuid,nodev 0 0
 EOF

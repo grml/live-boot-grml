@@ -19,11 +19,11 @@ log_wait_msg ()
 	# Print a message and wait for enter
 	if [ -x /sbin/usplash_write ]
 	then
-		/sbin/usplash_write "INPUTENTER $@"
+		/sbin/usplash_write "INPUTENTER ${@}"
 		read nunya < /dev/.initramfs/usplash_outfifo
 	fi
 
-	_log_msg "Waiting: $@ ..."
+	_log_msg "Waiting: ${@} ..."
 }
 
 really_export ()

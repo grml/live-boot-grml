@@ -33,11 +33,11 @@ log_begin_msg "Configuring power management..."
 
 gpm_version=$(chroot /root /usr/bin/dpkg-query -W --showformat='${Version}' gnome-power-manager 2>/dev/null) || panel_version=""
 
-if [ -n "$gpm_version" ]
+if [ -n "${gpm_version}" ]
 then
 	#live-reconfigure /root gnome-power-manager
-	chroot /root sudo -u "$USERNAME" gconftool-2 -s -t bool /apps/gnome-power-manager/can_hibernate false
-	chroot /root sudo -u "$USERNAME" gconftool-2 -s -t bool /apps/gnome-power-manager/can_suspend false
+	chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gnome-power-manager/can_hibernate false
+	chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gnome-power-manager/can_suspend false
 fi
 
 if [ -d /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config ]

@@ -27,7 +27,7 @@ log_begin_msg "Preconfiguring /etc/modules..."
 # live-initramfs script
 
 # load the right modules
-case "$DPKG_ARCH" in
+case "${DPKG_ARCH}" in
 	powerpc|ppc64)
 		echo snd_powermac >> /root/etc/modules
 		;;

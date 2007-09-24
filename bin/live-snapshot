@@ -99,7 +99,7 @@ Help ()
 	echo "Options:"
 	echo "  -c, --cow: specifies the copy on write directory (default: /live/cow)."
 	echo "  -d, --device: specifies the output snapshot device (default: none)."
-	echo "  -o, --output: specifies the output image file (default: $type dependent)."
+	echo "  -o, --output: specifies the output image file (default: ${type} dependent)."
     echo "  -r, --resync-string: internally used to resync previous made snapshots."
 	echo "  -t, --type: specifies the snapshot type between \"squashfs\", \"ext2\", \"ext3\" or \"cpio\".gz archive (default: cpio)"
     echo -e "\nLook at live-snapshot(1) man page for more information."
@@ -164,8 +164,8 @@ Do_snapshot ()
 
 Is_same_mount ()
 {
-	dir1="$(Base_path $1)"
-	dir2="$(Base_path $2)"
+	dir1="$(Base_path ${1})"
+	dir2="$(Base_path ${2})"
 
 	if [ "${dir1}" = "${dir2}" ]
 	then
@@ -178,10 +178,10 @@ Is_same_mount ()
 Parse_args ()
 {
 	# Parse command line
-	ARGS="$1"
+	ARGS="${1}"
 	ARGUMENTS="$(getopt --longoptions cow:,device:,output,resync-string:,type:,help,usage,version --name=${PROGRAM} --options c:d:o:t:r:,h,u,v --shell sh -- ${ARGS})"
 
-	if [ "$?" != "0" ]
+	if [ "${?}" != "0" ]
 	then
 		echo "Terminating." >&2
 		exit 1
@@ -191,29 +191,29 @@ Parse_args ()
 
 	while true
 	do
-		case "$1" in
+		case "${1}" in
 			-c|--cow)
-				SNAP_COW="$2"
+				SNAP_COW="${2}"
 				shift 2
 				;;
 
 			-d|--device)
-				SNAP_DEV="$2"
+				SNAP_DEV="${2}"
 				shift 2
 				;;
 
 			-o|--output)
-				SNAP_OUTPUT="$2"
+				SNAP_OUTPUT="${2}"
 				shift 2
 				;;
 
 			-t|--type)
-				SNAP_TYPE="$2"
+				SNAP_TYPE="${2}"
 				shift 2
 				;;
 
 			-r|--resync-string)
-				SNAP_RSTRING="$2"
+				SNAP_RSTRING="${2}"
 				break
 				;;
 
@@ -243,7 +243,7 @@ Parse_args ()
 
 Mount_device ()
 {
-	dev="$1"
+	dev="${1}"
 
 	if [ ! -d "${MOUNTP}" ]
 	then
@@ -255,9 +255,9 @@ Mount_device ()
 		# create a temp
 		mount -t tmpfs -o rw tmpfs "${MOUNTP}"
 
-		if [ ! -L /home/$USERNAME/Desktop/live-snapshot ]
+		if [ ! -L /home/${USERNAME}/Desktop/live-snapshot ]
 		then
-			ln -s "${MOUNTP}" /home/$USERNAME/Desktop/live-snapshot
+			ln -s "${MOUNTP}" /home/${USERNAME}/Desktop/live-snapshot
 		fi
 	else
 		if [ -b "${dev}" ]
@@ -274,7 +274,7 @@ Defaults ()
 	DEV=""
 	DEST="${MOUNTP}/live-sn.cpio.gz"
 	TYPE="cpio"
-	DESKTOP_LINK=/home/$USERNAME/Desktop/live-snapshot
+	DESKTOP_LINK=/home/${USERNAME}/Desktop/live-snapshot
 
 	if [ -n "${SNAP_RSTRING}" ]
 	then
@@ -334,12 +334,12 @@ Defaults ()
 		Usage "Error: ${COW} is not a directory"
 	fi
 
-	Mount_device $DEV
+	Mount_device ${DEV}
 }
 
 Clean ()
 {
-	if [ -n "$DEV" ]
+	if [ -n "${DEV}" ]
 	then
 		umount "${MOUNTP}"
 		rmdir "${MOUNTP}"
@@ -349,10 +349,10 @@ Clean ()
 
 Main ()
 {
-	Parse_args "$@"
+	Parse_args "${@}"
 	Defaults
 	Do_snapshot
 	Clean
 }
 
-Main "$@"
+Main "${@}"

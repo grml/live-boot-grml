@@ -31,7 +31,7 @@ log_begin_msg "Configuring X..."
 
 # live-initramfs script
 
-if [ "$TERM_TYPE" = "serial" ]
+if [ "${TERM_TYPE}" = "serial" ]
 then
 	# Don't bother trying to configure or start X on a serial console
 	rm -f /etc/rc?.d/S??[gxk]dm

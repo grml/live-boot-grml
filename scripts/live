@@ -314,14 +314,14 @@ Arguments ()
 
 				mkdir -p /root/var/run/network
 				chroot /root ifup -a
-				chroot /root wget -P /tmp "$location"
+				chroot /root wget -P /tmp "${location}"
 				chroot /root ifdown -a
 
 				umount /root/sys
 				umount /root/proc
 				umount /root/dev
 
-				LOCATION="/tmp/$(basename "$location")"
+				LOCATION="/tmp/$(basename "${location}")"
 				;;
 
 			*/*=*)
@@ -431,9 +431,9 @@ is_live_path ()
 
 get_backing_device ()
 {
-	case "$1" in
+	case "${1}" in
 		*.squashfs|*.ext2|*.ext3)
-			echo $(setup_loop "$1" "loop" "/sys/block/loop*" '0' "${LIVE_MEDIA_ENCRYPTION}")
+			echo $(setup_loop "${1}" "loop" "/sys/block/loop*" '0' "${LIVE_MEDIA_ENCRYPTION}")
 			;;
 
 		*.dir)
@@ -441,17 +441,17 @@ get_backing_device ()
 			;;
 
 		*)
-			panic "Unrecognized live filesystem: $1"
+			panic "Unrecognized live filesystem: ${1}"
 			;;
 	esac
 }
 
 match_files_in_dir ()
 {
-	# Does any files match pattern $1 ?
-	local pattern="$1"
+	# Does any files match pattern ${1} ?
+	local pattern="${1}"
 
-	if [ "$(echo $pattern)" != "$pattern" ]
+	if [ "$(echo ${pattern})" != "${pattern}" ]
 	then
 		return 0
 	fi
@@ -461,15 +461,15 @@ match_files_in_dir ()
 
 mount_images_in_directory ()
 {
-	directory="$1"
-	rootmnt="$2"
+	directory="${1}"
+	rootmnt="${2}"
 
-	if match_files_in_dir "$directory/${LIVE_MEDIA_PATH}/*.squashfs" ||
-		match_files_in_dir "$directory/${LIVE_MEDIA_PATH}/*.ext2" ||
-		match_files_in_dir "$directory/${LIVE_MEDIA_PATH}/*.ext3" ||
-		match_files_in_dir "$directory/${LIVE_MEDIA_PATH}/*.dir"
+	if match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.squashfs" ||
+		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext2" ||
+		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext3" ||
+		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.dir"
 	then
-		setup_unionfs "$directory/${LIVE_MEDIA_PATH}" "$rootmnt"
+		setup_unionfs "${directory}/${LIVE_MEDIA_PATH}" "${rootmnt}"
 	else
 		:
 	fi
@@ -517,7 +517,7 @@ copy_live_to ()
 		then
 			size=$( expr $(ls -la ${MODULETORAMFILE} | awk '{print $5}') / 1024 + 5000 )
 		else
-			log_warning_msg "Error: toram-module $MODULETORAM ($MODULETORAMFILE) could not be read."
+			log_warning_msg "Error: toram-module ${MODULETORAM} (${MODULETORAMFILE}) could not be read."
 			return 1
 		fi
 	fi
@@ -546,7 +546,7 @@ copy_live_to ()
 
 	if [ "${freespace}" -lt "${size}" ]
 	then
-		[ "$quiet" != "y" ] && log_warning_msg "Not enough free ${free_string} (${freespace}k free, ${size}k needed) to copy live media in ${copytodev}."
+		[ "${quiet}" != "y" ] && log_warning_msg "Not enough free ${free_string} (${freespace}k free, ${size}k needed) to copy live media in ${copytodev}."
 		return 1
 	fi
 
@@ -555,7 +555,7 @@ copy_live_to ()
 	echo "mount -t ${fstype} ${mount_options} ${dev} ${copyto}"
 	mount -t "${fstype}" ${mount_options} "${dev}" "${copyto}"
 
-	if [ "$extension" = "tgz" ]
+	if [ "${extension}" = "tgz" ]
 	then
 		cd "${copyto}"
 		tar zxf "${copyfrom}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
@@ -591,9 +591,9 @@ do_netmount ()
 	ipconfig ${DEVICE} | tee /netboot.config
 
 	# source relevant ipconfig output
-	OLDHOSTNAME=$HOSTNAME
+	OLDHOSTNAME=${HOSTNAME}
 	. /tmp/net-${DEVICE}.conf
-	[ -z $HOSTNAME ] && HOSTNAME=$OLDHOSTNAME
+	[ -z ${HOSTNAME} ] && HOSTNAME=${OLDHOSTNAME}
 	export HOSTNAME
 
 	if [ "${NFSROOT}" = "auto" ]
@@ -607,12 +607,12 @@ do_netmount ()
 		return ${rc}
 	fi
 
-	if [ "${NFSROOT#*:}" = "$NFSROOT" ] && [ "$NETBOOT" != "cifs" ]
+	if [ "${NFSROOT#*:}" = "${NFSROOT}" ] && [ "$NETBOOT" != "cifs" ]
 	then
 		NFSROOT=${ROOTSERVER}:${NFSROOT}
 	fi
 
-	[ "$quiet" != "y" ] && log_begin_msg "Trying netboot from ${NFSROOT}"
+	[ "${quiet}" != "y" ] && log_begin_msg "Trying netboot from ${NFSROOT}"
 
 	if [ "${NETBOOT}" != "nfs" ] && do_cifsmount
 	then
@@ -624,7 +624,7 @@ do_netmount ()
 		rc=0
 	fi
 
-	[ "$quiet" != "y" ] && log_end_msg
+	[ "${quiet}" != "y" ] && log_end_msg
 	return ${rc}
 }
 
@@ -635,15 +635,15 @@ do_httpmount ()
 
 	case "${extension}" in
 		squashfs|tgz|tar)
-			[ "$quiet" != "y" ] && log_begin_msg "Trying wget ${FETCH} -O ${mountpoint}/$(basename ${FETCH})"
+			[ "${quiet}" != "y" ] && log_begin_msg "Trying wget ${FETCH} -O ${mountpoint}/$(basename ${FETCH})"
 			mkdir -p "${mountpoint}/${LIVE_MEDIA_PATH}"
 			wget "${FETCH}" -O "${mountpoint}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
-			[ $? -eq 0 ] && rc=0
+			[ ${?} -eq 0 ] && rc=0
 			[ "${extension}" == "tgz" ] && live_dest="ram"
 			;;
 
 		*)
-			[ "$quiet" != "y" ] && log_begin_msg "Unrecognized archive extension for ${FETCH}"
+			[ "${quiet}" != "y" ] && log_begin_msg "Unrecognized archive extension for ${FETCH}"
 	esac
 
 	return ${rc}
@@ -660,7 +660,7 @@ do_nfsmount ()
 		NFSOPTS=""
 	fi
 
-	[ "$quiet" != "y" ] && log_begin_msg "Trying nfsmount -o nolock -o ro ${NFSOPTS} ${NFSROOT} ${mountpoint}"
+	[ "${quiet}" != "y" ] && log_begin_msg "Trying nfsmount -o nolock -o ro ${NFSOPTS} ${NFSROOT} ${mountpoint}"
 
 	# FIXME: This for loop is an ugly HACK round an nfs bug
 	for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13
@@ -685,7 +685,7 @@ do_cifsmount ()
 			CIFSOPTS="${NFSOPTS}"
 		fi
 
-		[ "$quiet" != "y" ] && log_begin_msg "Trying mount.cifs ${NFSROOT} ${mountpoint} ${CIFSOPTS}"
+		[ "${quiet}" != "y" ] && log_begin_msg "Trying mount.cifs ${NFSROOT} ${mountpoint} ${CIFSOPTS}"
 		modprobe "${MP_QUIET}" cifs
 
 		if mount.cifs "${NFSROOT}" "${mountpoint}" "${CIFSOPTS}"
@@ -745,13 +745,13 @@ do_snap_copy ()
 	else
 		return 1
 
-		[ "$quiet" != "y" ] && log_warning_msg "Unable to find the snapshot ${snap_type} medium"
+		[ "${quiet}" != "y" ] && log_warning_msg "Unable to find the snapshot ${snap_type} medium"
 	fi
 }
 
 try_snap ()
 {
-	# Look for $snap_label.* in block devices and copy the contents to $snap_mount
+	# Look for ${snap_label}.* in block devices and copy the contents to ${snap_mount}
 	# and remember the device and filename for resync on exit in live-initramfs.init
 
 	snap_label="${1}"
@@ -823,8 +823,8 @@ try_snap ()
 
 setup_unionfs ()
 {
-	image_directory="$1"
-	rootmnt="$2"
+	image_directory="${1}"
+	rootmnt="${2}"
 
 	modprobe "${MP_QUIET}" -b ${UNIONTYPE}
 
@@ -893,7 +893,7 @@ setup_unionfs ()
 			rofslist="${image} ${rofslist}"
 		elif [ -f "${image}" ]
 		then
-			backdev=$(get_backing_device "$image")
+			backdev=$(get_backing_device "${image}")
 			fstype=$(get_fstype "${backdev}")
 
 			if [ "${fstype}" = "unknown" ]
@@ -902,8 +902,8 @@ setup_unionfs ()
 			fi
 
 			mkdir -p "${croot}/${imagename}"
-			echo "debug: Can not mount backdev $backdev (image = $image) on croot/imagename ${croot}/${imagename}"
-			mount -t "${fstype}" -o ro "${backdev}" "${croot}/${imagename}" || panic "Can not mount $backdev ($image) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
+			echo "debug: Can not mount backdev ${backdev} (image = ${image}) on croot/imagename ${croot}/${imagename}"
+			mount -t "${fstype}" -o ro "${backdev}" "${croot}/${imagename}" || panic "Can not mount ${backdev} (${image}) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
 		fi
 	done
 
@@ -923,13 +923,13 @@ setup_unionfs ()
 			cowdevice=${cowprobe}
 			cow_fstype=$(get_fstype "${cowprobe}")
 		else
-			[ "$quiet" != "y" ] && log_warning_msg "Unable to find the persistent medium"
+			[ "${quiet}" != "y" ] && log_warning_msg "Unable to find the persistent medium"
 		fi
 	fi
 
-	mount ${cowdevice} -t ${cow_fstype} -o rw /cow || panic "Can not mount $cowdevice on /cow"
+	mount ${cowdevice} -t ${cow_fstype} -o rw /cow || panic "Can not mount ${cowdevice} on /cow"
 
-	mount -t ${UNIONTYPE} -o dirs=/cow=rw:$rofsstring ${UNIONTYPE} "$rootmnt" || panic "${UNIONTYPE} mount failed"
+	mount -t ${UNIONTYPE} -o dirs=/cow=rw:${rofsstring} ${UNIONTYPE} "${rootmnt}" || panic "${UNIONTYPE} mount failed"
 
 	# Adding other custom mounts
 	if [ -n "${PERSISTENT}" ]
@@ -943,7 +943,7 @@ setup_unionfs ()
 			mount -t $(get_fstype "${homecow}") -o rw "${homecow}" "${rootmnt}/home"
 			export HOMEMOUNTED=1 # used to proper calculate free space in do_snap_copy()
 		else
-			[ "$quiet" != "y" ] && log_warning_msg "Unable to find the persistent home medium"
+			[ "${quiet}" != "y" ] && log_warning_msg "Unable to find the persistent home medium"
 		fi
 
 		# Look for other snapshots to copy in
@@ -994,14 +994,14 @@ check_dev ()
 
 	if is_supported_fs ${fstype}
 	then
-		mount -t ${fstype} -o ro "${devname}" $mountpoint || continue
+		mount -t ${fstype} -o ro "${devname}" ${mountpoint} || continue
 
-		if is_live_path $mountpoint
+		if is_live_path ${mountpoint}
 		then
-			echo $mountpoint
+			echo ${mountpoint}
 			return 0
 		else
-			umount $mountpoint
+			umount ${mountpoint}
 		fi
 	fi
 
@@ -1098,10 +1098,10 @@ mountroot ()
 	Arguments
 
 	set_usplash_timeout
-	[ "$quiet" != "y" ] && log_begin_msg "Running /scripts/live-premount"
+	[ "${quiet}" != "y" ] && log_begin_msg "Running /scripts/live-premount"
 	pulsate
 	run_scripts /scripts/live-premount
-	[ "$quiet" != "y" ] && log_end_msg
+	[ "${quiet}" != "y" ] && log_end_msg
 
 	# Needed here too because some things (*cough* udev *cough*)
 	# changes the timeout
@@ -1120,7 +1120,7 @@ mountroot ()
 		# Scan local devices for the image
 		for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 		do
-			livefs_root=$(find_livefs $i)
+			livefs_root=$(find_livefs ${i})
 
 			if [ -n "${livefs_root}" ]
 			then
@@ -1153,7 +1153,7 @@ mountroot ()
 
 	if [ -n "${MODULETORAMFILE}" ]
 	then
-		setup_unionfs "${livefs_root}" "$rootmnt"
+		setup_unionfs "${livefs_root}" "${rootmnt}"
 	else
 		mount_images_in_directory "${livefs_root}" "${rootmnt}"
 	fi
@@ -1161,11 +1161,11 @@ mountroot ()
 	log_end_msg
 
 	maybe_break live-bottom
-	[ "$quiet" != "y" ] && log_begin_msg "Running /scripts/live-bottom"
+	[ "${quiet}" != "y" ] && log_begin_msg "Running /scripts/live-bottom"
 
 	pulsate
 	run_scripts /scripts/live-bottom
-	[ "$quiet" != "y" ] && log_end_msg
+	[ "${quiet}" != "y" ] && log_end_msg
 
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-
