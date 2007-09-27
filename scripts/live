@@ -971,7 +971,7 @@ setup_unionfs ()
 
 	# shows cow fs on /cow for use by live-snapshot
 	mkdir -p "${rootmnt}/live/cow"
-	mount -o bind /cow "${rootmnt}/live/cow"
+	mount -o move /cow "${rootmnt}/live/cow"
 }
 
 check_dev ()
