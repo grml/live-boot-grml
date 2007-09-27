@@ -1,0 +1,26 @@
+#! /bin/sh
+
+PREREQ=""
+DESCRIPTION="Disabling trackerd..."
+
+. /scripts/casper-functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+rm -f /root/etc/xdg/autostart/trackerd.desktop \
+      /root/usr/share/autostart/trackerd.desktop
+
+log_end_msg

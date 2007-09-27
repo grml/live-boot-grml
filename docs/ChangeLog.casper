@@ -1,3 +1,11 @@
+casper (1.105) gutsy; urgency=low
+
+  * scripts/casper-bottom/36disable_trackerd: Disable trackerd in the live
+    session; it's not very useful in this context and it uses a fair bit of
+    memory.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 24 Sep 2007 17:25:50 +0100
+
 casper (1.104) gutsy; urgency=low
 
   * casper-md5check: Fall back to text output if opening the usplash FIFO
