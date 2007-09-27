@@ -639,7 +639,7 @@ do_httpmount ()
 			mkdir -p "${mountpoint}/${LIVE_MEDIA_PATH}"
 			wget "${FETCH}" -O "${mountpoint}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
 			[ ${?} -eq 0 ] && rc=0
-			[ "${extension}" == "tgz" ] && live_dest="ram"
+			[ "${extension}" = "tgz" ] && live_dest="ram"
 			;;
 
 		*)
