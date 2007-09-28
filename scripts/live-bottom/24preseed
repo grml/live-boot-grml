@@ -52,6 +52,15 @@ then
 	done
 fi
 
+reply="$(echo "GET preseed/early_command" | chroot /root debconf-communicate -fnoninteractive casper)"
+if [ "${reply#0 }" != "$reply" ]; then
+       reply="${reply#0 }"
+       sh -c "$reply"
+fi
+
+# Clear out debconf database backup files to save memory.
+rm -f /root/var/cache/debconf/*.dat-old
+
 log_end_msg
 
 exit 0
