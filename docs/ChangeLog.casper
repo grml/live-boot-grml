@@ -1,3 +1,15 @@
+casper (1.106) gutsy; urgency=low
+
+  * Support preseed/early_command; code supplied here will be run using 'sh
+    -c' from casper-bottom, and can chroot to /root if needed (LP: #144845).
+  * Make sure we don't accidentally continue to boot if casper-md5check
+    fails (LP: #82856).
+  * Clear out debconf database backup files after preseeding to save memory
+    (LP: #43706).
+  * Mount everything as noatime to avoid unnecessary metadata writes.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 28 Sep 2007 15:27:52 +0100
+
 casper (1.105) gutsy; urgency=low
 
   * scripts/casper-bottom/36disable_trackerd: Disable trackerd in the live
