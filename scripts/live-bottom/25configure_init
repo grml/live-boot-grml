@@ -89,8 +89,11 @@ then
 						case ${x} in
 							noninteractive)
 								sed -i -e "s|^exec.*|exec /usr/bin/ubiquity noninteractive </dev/tty1 > /dev/tty1 2>\&1|" /root/etc/event.d/tty1
-								rm -f /root/etc/rc?.d/[SK]??gdm
-								rm -f /root/etc/rc?.d/[SK]??kdm
+								rm -f /root/etc/rc?.d/[SK]??[gkx]dm
+								;;
+
+							textonly)
+								rm -f /root/etc/rc?.d/[SK]??[gkx]dm
 								;;
 						esac
 					done

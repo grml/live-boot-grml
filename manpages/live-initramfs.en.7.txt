@@ -219,6 +219,10 @@ This parameter will make live-initramfs to show on "/" the ro filesystems
 lead to problems by applications like "mono" which store binary paths on
 installation.
 
+  textonly
+
+Start up to text-mode shell prompts, disabling the graphical user interface.
+
   timezone=**TIMEZONE**::
 
 By default, timezone is set to UTC. Using the timezone parameter, you can set it
