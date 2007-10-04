@@ -1,8 +1,25 @@
-live-initramfs (1.107.1-1) UNRELEASED; urgency=medium
+live-initramfs (1.107.1-1) unstable; urgency=medium
 
   * New upstream release.
+  * Preparing live-initramfs 1.102.4-2.
+  * Replacing backticks with POSIX expression.
+  * Consistently using curly brackets for variables.
+  * Fixing bashism.
+  * Merging casper 1.105.
+  * Adjusting to live-initramfs.
+  * Bumping version to 1.105.1-1.
+  * Applied patch from Jesse W. Hathaway <jesse@mbuki-mvuki.org> to move
+    cow mount rather than binding it on /live/cow. This prevents the
+    /cow mount showing up in /proc/mounts.
+  * Merging casper 1.106.
+  * Adjusting to live-initramfs.
+  * Bumping version to 1.106.1-1.
+  * Fixing wrong homepage field.
+  * Fixing typing error.
+  * Merging casper 1.107.
+  * Bumping version to 1.107.1-1.
 
- -- Daniel Baumann <daniel@debian.org>  Mon,  1 Oct 2007 00:00:00 +0200
+ -- Daniel Baumann <daniel@debian>  Mon,  1 Oct 2007 00:00:00 +0200
 
 live-initramfs (1.104.1-1) unstable; urgency=medium
 
