@@ -853,13 +853,13 @@ setup_unionfs ()
 	then
 		for IMAGE in $(cat ${image_directory}/filesystem.${MODULE}.module)
 		do
-			image_string="${image_string} ${image_directory}/${image}"
+			image_string="${image_string} ${image_directory}/${IMAGE}"
 		done
 	elif [ -e "${image_directory}/${MODULE}.module" ]
 	then
 		for IMAGE in $(cat ${image_directory}/${MODULE}.module)
 		do
-			image_string="${image_string} ${image_directory}/${image}"
+			image_string="${image_string} ${image_directory}/${IMAGE}"
 		done
 	else
 		# ${MODULE}.module does not exist, create a list of images
