@@ -336,6 +336,11 @@ Arguments ()
 				export SHOWMOUNTS
 				;;
 
+			textonly)
+				TEXTONLY="Yes"
+				export TEXTONLY
+				;;
+
 			timezone=*)
 				TIMEZONE="${ARGUMENT#timezone=}"
 				export TIMEZONE

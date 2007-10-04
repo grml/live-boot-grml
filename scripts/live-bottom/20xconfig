@@ -34,7 +34,12 @@ log_begin_msg "Configuring X..."
 if [ "${TERM_TYPE}" = "serial" ]
 then
 	# Don't bother trying to configure or start X on a serial console
-	rm -f /etc/rc?.d/S??[gxk]dm
+	rm -f /root/etc/rc?.d/S??[gkx]dm
+	exit 0
+fi
+
+if [ -n "${TEXTONLY}" ]
+then
 	exit 0
 fi
 

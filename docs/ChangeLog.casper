@@ -1,3 +1,16 @@
+casper (1.107) gutsy; urgency=low
+
+  * Fix gconf keys for suspend and hibernate (thanks, Oliver Grawert;
+    LP: #144790).
+  * Enable suspend again since as far as I can see we no longer need to
+    probe DMI while figuring out whether to enable it (see #61535).
+  * Add a 'textonly' boot option to disable X (LP: #65818).
+  * Write the please-remove-CD message to /dev/console so that it works even
+    if usplash isn't running, and make sure to set /dev/console into a sane
+    state so that pressing Enter doesn't just result in ^M being displayed.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 02 Oct 2007 15:12:57 +0100
+
 casper (1.106) gutsy; urgency=low
 
   * Support preseed/early_command; code supplied here will be run using 'sh
