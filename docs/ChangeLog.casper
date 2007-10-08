@@ -1,3 +1,11 @@
+casper (1.110) gutsy; urgency=low
+
+  * Don't generate fglrx or the nvidia modules in the live session at boot;
+    we disable restricted-manager in the live session anyway so they aren't
+    straightforward to use (see #43706). Saves about 19 MB of memory.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 05 Oct 2007 21:28:29 +0100
+
 casper (1.109) gutsy; urgency=low
 
   * Cache the stty binary before ejecting the CD.
