@@ -60,6 +60,11 @@ copying to ram and booting it.
 
 Those parameters lets you override values read from the config file.
 
+  ignore_uuid
+
+Do not check that any UUID embedded in the initramfs matches the discovered medium.
+casper may be told to generate a UUID by setting CASPER_GENERATE_UUID=1 when building the initramfs.
+
   integrity-check::
 
 If specified, an MD5 sum is calculated on the live media during boot and

@@ -79,6 +79,9 @@ Arguments ()
 				export USERFULLNAME LIVECONF
 				;;
 
+			ignore_uuid)
+				IGNORE_UUID="Yes" ;;
+
 			ip=*)
 				STATICIP="${ARGUMENT#ip=}"
 
@@ -432,6 +435,22 @@ is_live_path ()
 	fi
 
 	return 1
+}
+
+matches_uuid() {
+    if [ "$IGNORE_UUID" ] || [ ! -e /conf/uuid.conf ]; then
+        return 0
+    fi
+    path="$1"
+    uuid="$(cat /conf/uuid.conf)"
+    for try_uuid_file in "$mountpoint/.disk/casper-uuid"*; do
+        [ -e "$try_uuid_file" ] || continue
+        try_uuid="$(cat "$try_uuid_file")"
+        if [ "$uuid" = "$try_uuid" ]; then
+            return 0
+        fi
+    done
+    return 1
 }
 
 get_backing_device ()
@@ -983,6 +1002,7 @@ check_dev ()
 {
 	sysdev="${1}"
 	devname="${2}"
+	skip_uuid_check="${3}"
 
 	if [ -z "${devname}" ]
 	then
@@ -1002,7 +1022,8 @@ check_dev ()
 		mount -t ${fstype} -o ro,noatime,nodiratime "${devname}" ${mountpoint} || continue
 
 		if is_live_path ${mountpoint}
-		then
+		if is_live_path $mountpoint && \
+			([ "$skip_uuid_check" ] || matches_uuid $mountpoint); then
 			echo ${mountpoint}
 			return 0
 		else
@@ -1025,7 +1046,7 @@ find_livefs ()
 	# first look at the one specified in the command line
 	if [ ! -z "${LIVE_MEDIA}" ]
 	then
-		if check_dev "null" "${LIVE_MEDIA}"
+		if check_dev "null" "${LIVE_MEDIA}" "skip_uuid_check"
 		then
 			return 0
 		fi
