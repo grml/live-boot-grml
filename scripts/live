@@ -1032,8 +1032,7 @@ check_dev ()
 	then
 		mount -t ${fstype} -o ro,noatime,nodiratime "${devname}" ${mountpoint} || continue
 
-		if is_live_path ${mountpoint}
-		if is_live_path $mountpoint && \
+		if is_live_path ${mountpoint} && \
 			([ "${skip_uuid_check}" ] || matches_uuid ${mountpoint})
 		then
 			echo ${mountpoint}
