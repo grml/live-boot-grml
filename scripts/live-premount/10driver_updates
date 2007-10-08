@@ -41,12 +41,16 @@ is_updates_path ()
 	# kernel flavour.
 
 	path=${1}
-        abi="$(uname -r)"
-        kver="$(echo "$abi" | cut -d- -f1,2)"
-        kbase="$(echo "$abi" | cut -d- -f1)"
-        for leaf in "$abi" "$kver" "$kbase"; do
-                update_dir="$path/ubuntu-drivers/$leaf"
-                [ -d "$update_dir" ] || continue
+	abi="$(uname -r)"
+	kver="$(echo "$abi" | cut -d- -f1,2)"
+	kbase="$(echo "$abi" | cut -d- -f1)"
+
+	for leaf in "$abi" "$kver" "$kbase"
+	do
+		update_dir="$path/ubuntu-drivers/$leaf"
+
+		[ -d "$update_dir" ] || continue
+
 		if [ "$(echo ${update_dir}/*_${DPKG_ARCH}.deb)" != \
 			"${update_dir}/*_${DPKG_ARCH}.deb" ]
 		then
@@ -55,7 +59,7 @@ is_updates_path ()
 		fi
 	done
 
-	return 1;
+	return 1
 }
 
 is_nice_device ()
