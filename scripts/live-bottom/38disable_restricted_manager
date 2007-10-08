@@ -31,6 +31,6 @@ rm -f /root/etc/xdg/autostart/restricted-manager-kde.desktop
 # fglrx or nvidia modules either. The other restricted modules may still be
 # useful.
 sed -i 's/^DISABLED_MODULES=""/DISABLED_MODULES="fglrx nv"/' \
-       /root/etc/default/linux-restricted-modules-common
+	/root/etc/default/linux-restricted-modules-common
 
 log_end_msg
