@@ -1,3 +1,13 @@
+casper (1.108) gutsy; urgency=low
+
+  * If CASPER_GENERATE_UUID is set, generate a random UUID in the initramfs,
+    and check it against the discovered medium (unless booting with the
+    ignore_uuid parameter). This allows live CD images to be safely copied
+    to the hard disk without causing problems when booting future live CDs
+    (LP: #144800).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 04 Oct 2007 14:23:37 +0100
+
 casper (1.107) gutsy; urgency=low
 
   * Fix gconf keys for suspend and hibernate (thanks, Oliver Grawert;
