@@ -62,8 +62,9 @@ Those parameters lets you override values read from the config file.
 
   ignore_uuid
 
-Do not check that any UUID embedded in the initramfs matches the discovered medium.
-casper may be told to generate a UUID by setting CASPER_GENERATE_UUID=1 when building the initramfs.
+Do not check that any UUID embedded in the initramfs matches the discovered
+medium. live-initramfs may be told to generate a UUID by setting
+LIVE_GENERATE_UUID=1 when building the initramfs.
 
   integrity-check::
 
