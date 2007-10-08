@@ -1,6 +1,15 @@
-live-initramfs (1.110.1-1) UNRELEASED; urgency=medium
+live-initramfs (1.110.1-1) unstable; urgency=medium
 
   * New upstream release.
+  * Preparing live-initramfs 1.107.2-1.
+  * Also using nodiratime, not just noatime.
+  * Merging casper 1.108.
+  * Adjusting to live-initramfs.
+  * Merging casper 1.109.
+  * Adjusting to live-initramfs.
+  * Merging casper 1.110.
+  * Adjusting to live-initramfs.
+  * Bumping version to 1.110.1-1.
 
  -- Daniel Baumann <daniel@debian>  Mon,  8 Oct 2007 00:00:00 +0200
 
