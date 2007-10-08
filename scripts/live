@@ -80,7 +80,9 @@ Arguments ()
 				;;
 
 			ignore_uuid)
-				IGNORE_UUID="Yes" ;;
+				IGNORE_UUID="Yes"
+				export IGNORE_UUID
+				;;
 
 			ip=*)
 				STATICIP="${ARGUMENT#ip=}"
@@ -437,20 +439,29 @@ is_live_path ()
 	return 1
 }
 
-matches_uuid() {
-    if [ "$IGNORE_UUID" ] || [ ! -e /conf/uuid.conf ]; then
-        return 0
-    fi
-    path="$1"
-    uuid="$(cat /conf/uuid.conf)"
-    for try_uuid_file in "$mountpoint/.disk/casper-uuid"*; do
-        [ -e "$try_uuid_file" ] || continue
-        try_uuid="$(cat "$try_uuid_file")"
-        if [ "$uuid" = "$try_uuid" ]; then
-            return 0
-        fi
-    done
-    return 1
+matches_uuid ()
+{
+	if [ "${IGNORE_UUID}" ] || [ ! -e /conf/uuid.conf ]
+	then
+		return 0
+	fi
+
+	path="${1}"
+	uuid="$(cat /conf/uuid.conf)"
+
+	for try_uuid_file in "${mountpoint}/.disk/casper-uuid"*
+	do
+		[ -e "${try_uuid_file}" ] || continue
+
+		try_uuid="$(cat "${try_uuid_file}")"
+
+		if [ "${uuid}" = "${try_uuid}" ]
+		then
+			return 0
+		fi
+	done
+
+	return 1
 }
 
 get_backing_device ()
@@ -1023,7 +1034,8 @@ check_dev ()
 
 		if is_live_path ${mountpoint}
 		if is_live_path $mountpoint && \
-			([ "$skip_uuid_check" ] || matches_uuid $mountpoint); then
+			([ "${skip_uuid_check}" ] || matches_uuid ${mountpoint})
+		then
 			echo ${mountpoint}
 			return 0
 		else
