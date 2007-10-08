@@ -175,6 +175,10 @@ be checked at boot time, use this parameter, otherwise they are skipped.
 disables the "persistent" feature, useful if the bootloader (like syslinux) has
 been installed with persistent enabled.
 
+  noprompt
+
+Do not prompt to eject the CD on reboot.
+
   nosudo::
 
 This parameter disables the automatic configuration of sudo.

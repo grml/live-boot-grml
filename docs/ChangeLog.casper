@@ -1,3 +1,13 @@
+casper (1.109) gutsy; urgency=low
+
+  * Cache the stty binary before ejecting the CD.
+  * Skip the CD eject prompt if 'noprompt' is on the kernel command line
+    (LP: #149159).
+  * Try each of (e.g.) 2.6.22-13-generic, 2.6.22-13, and 2.6.22 in turn as
+    directory names for driver updates (LP: #122430).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 05 Oct 2007 03:24:43 +0100
+
 casper (1.108) gutsy; urgency=low
 
   * If CASPER_GENERATE_UUID is set, generate a random UUID in the initramfs,

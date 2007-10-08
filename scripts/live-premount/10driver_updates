@@ -41,18 +41,19 @@ is_updates_path ()
 	# kernel flavour.
 
 	path=${1}
-	kbase=$(uname -r | sed 's/^\([0-9]*\.[0-9]*\.[0-9]*\)-.*/\1/')
-	update_dir="${path}/ubuntu-drivers/${kbase}"
-
-	if [ -d "${update_dir}" ]
-	then
+        abi="$(uname -r)"
+        kver="$(echo "$abi" | cut -d- -f1,2)"
+        kbase="$(echo "$abi" | cut -d- -f1)"
+        for leaf in "$abi" "$kver" "$kbase"; do
+                update_dir="$path/ubuntu-drivers/$leaf"
+                [ -d "$update_dir" ] || continue
 		if [ "$(echo ${update_dir}/*_${DPKG_ARCH}.deb)" != \
 			"${update_dir}/*_${DPKG_ARCH}.deb" ]
 		then
 			echo "${update_dir}"
-			return 0;
+			return 0
 		fi
-	fi
+	done
 
 	return 1;
 }
