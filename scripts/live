@@ -762,7 +762,7 @@ do_snap_copy ()
 		if [ -n "${fstype}" ]
 		then
 			# Copying stuff...
-			mount -t "${fstype}" -o ro,noatime,nodiratime "${fromdev}" "${tomount}"
+			mount -t "${fstype}" -o ro,noatime "${fromdev}" "${tomount}"
 			cp -a "${tomount}"/* ${todir}
 			umount "${tomount}"
 		else
@@ -938,7 +938,7 @@ setup_unionfs ()
 
 			mkdir -p "${croot}/${imagename}"
 			echo "debug: Can not mount backdev ${backdev} (image = ${image}) on croot/imagename ${croot}/${imagename}"
-			mount -t "${fstype}" -o ro,noatime,nodiratime "${backdev}" "${croot}/${imagename}" || panic "Can not mount ${backdev} (${image}) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
+			mount -t "${fstype}" -o ro,noatime "${backdev}" "${croot}/${imagename}" || panic "Can not mount ${backdev} (${image}) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
 		fi
 	done
 
@@ -962,9 +962,9 @@ setup_unionfs ()
 		fi
 	fi
 
-	mount ${cowdevice} -t ${cow_fstype} -o rw,noatime,nodiratime /cow || panic "Can not mount ${cowdevice} on /cow"
+	mount ${cowdevice} -t ${cow_fstype} -o rw,noatime /cow || panic "Can not mount ${cowdevice} on /cow"
 
-	mount -t ${UNIONTYPE} -o noatime,nodiratime,dirs=/cow=rw:${rofsstring} ${UNIONTYPE} "${rootmnt}" || panic "${UNIONTYPE} mount failed"
+	mount -t ${UNIONTYPE} -o noatime,dirs=/cow=rw:${rofsstring} ${UNIONTYPE} "${rootmnt}" || panic "${UNIONTYPE} mount failed"
 
 	# Adding other custom mounts
 	if [ -n "${PERSISTENT}" ]
@@ -975,7 +975,7 @@ setup_unionfs ()
 
 		if [ -b "${homecow}" ]
 		then
-			mount -t $(get_fstype "${homecow}") -o rw,noatime,nodiratime "${homecow}" "${rootmnt}/home"
+			mount -t $(get_fstype "${homecow}") -o rw,noatime "${homecow}" "${rootmnt}/home"
 			export HOMEMOUNTED=1 # used to proper calculate free space in do_snap_copy()
 		else
 			[ "${quiet}" != "y" ] && log_warning_msg "Unable to find the persistent home medium"
@@ -1030,7 +1030,7 @@ check_dev ()
 
 	if is_supported_fs ${fstype}
 	then
-		mount -t ${fstype} -o ro,noatime,nodiratime "${devname}" ${mountpoint} || continue
+		mount -t ${fstype} -o ro,noatime "${devname}" ${mountpoint} || continue
 
 		if is_live_path ${mountpoint} && \
 			([ "${skip_uuid_check}" ] || matches_uuid ${mountpoint})
