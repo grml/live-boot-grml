@@ -1,6 +1,10 @@
-live-initramfs (1.110.2-1) UNRELEASED; urgency=medium
+live-initramfs (1.110.2-1) unstable; urgency=medium
 
   * New upstream release.
+  * Preparing live-initramfs 1.110.2-1.
+  * Fixing typing error.
+  * Removing nodiratime as it is already included in noatime, thanks to Kel
+    Modderman <kel@otaku42.de>.
 
  -- Daniel Baumann <daniel@debian>  Mon, 15 Oct 2007 00:00:00 +0200
 
