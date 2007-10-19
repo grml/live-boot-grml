@@ -88,16 +88,9 @@ then
 
 	really_export LANG
 
-	if [ "${BUILD_SYSTEM}" = "Ubuntu" ]
-	then
-		printf 'LANG="%s"\n' "${LANG}" > "${grep_file}"
-		chroot /root /usr/sbin/locale-gen "${LANG}"
-		live-preseed /root debian-installer/locale "${locale}"
-	else
-		printf 'LANG=%s\n' "${LANG}" > "${grep_file}"
-		printf '%s UTF-8\n' "${LANG}" > /root/etc/locale.gen
-		chroot /root /usr/sbin/locale-gen
-	fi
+	printf 'LANG=%s\n' "${LANG}" > "${grep_file}"
+	printf '%s UTF-8\n' "${LANG}" > /root/etc/locale.gen
+	chroot /root /usr/sbin/locale-gen
 fi
 
 log_end_msg

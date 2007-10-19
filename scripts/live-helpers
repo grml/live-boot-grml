@@ -1,16 +1,6 @@
 #!/bin/sh
 # live-initramfs helper functions, used by live-initramfs on boot and by live-snapshot
 
-if [ "${BUILD_SYSTEM}" = "Ubuntu" ]
-then
-	MP_QUIET="-Q"
-elif [ "${BUILD_SYSTEM}" = "Debian" ]
-then
-	MP_QUIET="-q"
-else
-	MP_QUIET=""
-fi
-
 if [ ! -x "/bin/fstype" ]
 then
 	# klibc not in path -> not in initramfs
@@ -157,7 +147,7 @@ setup_loop ()
 	local offset=${4}
 	local encryption=${5}
 
-	modprobe ${MP_QUIET} -b "${module}"
+	modprobe -q -b "${module}"
 	udevsettle
 
 	for loopdev in ${pattern}

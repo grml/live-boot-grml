@@ -40,8 +40,4 @@ then
 	chroot /root sudo -u "${USERNAME}" gconftool-2 -t bool -s /apps/gnome-screensaver/lock_enabled false
 fi
 
-if [ -d /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config ]; then
-	printf "[ScreenSaver]\nLock=false\n" >> /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config/kdesktoprc
-fi
-
 log_end_msg

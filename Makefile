@@ -1,7 +1,5 @@
 # Makefile
 
-BUILD_SYSTEM := $(shell lsb_release --short --id)
-
 TRANSLATIONS="it"
 
 all: build
@@ -13,12 +11,10 @@ test:
 	done
 
 build:
-	# Setting BUILD_SYSTEM
-	sed -e 's/\(BUILD_SYSTEM="\).*"/\1'$(BUILD_SYSTEM)'"/g' conf/live.conf > live.conf
 
 install: test build
 	# Installing configuration
-	install -D -m 0644 live.conf $(DESTDIR)/etc/live.conf
+	install -D -m 0644 conf/live.conf $(DESTDIR)/etc/live.conf
 
 	# Installing executables
 	mkdir -p $(DESTDIR)/sbin
@@ -116,7 +112,6 @@ update:
 	done
 
 clean:
-	rm -f live.conf
 
 distclean:
 

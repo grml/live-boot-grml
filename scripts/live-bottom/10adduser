@@ -31,12 +31,7 @@ log_begin_msg "Adding live session user..."
 
 # live-initramfs script
 
-if [ "${BUILD_SYSTEM}" = "Debian" ]
-then
-	user_crypted="8Ab05sVQ4LLps" # as in $(echo "live" | mkpasswd -s)
-else
-	user_crypted="U6aMy0wojraho" # "ubuntu"
-fi
+user_crypted="8Ab05sVQ4LLps" # as in $(echo "live" | mkpasswd -s)
 
 # U6aMy0wojraho is just a blank password
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
@@ -48,14 +43,9 @@ set passwd/username ${USERNAME}
 set passwd/user-uid 999
 EOF
 
-if [ "${BUILD_SYSTEM}" = "Debian" ]
-then
-	chroot /root /usr/bin/env -i HOME="/root" \
-		TERM="${TERM}" PATH="/usr/sbin:/usr/bin:/sbin:/bin" \
-		/usr/lib/user-setup/user-setup-apply > /dev/null
-else
-	chroot /root /usr/lib/user-setup/user-setup-apply > /dev/null
-fi
+chroot /root /usr/bin/env -i HOME="/root" \
+	TERM="${TERM}" PATH="/usr/sbin:/usr/bin:/sbin:/bin" \
+	/usr/lib/user-setup/user-setup-apply > /dev/null
 
 # Clear out debconf database again to avoid confusing ubiquity later.
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
@@ -71,43 +61,25 @@ if [ -z "${NOSUDO}" ]
 then
 	if [ -f /root/etc/sudoers ]
 	then
-		if [ "${BUILD_SYSTEM}" = "Ubuntu" ]
-		then
-			grep -q '^%admin' /root/etc/sudoers && sed -i -e '/^%admin/s/ALL$/NOPASSWD: ALL/' /root/etc/sudoers || echo '%admin  ALL=(ALL) NOPASSWD: ALL' >> /root/etc/sudoers
+		echo "${USERNAME}  ALL=(ALL) NOPASSWD: ALL" >> /root/etc/sudoers
 
-			# XXX - awful hack to stop xscreensaver locking the screen (#7150)
-			echo 'RUNNING_UNDER_GDM="yes"' >> /root/etc/environment
-
-			for file in /usr/share/applications/ubiquity-gtkui.desktop /usr/share/applications/kde/ubiquity-kdeui.desktop
-			do
-				if [ -f "/root/${file}" ]
-				then
-					chroot /root install -D -o ${USERNAME} -g ${USERNAME} ${file} /home/${USERNAME}/Desktop/$(basename "${file}")
-					break
-				fi
-			done
-		elif [ "${BUILD_SYSTEM}" = "Debian" ]
-		then
-			echo "${USERNAME}  ALL=(ALL) NOPASSWD: ALL" >> /root/etc/sudoers
-
-			chroot /root sudo -u "${USERNAME}" sh -c "echo 'SU_TO_ROOT_SU=sudo' >> /home/${USERNAME}/.su-to-rootrc"
-			chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gksu/sudo-mode true
-			chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gksu/display-no-pass-info false
+		chroot /root sudo -u "${USERNAME}" sh -c "echo 'SU_TO_ROOT_SU=sudo' >> /home/${USERNAME}/.su-to-rootrc"
+		chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gksu/sudo-mode true
+		chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gksu/display-no-pass-info false
 
 chroot /root sudo -u "${USERNAME}" sh -c "umask 0077 && mkdir -p /home/${USERNAME}/.kde/share/config && cat > /home/${USERNAME}/.kde/share/config/kdesurc" << EOF
 [super-user-command]
 super-user-command=sudo
 EOF
 
-			if [ -f /root/usr/share/apps/konsole/sumc.desktop ]
-			then
-				chroot /root sudo -u "${USERNAME}" sh -c "umask 0077 && mkdir -p /home/${USERNAME}/.kde/share/apps/konsole && sed -e's/Exec=su.*$/Exec=sudo mc -c/' /usr/share/apps/konsole/sumc.desktop > /home/${USERNAME}/.kde/share/apps/konsole/sumc.desktop"
-			fi
+		if [ -f /root/usr/share/apps/konsole/sumc.desktop ]
+		then
+			chroot /root sudo -u "${USERNAME}" sh -c "umask 0077 && mkdir -p /home/${USERNAME}/.kde/share/apps/konsole && sed -e's/Exec=su.*$/Exec=sudo mc -c/' /usr/share/apps/konsole/sumc.desktop > /home/${USERNAME}/.kde/share/apps/konsole/sumc.desktop"
+		fi
 
-			if [ -f /root/usr/share/apps/konsole/su.desktop ]
-			then
-				chroot /root sudo -u "${USERNAME}" sh -c "umask 0077 && mkdir -p /home/${USERNAME}/.kde/share/apps/konsole && sed -e's/Exec=su.*$/Exec=sudo -i/' /usr/share/apps/konsole/su.desktop > /home/${USERNAME}/.kde/share/apps/konsole/su.desktop"
-			fi
+		if [ -f /root/usr/share/apps/konsole/su.desktop ]
+		then
+			chroot /root sudo -u "${USERNAME}" sh -c "umask 0077 && mkdir -p /home/${USERNAME}/.kde/share/apps/konsole && sed -e's/Exec=su.*$/Exec=sudo -i/' /usr/share/apps/konsole/su.desktop > /home/${USERNAME}/.kde/share/apps/konsole/su.desktop"
 		fi
 	fi
 fi
@@ -116,11 +88,6 @@ if [ -L /root/home/${USERNAME}/Examples ]
 then
 	chroot /root install -o ${USERNAME} -g ${USERNAME} -d /home/${USERNAME}/Desktop/
 	mv /root/home/${USERNAME}/Examples /root/home/${USERNAME}/Desktop/
-fi
-
-if [ -f "/root/usr/share/apps/khelpcenter/plugins/kubuntu/about-kubuntu.desktop.tobemoved" ]
-then
-	chroot /root install -D -o ${USERNAME} -g ${USERNAME} /usr/share/apps/khelpcenter/plugins/kubuntu/about-kubuntu.desktop.tobemoved /home/${USERNAME}/Desktop/about-kubuntu.desktop
 fi
 
 log_end_msg
