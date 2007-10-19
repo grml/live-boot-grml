@@ -18,12 +18,11 @@ home_snapshot_label="home-sn"
 USERNAME="user"
 USERFULLNAME="Live user"
 HOSTNAME="host"
-BUILD_SYSTEM="Custom"
 
 mkdir -p "${mountpoint}"
 
 [ -f /etc/live.conf ] && . /etc/live.conf
-export USERNAME USERFULLNAME HOSTNAME BUILD_SYSTEM
+export USERNAME USERFULLNAME HOSTNAME
 
 . /scripts/live-helpers
 
@@ -618,7 +617,7 @@ do_netmount ()
 {
 	rc=1
 
-	modprobe "${MP_QUIET}" af_packet # For DHCP
+	modprobe -q af_packet # For DHCP
 
 	udevtrigger
 	udevsettle
@@ -688,7 +687,7 @@ do_nfsmount ()
 {
 	rc=1
 
-	modprobe "${MP_QUIET}" nfs
+	modprobe -q nfs
 
 	if [ -z "${NFSOPTS}" ]
 	then
@@ -721,7 +720,7 @@ do_cifsmount ()
 		fi
 
 		[ "${quiet}" != "y" ] && log_begin_msg "Trying mount.cifs ${NFSROOT} ${mountpoint} ${CIFSOPTS}"
-		modprobe "${MP_QUIET}" cifs
+		modprobe -q cifs
 
 		if mount.cifs "${NFSROOT}" "${mountpoint}" "${CIFSOPTS}"
 		then
@@ -861,7 +860,7 @@ setup_unionfs ()
 	image_directory="${1}"
 	rootmnt="${2}"
 
-	modprobe "${MP_QUIET}" -b ${UNIONTYPE}
+	modprobe -q -b ${UNIONTYPE}
 
 	# run-init can't deal with images in a subdir, but we're going to
 	# move all of these away before it runs anyway.  No, we're not,

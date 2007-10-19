@@ -42,9 +42,4 @@ then
 	chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gnome-power-manager/general/can_hibernate false
 fi
 
-if [ -d /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config ]
-then
-	echo "disableHibernate=1" >> /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config/power-managerrc
-fi
-
 log_end_msg

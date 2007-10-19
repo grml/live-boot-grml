@@ -55,30 +55,20 @@ then
 	chroot /root /usr/sbin/xdebconfigurator
 fi
 
-if [ "${BUILD_SYSTEM}" = "Ubuntu" ]
+if [ -n "${KOPTIONS}" ]
 then
+	setoptions="set xserver-xorg/config/inputdevice/keyboard/options ${KOPTIONS}"
+fi
 
-chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
-set xserver-xorg/autodetect_keyboard true
-fset xserver-xorg/autodetect_keyboard seen true
-EOF
+if [ -n "${KVARIANT}" ]
+then
+	setvariant="set xserver-xorg/config/inputdevice/keyboard/variant ${KVARIANT}"
+fi
 
-else
-	# d-i code not present, so:
-	if [ -n "${KOPTIONS}" ]
-	then
-		setoptions="set xserver-xorg/config/inputdevice/keyboard/options ${KOPTIONS}"
-	fi
-
-	if [ -n "${KVARIANT}" ]
-	then
-		setvariant="set xserver-xorg/config/inputdevice/keyboard/variant ${KVARIANT}"
-	fi
-
-	if [ -n "${KMODEL}" ]
-	then
-		setmodel="set xserver-xorg/config/inputdevice/keyboard/model ${KMODEL}"
-	fi
+if [ -n "${KMODEL}" ]
+then
+	setmodel="set xserver-xorg/config/inputdevice/keyboard/model ${KMODEL}"
+fi
 
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
 set xserver-xorg/config/inputdevice/keyboard/layout ${kbd}
@@ -86,8 +76,6 @@ ${setvariant}
 ${setmodel}
 ${setoptions}
 EOF
-
-fi
 
 DEBUG_XORG_PACKAGE=1 DEBUG_XORG_DEBCONF=1 live-reconfigure /root xserver-xorg
 umount /root/sys
