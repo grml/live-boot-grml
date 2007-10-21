@@ -45,7 +45,7 @@ Arguments ()
 
 			console=*)
 				DEFCONSOLE="${ARGUMENT#*=}"
-				export DEFCONFSOLE
+				export DEFCONSOLE
 				;;
 
 			debug)
