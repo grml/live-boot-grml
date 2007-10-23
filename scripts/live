@@ -371,6 +371,11 @@ Arguments ()
 				export TORAM MODULETORAM
 				;;
 
+			exposedroot)
+				EXPOSED_ROOT="Yes"
+				export EXPOSED_ROOT
+				;;
+
 			union=*)
 				UNIONTYPE="${ARGUMENT#union=}"
 				export UNIONTYPE
@@ -961,9 +966,40 @@ setup_unionfs ()
 		fi
 	fi
 
-	mount ${cowdevice} -t ${cow_fstype} -o rw,noatime /cow || panic "Can not mount ${cowdevice} on /cow"
+	rofscount=$(echo ${rofslist} |wc -w)
 
-	mount -t ${UNIONTYPE} -o noatime,dirs=/cow=rw:${rofsstring} ${UNIONTYPE} "${rootmnt}" || panic "${UNIONTYPE} mount failed"
+	if [ -n "${EXPOSED_ROOT}" ]
+	then
+		if [ ${rofscount} -ne 1 ]
+		then
+			panic "only one RO file system supported with exposedroot: ${rofslist}"
+		fi
+		exposedrootfs=${rofslist%% }
+
+		mount --bind ${exposedrootfs} ${rootmnt} || \
+			panic "bind mount of ${exposedrootfs} failed"
+
+		mount ${cowdevice} -t ${cow_fstype} -o rw,noatime /cow || \
+			panic "Can not mount ${cowdevice} on /cow"
+
+		cow_dirs='/tmp /var/tmp /var/lock /var/run /var/log /var/spool
+			/home /live /var/lib/live'
+
+		for dir in ${cow_dirs}; do
+			mkdir -p /cow${dir}
+			mount -t ${UNIONTYPE} \
+				-o rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro \
+				${UNIONTYPE} "${rootmnt}${dir}" || \
+				panic "mount ${UNIONTYPE} on ${rootmnt}${dir} failed with option \
+					rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro"
+		done
+	else
+		mount ${cowdevice} -t ${cow_fstype} -o rw,noatime /cow || \
+			panic "Can not mount ${cowdevice} on /cow"
+		mount -t ${UNIONTYPE} -o noatime,dirs=/cow=rw:${rofsstring} \
+			${UNIONTYPE} "${rootmnt}" || panic "mount ${UNIONTYPE} on \
+			${rootmnt} failed with option noatime,dirs=/cow=rw:${rofsstring}"
+	fi
 
 	# Adding other custom mounts
 	if [ -n "${PERSISTENT}" ]
