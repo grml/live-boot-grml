@@ -1,6 +1,15 @@
-live-initramfs (1.110.3-1) UNRELEASED; urgency=medium
+live-initramfs (1.110.3-1) unstable; urgency=medium
 
+  [ Daniel Baumann ]
   * New upstream release.
+  * Preparing live-initramfs 1.110.3-1.
+  * Removing ubuntu support.
+
+  [ Alex Owen ]
+  * Fix typo to get serial console to work
+
+  [ Jesse Hathaway ]
+  * add support for exposedroot option for live-helper
 
  -- Daniel Baumann <daniel@debian>  Mon, 22 Oct 2007 00:00:00 +0200
 
