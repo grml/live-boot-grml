@@ -169,6 +169,11 @@ Arguments ()
 				export NFSOPTS
 				;;
 
+			nfscow=*)
+				NFS_COW="${ARGUMENT#nfscow=}"
+				export NFS_COW
+				;;
+
 			noaccessibility)
 				NOACCESSIBILITY="Yes"
 				export NOACCESSIBILITY
@@ -949,8 +954,6 @@ setup_unionfs ()
 	rofsstring=${rofsstring%:}
 
 	mkdir -p /cow
-	cowdevice="tmpfs"
-	cow_fstype="tmpfs"
 
 	# Looking for "${root_persistence}" device or file
 	if [ -n "${PERSISTENT}" ]
@@ -964,6 +967,39 @@ setup_unionfs ()
 		else
 			[ "${quiet}" != "y" ] && log_warning_msg "Unable to find the persistent medium"
 		fi
+	elif [ -n "${NFS_COW}" ]
+	then
+		# check if there are any nfs options
+		if echo ${NFS_COW}|grep -q ','
+		then
+			nfs_cow_opts="-o nolock,$(echo ${NFS_COW}|cut -d, -f2-)"
+			nfs_cow=$(echo ${NFS_COW}|cut -d, -f1)
+		else
+			nfs_cow_opts="-o nolock"
+			nfs_cow=${NFS_COW}
+		fi
+		mac=$(get_mac)
+		if [ -n "${mac}" ]
+		then
+			cowdevice=$(echo ${nfs_cow}|sed "s/client_mac_address/${mac}/")
+			cow_fstype="nfs"
+		else
+			panic "unable to determine mac address"
+		fi
+	else
+		cowdevice="tmpfs"
+		cow_fstype="tmpfs"
+	fi
+
+	if [ "${cow_fstype}" = "nfs" ]
+	then
+		[ "${quiet}" != "y" ] && log_begin_msg \
+			"Trying nfsmount ${nfs_cow_opts} ${cowdevice} /cow"
+		nfsmount ${nfs_cow_opts} ${cowdevice} /cow || \
+			panic "Can not mount ${cowdevice} on /cow"
+	else
+		mount ${cowdevice} -t ${cow_fstype} -o rw,noatime /cow || \
+			panic "Can not mount ${cowdevice} on /cow"
 	fi
 
 	rofscount=$(echo ${rofslist} |wc -w)
@@ -979,11 +1015,8 @@ setup_unionfs ()
 		mount --bind ${exposedrootfs} ${rootmnt} || \
 			panic "bind mount of ${exposedrootfs} failed"
 
-		mount ${cowdevice} -t ${cow_fstype} -o rw,noatime /cow || \
-			panic "Can not mount ${cowdevice} on /cow"
-
-		cow_dirs='/tmp /var/tmp /var/lock /var/run /var/log /var/spool
-			/home /live /var/lib/live'
+		cow_dirs='/var/tmp /var/lock /var/run /var/log /var/spool
+			/home /var/lib/live'
 
 		for dir in ${cow_dirs}; do
 			mkdir -p /cow${dir}
@@ -994,12 +1027,14 @@ setup_unionfs ()
 					rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro"
 		done
 	else
-		mount ${cowdevice} -t ${cow_fstype} -o rw,noatime /cow || \
-			panic "Can not mount ${cowdevice} on /cow"
 		mount -t ${UNIONTYPE} -o noatime,dirs=/cow=rw:${rofsstring} \
 			${UNIONTYPE} "${rootmnt}" || panic "mount ${UNIONTYPE} on \
 			${rootmnt} failed with option noatime,dirs=/cow=rw:${rofsstring}"
 	fi
+
+	# tmpfs file systems
+	mkdir -p "${rootmnt}/live"
+	mount -t tmpfs tmpfs ${rootmnt}/live
 
 	# Adding other custom mounts
 	if [ -n "${PERSISTENT}" ]
