@@ -1,6 +1,13 @@
-live-initramfs (1.110.4-1) UNRELEASED; urgency=medium
+live-initramfs (1.110.4-1) unstable; urgency=medium
 
+  [ Daniel Baumann ]
   * New upstream release.
+  * Preparing live-initramfs 1.110.3-1.
+  * Correcting homepage field.
+  * Correcting vcs fields.
+
+  [ Jesse Hathaway ]
+  * add support for mounting the cow device on an nfs volume
 
  -- Daniel Baumann <daniel@debian>  Mon, 29 Oct 2007 00:00:00 +0100
 
