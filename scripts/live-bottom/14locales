@@ -79,6 +79,20 @@ then
 
 	LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 | sed -e 's, .*,,' -e q)
 
+	language="${LANG%%.UTF-8*}"
+	if [ -d /root/etc/default/kdm.d/ ]
+	then
+
+cat > /root/etc/default/kdm.d/live-autologin << EOF
+LANGUAGE=${language}
+EOF
+
+	elif [ -f /root/etc/kde3/kdm/kdmrc ]
+	then
+		sed -i -r -e "s/#Language=.*/Language=${language}/" \
+			/root/etc/kde3/kdm/kdmrc
+	fi
+
 	if [ -z "${LANG}" ]
 	then
 		log_warning_message "Locale ${locale} is unsupported."
