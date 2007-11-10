@@ -507,13 +507,16 @@ mount_images_in_directory ()
 {
 	directory="${1}"
 	rootmnt="${2}"
+    	mac="$3"
+
 
 	if match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.squashfs" ||
 		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext2" ||
 		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext3" ||
 		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.dir"
 	then
-		setup_unionfs "${directory}/${LIVE_MEDIA_PATH}" "${rootmnt}"
+                [ -n "$mac" ] && adddirectory="$directory/${LIVE_MEDIA_PATH}/${mac}"
+		setup_unionfs "${directory}/${LIVE_MEDIA_PATH}" "${rootmnt}" "${adddirectory}"
 	else
 		:
 	fi
@@ -869,7 +872,7 @@ setup_unionfs ()
 {
 	image_directory="${1}"
 	rootmnt="${2}"
-
+        addimage_directory="$3"
 	modprobe -q -b ${UNIONTYPE}
 
 	# run-init can't deal with images in a subdir, but we're going to
@@ -917,6 +920,19 @@ setup_unionfs ()
 				fi
 			done
 		done
+
+    if [ -n "${addimage_directory}" -a -d "${addimage_directory}" ]; then
+      for FILESYSTEM in squashfs ext2 ext3 xfs dir
+      do
+        for IMAGE in "${addimage_directory}"/*."${FILESYSTEM}"
+        do
+          if [ -e "${IMAGE}" ]
+          then
+            image_string="${image_string} ${IMAGE}"
+          fi
+        done
+      done
+    fi
 
 		# Now sort the list
 		image_string="$(echo ${image_string} | sed -e 's/ /\n/g' | sort )"
@@ -1262,7 +1278,9 @@ mountroot ()
 	then
 		setup_unionfs "${livefs_root}" "${rootmnt}"
 	else
-		mount_images_in_directory "${livefs_root}" "${rootmnt}"
+		mac=$(get_mac)
+    mac=$(echo ${mac}|sed "s/-//g")
+		mount_images_in_directory "${livefs_root}" "${rootmnt}" "${mac}"
 	fi
 
 	log_end_msg
