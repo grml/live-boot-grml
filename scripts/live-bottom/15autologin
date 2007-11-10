@@ -57,11 +57,13 @@ fi
 
 if [ -d /root/etc/default/kdm.d/ ]
 then
-	cat > /root/etc/default/kdm.d/live-autologin << EOF
+
+cat >> /root/etc/default/kdm.d/live-autologin << EOF
 AUTOLOGINUSER=${USERNAME}
 AUTOLOGINAGAIN=true
 AUTOLOGINDELAY=0
 EOF
+
 elif [ -f /root/etc/kde3/kdm/kdmrc ]
 then
 	# Configure KDM autologin
