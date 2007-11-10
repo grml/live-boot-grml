@@ -507,7 +507,7 @@ mount_images_in_directory ()
 {
 	directory="${1}"
 	rootmnt="${2}"
-    	mac="$3"
+    	mac="${3}"
 
 
 	if match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.squashfs" ||
@@ -515,7 +515,7 @@ mount_images_in_directory ()
 		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext3" ||
 		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.dir"
 	then
-                [ -n "$mac" ] && adddirectory="$directory/${LIVE_MEDIA_PATH}/${mac}"
+		[ -n "${mac}" ] && adddirectory="${directory}/${LIVE_MEDIA_PATH}/${mac}"
 		setup_unionfs "${directory}/${LIVE_MEDIA_PATH}" "${rootmnt}" "${adddirectory}"
 	else
 		:
@@ -872,7 +872,7 @@ setup_unionfs ()
 {
 	image_directory="${1}"
 	rootmnt="${2}"
-        addimage_directory="$3"
+        addimage_directory="${3}"
 	modprobe -q -b ${UNIONTYPE}
 
 	# run-init can't deal with images in a subdir, but we're going to
@@ -921,18 +921,19 @@ setup_unionfs ()
 			done
 		done
 
-    if [ -n "${addimage_directory}" -a -d "${addimage_directory}" ]; then
-      for FILESYSTEM in squashfs ext2 ext3 xfs dir
-      do
-        for IMAGE in "${addimage_directory}"/*."${FILESYSTEM}"
-        do
-          if [ -e "${IMAGE}" ]
-          then
-            image_string="${image_string} ${IMAGE}"
-          fi
-        done
-      done
-    fi
+		if [ -n "${addimage_directory}" ] && [ -d "${addimage_directory}" ]
+		then
+			for FILESYSTEM in squashfs ext2 ext3 xfs dir
+			do
+				for IMAGE in "${addimage_directory}"/*."${FILESYSTEM}"
+				do
+					if [ -e "${IMAGE}" ]
+					then
+						image_string="${image_string} ${IMAGE}"
+					fi
+				done
+			done
+		fi
 
 		# Now sort the list
 		image_string="$(echo ${image_string} | sed -e 's/ /\n/g' | sort )"
@@ -994,7 +995,7 @@ setup_unionfs ()
 			nfs_cow_opts="-o nolock"
 			nfs_cow=${NFS_COW}
 		fi
-		mac=$(get_mac)
+		mac="$(get_mac)"
 		if [ -n "${mac}" ]
 		then
 			cowdevice=$(echo ${nfs_cow}|sed "s/client_mac_address/${mac}/")
@@ -1278,8 +1279,8 @@ mountroot ()
 	then
 		setup_unionfs "${livefs_root}" "${rootmnt}"
 	else
-		mac=$(get_mac)
-    mac=$(echo ${mac}|sed "s/-//g")
+		mac="$(get_mac)"
+		mac="$(echo ${mac} | sed 's/-//g')"
 		mount_images_in_directory "${livefs_root}" "${rootmnt}" "${mac}"
 	fi
 

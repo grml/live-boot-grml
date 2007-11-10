@@ -291,14 +291,18 @@ find_files ()
 
 get_mac ()
 {
-   mac=""
-   for adaptor in /sys/class/net/*;do
-      status=$(cat ${adaptor}/iflink)
-      if [ ${status} -eq 2 ];
-      then
-         mac=$(cat ${adaptor}/address)
-         mac=$(echo ${mac}|sed 's/:/-/g'|tr '[a-z]' '[A-Z]')
-      fi
-   done
-   echo $mac
+	mac=""
+
+	for adaptor in /sys/class/net/*
+	do
+		status="$(cat ${adaptor}/iflink)"
+
+		if [ "${status}" -eq 2 ]
+		then
+			mac="$(cat ${adaptor}/address)"
+			mac="$(echo ${mac} | sed 's/:/-/g' | tr '[a-z]' '[A-Z]')"
+		fi
+	done
+
+	echo ${mac}
 }
