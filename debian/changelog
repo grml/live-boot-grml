@@ -1,6 +1,14 @@
-live-initramfs (1.110.5-1) UNRELEASED; urgency=medium
+live-initramfs (1.110.5-1) unstable; urgency=medium
 
   * New upstream release.
+  * Preparing live-initramfs 1.110.5-1.
+  * Using kdm initscript autologin overrides, thanks to Kel Modderman
+    <kel@otaku42.de>.
+  * Setting the kdm language, thanks to Jordi Pujol
+    <jordi_pujol@telefonica.net>.
+  * Adding files to the live filesystem according to the MAC number,
+    thanks to Jordi Pujol <jordi_pujol@telefonica.net>.
+  * Fixing some coding style issues.
 
  -- Daniel Baumann <daniel@debian>  Mon,  5 Nov 2007 00:00:00 +0100
 
