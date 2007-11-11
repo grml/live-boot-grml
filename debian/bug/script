@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Checking depends
+dpkg -l busybox file initramfs-tools sudo user-setup
+
+# Checking recommends
+dpkg -l eject wget live-initscripts
+
+# Checking suggests
+dpkg -l genext2fs squashfs-tools
+
+# Checking other packages
+dpkg -l cryptsetup splashy usplash

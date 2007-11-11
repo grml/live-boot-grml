@@ -40,6 +40,9 @@ install: build
 	rm -f debian/live-initramfs/usr/share/doc/live-initramfs/ChangeLog
 	mv debian/live-initramfs/usr/share/doc/live-initramfs/ChangeLog.casper debian/live-initramfs/usr/share/doc/live-initramfs/changelog.casper
 
+	# Installing bug control
+	install -D -m 0755 debian/bug/script debian/live-initramfs/usr/share/bug/live-initramfs
+
 binary-arch: build install
 
 binary-indep: build install
