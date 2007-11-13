@@ -5,10 +5,19 @@ TRANSLATIONS="it"
 all: build
 
 test:
+	# Checking for syntax errors
 	set -e; for SCRIPT in bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*; \
 	do \
 		sh -n $$SCRIPT; \
 	done
+
+	# Checking for bashisms (temporary not failing, but only listing)
+	if [ -x /usr/bin/checkbashisms ]; \
+	then \
+		checkbashisms bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/* || true; \
+	else \
+		echo "bashism test skipped - you need to install devscripts."; \
+	fi
 
 build:
 
