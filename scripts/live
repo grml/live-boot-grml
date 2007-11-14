@@ -983,6 +983,8 @@ setup_unionfs ()
 			cow_fstype=$(get_fstype "${cowprobe}")
 		else
 			[ "${quiet}" != "y" ] && log_warning_msg "Unable to find the persistent medium"
+			cowdevice="tmpfs"
+			cow_fstype="tmpfs"
 		fi
 	elif [ -n "${NFS_COW}" ]
 	then
