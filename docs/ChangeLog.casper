@@ -1,3 +1,11 @@
+casper (1.111) hardy; urgency=low
+
+  * Remove code to set the progress bar to throbbing, this now comes as
+    standard so we don't need to duplicate it or override things that
+    attempted to set progress.  LP: #162397.
+
+ -- Scott James Remnant <scott@ubuntu.com>  Tue, 13 Nov 2007 20:49:31 +0000
+
 casper (1.110) gutsy; urgency=low
 
   * Don't generate fglrx or the nvidia modules in the live session at boot;
