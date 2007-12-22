@@ -1,3 +1,14 @@
+casper (1.112) hardy; urgency=low
+
+  * hooks/casper: no need to copy udevinfo into the initramfs, it's already
+    there inside udevadm
+  * scripts/casper: call udevadm with trigger and settle arguments
+  * scripts/casper-bottom/23networking: call udevadm with trigger and
+    settle arguments
+  * scripts/casper-helpers: call udevadm with info and settle arguments
+
+ -- Scott James Remnant <scott@ubuntu.com>  Fri, 14 Dec 2007 15:00:29 +0000
+
 casper (1.111) hardy; urgency=low
 
   * Remove code to set the progress bar to throbbing, this now comes as
