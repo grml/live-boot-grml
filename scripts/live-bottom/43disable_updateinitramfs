@@ -1,0 +1,36 @@
+#!/bin/sh
+# Fix for LP#150188
+
+PREREQ=""
+DESCRIPTION="Disabling update-initramfs (useless on a live CD)..."
+
+. /scripts/casper-functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+chroot /root dpkg-divert --add --rename --quiet \
+        /usr/sbin/update-initramfs
+cat > /root/usr/sbin/update-initramfs <<EOF
+#! /bin/sh
+
+echo "update-initramfs is disabled since running on a live CD"
+exit 0
+
+EOF
+
+chmod 755 /root/usr/sbin/update-initramfs
+
+log_end_msg
