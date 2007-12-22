@@ -1198,14 +1198,6 @@ find_livefs ()
 	return 1
 }
 
-pulsate ()
-{
-	if [ -x /sbin/usplash_write ]
-	then
-		/sbin/usplash_write "PULSATE"
-	fi
-}
-
 set_usplash_timeout ()
 {
 	if [ -x /sbin/usplash_write ]
@@ -1225,7 +1217,6 @@ mountroot ()
 
 	set_usplash_timeout
 	[ "${quiet}" != "y" ] && log_begin_msg "Running /scripts/live-premount"
-	pulsate
 	run_scripts /scripts/live-premount
 	[ "${quiet}" != "y" ] && log_end_msg
 
@@ -1291,7 +1282,6 @@ mountroot ()
 	maybe_break live-bottom
 	[ "${quiet}" != "y" ] && log_begin_msg "Running /scripts/live-bottom"
 
-	pulsate
 	run_scripts /scripts/live-bottom
 	[ "${quiet}" != "y" ] && log_end_msg
 

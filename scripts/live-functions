@@ -3,17 +3,6 @@
 . /scripts/functions
 . /live.vars
 
-log_end_msg ()
-{
-	# Override this so we don't call PROGRESS
-	if [ -x /sbin/usplash_write ]
-	then
-		/sbin/usplash_write "SUCCESS ok"
-	fi
-
-	_log_msg "Done."
-}
-
 log_wait_msg ()
 {
 	# Print a message and wait for enter
