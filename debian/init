@@ -24,6 +24,9 @@ DO_SNAPSHOT=/sbin/live-snapshot
 # Exit if system was not booted by live-initramfs
 grep -qs boot=live /proc/cmdline || exit 0
 
+# Exit if the system was booted from an ISO image rather than a physical CD
+grep -qs find_iso= /proc/cmdline && exit 0
+
 # Read configuration variable file if it is present
 [ -r /etc/live.conf ] && . /etc/live.conf
 

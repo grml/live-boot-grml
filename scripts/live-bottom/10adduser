@@ -59,7 +59,7 @@ EOF
 
 if [ -z "${NOSUDO}" ]
 then
-	if [ -f /root/etc/sudoers ]
+	if ! grep -q "${USERNAME}" /root/etc/sudoers
 	then
 		echo "${USERNAME}  ALL=(ALL) NOPASSWD: ALL" >> /root/etc/sudoers
 

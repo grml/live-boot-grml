@@ -1,3 +1,18 @@
+casper (1.113) hardy; urgency=low
+
+  [ Tollef Fog Heen ]
+  * dpkg-divert away update-initramfs as it's useless on live CDs and
+    annoying when people install LVM and similar tools in order to rescue
+    a system.  LP: #150188
+
+  [ Colin Watson ]
+  * Adjust /etc/sudoers editing code so that it doesn't repeatedly add
+    "NOPASSWD:" in persistent mode (LP: #175159).
+  * Avoid ejecting the CD if booting from an ISO image rather than from a
+    physical CD (thanks, Agostino Russo; LP: #176014).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Wed, 19 Dec 2007 09:17:50 +0000
+
 casper (1.112) hardy; urgency=low
 
   * hooks/casper: no need to copy udevinfo into the initramfs, it's already
