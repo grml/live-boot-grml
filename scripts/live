@@ -436,7 +436,7 @@ is_live_path ()
 
 	if [ -d "${DIRECTORY}"/"${LIVE_MEDIA_PATH}" ]
 	then
-		for FILESYSTEM in squashfs ext2 ext3 xfs dir
+		for FILESYSTEM in squashfs ext2 ext3 xfs dir jffs2
 		do
 			if [ "$(echo ${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM})" != "${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM}" ]
 			then
@@ -476,7 +476,7 @@ matches_uuid ()
 get_backing_device ()
 {
 	case "${1}" in
-		*.squashfs|*.ext2|*.ext3)
+		*.squashfs|*.ext2|*.ext3|*.jffs2)
 			echo $(setup_loop "${1}" "loop" "/sys/block/loop*" '0' "${LIVE_MEDIA_ENCRYPTION}")
 			;;
 
@@ -513,6 +513,7 @@ mount_images_in_directory ()
 	if match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.squashfs" ||
 		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext2" ||
 		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext3" ||
+		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.jffs2" ||
 		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.dir"
 	then
 		[ -n "${mac}" ] && adddirectory="${directory}/${LIVE_MEDIA_PATH}/${mac}"
@@ -540,7 +541,7 @@ is_supported_fs ()
 	fstype="${1}"
 
 	case ${fstype} in
-		vfat|iso9660|udf|ext2|ext3|ntfs)
+		vfat|iso9660|udf|ext2|ext3|ntfs|jffs2)
 			return 0
 			;;
 	esac
@@ -804,7 +805,7 @@ try_snap ()
 	snap_label="${1}"
 	snap_mount="${2}"
 	snap_type="${3}"
-	snapdata=$(find_files "${snap_label}.squashfs ${snap_label}.cpio.gz ${snap_label}.ext2 ${snap_label}.ext3")
+	snapdata=$(find_files "${snap_label}.squashfs ${snap_label}.cpio.gz ${snap_label}.ext2 ${snap_label}.ext3 ${snap_label}.jffs2")
 
 	if [ ! -z "${snapdata}" ]
 	then
@@ -812,9 +813,9 @@ try_snap ()
 		snapback="$(echo ${snapdata} | cut -f2 -d ' ')"
 		snapfile="$(echo ${snapdata} | cut -f3 -d ' ')"
 
-		if echo "${snapfile}" | grep -qs '\(squashfs\|ext2\|ext3\)'
+		if echo "${snapfile}" | grep -qs '\(squashfs\|ext2\|ext3\|jffs2\)'
 		then
-			# squashfs or ext2/ext3 snapshot
+			# squashfs, jffs2 or ext2/ext3 snapshot
 			dev=$(get_backing_device "${snapback}/${snapfile}")
 
 			if ! do_snap_copy "${dev}" "${snap_mount}" "${snap_type}"
@@ -910,7 +911,7 @@ setup_unionfs ()
 		done
 	else
 		# ${MODULE}.module does not exist, create a list of images
-		for FILESYSTEM in squashfs ext2 ext3 xfs dir
+		for FILESYSTEM in squashfs ext2 ext3 xfs jffs2 dir
 		do
 			for IMAGE in "${image_directory}"/*."${FILESYSTEM}"
 			do
@@ -923,7 +924,7 @@ setup_unionfs ()
 
 		if [ -n "${addimage_directory}" ] && [ -d "${addimage_directory}" ]
 		then
-			for FILESYSTEM in squashfs ext2 ext3 xfs dir
+			for FILESYSTEM in squashfs ext2 ext3 xfs jffs2 dir
 			do
 				for IMAGE in "${addimage_directory}"/*."${FILESYSTEM}"
 				do
@@ -1184,7 +1185,8 @@ find_livefs ()
 			done
 		elif [ "${fstype}" = "squashfs" -o \
 			"${fstype}" = "ext2" -o \
-			"${fstype}" = "ext3" ]
+			"${fstype}" = "ext3" -o \
+			"${fstype}" = "jffs2" ]
 		then
 			# This is an ugly hack situation, the block device has
 			# an image directly on it.  It's hopefully
