@@ -74,6 +74,9 @@ fi
 # Filesystem: ext3
 manual_add_modules ext3
 
+# Filesystem: jffs2
+manual_add_modules jffs2
+
 # Filesystem: squashfs
 copy_exec /sbin/losetup /sbin
 manual_add_modules loop
