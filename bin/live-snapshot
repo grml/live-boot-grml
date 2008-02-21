@@ -100,7 +100,7 @@ Help ()
 	echo "  -d, --device: specifies the output snapshot device (default: none)."
 	echo "  -o, --output: specifies the output image file (default: ${type} dependent)."
 	echo "  -r, --resync-string: internally used to resync previous made snapshots."
-	echo "  -t, --type: specifies the snapshot type between \"squashfs\", \"ext2\", \"ext3\" or \"cpio\".gz archive (default: cpio)"
+	echo "  -t, --type: specifies the snapshot type between \"squashfs\", \"ext2\", \"ext3\", \"jffs2\" or \"cpio\".gz archive (default: cpio)"
 	/bin/echo -e "\nLook at live-snapshot(1) man page for more information."
 
 	exit 0
@@ -152,6 +152,10 @@ Do_snapshot ()
 			DU_DIM="$(du -ks ${COW} | cut -f1)"
 			REAL_DIM="$(expr ${DU_DIM} + ${DU_DIM} / 20)" # Just 5% more to be sure, need something more sophistcated here...
 			genext2fs --size-in-blocks=${REAL_DIM} --reserved-blocks=0 --root="${COW}" "${DEST}" || exit 1
+			;;
+
+		jffs2)
+			mkfs.jffs2 --root="${COW}" --output="${DEST}" || exit 1
 			;;
 
 		*)
@@ -290,6 +294,10 @@ Defaults ()
 				TYPE="squashfs"
 				;;
 
+			*.jffs2)
+				TYPE="jffs2"
+				;;
+
 			""|*.ext2|*.ext3)
 				TYPE="ext2"
 				;;
@@ -310,7 +318,7 @@ Defaults ()
 		fi
 
 		case "${SNAP_TYPE}" in
-			"cpio"|"squashfs"|"ext2"|"ext3")
+			"cpio"|"squashfs"|"ext2"|"ext3"|"jffs2")
 				TYPE="${SNAP_TYPE}"
 				;;
 
