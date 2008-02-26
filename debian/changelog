@@ -1,8 +1,32 @@
-live-initramfs (1.118.1-1) UNRELEASED; urgency=medium
+live-initramfs (1.118.1-1) unstable; urgency=medium
 
+  [ Daniel Baumann ]
   * New upstream release.
+  * Adding direct depends to udev, thanks to Anton Lundin
+    <glance@acc.umu.se> (Closes: #452448).
+  * Merging casper 1.111.
+  * Bumping version to 1.110.1-1.
+  * Merging casper 1.112.
+  * Merging casper 1.113.
+  * Adjusting to live-initramfs.
+  * Bumping version to 1.113.1-1.
+  * Merging casper 1.114.
+  * Merging casper 1.115.
+  * Merging casper 1.116.
+  * Merging casper 1.117.
+  * Merging casper 1.118.
+  * Bumping version to 1.118.1-1.
 
- -- Daniel Baumann <daniel@debian>  Mon, 25 Feb 2008 00:00:00 +0100
+  [ Otavio Salvador ]
+  * debian: add mtd-tools as suggestion since it's required for jffs2
+    support
+  * hooks: include jffs2 kernel module on initramfs image
+  * live-snapshot: add support to use jffs2 images
+  * live: add support for jffs2 images and snapshots
+  * live-helpers: add jffs2 as a valid image
+  * live-snapshot.en.1: add ext3 and jffs2 images as valid options
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 26 Feb 2008 13:35:00 +0100
 
 live-initramfs (1.110.7-1) unstable; urgency=medium
 
