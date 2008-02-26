@@ -67,7 +67,7 @@ case ${ACCESS} in
 		if type orca > /dev/null 2>&1
 		then
 			mkdir -p /root/home/${USERNAME}/.orca
-			echo "orca.settings.enableSpeech = True" >> /root/home/${USERNAME}/.orca/orca-customizations.py
+			echo "orca.settings.enableSpeech = False" >> /root/home/${USERNAME}/.orca/orca-customizations.py
 			echo "orca.settings.enableMagnifier = True" >> /root/home/${USERNAME}/.orca/orca-customizations.py
 		fi
 		;;
@@ -90,7 +90,7 @@ case ${ACCESS} in
 		if type orca > /dev/null 2>&1
 		then
 			mkdir -p /root/home/${USERNAME}/.orca
-			echo "orca.settings.enableSpeech = True" >> /root/home/${USERNAME}/.orca/orca-customizations.py
+			echo "orca.settings.enableSpeech = False" >> /root/home/${USERNAME}/.orca/orca-customizations.py
 			echo "orca.settings.enableBraille = True" >> /root/home/${USERNAME}/.orca/orca-customizations.py
 		fi
 		;;
