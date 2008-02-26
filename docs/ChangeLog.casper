@@ -1,3 +1,13 @@
+casper (1.114) hardy; urgency=low
+
+  * casper-md5check: Close md5_file before exiting.
+  * Disable tracker-applet as well as trackerd, otherwise the former starts
+    the latter.
+  * casper-snapshot: Fix argument parsing (thanks, Tormod Volden;
+    LP: #179411).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 15 Jan 2008 18:25:21 +0000
+
 casper (1.113) hardy; urgency=low
 
   [ Tollef Fog Heen ]
