@@ -31,7 +31,8 @@ log_begin_msg "Disabling trackerd..."
 
 # live-initramfs script
 
-rm -f /root/etc/xdg/autostart/trackerd.desktop \
-      /root/usr/share/autostart/trackerd.desktop
+rm -f /root/etc/xdg/autostart/tracker-applet.desktop \
+	/root/etc/xdg/autostart/trackerd.desktop \
+	/root/usr/share/autostart/trackerd.desktop
 
 log_end_msg
