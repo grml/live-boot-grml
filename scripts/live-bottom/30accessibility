@@ -64,9 +64,11 @@ case ${ACCESS} in
 		gct -s -t bool /desktop/gnome/applications/at/visual/startup true
 		gct -s -t bool /apps/gksu/disable-grab true
 
-		if [ -e /root/usr/share/pycentral/gnome-orca/site-packages/orca/settings.py ]
+		if type orca > /dev/null 2>&1
 		then
-			sed -i '/^enableSpeech\W/ s/True/False/;/^enableMagnifier/ s/False/True/' /root/usr/share/pycentral/gnome-orca/site-packages/orca/settings.py
+			mkdir -p /root/home/${USERNAME}/.orca
+			echo "orca.settings.enableSpeech = True" >> /root/home/${USERNAME}/.orca/orca-customizations.py
+			echo "orca.settings.enableMagnifier = True" >> /root/home/${USERNAME}/.orca/orca-customizations.py
 		fi
 		;;
 
@@ -85,9 +87,11 @@ case ${ACCESS} in
 		gct -s -t bool /desktop/gnome/applications/at/visual/startup true
 		gct -s -t bool /apps/gksu/disable-grab true
 
-		if [ -e /root/usr/share/pycentral/gnome-orca/site-packages/orca/settings.py ]
+		if type orca > /dev/null 2>&1
 		then
-			sed -i '/^enableSpeech\W/ s/True/False/;/^enableBraille/ s/False/True/' /root/usr/share/pycentral/gnome-orca/site-packages/orca/settings.py
+			mkdir -p /root/home/${USERNAME}/.orca
+			echo "orca.settings.enableSpeech = True" >> /root/home/${USERNAME}/.orca/orca-customizations.py
+			echo "orca.settings.enableBraille = True" >> /root/home/${USERNAME}/.orca/orca-customizations.py
 		fi
 		;;
 
