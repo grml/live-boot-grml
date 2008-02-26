@@ -1,3 +1,12 @@
+casper (1.116) hardy; urgency=low
+
+  * Fix setting orca options in 30accessibility.
+  * Remove gdm and kdm from init when using automatic-ubiquity and
+    only-ubiquity.  The ubiquity initscript will take care of spawning
+    these.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Mon, 11 Feb 2008 12:19:39 -0500
+
 casper (1.115) hardy; urgency=low
 
   * Add the user to the groups specified by user-setup-udeb.
