@@ -1,5 +1,12 @@
+casper (1.115) hardy; urgency=low
+
+  * Add the user to the groups specified by user-setup-udeb.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Thu, 24 Jan 2008 19:08:33 +0000
+
 casper (1.114) hardy; urgency=low
 
+  [ Colin Watson ]
   * casper-md5check: Close md5_file before exiting.
   * Disable tracker-applet as well as trackerd, otherwise the former starts
     the latter.
