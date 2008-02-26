@@ -1,3 +1,10 @@
+casper (1.118) hardy; urgency=low
+
+  [ Julian Andres Klode, Colin Watson ]
+  * Use aufs instead of unionfs if union=aufs is given (LP: #187259).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 14 Feb 2008 18:00:36 +0000
+
 casper (1.117) hardy; urgency=low
 
   * Disable speech for magnifier and braille profiles again.  Thanks

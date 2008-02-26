@@ -892,6 +892,9 @@ setup_unionfs ()
 	then
 		# go aroung a bug in nfs-unionfs locking for unionfs <= 1.4
 		roopt="nfsro"
+	elif [ "${UNIONTYPE}" = "aufs" ]
+	then
+		roopt="rr"
 	else
 		roopt="ro"
 	fi
