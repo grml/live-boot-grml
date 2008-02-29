@@ -396,6 +396,11 @@ Arguments ()
 				export XDEBCONF
 				;;
 
+			xdriver=*)
+			        XDRIVER="${ARGUMENT#xdriver=}"
+				export XDRIVER
+				;;
+
 			xvideomode=*)
 				XVIDEOMODE="${ARGUMENT#xvideomode=}"
 				export XVIDEOMODE
