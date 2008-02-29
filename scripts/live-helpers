@@ -34,6 +34,13 @@ get_fstype ()
 	local FSTYPE
 	local FSSIZE
 
+	# fstype misreports LUKS devices
+	is_luks "${1}"
+	if [ $? -eq 0 ]; then
+	    /lib/udev/vol_id -t ${1} 2>/dev/null
+	    return
+	fi
+
 	eval $(fstype < ${1})
 
 	if [ "${FSTYPE}" != "unknown" ]
@@ -305,4 +312,17 @@ get_mac ()
 	done
 
 	echo ${mac}
+}
+
+is_luks()
+{
+    devname="${1}"
+    if [ -x /sbin/cryptsetup ]
+    then
+	/sbin/cryptsetup isLuks "${devname}" 2>/dev/null
+	return $?
+    else
+	return 1
+    fi
+
 }
