@@ -1171,7 +1171,7 @@ find_livefs ()
 	fi
 
 	# or do the scan of block devices
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram)
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v 'dm-')
 	do
 		devname=$(sys2dev "${sysblock}")
 		fstype=$(get_fstype "${devname}")
@@ -1218,6 +1218,11 @@ set_usplash_timeout ()
 
 mountroot ()
 {
+    
+        if [ -x /scripts/local-top/cryptroot ]; then
+	    /scripts/local-top/cryptroot
+	fi
+
 	exec 6>&1
 	exec 7>&2
 	exec > live.log
