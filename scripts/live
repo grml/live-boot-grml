@@ -60,6 +60,11 @@ Arguments ()
                                 export FETCH
                                 ;;
 
+			hook=*)
+				HOOK="${ARGUMENT#hook=}"
+				export HOOK
+				;;
+
 			hostname=*)
 				HOSTNAME="${ARGUMENT#hostname=}"
 				LIVECONF="changed"
