@@ -1,3 +1,13 @@
+live-initramfs (1.119.1-1) unstable; urgency=medium
+
+  * Creating resolv.conf when netbooting not just when there's no
+    resolv.conf, but also when it is empty.
+  * Making hooks executable after fetching them.
+  * Removing disabling of kwallet.
+  * Merging casper 1.119.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 10 Mar 2008 00:00:00 +0100
+
 live-initramfs (1.118.2-1) unstable; urgency=medium
 
   [ Andrey Asadchev ]
