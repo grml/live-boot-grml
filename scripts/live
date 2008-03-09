@@ -234,11 +234,6 @@ Arguments ()
 				export NOKPERSONALIZER
 				;;
 
-			nokwallet)
-				NOKWALLET="Yes"
-				export NOKWALLET
-				;;
-
 			nolanguageselector)
 				NOLANGUAGESELECTOR="Yes"
 				export NOLANGUAGESELECTOR
