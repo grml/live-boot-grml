@@ -28,7 +28,6 @@ log_begin_msg "Grant administrative PolicyKit pivilieges to default user..."
 
 # configure PolicyKit in live session
 cat << EOF > /root/etc/PolicyKit/PolicyKit.conf
-
 <?xml version="1.0" encoding="UTF-8"?> <!-- -*- XML -*- -->
 
 <!DOCTYPE pkconfig PUBLIC "-//freedesktop//DTD PolicyKit Configuration 1.0//EN"
