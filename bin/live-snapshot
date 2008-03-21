@@ -57,7 +57,7 @@ fi
 MOUNTP=""
 COW=""
 DEV=""
-DEST=""
+DEST="${MOUNTP}/live-sn.cpio.gz"
 TYPE=""
 DESKTOP_LINK=""
 
@@ -331,6 +331,18 @@ Defaults ()
 				;;
 		esac
 
+               case "${TYPE}" in
+                       cpio)
+                               DEST="${MOUNTP}/casper-sn.cpio.gz" ;;
+                       squashfs)
+                               DEST="${MOUNTP}/casper-sn.squashfs" ;;
+                       ext2)
+                               DEST="${MOUNTP}/casper-sn.ext2" ;;
+                       *)
+                               echo "Internal error."
+                               exit 1
+                               ;;
+               esac
 		#if [ -d
 		#if Is_same_mount
 	fi
