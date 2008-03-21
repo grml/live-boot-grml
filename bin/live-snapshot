@@ -331,20 +331,24 @@ Defaults ()
 				;;
 		esac
 
-               case "${TYPE}" in
-                       cpio)
-                               DEST="${MOUNTP}/casper-sn.cpio.gz" ;;
-                       squashfs)
-                               DEST="${MOUNTP}/casper-sn.squashfs" ;;
-                       ext2)
-                               DEST="${MOUNTP}/casper-sn.ext2" ;;
-                       *)
-                               echo "Internal error."
-                               exit 1
-                               ;;
-               esac
-		#if [ -d
-		#if Is_same_mount
+		case "${TYPE}" in
+			cpio)
+				DEST="${MOUNTP}/live-sn.cpio.gz"
+				;;
+
+			squashfs)
+				DEST="${MOUNTP}/live-sn.squashfs"
+				;;
+
+			ext2)
+				DEST="${MOUNTP}/live-sn.ext2"
+				;;
+
+			*)
+				echo "Internal error."
+				exit 1
+			;;
+		esac
 	fi
 
 	# check vars
