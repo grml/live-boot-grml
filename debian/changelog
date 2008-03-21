@@ -1,3 +1,19 @@
+live-initramfs (1.124.1-1) unstable; urgency=medium
+
+  [ Daniel Baumann ]
+  * Adjusting live-snapshot to live-initramfs.
+  * Merging casper 1.124.
+  * Adjusting 44pk_allow to live-initramfs.
+  * Merging casper 1.123.
+  * Merging casper 1.122.
+  * Merging casper 1.121.
+  * Merging casper 1.120.
+
+  [ Chris Lamb ]
+  * 99hook: Download hook script from inside target filesystem
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 17 Mar 2008 00:00:00 +0100
+
 live-initramfs (1.119.1-1) unstable; urgency=medium
 
   * Creating resolv.conf when netbooting not just when there's no
