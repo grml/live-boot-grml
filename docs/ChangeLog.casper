@@ -1,3 +1,9 @@
+casper (1.121) hardy; urgency=low
+
+  * Use a link for About Kubuntu docs in Kubuntu-KDE4
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 12 Mar 2008 23:57:50 +0000
+
 casper (1.120) hardy; urgency=low
 
   * Use dhclient directly instead of ifupdown for the url= kernel cmdline
