@@ -322,9 +322,9 @@ Arguments ()
 				mount -n -o bind /dev /root/dev
 
 				mkdir -p /root/var/run/network
-				chroot /root ifup -a
+				chroot /root dhclient eth0
 				chroot /root wget -P /tmp "${location}"
-				chroot /root ifdown -a
+				chroot /root ifconfig eth0 down
 
 				umount /root/sys
 				umount /root/proc
