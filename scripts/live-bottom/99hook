@@ -32,7 +32,7 @@ log_begin_msg "Executing custom hook script..."
 # live-initramfs script
 
 cd /root
-wget "${HOOK}"
+chroot /root wget "${HOOK}"
 
 FILE="$(basename ${HOOK})"
 
