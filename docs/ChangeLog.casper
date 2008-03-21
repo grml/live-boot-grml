@@ -1,3 +1,11 @@
+casper (1.120) hardy; urgency=low
+
+  * Use dhclient directly instead of ifupdown for the url= kernel cmdline
+    argument so that we don't have to worry about the interfaces file
+    propagating to the installed system.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Tue, 11 Mar 2008 13:08:08 -0400
+
 casper (1.119) hardy; urgency=low
 
   [ Luke Yelavich ]
