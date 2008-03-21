@@ -1,3 +1,12 @@
+casper (1.123) hardy; urgency=low
+
+  * Add scripts/casper-bottom/44pk_allow_ubuntu: Allow PolicyKit privileges
+    without password to the default live session user. This avoids the need to
+    press Enter at the password prompt, which is quite confusing. Thanks to
+    MarioDebian! (LP: #201852)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Fri, 14 Mar 2008 17:26:37 +0100
+
 casper (1.122) hardy; urgency=low
 
   * Fix paths in About Kubuntu links
