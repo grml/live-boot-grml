@@ -1,3 +1,9 @@
+casper (1.122) hardy; urgency=low
+
+  * Fix paths in About Kubuntu links
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 14 Mar 2008 15:12:38 +0000
+
 casper (1.121) hardy; urgency=low
 
   * Use a link for About Kubuntu docs in Kubuntu-KDE4
