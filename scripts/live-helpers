@@ -178,9 +178,10 @@ setup_loop ()
 				do
 					load_keymap
 
-					echo -n "Enter passphrase for ${fspath}: " >&6
+					echo -n "Enter passphrase for root filesystem: " >&6
 					read -s passphrase
 					echo "${passphrase}" > /tmp/passphrase
+					unset passphrase
 					exec 9</tmp/passphrase
 					/sbin/losetup ${options} -e "${encryption}" -p 9 "${dev}" "${fspath}"
 					error=${?}
@@ -193,10 +194,11 @@ setup_loop ()
 						break
 					fi
 
-					echo -n "Something went wrong... Retry? [YES/no] " >&6
+					echo
+					echo -n "There was an error decrypting the root filesystem ... Retry? [Y/n] " >&6
 					read answer
 
-					if [ 'no' = "${answer}" ]
+					if [ "$(echo "${answer}" | cut -b1 | tr A-Z a-z)" = "n" ]
 					then
 						unset answer
 						break
