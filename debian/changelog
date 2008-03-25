@@ -1,3 +1,14 @@
+live-initramfs (1.125.1-1) unstable; urgency=medium
+
+  [ Daniel Baumann ]
+  * Merging casper 1.125.
+
+  [ Chris Lamb ]
+  * scripts/live-helpers: Cosmetic changes to loop-aes passphrase prompt
+  * Rename 18hostname -> 06hostname
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 24 Mar 2008 00:00:00 +0100
+
 live-initramfs (1.124.1-1) unstable; urgency=medium
 
   [ Daniel Baumann ]
