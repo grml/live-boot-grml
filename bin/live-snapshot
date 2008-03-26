@@ -181,7 +181,7 @@ Is_same_mount ()
 Parse_args ()
 {
 	# Parse command line
-	ARGS="${1}"
+	ARGS="${*}"
 	ARGUMENTS="$(getopt --longoptions cow:,device:,output,resync-string:,type:,help,usage,version --name=${PROGRAM} --options c:d:o:t:r:,h,u,v --shell sh -- ${ARGS})"
 
 	if [ "${?}" != "0" ]
