@@ -35,8 +35,8 @@ get_fstype ()
 	local FSSIZE
 
 	# fstype misreports LUKS devices
-	is_luks "${1}"
-	if [ $? -eq 0 ]; then
+	if is_luks "${1}"
+	then
 	    /lib/udev/vol_id -t ${1} 2>/dev/null
 	    return
 	fi
@@ -321,8 +321,8 @@ is_luks()
     devname="${1}"
     if [ -x /sbin/cryptsetup ]
     then
-	/sbin/cryptsetup isLuks "${devname}" 2>/dev/null
-	return $?
+	/sbin/cryptsetup isLuks "${devname}" 2>/dev/null || ret=${?}
+	return ${ret}
     else
 	return 1
     fi
