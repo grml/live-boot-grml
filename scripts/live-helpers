@@ -244,20 +244,24 @@ find_cow_device ()
 			then
 				echo "${devname}"
 				return
-			elif [ "$(get_fstype ${devname})" = "vfat" ]
-			then
-				# FIXME: all supported block devices should be scanned
-				mkdir -p "${cow_backing}"
-				try_mount "${devname}" "${cow_backing}" "rw"
-
-				if [ -e "${cow_backing}/${pers_label}" ]
-				then
-					echo $(setup_loop "${cow_backing}/${pers_label}" "loop" "/sys/block/loop*")
-					return 0
-				else
-					umount ${cow_backing}
-				fi
 			fi
+
+			case "$(get_fstype ${devname})" in
+				vfat|ext2|ext3|jffs2)
+					mkdir -p "${cow_backing}"
+					try_mount "${devname}" "${cow_backing}" "rw"
+
+					if [ -f "${cow_backing}/${pers_label}" ]
+					then
+						echo $(setup_loop "${cow_backing}/${pers_label}" "loop" "/sys/block/loop*")
+						return 0
+					else
+						umount ${cow_backing}
+					fi
+					;;
+				*)
+					;;
+			esac
 		done
 	done
 }
@@ -277,23 +281,24 @@ find_files ()
 			devname=$(sys2dev "${dev}")
 			devfstype="$(get_fstype ${devname})"
 
-			if [ "${devfstype}" = "vfat" ] ||  [ "${devfstype}" = "ext2" ] || [ "${devfstype}" = "ext3" ] || [ "${devfstype}" = "jffs2" ]
-			then
-				# FIXME: all supported block devices should be scanned
-				mkdir -p "${snap_backing}"
-				try_mount "${devname}" "${snap_backing}" "ro"
+			case "${devfstype}" in
+				vfat|ext2|ext3|jffs2)
+					# FIXME: all supported block devices should be scanned
+					mkdir -p "${snap_backing}"
+					try_mount "${devname}" "${snap_backing}" "ro"
 
-				for filename in ${filenames}
-				do
-					if [ -e "${snap_backing}/${filename}" ]
-					then
-						echo "${devname} ${snap_backing} ${filename}"
-						return 0
-					fi
-				done
+					for filename in ${filenames}
+					do
+						if [ -f "${snap_backing}/${filename}" ]
+						then
+							echo "${devname} ${snap_backing} ${filename}"
+							return 0
+						fi
+					done
 
-				umount ${snap_backing}
-			fi
+					umount ${snap_backing}
+					;;
+			esac
 		done
 	done
 }
