@@ -994,6 +994,30 @@ setup_unionfs ()
 	# Looking for "${root_persistence}" device or file
 	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
 	then
+		# Load USB modules
+		num_block=$(ls -l /sys/block | wc -l)
+		for module in sd_mod uhci-hcd ehci-hcd ohci-hcd usb-storage
+		do
+			modprobe -q -b ${module}
+		done
+
+		udevtrigger
+		udevsettle
+
+		# For some reason, udevsettle does not block in this scenario,
+		# so we sleep for a little while.
+		#
+		# See https://bugs.launchpad.net/ubuntu/+source/casper/+bug/84591
+		for timeout in 5 4 3 2 1
+		do
+			sleep 1
+
+			if [ $(ls -l /sys/block | wc -l) -gt ${num_block} ]
+			then
+				break
+			fi
+		done
+
 		cowprobe=$(find_cow_device "${root_persistence}")
 
 		if [ -b "${cowprobe}" ]
