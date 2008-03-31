@@ -1,3 +1,9 @@
+casper (1.127) hardy; urgency=low
+
+  * Leave spawning the noninteractive ubiquity frontend to its initscript.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Tue, 25 Mar 2008 15:52:32 -0400
+
 casper (1.126) hardy; urgency=low
 
   * scripts/casper-bottom/10adduser: Test for konqueror not kdesktop,
