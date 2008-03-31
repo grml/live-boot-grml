@@ -1,3 +1,10 @@
+casper (1.126) hardy; urgency=low
+
+  * scripts/casper-bottom/10adduser: Test for konqueror not kdesktop,
+    stops putting a broken icon on the Kubuntu KDE 4 desktop
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Tue, 25 Mar 2008 15:42:31 +0000
+
 casper (1.125) hardy; urgency=low
 
   [ Colin Watson ]
