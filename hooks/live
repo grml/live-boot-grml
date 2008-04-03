@@ -126,3 +126,9 @@ if [ -x /usr/bin/wget ]
 then
 	copy_exec /usr/bin/wget /bin
 fi
+
+# Fix missing klibc deps
+for hidden_klibc_dep_library in libacl libblkid libuuid libdevmapper libattr
+do
+	cp -a /lib/${hidden_klibc_dep_library}.so.* ${DESTDIR}/lib
+done
