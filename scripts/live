@@ -1058,10 +1058,10 @@ setup_unionfs ()
 		[ "${quiet}" != "y" ] && log_begin_msg \
 			"Trying nfsmount ${nfs_cow_opts} ${cowdevice} /cow"
 		nfsmount ${nfs_cow_opts} ${cowdevice} /cow || \
-			panic "Can not mount ${cowdevice} on /cow"
+			panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on /cow"
 	else
 		mount -t ${cow_fstype} -o rw,noatime ${cowdevice} /cow || \
-			panic "Can not mount ${cowdevice} on /cow"
+			panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on /cow"
 	fi
 
 	rofscount=$(echo ${rofslist} |wc -w)
