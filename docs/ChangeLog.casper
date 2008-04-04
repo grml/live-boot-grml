@@ -1,3 +1,24 @@
+casper (1.128) hardy; urgency=low
+
+  [ Luke Yelavich ]
+  * scripts/casper-bottom/30accessibility &
+    ubiquity-hooks/30accessibility:
+    - Update gconf keys to ensure onboard actually gets loaded.
+    - Change ownership of created orca settings files to the user.
+    - Add extra bits to make orca settings actually work.
+
+  [ Evan Dandrea ]
+  * Add mode=755 to the tmpfs mount that becomes / in the unionfs mount
+    so that / in the live filesystem does not end up with 777 permissions
+    (LP: #206030).
+
+  [ Colin Watson ]
+  * Make scripts/casper-bottom/38disable_restricted_manager executable
+    again.
+  * Depend on uuid-runtime for uuidgen.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 31 Mar 2008 18:11:55 +0100
+
 casper (1.127) hardy; urgency=low
 
   * Leave spawning the noninteractive ubiquity frontend to its initscript.
