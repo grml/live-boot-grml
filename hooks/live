@@ -46,6 +46,12 @@ copy_exec /usr/share/live-initramfs/live-preseed /bin
 cp /usr/share/initramfs-tools/scripts/live-functions "${DESTDIR}"/scripts
 cp /usr/share/initramfs-tools/scripts/live-helpers "${DESTDIR}"/scripts
 
+# klibc dependencies
+for hidden_klibc_dep_library in libacl libblkid libuuid libdevmapper libattr
+do
+	cp -a /lib/${hidden_klibc_dep_library}.so.* "${DESTDIR}"/lib
+done
+
 # Handling other stuff
 
 # Configuration: keymap (usefull when using encryption)
@@ -81,8 +87,8 @@ manual_add_modules jffs2
 copy_exec /sbin/losetup /sbin
 manual_add_modules loop
 manual_add_modules squashfs
-manual_add_modules unlzma
 manual_add_modules sqlzma
+manual_add_modules unlzma
 
 # Filesystem: unionfs/aufs
 manual_add_modules unionfs
@@ -126,9 +132,3 @@ if [ -x /usr/bin/wget ]
 then
 	copy_exec /usr/bin/wget /bin
 fi
-
-# Fix missing klibc deps
-for hidden_klibc_dep_library in libacl libblkid libuuid libdevmapper libattr
-do
-	cp -a /lib/${hidden_klibc_dep_library}.so.* ${DESTDIR}/lib
-done
