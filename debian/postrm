@@ -1,6 +1,6 @@
 #!/bin/sh
 
-case "$(ls -l /boot/vmlinuz* | wc -l)" in
+case "$(ls -l /boot/vmlinuz-* | wc -l)" in
 	1)
 		# We only have one kernel installed, so we can use "-u"
 		# which will use dpkg-trigger inside update-initramfs
