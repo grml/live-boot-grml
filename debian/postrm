@@ -6,19 +6,20 @@ case "$(ls -l /boot/vmlinuz-* | wc -l)" in
 		# which will use dpkg-trigger inside update-initramfs
 		INITRAMFS_ARGS="-u"
 		;;
+
 	*)
 		INITRAMFS_ARGS="-u -k all"
 		;;
 esac
 
-if [ -x /usr/sbin/update-initramfs ] && [ "x$1" != "xtriggered" ] && \
-   dpkg --compare-versions "$DPKG_RUNNING_VERSION" ge '1.14.18'
+if [ -x /usr/sbin/update-initramfs ] && [ "${1}" != "triggered" ] && \
+	dpkg --compare-versions "${DPKG_RUNNING_VERSION}" ge "1.14.18"
 then
 	# this activates the trigger, if triggers are working
 	update-initramfs ${INITRAMFS_ARGS}
 else
 	# force it to actually happen
-	DPKG_MAINTSCRIPT_PACKAGE='' update-initramfs ${INITRAMFS_ARGS}
+	DPKG_MAINTSCRIPT_PACKAGE="" update-initramfs ${INITRAMFS_ARGS}
 fi
 
 #DEBHELPER#
