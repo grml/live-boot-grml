@@ -1,3 +1,15 @@
+casper (1.129) hardy; urgency=low
+
+  * Add COPYING file with GPL text (LP: #211923).
+  * Add casper-new-uuid script to simplify UUID regeneration process,
+    contributed by Mario Limonciello of Dell (LP: #209847).
+  * Update casper-snapshot for genext2fs --reserved-blocks =>
+    --reserved-percentage option change (LP: #202048). Add a Breaks as the
+    most lightweight available method of documenting that we need genext2fs
+    >= 1.4.1 for this.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 10 Apr 2008 01:45:47 +0100
+
 casper (1.128) hardy; urgency=low
 
   [ Luke Yelavich ]
