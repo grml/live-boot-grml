@@ -1,3 +1,18 @@
+live-initramfs (1.130.1-1) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Use triggers when calling update-initramfs in postinst and postrm
+
+  [ Daniel Baumann ]
+  * Sorting some lines in live hook.
+  * Merging casper 1.130.
+  * Merging casper 1.129.
+  * Adjusting code formating in maintainer scripts.
+  * Restricting counting of installed kernels based on /boot/vmlinuz-*
+    instead of /boot/vmlinuz*.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 14 Apr 2008 00:00:00 +0200
+
 live-initramfs (1.128.1-1) unstable; urgency=medium
 
   [ Marco Amadori ]
