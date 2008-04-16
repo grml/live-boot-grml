@@ -1,3 +1,10 @@
+casper (1.130) hardy; urgency=low
+
+  * Handle use of debian-installer/language for locale selection
+    (LP: #213930).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Sat, 12 Apr 2008 00:30:10 +0100
+
 casper (1.129) hardy; urgency=low
 
   * Add COPYING file with GPL text (LP: #211923).

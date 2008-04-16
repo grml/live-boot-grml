@@ -12,7 +12,7 @@ XS-Upstream-Depends: git-core
 
 Package: live-initramfs
 Architecture: all
-Depends: ${misc:Depends}, busybox, file, initramfs-tools, sudo, udev, user-setup
+Depends: ${misc:Depends}, busybox, file, initramfs-tools, localechooser-data, sudo, udev, user-setup
 Recommends: eject, uuid-runtime, wget
 Suggests: genext2fs (>= 1.4.1), squashfs-tools, mtd-tools
 Description: Debian Live initramfs hook
