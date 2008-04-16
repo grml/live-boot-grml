@@ -154,6 +154,12 @@ Arguments ()
 				export LIVE_MEDIA_TIMEOUT
 				;;
 
+			language=*|debian-installer/language=*)
+				language=${x#debian-installer/language=}
+				locale="$(lang2locale "$language")"
+				set_locale="true"
+				;;
+
 			locale=*|debian-installer/locale=*)
 				LOCALE="${ARGUMENT#*=}"
 				export LOCALE
