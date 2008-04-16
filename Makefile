@@ -27,7 +27,7 @@ install: test build
 
 	# Installing executables
 	mkdir -p $(DESTDIR)/sbin
-	cp bin/live-getty bin/live-login bin/live-snapshot $(DESTDIR)/sbin
+	cp bin/live-getty bin/live-login bin/live-new-uuid bin/live-snapshot $(DESTDIR)/sbin
 
 	mkdir -p $(DESTDIR)/usr/share/live-initramfs
 	cp bin/live-preseed bin/live-reconfigure $(DESTDIR)/usr/share/live-initramfs
