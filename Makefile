@@ -30,7 +30,7 @@ install: test build
 	cp bin/live-getty bin/live-login bin/live-new-uuid bin/live-snapshot $(DESTDIR)/sbin
 
 	mkdir -p $(DESTDIR)/usr/share/live-initramfs
-	cp bin/live-preseed bin/live-reconfigure $(DESTDIR)/usr/share/live-initramfs
+	cp bin/live-preseed bin/live-reconfigure contrib/languagelist $(DESTDIR)/usr/share/live-initramfs
 
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools
 	cp -r hooks scripts $(DESTDIR)/usr/share/initramfs-tools
@@ -119,6 +119,10 @@ update:
 			-e 's/1.113.1/1.113.2/' \
 		$$FILE; \
 	done
+
+	# Update language list
+	wget -O "contrib/languagelist" \
+		"http://svn.debian.org/viewsvn/\*checkout\*/d-i/trunk/packages/localechooser/languagelist"
 
 clean:
 
