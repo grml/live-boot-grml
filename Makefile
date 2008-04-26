@@ -122,7 +122,7 @@ update:
 
 	# Update language list
 	wget -O "contrib/languagelist" \
-		"http://svn.debian.org/viewsvn/\*checkout\*/d-i/trunk/packages/localechooser/languagelist"
+		"http://svn.debian.org/viewsvn/*checkout*/d-i/trunk/packages/localechooser/languagelist"
 
 clean:
 
