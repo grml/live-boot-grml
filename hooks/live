@@ -49,7 +49,10 @@ cp /usr/share/initramfs-tools/scripts/live-helpers "${DESTDIR}"/scripts
 # klibc dependencies
 for hidden_klibc_dep_library in libacl libblkid libuuid libdevmapper libattr
 do
-	cp -a /lib/${hidden_klibc_dep_library}.so.* "${DESTDIR}"/lib
+	if ls /lib/${hidden_klibc_dep_library}.so.* > /dev/null 2>&1
+	then
+		cp -a /lib/${hidden_klibc_dep_library}.so.* "${DESTDIR}"/lib
+	fi
 done
 
 # Handling other stuff
