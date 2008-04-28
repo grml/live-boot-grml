@@ -47,11 +47,11 @@ cp /usr/share/initramfs-tools/scripts/live-functions "${DESTDIR}"/scripts
 cp /usr/share/initramfs-tools/scripts/live-helpers "${DESTDIR}"/scripts
 
 # klibc dependencies
-for hidden_klibc_dep_library in libacl libblkid libuuid libdevmapper libattr
+for FILE in /lib/libacl* /lib/libblkid* /lib/libuuid* /lib/libdevmapper* /lib/libattr*
 do
-	if ls /lib/${hidden_klibc_dep_library}.so.* > /dev/null 2>&1
+	if [ ! -e "${DESTDIR}"/"${FILE}" ]
 	then
-		cp -a /lib/${hidden_klibc_dep_library}.so.* "${DESTDIR}"/lib
+		cp -a "${FILE}" "${DESTDIR}"/"${FILE}"
 	fi
 done
 
