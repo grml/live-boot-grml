@@ -6,8 +6,8 @@ Uploaders: Daniel Baumann <daniel@debian.org>
 Build-Depends: debhelper (>= 5), asciidoc, docbook-xsl, xsltproc
 Standards-Version: 3.7.3
 Homepage: http://debian-live.alioth.debian.org/
-Vcs-Git: git://git.debian.org/git/users/daniel/live-initramfs.git
-Vcs-Browser: http://git.debian.org/?p=users/daniel/live-initramfs.git
+Vcs-Browser: http://git.debian.net/?p=live-initramfs.git
+Vcs-Git: git://git.debian.net/git/live-initramfs.git
 XS-Upstream-Depends: git-core
 
 Package: live-initramfs
