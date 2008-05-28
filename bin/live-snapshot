@@ -313,8 +313,13 @@ Do_snapshot ()
 
 Clean ()
 {
-	umount "${MOUNTP}"
-	rmdir "${MOUNTP}"
+	if echo "${DEST}" | grep -q "${MOUNTP}"
+	then
+		echo "${DEST} is present on ${MOUNTP}, therefore no automatic unmounting the latter." > /dev/null 1>&2
+	else
+		umount "${MOUNTP}"
+		rmdir "${MOUNTP}"
+	fi
 }
 
 Main ()
