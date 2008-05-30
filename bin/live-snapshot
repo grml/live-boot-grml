@@ -2,7 +2,7 @@
 
 # live-snapshot - utility to manage Debian Live systems snapshots
 #
-#   This program mount a device (fallback to /tmpfs under /mnt/snapshot
+#   This program mount a device (fallback to /tmpfs under $MOUNTP
 #   and save the /live/cow (or a different dir) filesystem in it for reusing
 #   in another live-initramfs session. Look at manpage for more info.
 #
@@ -36,7 +36,11 @@ export USERNAME USERFULLNAME HOSTNAME
 PROGRAM="$(basename $0)"
 VERSION=0.0.2
 
-MOUNTP="/mnt/live-snapshot"
+# Needs to be available at run and reboot time
+SAFE_TMPDIR="/live"
+
+# Permits multiple runs
+MOUNTP="$(mktemp -d -p ${SAFE_TMPDIR} live-snapshot-mnt.XXXXXX)"
 SNAP_COW="/live/cow"
 SNAP_DEV=""
 DEST="${MOUNTP}/live-sn.cpio.gz"
@@ -289,10 +293,13 @@ Do_snapshot ()
 {
 	case "${SNAP_TYPE}" in
 		squashfs)
-			echo "./tmp/exclude_list" > /tmp/exclude_list
-			( cd "${SNAP_COW}" && find . -name '*.wh.*' >> /tmp/exclude_list )
-			mksquashfs "${SNAP_COW}" "${DEST}" -ef /tmp/exclude_list
-			rm /tmp/exclude_list
+			EXCLUDE_LIST="$(mktemp -p ${SAFE_TMPDIR} live-snapshot-exclude-list.XXXXXX)"
+			echo "./${EXCLUDE_LIST}" > "${EXCLUDE_LIST}"
+			cd "${SNAP_COW}"
+			find . -name '*.wh.*' >> "${EXCLUDE_LIST}"
+			cd "${OLDPWD}"
+			mksquashfs "${SNAP_COW}" "${DEST}" -ef "${EXCLUDE_LIST}"
+			rm -f "${EXCLUDE_LIST}"
 			;;
 
 		cpio)
