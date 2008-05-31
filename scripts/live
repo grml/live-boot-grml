@@ -498,7 +498,7 @@ get_backing_device ()
 {
 	case "${1}" in
 		*.squashfs|*.ext2|*.ext3|*.jffs2)
-			echo $(setup_loop "${1}" "loop" "/sys/block/loop*" '0' "${LIVE_MEDIA_ENCRYPTION}")
+			echo $(setup_loop "${1}" "loop" "/sys/block/loop*" '0' "${LIVE_MEDIA_ENCRYPTION}" "${2}")
 			;;
 
 		*.dir)
@@ -965,7 +965,7 @@ setup_unionfs ()
 			rofslist="${image} ${rofslist}"
 		elif [ -f "${image}" ]
 		then
-			backdev=$(get_backing_device "${image}")
+			backdev=$(get_backing_device "${image}" "-r")
 			fstype=$(get_fstype "${backdev}")
 
 			if [ "${fstype}" = "unknown" ]

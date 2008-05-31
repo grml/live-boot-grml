@@ -167,6 +167,7 @@ setup_loop ()
 	local pattern=${3}
 	local offset=${4}
 	local encryption=${5}
+	local readonly=${6}
 
 	modprobe -q -b "${module}"
 	udevsettle
@@ -177,6 +178,11 @@ setup_loop ()
 		then
 			dev=$(sys2dev "${loopdev}")
 			options=''
+
+			if [ -n ${readonly} ]
+			then
+				options="${options} -r"
+			fi
 
 			if [ 0 -lt "${offset}" ]
 			then
