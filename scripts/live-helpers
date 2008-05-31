@@ -234,7 +234,7 @@ find_cow_device ()
 	pers_label="${1}"
 	cow_backing="/${pers_label}-backing"
 
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram)
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
 	do
 		for dev in $(subdevices "${sysblock}")
 		do
@@ -274,7 +274,7 @@ find_files ()
 	filenames="${1}"
 	snap_backing="/snap-backing"
 
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram)
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
 	do
 		for dev in $(subdevices "${sysblock}")
 		do
