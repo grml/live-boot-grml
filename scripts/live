@@ -556,20 +556,6 @@ is_nice_device ()
 	return 1
 }
 
-is_supported_fs ()
-{
-	# FIXME: do something better like the scan of supported filesystems
-	fstype="${1}"
-
-	case ${fstype} in
-		vfat|iso9660|udf|ext2|ext3|ntfs|jffs2)
-			return 0
-			;;
-	esac
-
-	return 1
-}
-
 copy_live_to ()
 {
 	copyfrom="${1}"
@@ -1162,6 +1148,19 @@ check_dev ()
 	then
 		loopdevname=$(setup_loop "${devname}" "loop" "/sys/block/loop*" "${LIVE_MEDIA_OFFSET}" '')
 		devname="${loopdevname}"
+	fi
+
+	if [ -d "${devname}" ]
+	then
+		mount -o bind "${devname}" $mountpoint || continue
+
+		if is_live_path $mountpoint
+		then
+			echo $mountpoint
+			return 0
+		else
+			umount $mountpoint
+		fi
 	fi
 
 	fstype=$(get_fstype "${devname}")
