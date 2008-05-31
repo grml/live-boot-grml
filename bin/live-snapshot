@@ -95,7 +95,6 @@ Usage ()
 
 	exit 0
 }
-	
 
 Version ()
 {
@@ -197,7 +196,6 @@ Parse_args ()
 
 		esac
 	done
-
 }
 
 Defaults ()
@@ -229,7 +227,6 @@ Defaults ()
 				Error "unrecognized resync string"
 				;;
 		esac
-
 	else
 		# Set target file based on image
 		case "${SNAP_TYPE}" in
@@ -246,14 +243,14 @@ Defaults ()
 				;;
 		esac
 	fi
-
 }
 
 Validate_input ()
 {
-	case "${SNAP_TYPE}" in 
+	case "${SNAP_TYPE}" in
 		cpio|squashfs|jffs2|ext2|ext3)
 			;;
+
 		*)
 			Error "invalid filesystem type \"${SNAP_TYPE}\""
 			;;
@@ -279,6 +276,7 @@ Mount_device ()
 			# create a temp
 			mount -t tmpfs -o rw tmpfs "${MOUNTP}"
 			;;
+
 		*)
 			if [ -b "${SNAP_DEV}" ]
 			then
@@ -333,7 +331,7 @@ Main ()
 	Parse_args "${@}"
 	Defaults
 	Validate_input
-	trap 'Clean' EXIT 
+	trap 'Clean' EXIT
 	Mount_device
 	Do_snapshot
 }
