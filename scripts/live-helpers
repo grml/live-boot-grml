@@ -29,6 +29,20 @@ subdevices ()
 	echo ${r}
 }
 
+is_supported_fs ()
+{
+	# FIXME: do something better like the scan of supported filesystems
+	fstype="${1}"
+
+	case ${fstype} in
+		vfat|iso9660|udf|ext2|ext3|ntfs|jffs2)
+		return 0
+		;;
+	esac
+
+	return 1
+}
+
 get_fstype ()
 {
 	local FSTYPE
@@ -281,24 +295,22 @@ find_files ()
 			devname=$(sys2dev "${dev}")
 			devfstype="$(get_fstype ${devname})"
 
-			case "${devfstype}" in
-				vfat|ext2|ext3|jffs2)
-					# FIXME: all supported block devices should be scanned
-					mkdir -p "${snap_backing}"
-					try_mount "${devname}" "${snap_backing}" "ro"
+			if is_supported_fs ${devfstype}
+			then
+				mkdir -p "${snap_backing}"
+				try_mount "${devname}" "${snap_backing}" "ro"
 
-					for filename in ${filenames}
+				for filename in ${filenames}
 					do
-						if [ -f "${snap_backing}/${filename}" ]
-						then
-							echo "${devname} ${snap_backing} ${filename}"
-							return 0
-						fi
-					done
+					if [ -f "${snap_backing}/${filename}" ]
+					then
+						echo "${devname} ${snap_backing} ${filename}"
+						return 0
+					fi
+				done
 
-					umount ${snap_backing}
-					;;
-			esac
+				umount ${snap_backing}
+			fi
 		done
 	done
 }

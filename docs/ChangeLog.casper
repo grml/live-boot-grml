@@ -1,3 +1,15 @@
+casper (1.132) intrepid; urgency=low
+
+  [ Colin Watson ]
+  * Switch default unionfs implementation to aufs.
+
+  [ Agostino Russo ]
+  * Do not scan only vfat volumes when looking for cow devices (LP: #230703)
+  * Allow casper to use a squashfs filesystem within an arbitrary path (LP:
+    #230716, #207137)
+
+ -- Evan Dandrea <evand@ubuntu.com>  Wed, 28 May 2008 15:01:30 -0400
+
 casper (1.131) hardy; urgency=low
 
   [ Luke Yelavich ]
