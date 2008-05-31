@@ -6,7 +6,7 @@
 #   and saves the /live/cow (or a different dir) filesystem in it for reuse
 #   in another live-initramfs session. Look at manpage for more info.
 #
-# Copyright (C) 2006 Marco Amadori <marco.amadori@gmail.com>
+# Copyright (C) 2006-2008 Marco Amadori <marco.amadori@gmail.com>
 # Copyright (C) 2008 Chris Lamb <chris@chris-lamb.co.uk>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -101,6 +101,7 @@ Version ()
 	echo "${PROGRAM}"
 	echo
 	echo "Copyright (C) 2006 Marco Amadori <marco.amadori@gmail.com>"
+	echo "Copyright (C) 2008 Chris Lamb <chris@chris-lamb.co.uk>"
 	echo
 	echo "This program is free software; you can redistribute it and/or modify"
 	echo "it under the terms of the GNU General Public License as published by"
