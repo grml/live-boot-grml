@@ -1,3 +1,22 @@
+casper (1.131) hardy; urgency=low
+
+  [ Luke Yelavich ]
+  * scripts/casper-bottom/30accessibility: Set gconf and orca config values as
+    root in automatic-ubiquity, only-ubiquity, and debug-ubiquity modes.
+  * ubiquity-hooks/30accessibility: Remove unneeded gconf call to disable esd.
+
+  [ Colin Watson ]
+  * Ensure that the live CD user's Desktop directory is owned by them, not
+    by root (LP: #218576).
+  * Duplicate a chunk of console-setup logic into the keyboard script so
+    that we can deal with non-Latin keymaps and the like without having to
+    have gfxboot-theme-ubuntu help us; the previous approach broke other
+    uses of console-setup, and thus the alternate install CD (LP: #218754).
+    This should later be replaced by just running console-setup, and I'll
+    open another bug for this.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 21 Apr 2008 14:52:05 +0100
+
 casper (1.130) hardy; urgency=low
 
   * Handle use of debian-installer/language for locale selection
