@@ -34,7 +34,6 @@ set -eu
 export USERNAME USERFULLNAME HOSTNAME
 
 PROGRAM="$(basename $0)"
-VERSION=0.0.2
 
 # Needs to be available at run and reboot time
 SAFE_TMPDIR="/live"
@@ -100,7 +99,7 @@ Usage ()
 
 Version ()
 {
-	echo "${PROGRAM}, version ${VERSION}"
+	echo "${PROGRAM}"
 	echo
 	echo "Copyright (C) 2006 Marco Amadori <marco.amadori@gmail.com>"
 	echo
