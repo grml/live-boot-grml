@@ -615,7 +615,7 @@ copy_live_to ()
 		cd "${copyto}"
 		tar zxf "${copyfrom}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
 		rm -f "${copyfrom}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
-		mount -r --move "${copyto}" "${rootmnt}"
+		mount -r -o move "${copyto}" "${rootmnt}"
 		cd "${OLDPWD}"
 	else
 		if [ -n "${MODULETORAMFILE}" ]
@@ -627,7 +627,7 @@ copy_live_to ()
 
 		livefs_root
 		umount ${copyfrom}
-		mount -r --move ${copyto} ${copyfrom}
+		mount -r -o move ${copyto} ${copyfrom}
 	fi
 
 	rmdir ${copyto}
@@ -1122,7 +1122,7 @@ setup_unionfs ()
 					;;
 
 				*)
-					mount --move "${d}" "${rootmnt}/live/${d##*/}"
+					mount -o move "${d}" "${rootmnt}/live/${d##*/}"
 					;;
 			esac
 		done
