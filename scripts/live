@@ -479,7 +479,7 @@ matches_uuid ()
 	path="${1}"
 	uuid="$(cat /conf/uuid.conf)"
 
-	for try_uuid_file in "${mountpoint}/.disk/casper-uuid"*
+	for try_uuid_file in "${mountpoint}/.disk/live-uuid"*
 	do
 		[ -e "${try_uuid_file}" ] || continue
 
