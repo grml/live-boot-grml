@@ -875,7 +875,7 @@ try_snap ()
 			fi
 		else
 			# cpio.gz snapshot
-			if ! (cd "${snap_mount}" && zcat "${snapback}/${snapfile}" | cpio -i -u -d 2>/dev/null)
+			if ! (cd "${snap_mount}" && zcat "${snapback}/${snapfile}" | cpio --extract --preserve-modification-time --no-absolute-filenames --sparse --unconditional --make-directories > /dev/null 2>&1)
 			then
 				log_warning_msg "Impossible to include the ${snapfile} Snapshot"
 				return 1

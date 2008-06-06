@@ -83,6 +83,15 @@ mostra l'utilizzo ed esce
 
 da informazioni sulla versione ed esce
 
+Files
+-----
+
+  /etc/live-snapshot.list
+
+Facoltativo, se presente cambia completamente il funzionamento di live-snapshot; solo i files e le directory elencate verranno effettivamente inclusi nello snapshot.
+Attenzione, e` una funzionalita` sperimentale che funziona attualmente solo con gli snapshot di tipo "cpio".
+
+
 See also
 --------
 

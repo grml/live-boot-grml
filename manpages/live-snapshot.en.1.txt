@@ -77,6 +77,14 @@ show usage and exit
 
 output version information and exit
 
+Files
+-----
+
+  /etc/live-snapshot.list
+
+This optional file, if present changes the behaviour of live-snapshot, only files and directories listed there are included (integrally) in the snapshot.
+Beware, it is an experimental feature that only works for cpio targets now.
+
 See also
 --------
 

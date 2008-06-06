@@ -48,13 +48,16 @@ SAFE_TMPDIR="/live"
 # Permits multiple runs
 MOUNTP="$(mktemp -d -p ${SAFE_TMPDIR} live-snapshot-mnt.XXXXXX)"
 DEST="${MOUNTP}/live-sn.cpio.gz"
+DEF_SNAP_COW="/live/cow"
+TMP_FILELIST="${PROGRAM}.list"
 
 # Command line defaults and declarations
-SNAP_COW="/live/cow"
+SNAP_COW="${DEF_SNAP_COW}"
 SNAP_DEV=""
 SNAP_OUTPUT=""
 SNAP_RESYNC_STRING=""
 SNAP_TYPE="cpio"
+SNAP_LIST="/etc/live-snapshot.list"
 
 Error ()
 {
@@ -312,21 +315,61 @@ Mount_device ()
 	esac
 }
 
+Do_filelist ()
+{
+	# BUGS: supports only cpio.gz types right now
+	TMP_FILELIST=$1
+	if [ -f "${SNAP_LIST}" ]
+	then
+		# Generate include list
+		for entry in $(cat "${SNAP_LIST}" | grep -v '^#.*$' | grep -v '^ *$')
+		do
+			if [ -f "${entry}" ]
+			then
+				printf "%s\000" "${entry}" >> "${TMP_FILELIST}"
+			elif [ -d "${entry}" ]
+			then
+				cd /
+				find "${entry}" -print0 >> "${TMP_FILELIST}"
+				cd "${OLDPWD}"
+			fi
+		done
+
+		if [ "${SNAP_COW}" = "${DEF_SNAP_COW}" ]
+		then
+			# Relative to rootfs
+			echo "/"
+		else
+			# Mostly "/home"
+			echo "${SNAP_COW}"
+		fi
+	else
+		cd "${SNAP_COW}"
+		find . -path '*.wh.*' -prune -o -print0 >> "${TMP_FILELIST}"
+		cd "${OLDPWD}"
+		echo "${SNAP_COW}"
+	fi
+}
+
 Do_snapshot ()
 {
+	TMP_FILELIST=$(mktemp -p "${SAFE_TMPDIR}" "${TMP_FILELIST}.XXXXXX")
+
 	case "${SNAP_TYPE}" in
 		squashfs)
-			EXCLUDE_LIST="$(mktemp -p ${SAFE_TMPDIR} live-snapshot-exclude-list.XXXXXX)"
-			echo "./${EXCLUDE_LIST}" > "${EXCLUDE_LIST}"
+			echo ".${TMP_FILELIST}" > "${TMP_FILELIST}"
+			# Removing whiteheads of unionfs
 			cd "${SNAP_COW}"
-			find . -name '*.wh.*' >> "${EXCLUDE_LIST}"
+			find . -name '*.wh.*' >> "${TMP_FILELIST}"
 			cd "${OLDPWD}"
-			mksquashfs "${SNAP_COW}" "${DEST}" -ef "${EXCLUDE_LIST}"
-			rm -f "${EXCLUDE_LIST}"
+			mksquashfs "${SNAP_COW}" "${DEST}" -ef "${TMP_FILELIST}"
 			;;
 
 		cpio)
-			( cd "${SNAP_COW}" && find . -path '*.wh.*' -prune -o -print0 | cpio --quiet -o0 -H newc | gzip -9c > "${DEST}" ) || exit 1
+			WORKING_DIR=$(Do_filelist "${TMP_FILELIST}")
+			cd "${WORKING_DIR}"
+			cat "${TMP_FILELIST}" | cpio --quiet -o0 -H newc | gzip -9c > "${DEST}" || exit 1
+			cd "${OLDPWD}"
 			;;
 
 		ext2|ext3)
@@ -339,6 +382,11 @@ Do_snapshot ()
 			mkfs.jffs2 --root="${SNAP_COW}" --output="${DEST}"
 			;;
 	esac
+
+	if [ -f "${TMP_FILELIST}" ]
+	then
+		rm -f "${TMP_FILELIST}"
+	fi
 }
 
 Clean ()
