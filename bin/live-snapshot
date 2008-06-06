@@ -125,19 +125,6 @@ Version ()
 	exit 0
 }
 
-Is_same_mount ()
-{
-	dir1="$(Base_path ${1})"
-	dir2="$(Base_path ${2})"
-
-	if [ "${dir1}" = "${dir2}" ]
-	then
-		return 0
-	else
-		return 1
-	fi
-}
-
 Parse_args ()
 {
 	# Parse command line
