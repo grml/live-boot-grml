@@ -257,8 +257,6 @@ Validate_input ()
 
 Mount_device ()
 {
-	mkdir -p "${MOUNTP}"
-
 	case "${SNAP_DEV}" in
 		"")
 			# create a temp
