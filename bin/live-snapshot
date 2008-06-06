@@ -351,6 +351,33 @@ Clean ()
 	fi
 }
 
+Warn_user ()
+{
+	if [ -z "${SNAP_RESYNC_STRING}" ]
+	then
+		case ${SNAP_TYPE} in
+			cpio|ext2|ext3)
+				echo "Please move ${DEST} (if is not already in it)" > /dev/null 1>&2
+				echo "in a supported writable partition (e.g ext3, vfat)." > /dev/null 1>&2
+				;;
+
+			squashfs)
+				echo "To use ${DEST} you need to rebuild your media or add it" > /dev/null 1>&2
+				echo "to your multisession disc under the \"/live\" directory." > /dev/null 1>&2
+				;;
+
+			jffs2)
+				echo "Please cat or flashcp ${DEST} to your partition in order to start using it." > /dev/null 1>&2
+				;;
+		esac
+
+		if grep -qv persistent /proc/cmdline
+		then
+			echo "Remember to boot this live system with \"persistent\" specified at boot prompt." > /dev/null 1>&2
+		fi
+	fi
+}
+
 Main ()
 {
 	Parse_args "${@}"
@@ -359,6 +386,7 @@ Main ()
 	trap 'Clean' EXIT
 	Mount_device
 	Do_snapshot
+	Warn_user
 }
 
 Main "${@:-}"
