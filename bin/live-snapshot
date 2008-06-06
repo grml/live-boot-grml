@@ -206,7 +206,7 @@ Defaults ()
 	then
 		SNAP_COW=$(echo "${SNAP_RESYNC_STRING}" | cut -f1 -d ':')
 		SNAP_DEV=$(echo "${SNAP_RESYNC_STRING}" | cut -f2 -d ':')
-		DEST=$(echo "${SNAP_RESYNC_STRING}" | cut -f3 -d ':')
+		DEST="${MOUNTP}/$(echo ${SNAP_RESYNC_STRING} | cut -f3 -d ':')"
 
 		case "${DEST}" in
 			*.cpio.gz)
