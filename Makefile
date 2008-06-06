@@ -40,7 +40,7 @@ install: test build
 	cp -r COPYING docs/* $(DESTDIR)/usr/share/doc/live-initramfs
 
 	mkdir -p $(DESTDIR)/usr/share/doc/live-initramfs/examples
-	cp -r conf/live.conf $(DESTDIR)/usr/share/doc/live-initramfs/examples
+	cp -r conf/* $(DESTDIR)/usr/share/doc/live-initramfs/examples
 
 	# Installing manpages
 	set -e; for MANPAGE in manpages/*.en.1; \
