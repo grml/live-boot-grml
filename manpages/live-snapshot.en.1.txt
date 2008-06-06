@@ -55,6 +55,12 @@ the filename/label used for the output file/partition. If left blank, live-snaps
 
 internally used on resyncs.
 
+  -f, --refresh::
+
+try to do the same operation that should be done at reboot or halt, resyncing
+boot-time auto discovered snapshots. Useful to prevent a crash or surge
+power-off.
+
   -t, --type **TYPE**::
 
 Type could be one of "cpio", "squashfs", "ext2", "ext3" or "jffs2".

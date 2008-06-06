@@ -26,14 +26,21 @@
 # On Debian systems, the complete text of the GNU General Public License
 # can be found in /usr/share/common-licenses/GPL-2 file.
 
+# declare here two vars from /etc/live.conf because of "set -u"
+ROOTSNAP=""
+HOMESNAP=""
+
 set -eu
 
 . /usr/share/initramfs-tools/scripts/live-helpers
-. /etc/live.conf
+
+LIVE_CONF="/etc/live.conf"
+. "${LIVE_CONF}"
 
 export USERNAME USERFULLNAME HOSTNAME
 
-PROGRAM="$(basename $0)"
+EXECUTABLE="${0}"
+PROGRAM=$(basename "${EXECUTABLE}")
 
 # Needs to be available at run and reboot time
 SAFE_TMPDIR="/live"
@@ -66,6 +73,7 @@ Header ()
 	echo
 	echo "usage: ${PROGRAM} [-c|--cow DIRECTORY] [-d|--device DEVICE] [-o|--output FILE] [-t|--type TYPE]"
 	echo "       ${PROGRAM} [-r|--resync-string STRING]"
+	echo "       ${PROGRAM} [-f|--refresh]"
 	echo "       ${PROGRAM} [-h|--help]"
 	echo "       ${PROGRAM} [-u|--usage]"
 	echo "       ${PROGRAM} [-v|--version]"
@@ -81,6 +89,7 @@ Help ()
 	echo "  -d, --device: output snapshot device (default: ${SNAP_DEV:-auto})."
 	echo "  -o, --output: output image file (default: ${DEST})."
 	echo "  -r, --resync-string: internally used to resync previous made snapshots."
+	echo "  -f, --refresh: try to sync a running snapshot."
 	echo "  -t, --type: snapshot filesystem type. Options: \"squashfs\", \"ext2\", \"ext3\", \"jffs2\" or \"cpio\".gz archive (default: ${SNAP_TYPE})"
 	echo
 	echo "Look at live-snapshot(1) man page for more information."
@@ -127,11 +136,32 @@ Version ()
 	exit 0
 }
 
+Try_refresh ()
+{
+	FOUND=""
+	if [ -n "${ROOTSNAP}" ]; then
+		"${EXECUTABLE}" --resync-string="${ROOTSNAP}"
+		FOUND="Yes"
+	fi
+
+	if [ -n "${HOMESNAP}" ]; then
+		"${EXECUTABLE}" --resync-string="${HOMESNAP}"
+		FOUND="Yes"
+	fi
+
+	if [ -z "${FOUND}" ]
+	then
+		echo "No autoconfigured snapshots found at boot;" > /dev/null 1>&2
+		echo "(no resync string in ${LIVE_CONF})." > /dev/null 1>&2
+		exit 1
+	fi
+}
+
 Parse_args ()
 {
 	# Parse command line
 	ARGS="${*}"
-	ARGUMENTS="$(getopt --longoptions cow:,device:,output,resync-string:,type:,help,usage,version --name=${PROGRAM} --options c:d:o:t:r:,h,u,v --shell sh -- ${ARGS})"
+	ARGUMENTS="$(getopt --longoptions cow:,device:,output,resync-string:,refresh,type:,help,usage,version --name=${PROGRAM} --options c:d:o:t:r:fhuv --shell sh -- ${ARGS})"
 
 	eval set -- "${ARGUMENTS}"
 
@@ -161,6 +191,11 @@ Parse_args ()
 			-r|--resync-string)
 				SNAP_RESYNC_STRING="${2}"
 				break
+				;;
+
+			-f|--refresh)
+				Try_refresh
+				exit 0
 				;;
 
 			-h|--help)
