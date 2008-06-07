@@ -307,7 +307,7 @@ Do_snapshot ()
 
 Clean ()
 {
-	if echo "${DEST}" | grep -q "${MOUNTP}"
+	if [ -z "${SNAP_RESYNC_STRING}" ] && echo "${DEST}" | grep -q "${MOUNTP}"
 	then
 		echo "${DEST} is present on ${MOUNTP}, therefore no automatic unmounting the latter." > /dev/null 1>&2
 	else
