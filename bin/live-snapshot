@@ -42,6 +42,7 @@ SAFE_TMPDIR="/live"
 MOUNTP="$(mktemp -d -p ${SAFE_TMPDIR} live-snapshot-mnt.XXXXXX)"
 SNAP_COW="/live/cow"
 SNAP_DEV=""
+SNAP_OUTPUT=""
 DEST="${MOUNTP}/live-sn.cpio.gz"
 SNAP_TYPE="cpio"
 DESKTOP_LINK="/home/${USERNAME}/Desktop/live-snapshot"
@@ -215,7 +216,8 @@ Defaults ()
 				Error "unrecognized resync string"
 				;;
 		esac
-	else
+	elif [ -z "${SNAP_OUTPUT}" ]
+	then
 		# Set target file based on image
 		case "${SNAP_TYPE}" in
 			cpio)
@@ -230,6 +232,8 @@ Defaults ()
 				DEST="${MOUNTP}/live-sn.ext2"
 				;;
 		esac
+	else
+		DEST="${SNAP_OUTPUT}"
 	fi
 }
 
