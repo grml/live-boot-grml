@@ -65,6 +65,16 @@ Arguments ()
 				export HOOK
 				;;
 
+			ftpfs=*)
+				FTPFS="${ARGUMENT#ftpfs=}"
+				export FTPFS
+				;;
+
+			httpfs=*)
+				HTTPFS="${ARGUMENT#httpfs=}"
+				export HTTPFS
+				;;
+
 			hostname=*)
 				HOSTNAME="${ARGUMENT#hostname=}"
 				LIVECONF="changed"
@@ -656,7 +666,7 @@ do_netmount ()
 		NFSROOT=${ROOTSERVER}:${ROOTPATH}
 	fi
 
-	if [ -n "${FETCH}" ] && do_httpmount
+	if ( [ -n "${FETCH}" ] || [ -n "${HTTPFS}" ] || [ -n "${FTPFS}" ] ) && do_httpmount
 	then
 		rc=0
 		return ${rc}
@@ -686,20 +696,53 @@ do_netmount ()
 do_httpmount ()
 {
 	rc=1
-	extension=$(echo "${FETCH}" | sed 's/\(.*\)\.\(.*\)/\2/')
+	dest="${mountpoint}/${LIVE_MEDIA_PATH}"
+	mount -t ramfs ram "${mountpoint}"
+	mkdir -p "${dest}"
 
-	case "${extension}" in
-		squashfs|tgz|tar)
-			[ "${quiet}" != "y" ] && log_begin_msg "Trying wget ${FETCH} -O ${mountpoint}/$(basename ${FETCH})"
-			mkdir -p "${mountpoint}/${LIVE_MEDIA_PATH}"
-			wget "${FETCH}" -O "${mountpoint}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
-			[ ${?} -eq 0 ] && rc=0
-			[ "${extension}" = "tgz" ] && live_dest="ram"
-			;;
+	for webfile in HTTPFS FTPFS FETCH
+	do
+		url="$(eval echo \"\$\{${webfile}\}\")"
+		extension="$(echo "${url}" | sed 's/\(.*\)\.\(.*\)/\2/')"
 
-		*)
-			[ "${quiet}" != "y" ] && log_begin_msg "Unrecognized archive extension for ${FETCH}"
-	esac
+		if [ -n "$url" ]
+		then
+			case "${extension}" in
+				squashfs|tgz|tar)
+					if [ "${webfile}" = "FETCH" ]
+					then
+						[ "${quiet}" != "y" ] &&
+							log_begin_msg "Trying wget ${url} -O ${dest}/$(basename ${url})"
+						wget "${url}" -O "${dest}/$(basename ${url})"
+					else
+						[ "${quiet}" != "y" ] &&
+							log_begin_msg "Trying to mount ${url} on ${dest}/$(basename ${url})"
+						if [ "${webfile}" = "FTPFS" ]
+						then
+							FUSE_MOUNT="curlftpfs"
+							url="$(dirname ${url})"
+						else
+							FUSE_MOUNT="httpfs"
+						fi
+						modprobe fuse
+						$FUSE_MOUNT "${url}" "${dest}"
+					fi
+					[ ${?} -eq 0 ] && rc=0
+					[ "${extension}" = "tgz" ] && live_dest="ram"
+					break
+					;;
+
+				*)
+					[ "${quiet}" != "y" ] && log_begin_msg "Unrecognized archive extension for ${url}"
+					;;
+			esac
+		fi
+	done
+
+	if [ ${rc} != 0 ]
+	then
+	    umount "${mountpoint}"
+	fi
 
 	return ${rc}
 }
@@ -1281,7 +1324,7 @@ mountroot ()
 
 	set_usplash_timeout
 
-	if [ ! -z "${NETBOOT}" ] || [ ! -z "${FETCH}" ]
+	if [ ! -z "${NETBOOT}" ] || [ ! -z "${FETCH}" ] || [ ! -z "${HTTPFS}" ] || [ ! -z "${FTPFS}" ]
 	then
 		if do_netmount
 		then
