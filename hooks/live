@@ -135,3 +135,24 @@ if [ -x /usr/bin/wget ]
 then
 	copy_exec /usr/bin/wget /bin
 fi
+
+# FUSE kernel module
+manual_add_modules fuse
+
+# FUSE filesystem: httpfs
+if [ -x /usr/bin/httpfs_ssl ]
+then
+	copy_exec /usr/bin/httpfs2_ssl /bin/httpfs
+else
+	if [ -x /usr/bin/httpfs ]
+	then
+		copy_exec /usr/bin/httpfs2 /bin/httpfs
+	fi
+fi
+
+# FUSE filesystem: curlftpfs
+if [ -x /usr/bin/curlftpfs ]
+then
+	copy_exec /usr/bin/curlftpfs /bin
+fi
+
