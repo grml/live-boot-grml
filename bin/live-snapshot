@@ -40,13 +40,14 @@ SAFE_TMPDIR="/live"
 
 # Permits multiple runs
 MOUNTP="$(mktemp -d -p ${SAFE_TMPDIR} live-snapshot-mnt.XXXXXX)"
+DEST="${MOUNTP}/live-sn.cpio.gz"
+
+# Command line defaults and declarations
 SNAP_COW="/live/cow"
 SNAP_DEV=""
 SNAP_OUTPUT=""
-DEST="${MOUNTP}/live-sn.cpio.gz"
-SNAP_TYPE="cpio"
-DESKTOP_LINK="/home/${USERNAME}/Desktop/live-snapshot"
 SNAP_RESYNC_STRING=""
+SNAP_TYPE="cpio"
 
 Error ()
 {
