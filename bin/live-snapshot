@@ -3,8 +3,9 @@
 # live-snapshot - utility to manage Debian Live systems snapshots
 #
 #   This program mounts a device (fallback to /tmpfs under $MOUNTP
-#   and saves the /live/cow (or a different dir) filesystem in it for reuse
-#   in another live-initramfs session. Look at manpage for more info.
+#   and saves the /live/cow (or a different directory) filesystem in it
+#   for reuse in another live-initramfs session.
+#   Look at the manpage for more informations.
 #
 # Copyright (C) 2006-2008 Marco Amadori <marco.amadori@gmail.com>
 # Copyright (C) 2008 Chris Lamb <chris@chris-lamb.co.uk>
