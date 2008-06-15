@@ -28,4 +28,4 @@ esac
 #  * http://lists.alioth.debian.org/pipermail/debian-live-devel/2007-June/001517.html
 #  * http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=363047
 
-modprobe ide-generic
+modprobe -q ide-generic
