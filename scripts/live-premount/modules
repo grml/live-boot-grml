@@ -29,3 +29,4 @@ esac
 #  * http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=363047
 
 modprobe -q ide-generic
+modprobe -q esp
