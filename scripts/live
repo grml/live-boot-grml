@@ -1008,7 +1008,12 @@ setup_unionfs ()
 			rofslist="${image} ${rofslist}"
 		elif [ -f "${image}" ]
 		then
-			backdev=$(get_backing_device "${image}" "-r")
+			if /sbin/losetup --help 2>&1 | grep -q -- "-r\b"
+			then
+				backdev=$(get_backing_device "${image}" "-r")
+			else
+				backdev=$(get_backing_device "${image}")
+			fi
 			fstype=$(get_fstype "${backdev}")
 
 			if [ "${fstype}" = "unknown" ]
