@@ -93,7 +93,7 @@ EOF
 
 	if [ -z "${LANG}" ]
 	then
-		log_warning_message "Locale ${locale} is unsupported."
+		log_warning_msg "Locale ${locale} is unsupported."
 		locale="en_US.UTF-8"
 		LANG="${locale}"
 	fi
