@@ -650,7 +650,7 @@ do_netmount ()
 
 	modprobe -q af_packet # For DHCP
 
-	udevtrigger
+	udevadm trigger
 	udevsettle
 
 	ipconfig ${DEVICE} | tee /netboot.config
@@ -1041,7 +1041,7 @@ setup_unionfs ()
 			modprobe -q -b ${module}
 		done
 
-		udevtrigger
+		udevadm trigger
 		udevsettle
 
 		# For some reason, udevsettle does not block in this scenario,
