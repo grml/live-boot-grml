@@ -126,7 +126,7 @@ fi
 copy_exec /usr/bin/md5sum /bin
 
 # Program: udev
-copy_exec /sbin/udevtrigger /sbin
+copy_exec /sbin/udevadm /sbin
 copy_exec /sbin/udevsettle /sbin
 copy_exec /usr/bin/udevinfo /bin
 
