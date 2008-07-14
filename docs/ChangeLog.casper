@@ -1,3 +1,12 @@
+casper (1.136) intrepid; urgency=low
+
+  * Remove bad-and-wrong setting of PATH to include directories under /root;
+    now that grep links to more libraries than before, this broke a number
+    of things. Requires initramfs-tools (>= 0.92bubuntu5) because this
+    doesn't work with klibc chroot.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 11 Jul 2008 12:34:35 +0100
+
 casper (1.135) intrepid; urgency=low
 
   [ Loic Minier ]
