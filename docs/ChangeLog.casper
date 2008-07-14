@@ -1,3 +1,14 @@
+casper (1.134) intrepid; urgency=low
+
+  [ Evan Dandrea ]
+  * Do not use mode= when mounting /cow using persistent mode (LP: #219192).
+
+  [ Colin Watson ]
+  * Support ?= (set value but don't mark as seen) preseeding syntax for
+    console-setup/* (LP: #64058).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 30 Jun 2008 23:52:41 +0100
+
 casper (1.133) intrepid; urgency=low
 
   [ Tormod Volden ]
