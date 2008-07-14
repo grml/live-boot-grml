@@ -93,9 +93,9 @@ manual_add_modules squashfs
 manual_add_modules sqlzma
 manual_add_modules unlzma
 
-# Filesystem: unionfs/aufs
-manual_add_modules unionfs
+# Filesystem: aufs/unionfs
 manual_add_modules aufs
+manual_add_modules unionfs
 
 # Filesystem: vfat
 manual_add_modules nls_cp437

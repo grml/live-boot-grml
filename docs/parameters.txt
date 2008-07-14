@@ -46,7 +46,7 @@ live showmounts
 live timezone=TIMEZONE
 live todisk=DEVICE
 live toram
-live union=unionfs|aufs
+live union=aufs|unionfs
 live utc=yes|no
 live xdebconf
 live xvideomode=RESOLUTION

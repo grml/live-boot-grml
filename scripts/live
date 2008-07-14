@@ -456,7 +456,7 @@ Arguments ()
 
 	if [ -z "${UNIONTYPE}" ]
 	then
-		UNIONTYPE="unionfs"
+		UNIONTYPE="aufs"
 		export UNIONTYPE
 	fi
 }

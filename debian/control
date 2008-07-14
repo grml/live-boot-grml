@@ -23,7 +23,7 @@ Description: Debian Live initramfs hook
  At boot time it will look for a (read-only) media containing a "/live"
  directory where a root filesystems (often a compressed filesystem image like
  squashfs) is stored. If found, it will create a writable environment, using
- unionfs, for Debian like systems to boot from.
+ aufs or unionfs, for Debian like systems to boot from.
  .
  You probably do not want to install this package onto a non-live system,
  although it will do no harm.
