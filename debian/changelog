@@ -1,3 +1,49 @@
+live-initramfs (1.136.1-1) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Fix call to log_warning_msg. Thanks to Bradley Smith
+    <brad@brad-smith.co.uk>.
+  * Expand glob for kernels in post{inst,rm} to include "vmlinux"-prefixed
+    kernels on powerpc.
+  * Check losetup capabilities before specifying to mount as read-only.
+  * Modprobe 'esp' SCSI driver for the benefit of sparc.
+  * Quieten call to modprobe ide-generic.
+  * Move local-top/live to live-premount/modules so it gets called before
+    find_livefs.
+  * Sync bug script "dpkg -l" calls with debian/control
+
+  [ Daniel Baumann ]
+  * Defaulting now to aufs if no union= parameter is given.
+  * Merging casper version 1.136.
+  * Merging casper version 1.135.
+  * Merging casper version 1.134.
+  * Merging casper version 1.133.
+  * Converting udev depends into a versioned depends in order to reflect udevadm
+    introduction.
+  * Updating live-snapshot to GPL-3+.
+  * Updating to standards 3.8.0.
+  * Renaming forgotton uuid file to live-uuid.
+
+  [ Marco Amadori ]
+  * udevtrigger replacement.
+  * live-snapshot: fixed the remount helper.
+  * live-snapshot: now supports a static keep file list.
+  * Try to bind /cow to /live/cow if unable to move.
+  * live-snapshot: cleaned some wordings.
+  * live-snapshot: included vital informations on exit.
+  * live-snapshot: new "--refresh" option.
+  * live-snapshot: cleaned and sorted used command line defaults.
+  * live-snapshot: nicer default auto unmount logic.
+  * live-snapshot: honour "-o|--output FILE".
+  * live-snapshot: removed a useless mkdir.
+  * live-snapshot: removed an unused and useless function.
+  * live-snapshot: fixes snapshotting from resync string.
+
+  [ Michal Suchanek ]
+  * Add support for httpfs= and ftpfs= parameters.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 14 Jul 2008 00:00:00 +0200
+
 live-initramfs (1.132.1-1) unstable; urgency=medium
 
   [ Chris Lamb ]
