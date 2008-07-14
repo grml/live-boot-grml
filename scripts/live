@@ -1192,12 +1192,6 @@ check_dev ()
 		devname=$(sys2dev "${sysdev}")
 	fi
 
-	if [ -n "${LIVE_MEDIA_OFFSET}" ]
-	then
-		loopdevname=$(setup_loop "${devname}" "loop" "/sys/block/loop*" "${LIVE_MEDIA_OFFSET}" '')
-		devname="${loopdevname}"
-	fi
-
 	if [ -d "${devname}" ]
 	then
 		mount -o bind "${devname}" $mountpoint || continue
@@ -1209,6 +1203,12 @@ check_dev ()
 		else
 			umount $mountpoint
 		fi
+	fi
+
+	if [ -n "${LIVE_MEDIA_OFFSET}" ]
+	then
+		loopdevname=$(setup_loop "${devname}" "loop" "/sys/block/loop*" "${LIVE_MEDIA_OFFSET}" '')
+		devname="${loopdevname}"
 	fi
 
 	fstype=$(get_fstype "${devname}")

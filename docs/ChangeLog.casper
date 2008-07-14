@@ -1,3 +1,17 @@
+casper (1.133) intrepid; urgency=low
+
+  [ Tormod Volden ]
+  * Do not use swap on RAID raw devices (LP: #136804)
+
+  [ Agostino Russo ]
+  * Test if livemedia is a directory before trying to mount it as a
+    loopfile
+  * Reverted changes to casper-helpers as requested by Mithrandir since
+    replaying the journal on a hibernated system would lead to file system
+    corruption.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Wed, 18 Jun 2008 12:34:58 -0400
+
 casper (1.132) intrepid; urgency=low
 
   [ Colin Watson ]
