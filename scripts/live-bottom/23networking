@@ -46,8 +46,16 @@ iface lo inet loopback
 
 EOF
 
-udevadm trigger
-udevsettle
+if [ -x /sbin/udevadm ]
+then
+	# lenny
+	udevadm trigger
+	udevadm settle
+else
+	# etch
+	udevtrigger
+	udevsettle
+fi
 
 if [ -z "${NETBOOT}" -a -n "${STATICIP}" -a "${STATICIP}" != "frommedia" ]
 then
