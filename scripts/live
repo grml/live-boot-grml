@@ -1118,6 +1118,8 @@ setup_unionfs ()
 		nfsmount ${nfs_cow_opts} ${cowdevice} /cow || \
 			panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on /cow"
 	else
+		# make sure cow_mountopt is set:
+		[ -n "$cow_mountopt" ] || cow_mountopt="rw,noatime,mode=755"
 		mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} /cow || \
 			panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on /cow"
 	fi
