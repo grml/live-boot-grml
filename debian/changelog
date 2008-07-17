@@ -1,3 +1,10 @@
+live-initramfs (1.136.3-1) unstable; urgency=medium
+
+  [ Michael Prokop ]
+  * Make sure mounting /cow-tmpfs provides mount options.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 18 Jul 2008 00:00:00 +0200
+
 live-initramfs (1.136.2-1) unstable; urgency=medium
 
   * Replacing previous imperfect changes for udevadm with check for
