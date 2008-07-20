@@ -2,8 +2,6 @@
 
 PREREQ=""
 
-. /scripts/live-functions
-
 prereqs()
 {
        echo "$PREREQ"
@@ -21,6 +19,8 @@ if [ -n "${NORESTRICTEDMANAGER}" ]
 then
 	exit 0
 fi
+
+. /scripts/live-functions
 
 log_begin_msg "Disabling restricted-manager..."
 
