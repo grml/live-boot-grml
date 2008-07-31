@@ -1016,7 +1016,7 @@ setup_unionfs ()
 			rofslist="${image} ${rofslist}"
 		elif [ -f "${image}" ]
 		then
-			if /sbin/losetup --help 2>&1 | grep -q -- "-r\b"
+			if losetup --help 2>&1 | grep -q -- "-r\b"
 			then
 				backdev=$(get_backing_device "${image}" "-r")
 			else

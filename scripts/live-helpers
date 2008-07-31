@@ -178,7 +178,7 @@ setup_loop ()
 
 			if [ -n ${readonly} ]
 			then
-				if /sbin/losetup --help 2>&1 | grep -q -- "-r\b"
+				if losetup --help 2>&1 | grep -q -- "-r\b"
 				then
 					options="${options} -r"
 				fi
