@@ -1,3 +1,10 @@
+casper (1.137) intrepid; urgency=low
+
+  * Update scripts/casper-bottom/15autologin for KDM from KDE 4.
+  * Update 32disable_hibernation for KDE 4.
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 17 Jul 2008 13:41:38 +0100
+
 casper (1.136) intrepid; urgency=low
 
   * Remove bad-and-wrong setting of PATH to include directories under /root;
