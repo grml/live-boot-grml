@@ -33,6 +33,12 @@ is_supported_fs ()
 {
 	fstype="${1}"
 
+	# Validate input first
+	if [ -z "${fstype}" ]
+	then
+		return 1
+	fi
+
 	# Try to look if it is already supported by the kernel
 	if grep -q ${fstype} /proc/filesystems
 	then
