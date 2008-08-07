@@ -561,6 +561,9 @@ is_nice_device ()
 	if /lib/udev/path_id "${sysfs_path}" | grep -E -q "ID_PATH=(usb|pci-[^-]*-[ide|scsi|usb])"
 	then
 		return 0
+	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
+	then
+		return 0
 	fi
 
 	return 1
