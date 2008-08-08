@@ -27,6 +27,7 @@ log_begin_msg "Grant administrative PolicyKit pivilieges to default user"
 # live-initramfs script
 
 # configure PolicyKit in live session
+mkdir -p /root/etc/PolicyKit
 cat << EOF > /root/etc/PolicyKit/PolicyKit.conf
 <?xml version="1.0" encoding="UTF-8"?> <!-- -*- XML -*- -->
 
