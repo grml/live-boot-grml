@@ -722,9 +722,20 @@ do_httpmount ()
 				squashfs|tgz|tar)
 					if [ "${webfile}" = "FETCH" ]
 					then
-						[ "${quiet}" != "y" ] &&
-							log_begin_msg "Trying wget ${url} -O ${dest}/$(basename ${url})"
-						wget "${url}" -O "${dest}/$(basename ${url})"
+						case "$url" in
+							tftp*)
+								ip="$(dirname $url | sed -e 's|tftp://||g')"
+								[ "${quiet}" != "y" ] &&
+								log_begin_msg "Trying tftp -g -b 10240 -r $(basename ${url})  -l ${dest}/$(basename ${url}) $ip"
+								tftp -g -b 10240 -r $(basename ${url})  -l ${dest}/$(basename ${url}) $ip
+							;;
+
+							*)
+								[ "${quiet}" != "y" ] &&
+								log_begin_msg "Trying wget ${url} -O ${dest}/$(basename ${url})"
+								wget "${url}" -O "${dest}/$(basename ${url})"
+								;;
+						esac
 					else
 						[ "${quiet}" != "y" ] &&
 							log_begin_msg "Trying to mount ${url} on ${dest}/$(basename ${url})"
