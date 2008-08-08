@@ -77,7 +77,7 @@ ${setmodel}
 ${setoptions}
 EOF
 
-DEBUG_XORG_PACKAGE=1 DEBUG_XORG_DEBCONF=1 live-reconfigure /root xserver-xorg
+DEBUG_XORG_PACKAGE=1 DEBUG_XORG_DEBCONF=1 live-reconfigure /root xserver-xorg 2>/dev/null
 umount /root/sys
 umount /root/proc
 umount /root/dev

@@ -64,8 +64,12 @@ then
 		echo "${USERNAME}  ALL=(ALL) NOPASSWD: ALL" >> /root/etc/sudoers
 
 		chroot /root sudo -u "${USERNAME}" sh -c "echo 'SU_TO_ROOT_SU=sudo' >> /home/${USERNAME}/.su-to-rootrc"
-		chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gksu/sudo-mode true
-		chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gksu/display-no-pass-info false
+
+		if [ -x /root/usr/bin/gconftool-2 ]
+		then
+			chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gksu/sudo-mode true
+			chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gksu/display-no-pass-info false
+		fi
 
 chroot /root sudo -u "${USERNAME}" sh -c "umask 0077 && mkdir -p /home/${USERNAME}/.kde/share/config && cat > /home/${USERNAME}/.kde/share/config/kdesurc" << EOF
 [super-user-command]

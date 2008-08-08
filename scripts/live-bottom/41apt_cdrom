@@ -31,6 +31,9 @@ log_begin_msg "Adding APT-CDROM source"
 
 # live-initramfs script
 
-chroot /root apt-cdrom -m add
+if [ -d /root/cdrom ]
+then
+	chroot /root apt-cdrom -m add
+fi
 
 log_end_msg
