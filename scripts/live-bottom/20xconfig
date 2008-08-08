@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Configuring X..."
+log_begin_msg "Configuring X"
 
 # live-initramfs script
 

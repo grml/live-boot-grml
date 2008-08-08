@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Loading preseed file..."
+log_begin_msg "Loading preseed file"
 
 # live-initramfs script
 

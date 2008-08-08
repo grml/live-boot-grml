@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Setting up swap..."
+log_begin_msg "Setting up swap"
 
 # live-initramfs script
 

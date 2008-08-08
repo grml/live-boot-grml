@@ -22,7 +22,7 @@ esac
 
 . /scripts/live-functions
 
-log_begin_msg "Setting up automatic login..."
+log_begin_msg "Setting up automatic login"
 
 # live-initramfs script
 

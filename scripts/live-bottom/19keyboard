@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Setting up console keyboard..."
+log_begin_msg "Setting up console keyboard"
 
 # live-initramfs script
 

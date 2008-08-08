@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Setting timezone..."
+log_begin_msg "Setting timezone"
 
 # live-initramfs script
 

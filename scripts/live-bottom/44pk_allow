@@ -22,7 +22,7 @@ esac
 
 . /scripts/live-functions
 
-log_begin_msg "Grant administrative PolicyKit pivilieges to default user..."
+log_begin_msg "Grant administrative PolicyKit pivilieges to default user"
 
 # live-initramfs script
 
