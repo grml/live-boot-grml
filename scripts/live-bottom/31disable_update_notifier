@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Disabling update-notifier..."
+log_begin_msg "Disabling update-notifier"
 
 # live-initramfs script
 

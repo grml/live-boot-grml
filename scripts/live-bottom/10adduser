@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Adding live session user..."
+log_begin_msg "Adding live session user"
 
 # live-initramfs script
 

@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Configuring accessibility options..."
+log_begin_msg "Configuring accessibility options"
 
 # live-initramfs script
 

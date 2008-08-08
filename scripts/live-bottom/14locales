@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Setting up locales..."
+log_begin_msg "Setting up locales"
 
 # live-initramfs script
 

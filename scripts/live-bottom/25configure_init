@@ -22,7 +22,7 @@ esac
 
 . /scripts/live-functions
 
-log_begin_msg "Setting up init..."
+log_begin_msg "Setting up init"
 
 # live-initramfs script
 

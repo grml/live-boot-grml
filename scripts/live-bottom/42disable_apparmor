@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Disabling AppArmor (does not work with stacked file systems)..."
+log_begin_msg "Disabling AppArmor (does not work with stacked file systems)"
 
 # live-initramfs script
 
