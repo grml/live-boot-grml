@@ -45,7 +45,8 @@ EOF
 
 chroot /root /usr/bin/env -i HOME="/root" \
 	TERM="${TERM}" PATH="/usr/sbin:/usr/bin:/sbin:/bin" \
-	/usr/lib/user-setup/user-setup-apply > /dev/null
+	/usr/lib/user-setup/user-setup-apply 2>&1 \
+		| grep -v "Shadow passwords are now on"
 
 # Clear out debconf database again to avoid confusing ubiquity later.
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
