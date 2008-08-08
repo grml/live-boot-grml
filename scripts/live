@@ -607,14 +607,14 @@ copy_live_to ()
 			fstype=$(get_fstype "${dev}")
 			freespace=$(fs_size "${dev}")
 		else
-			[ "$quiet" != "y" ] && log_warning_msg "${copytodev} is not a block device."
+			log_warning_msg "${copytodev} is not a block device."
 			return 1
 		fi
 	fi
 
 	if [ "${freespace}" -lt "${size}" ]
 	then
-		[ "${quiet}" != "y" ] && log_warning_msg "Not enough free ${free_string} (${freespace}k free, ${size}k needed) to copy live media in ${copytodev}."
+		log_warning_msg "Not enough free ${free_string} (${freespace}k free, ${size}k needed) to copy live media in ${copytodev}."
 		return 1
 	fi
 
@@ -688,7 +688,7 @@ do_netmount ()
 		NFSROOT=${ROOTSERVER}:${NFSROOT}
 	fi
 
-	[ "${quiet}" != "y" ] && log_begin_msg "Trying netboot from ${NFSROOT}"
+	log_begin_msg "Trying netboot from ${NFSROOT}"
 
 	if [ "${NETBOOT}" != "nfs" ] && do_cifsmount
 	then
@@ -700,7 +700,7 @@ do_netmount ()
 		rc=0
 	fi
 
-	[ "${quiet}" != "y" ] && log_end_msg
+	log_end_msg
 	return ${rc}
 }
 
@@ -725,20 +725,17 @@ do_httpmount ()
 						case "$url" in
 							tftp*)
 								ip="$(dirname $url | sed -e 's|tftp://||g')"
-								[ "${quiet}" != "y" ] &&
 								log_begin_msg "Trying tftp -g -b 10240 -r $(basename ${url})  -l ${dest}/$(basename ${url}) $ip"
 								tftp -g -b 10240 -r $(basename ${url})  -l ${dest}/$(basename ${url}) $ip
 							;;
 
 							*)
-								[ "${quiet}" != "y" ] &&
 								log_begin_msg "Trying wget ${url} -O ${dest}/$(basename ${url})"
 								wget "${url}" -O "${dest}/$(basename ${url})"
 								;;
 						esac
 					else
-						[ "${quiet}" != "y" ] &&
-							log_begin_msg "Trying to mount ${url} on ${dest}/$(basename ${url})"
+						log_begin_msg "Trying to mount ${url} on ${dest}/$(basename ${url})"
 						if [ "${webfile}" = "FTPFS" ]
 						then
 							FUSE_MOUNT="curlftpfs"
@@ -755,7 +752,7 @@ do_httpmount ()
 					;;
 
 				*)
-					[ "${quiet}" != "y" ] && log_begin_msg "Unrecognized archive extension for ${url}"
+					log_begin_msg "Unrecognized archive extension for ${url}"
 					;;
 			esac
 		fi
@@ -780,7 +777,7 @@ do_nfsmount ()
 		NFSOPTS=""
 	fi
 
-	[ "${quiet}" != "y" ] && log_begin_msg "Trying nfsmount -o nolock -o ro ${NFSOPTS} ${NFSROOT} ${mountpoint}"
+	log_begin_msg "Trying nfsmount -o nolock -o ro ${NFSOPTS} ${NFSROOT} ${mountpoint}"
 
 	# FIXME: This for loop is an ugly HACK round an nfs bug
 	for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13
@@ -805,7 +802,7 @@ do_cifsmount ()
 			CIFSOPTS="${NFSOPTS}"
 		fi
 
-		[ "${quiet}" != "y" ] && log_begin_msg "Trying mount.cifs ${NFSROOT} ${mountpoint} ${CIFSOPTS}"
+		log_begin_msg "Trying mount.cifs ${NFSROOT} ${mountpoint} ${CIFSOPTS}"
 		modprobe -q cifs
 
 		if mount.cifs "${NFSROOT}" "${mountpoint}" "${CIFSOPTS}"
@@ -865,7 +862,7 @@ do_snap_copy ()
 	else
 		return 1
 
-		[ "${quiet}" != "y" ] && log_warning_msg "Unable to find the snapshot ${snap_type} medium"
+		log_warning_msg "Unable to find the snapshot ${snap_type} medium"
 	fi
 }
 
@@ -1096,7 +1093,7 @@ setup_unionfs ()
 			cow_fstype=$(get_fstype "${cowprobe}")
 			cow_mountopt="rw,noatime"
 		else
-			[ "${quiet}" != "y" ] && log_warning_msg "Unable to find the persistent medium"
+			log_warning_msg "Unable to find the persistent medium"
 			cowdevice="tmpfs"
 			cow_fstype="tmpfs"
 			cow_mountopt="rw,noatime,mode=755"
@@ -1128,7 +1125,7 @@ setup_unionfs ()
 
 	if [ "${cow_fstype}" = "nfs" ]
 	then
-		[ "${quiet}" != "y" ] && log_begin_msg \
+		log_begin_msg \
 			"Trying nfsmount ${nfs_cow_opts} ${cowdevice} /cow"
 		nfsmount ${nfs_cow_opts} ${cowdevice} /cow || \
 			panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on /cow"
@@ -1183,7 +1180,7 @@ setup_unionfs ()
 			mount -t $(get_fstype "${homecow}") -o rw,noatime "${homecow}" "${rootmnt}/home"
 			export HOMEMOUNTED=1 # used to proper calculate free space in do_snap_copy()
 		else
-			[ "${quiet}" != "y" ] && log_warning_msg "Unable to find the persistent home medium"
+			log_warning_msg "Unable to find the persistent home medium"
 		fi
 
 		# Look for other snapshots to copy in
@@ -1211,7 +1208,7 @@ setup_unionfs ()
 
 	# shows cow fs on /cow for use by live-snapshot
 	mkdir -p "${rootmnt}/live/cow"
-	mount -o move /cow "${rootmnt}/live/cow" || mount -o bind /cow "${rootmnt}/live/cow" || [ "${quiet}" != "y" ] && log_warning_msg "Unable to move or bind /cow to ${rootmnt}/live/cow"
+	mount -o move /cow "${rootmnt}/live/cow" || mount -o bind /cow "${rootmnt}/live/cow" || log_warning_msg "Unable to move or bind /cow to ${rootmnt}/live/cow"
 }
 
 check_dev ()
@@ -1356,9 +1353,9 @@ mountroot ()
 	Arguments
 
 	set_usplash_timeout
-	[ "${quiet}" != "y" ] && log_begin_msg "Running /scripts/live-premount"
+	log_begin_msg "Running /scripts/live-premount"
 	run_scripts /scripts/live-premount
-	[ "${quiet}" != "y" ] && log_end_msg
+	log_end_msg
 
 	# Needed here too because some things (*cough* udev *cough*)
 	# changes the timeout
@@ -1426,10 +1423,10 @@ mountroot ()
 	log_end_msg
 
 	maybe_break live-bottom
-	[ "${quiet}" != "y" ] && log_begin_msg "Running /scripts/live-bottom"
+	log_begin_msg "Running /scripts/live-bottom"
 
 	run_scripts /scripts/live-bottom
-	[ "${quiet}" != "y" ] && log_end_msg
+	log_end_msg
 
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-
