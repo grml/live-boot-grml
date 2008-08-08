@@ -190,7 +190,15 @@ setup_loop ()
 	local readonly=${6}
 
 	modprobe -q -b "${module}"
-	udevsettle
+
+	if [ -x /sbin/udevadm ]
+	then
+		# lenny
+		udevadm settle
+	else
+		# etch
+		udevsettle
+	fi
 
 	for loopdev in ${pattern}
 	do
