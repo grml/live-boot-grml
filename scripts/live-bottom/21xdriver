@@ -49,3 +49,4 @@ EOF
 	umount /root/dev
 fi
 
+log_end_msg
