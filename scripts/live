@@ -1350,6 +1350,9 @@ mountroot ()
 	tail -f live.log >&7 &
 	tailpid="${!}"
 
+	# Ensure 'panic' function is overridden
+    	. /scripts/live-functions
+
 	Arguments
 
 	set_usplash_timeout
