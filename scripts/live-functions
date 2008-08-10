@@ -118,7 +118,7 @@ panic() {
 
 	printf "\n\n"
 	printf "     ${DEB_1}\n"
-	printf "     ${DEB_2}  \033[1;37mBOOT FAILED !!!\033[0m\n"
+	printf "     ${DEB_2}  \033[1;37mBOOT FAILED!\033[0m\n"
 	printf "     ${DEB_3}\n"
 	printf "     ${DEB_4}  This Debian Live image failed to boot.\n\n"
 
