@@ -27,8 +27,6 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Configuring X"
-
 # live-initramfs script
 
 if [ "${TERM_TYPE}" = "serial" ]
@@ -47,6 +45,8 @@ if [ -x /root/usr/bin/X ]
 then
 	exit 0
 fi
+
+log_begin_msg "Configuring X"
 
 locale=en_US.UTF-8
 
