@@ -43,6 +43,11 @@ then
 	exit 0
 fi
 
+if [ -x /root/usr/bin/X ]
+then
+	exit 0
+fi
+
 locale=en_US.UTF-8
 
 mount -n -o bind /sys /root/sys
