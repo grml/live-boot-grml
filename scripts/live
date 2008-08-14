@@ -1041,8 +1041,9 @@ setup_unionfs ()
 			fi
 
 			mkdir -p "${croot}/${imagename}"
-			echo "debug: Mounting backdev \"${backdev}\" (image = ${image}) on croot/imagename \"${croot}/${imagename}\""
+			log_begin_msg "Mounting \"${image}\" on \"${croot}${imagename}\" via \"${backdev}\""
 			mount -t "${fstype}" -o ro,noatime "${backdev}" "${croot}/${imagename}" || panic "Can not mount ${backdev} (${image}) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
+			log_end_msg
 		fi
 	done
 
