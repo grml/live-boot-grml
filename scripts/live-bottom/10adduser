@@ -40,7 +40,7 @@ set passwd/root-password-crypted *
 set passwd/user-password-crypted ${user_crypted}
 set passwd/user-fullname ${USERFULLNAME}
 set passwd/username ${USERNAME}
-set passwd/user-uid 999
+set passwd/user-uid 1000
 EOF
 
 chroot /root /usr/bin/env -i HOME="/root" \
