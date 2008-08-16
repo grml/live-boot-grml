@@ -24,6 +24,7 @@ build:
 install: test build
 	# Installing configuration
 	install -D -m 0644 conf/live.conf $(DESTDIR)/etc/live.conf
+	install -D -m 0644 conf/compcache $(DESTDIR)/usr/share/initramfs-tools/conf.d/compcache
 
 	# Installing executables
 	mkdir -p $(DESTDIR)/sbin
