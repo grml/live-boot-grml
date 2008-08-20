@@ -14,8 +14,8 @@ XS-Upstream-Depends: git-core
 Package: live-initramfs
 Architecture: all
 Depends: ${misc:Depends}, busybox, file, initramfs-tools, sudo, udev, user-setup
-Recommends: eject, loop-aes-utils, uuid-runtime, wget
-Suggests: curlftpfs, genext2fs (>= 1.4.1), httpfs2, squashfs-tools, mtd-tools
+Recommends: eject, uuid-runtime, wget
+Suggests: loop-aes-utils, curlftpfs, genext2fs (>= 1.4.1), httpfs2, squashfs-tools, mtd-tools
 Description: Debian Live initramfs hook
  live-initramfs is a hook for the initramfs-tools, used to generate a initramfs
  capable to boot live systems, such as those created by live-helper. This
