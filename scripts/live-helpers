@@ -146,7 +146,7 @@ fs_size ()
 			mountp="/mnt/tmp_fs_size"
 
 			mkdir -p "${mountp}"
-			mount -t $(get_fstype "${dev}") -o ro "${dev}" "${mountp}"
+			mount -n -t $(get_fstype "${dev}") -o ro "${dev}" "${mountp}"
 
 			doumount=1
 		fi
@@ -274,10 +274,10 @@ try_mount ()
 
 	if [ -n "${old_mountp}" ]
 	then
-		mount -o remount,"${opts}" "${dev}" "${old_mountp}" || panic "Remounting ${dev} ${opts} on ${old_mountp} failed"
-		mount -o bind "${old_mountp}" "${mountp}" || panic "Cannot bind-mount ${old_mountp} on ${mountp}"
+		mount -n -o remount,"${opts}" "${dev}" "${old_mountp}" || panic "Remounting ${dev} ${opts} on ${old_mountp} failed"
+		mount -n -o bind "${old_mountp}" "${mountp}" || panic "Cannot bind-mount ${old_mountp} on ${mountp}"
 	else
-		mount -t $(get_fstype "${dev}") -o "${opts}" "${dev}" "${mountp}" || panic "Cannot mount ${dev} on ${mountp}"
+		mount -n -t $(get_fstype "${dev}") -o "${opts}" "${dev}" "${mountp}" || panic "Cannot mount ${dev} on ${mountp}"
 	fi
 }
 
