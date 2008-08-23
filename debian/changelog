@@ -1,3 +1,75 @@
+live-initramfs (1.139.1-1) unstable; urgency=medium
+
+  [ Ben Voui ]
+  * Adding support for Virtio vd[a-z] drives.
+
+  [ Chris Lamb ]
+  * Move loop-aes-tools to Suggests; live-helper should install them if
+    required.
+  * Remove unnecessary indentation level.
+  * Modify hiding of harmless X.org reconfiguring messages.
+  * Revert to using uid 1000 as PAM bug seems to have disappeared
+    (Closes: #433076)
+  * Hide error from attempting to "mount --move"
+  * Rework ugly `echo "debug:..` message to use log_{begin,end}_msg.
+  * Don't configure X.org if it's not installed.
+  * Fix check for X.org.
+  * Add an /etc/fstab to the initramfs to silence harmless "empty fstab"
+    warnings.
+  * Silence another "script-not-executable" message for a sourced library.
+  * Add missing pipe. Thanks to Andreas Bombe.
+  * Shamefully adding myself to CREDITS
+  * Tidy "Disabling update-initramfs" message.
+  * Re-order some commands so we don't call log_begin_msg without calling
+    log_end_msg.
+  * Don't configure X when /usr/bin/X does not exist.
+  * Silence 'script-not-executable' lintian warning - live-functions script is
+    always sourced.
+  * Fix spacing in swirl.
+  * Override log_*_msg to print nicer status text (until #494257 is merged).
+  * Hide "overwriting possibly-customised configuration file" in X.org setup
+    output.
+  * Hide "Shadow passwords are now on" status message on bootup.
+  * Remove a number of "${quiet}" checks - they are repeated in the log_*_msg
+    functions.
+  * Rework locale handling
+  * Print friendly error message on live-initramfs panic.
+  * Fix path issue with live-preseed causing noisy errors when booting.
+  * Silence a number of annoying and distracting bootup messages.
+  * Add missing "log_end_msg" to live-bottom/21xdriver.
+  * Set different log messages for live-bottom/21{xdriver,xvidemode}.
+  * Remove trailing "..." from calls to log_begin_msg - they get added anyway.
+  * Move some arch-indep helper utilities to Build-Depends-Indep.
+  * Set default cow_mountopt where the other defaults are used.
+  * Don't use /sbin/losetup to test for '-r' option when the scripts just use
+    "lostup"
+
+  [ Daniel Baumann ]
+  * Updating authors file.
+  * Merging casper 1.139.
+  * Not going over the top with exclamation marks in the panic message.
+  * Updating credits file.
+  * Slightely adjusting to the more widespread used ascii swirl.
+  * Merging casper 1.138.
+  * Merging casper 1.137.
+
+  [ Marco Amadori ]
+  * Added "-n" option to all mount commands, thanks to Peter Holik
+    <peter@holik.at> for pointing this out.
+  * Be sure that the discovered filesystem is not null.
+  * The list of supported filesytems goes dynamic.
+  * Added ntfs filesystem to the initramfs.
+
+  [ Michael Prokop ]
+  * Move sourcing of live-functions in 38disable_restricted_manager to correct
+    place.
+
+  [ Steven Shiau ]
+  * Adding support for using tftp in fetch= parameter.
+  * Another fix about using udevsettle or "udevadm settle".
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 24 Aug 2008 00:00:00 +0200
+
 live-initramfs (1.136.3-1) unstable; urgency=medium
 
   [ Michael Prokop ]
