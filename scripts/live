@@ -1040,6 +1040,12 @@ setup_unionfs ()
 				panic "Unknown file system type on ${backdev} (${image})"
 			fi
 
+			if [ -z "${fstype}" ]
+			then
+				fstype="${imagename##*.}"
+				log_warning_msg "Unknown file system type on ${backdev} (${image}), assuming ${fstype}."
+			fi
+
 			mkdir -p "${croot}/${imagename}"
 			log_begin_msg "Mounting \"${image}\" on \"${croot}${imagename}\" via \"${backdev}\""
 			mount -n -t "${fstype}" -o ro,noatime "${backdev}" "${croot}/${imagename}" || panic "Can not mount ${backdev} (${image}) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
