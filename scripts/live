@@ -1338,7 +1338,9 @@ set_usplash_timeout ()
 	if [ -x /sbin/usplash_write ]
 	then
 		/sbin/usplash_write "TIMEOUT 120"
-	fi
+	else if [ -x /sbin/splashy_update ] ; then
+		/sbin/splashy_update "TIMEOUT 120"
+	fi ; fi
 }
 
 mountroot ()

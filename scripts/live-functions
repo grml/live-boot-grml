@@ -50,7 +50,9 @@ log_wait_msg ()
 	then
 		/sbin/usplash_write "INPUTENTER ${@}"
 		read nunya < /dev/.initramfs/usplash_outfifo
-	fi
+	else if [ -x /sbin/splashy_update ] ; then
+		/sbin/splashy_update "getstring ${@}" | read nunya
+	fi ; fi
 
 	_log_msg "Waiting: ${@} ... \n"
 }
