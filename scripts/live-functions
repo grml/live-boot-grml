@@ -124,9 +124,8 @@ panic() {
 	printf "     ${DEB_4}  This Debian Live image failed to boot.\n\n"
 
 	printf "  Please file a bug against the 'live-initramfs' package or email the Debian\n"
-	printf "  Live mailing list at <debian-live-devel@lists.alioth.debian.org>, making\n"
-	printf "  sure to note the exact version, name and distribution of the image you were\n"
-	printf "  attempting to boot.\n\n"
+	printf "  Live mailing list at <debian-live@lists.debian.org>, making sure to note the\n"
+	printf "  exact version, name and distribution of the image you were attempting to boot.\n\n"
 
 	printf "  The file ${LIVELOG} contains some debugging information but booting with the\n"
 	printf "  ${DEBUG} command-line parameter will greatly increase its verbosity which is\n"
