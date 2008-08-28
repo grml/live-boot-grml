@@ -538,7 +538,7 @@ mount_images_in_directory ()
 {
 	directory="${1}"
 	rootmnt="${2}"
-    	mac="${3}"
+	mac="${3}"
 
 
 	if match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.squashfs" ||
@@ -1345,7 +1345,6 @@ set_usplash_timeout ()
 
 mountroot ()
 {
-    
         if [ -x /scripts/local-top/cryptroot ]; then
 	    /scripts/local-top/cryptroot
 	fi
@@ -1358,7 +1357,7 @@ mountroot ()
 	tailpid="${!}"
 
 	# Ensure 'panic' function is overridden
-    	. /scripts/live-functions
+	. /scripts/live-functions
 
 	Arguments
 
