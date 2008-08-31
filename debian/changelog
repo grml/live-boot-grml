@@ -1,3 +1,19 @@
+live-initramfs (1.139.1-2) unstable; urgency=medium
+
+  [ Daniel Baumann ]
+  * If the filesystem type of the rootfs cannot be automatically detected, we
+    try to assume it from the extension of the imagefile we have found. Thanks
+    to Jordi Pujol <jordi_pujol@telefonica.net> (Closes: #460456).
+  * Setting project email address to the new debian-live@lists.debian.org.
+  * Disabling default usage of local swap partitions. Can be enabled with the
+    'swapon' boot parameter. Thanks to Joseph Rawson <umeboshi3@gmail.com> for
+    bringing it up.
+
+  [ Michal Suchanek ]
+  * Enabling the "remove CD" prompt in splashy.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon,  1 Sep 2008 00:00:00 +0200
+
 live-initramfs (1.139.1-1) unstable; urgency=medium
 
   [ Ben Voui ]
