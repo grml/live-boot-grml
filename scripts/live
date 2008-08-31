@@ -285,9 +285,9 @@ Arguments ()
 				export NOSUDO
 				;;
 
-			noswap)
-				NOSWAP="Yes"
-				export NOSWAP
+			swapon)
+				SWAPON="Yes"
+				export SWAPON
 				;;
 
 			noupdatenotifier)
