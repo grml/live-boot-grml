@@ -20,7 +20,7 @@ esac
 
 # live-initramfs header
 
-if [ -n "${NOSWAP}" ] || [ -n "${NOFSTAB}" ]
+if [ -z "${SWAPON}" ] || [ -n "${NOFSTAB}" ]
 then
 	exit 0
 fi

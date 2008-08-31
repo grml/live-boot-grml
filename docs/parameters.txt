@@ -35,7 +35,7 @@ live noxautologin
 live nofastboot
 live nopersistent
 live nosudo
-live noswap
+live swapon
 live nouser
 live noxautoconfig
 live persistent

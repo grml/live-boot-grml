@@ -183,9 +183,9 @@ Do not prompt to eject the CD on reboot.
 
 This parameter disables the automatic configuration of sudo.
 
-  noswap::
+  swapon::
 
-This parameter disables usage of local swap partitions.
+This parameter enables usage of local swap partitions.
 
   nouser::
 
