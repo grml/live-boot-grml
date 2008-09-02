@@ -27,6 +27,12 @@ fi
 
 . /scripts/live-functions
 
+if [ -z "${USERNAME}" ]
+then
+	echo "No default user for accessibility options."
+	exit 0
+fi
+
 log_begin_msg "Configuring accessibility options"
 
 # live-initramfs script

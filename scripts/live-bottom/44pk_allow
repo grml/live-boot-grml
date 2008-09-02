@@ -40,10 +40,19 @@ cat << EOF > /root/etc/PolicyKit/PolicyKit.conf
 	<match user="root">
 		<return result="yes"/>
 	</match>
+EOF
+
+if [ -n "${USERNAME}" ]
+then
+	cat << EOF >> /root/etc/PolicyKit/PolicyKit.conf
 	<!-- don't ask password for user in live session -->
 	<match user="$USERNAME">
 		<return result="yes"/>
 	</match>
+EOF
+fi
+
+cat << EOF >> /root/etc/PolicyKit/PolicyKit.conf
 	<define_admin_auth group="admin"/>
 </config>
 EOF

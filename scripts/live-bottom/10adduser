@@ -58,6 +58,28 @@ set passwd/username
 set passwd/user-uid
 EOF
 
+if ! grep "${USERNAME}" /root/etc/passwd
+then
+	echo "The default user (${USERNAME}) is not present,"
+	first_user=$(grep '^[^:]*:[^:]*:[12]\?[0-9][0-9][0-9][0-9]:' /root/etc/passwd | head -1 | cut -f1 -d ':')
+	if [ -n "${first_user}" ];
+	then
+		echo "setting default user to: ${first_user}."
+		USERNAME="${first_user}"
+		really_export USERNAME
+	else
+		echo "no other valid users found, disabling autologin."
+		NOAUTOLOGIN="Yes"
+		NOXAUTOLOGIN="Yes"
+		USERNAME=""
+		really_export NOAUTOLOGIN
+		really_export NOXAUTOLOGIN
+		really_export USERNAME
+		log_end_msg
+		exit 0
+	fi
+fi
+
 if [ -z "${NOSUDO}" ]
 then
 	if ! grep -q "${USERNAME}" /root/etc/sudoers
