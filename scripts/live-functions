@@ -2,47 +2,6 @@
 . /scripts/functions
 . /live.vars
 
-# Override log_*_msg until #494257 is merged
-
-_log_msg()
-{
-	if [ "$quiet" = "y" ]; then return; fi
-	printf "$@"
-}
-
-log_success_msg()
-{
-	_log_msg "Success: $@\n"
-}
-
-log_failure_msg()
-{
-	_log_msg "Failure: $@\n"
-}
-
-log_warning_msg()
-{
-	_log_msg "Warning: $@\n"
-}
-
-log_begin_msg()
-{
-	if [ -x /sbin/usplash_write ]; then
-		/sbin/usplash_write "TEXT $@"
-	fi
-	_log_msg "Begin: $@ ... "
-}
-
-log_end_msg()
-{
-	if [ -x /sbin/usplash_write ]; then
-		/sbin/usplash_write "SUCCESS ok"
-	fi
-	_log_msg "done.\n"
-}
-
-##
-
 log_wait_msg ()
 {
 	# Print a message and wait for enter
