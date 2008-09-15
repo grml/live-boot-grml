@@ -1373,6 +1373,8 @@ mountroot ()
 	Arguments
 
 	set_usplash_timeout
+
+	maybe_break live-premount
 	log_begin_msg "Running /scripts/live-premount"
 	run_scripts /scripts/live-premount
 	log_end_msg
