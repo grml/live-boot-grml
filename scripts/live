@@ -21,6 +21,17 @@ HOSTNAME="host"
 
 mkdir -p "${mountpoint}"
 
+# Create /etc/mtab for debug purpose and future syncs
+if [ ! -d /etc ]
+then
+	mkdir /etc/
+fi
+
+if [ ! -f /etc/mtab ]
+then
+	touch /etc/mtab
+fi
+
 [ -f /etc/live.conf ] && . /etc/live.conf
 export USERNAME USERFULLNAME HOSTNAME
 
