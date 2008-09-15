@@ -844,7 +844,7 @@ do_snap_copy ()
 		if [ -n "${fstype}" ]
 		then
 			# Copying stuff...
-			mount -n -t "${fstype}" -o ro,noatime "${fromdev}" "${tomount}"
+			mount -n -t "${fstype}" -o ro,noatime "${fromdev}" "${tomount}" || log_warning_msg "Error in mount -n -t ${fstype} -o ro,noatime ${fromdev} ${tomount}"
 			cp -a "${tomount}"/* ${todir}
 			umount "${tomount}"
 		else
