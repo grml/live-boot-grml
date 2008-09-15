@@ -50,9 +50,9 @@ log_begin_msg "Configuring X"
 
 locale=en_US.UTF-8
 
-mount -n -o bind /sys /root/sys
-mount -n -o bind /proc /root/proc
-mount -n -o bind /dev /root/dev
+mount -o bind /sys /root/sys
+mount -o bind /proc /root/proc
+mount -o bind /dev /root/dev
 
 if [ -n "${XDEBCONF}" -a -x /root/usr/sbin/xdebconfigurator ]
 then

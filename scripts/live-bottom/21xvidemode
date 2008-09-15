@@ -38,9 +38,9 @@ log_begin_msg "Configuring X video modes"
 
 if [ -n "$XVIDEOMODE" ]
 then
-	mount -n -o bind /sys /root/sys
-	mount -n -o bind /proc /root/proc
-	mount -n -o bind /dev /root/dev
+	mount -o bind /sys /root/sys
+	mount -o bind /proc /root/proc
+	mount -o bind /dev /root/dev
 
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
 set xserver-xorg/config/monitor/mode-list ${XVIDEOMODE}

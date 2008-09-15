@@ -30,7 +30,7 @@ log_begin_msg "Moving mount points"
 if [ ! -d /root/live/image ]
 then
 	mkdir -p /root/live/image
-	mount -n --move /live/image /root/live/image
+	mount --move /live/image /root/live/image
 fi
 
 log_end_msg

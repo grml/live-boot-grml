@@ -344,9 +344,9 @@ Arguments ()
 			url=*)
 				location="${ARGUMENT#url=}"
 
-				mount -n -o bind /sys /root/sys
-				mount -n -o bind /proc /root/proc
-				mount -n -o bind /dev /root/dev
+				mount -o bind /sys /root/sys
+				mount -o bind /proc /root/proc
+				mount -o bind /dev /root/dev
 
 				mkdir -p /root/var/run/network
 				chroot /root dhclient eth0
@@ -632,14 +632,14 @@ copy_live_to ()
 	# begin copying (or uncompressing)
 	mkdir "${copyto}"
 	echo "mount -t ${fstype} ${mount_options} ${dev} ${copyto}"
-	mount -n -t "${fstype}" ${mount_options} "${dev}" "${copyto}"
+	mount -t "${fstype}" ${mount_options} "${dev}" "${copyto}"
 
 	if [ "${extension}" = "tgz" ]
 	then
 		cd "${copyto}"
 		tar zxf "${copyfrom}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
 		rm -f "${copyfrom}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
-		mount -n -r -o move "${copyto}" "${rootmnt}"
+		mount -r -o move "${copyto}" "${rootmnt}"
 		cd "${OLDPWD}"
 	else
 		if [ -n "${MODULETORAMFILE}" ]
@@ -651,7 +651,7 @@ copy_live_to ()
 
 		livefs_root
 		umount ${copyfrom}
-		mount -n -r -o move ${copyto} ${copyfrom}
+		mount -r -o move ${copyto} ${copyfrom}
 	fi
 
 	rmdir ${copyto}
@@ -719,7 +719,7 @@ do_httpmount ()
 {
 	rc=1
 	dest="${mountpoint}/${LIVE_MEDIA_PATH}"
-	mount -n -t ramfs ram "${mountpoint}"
+	mount -t ramfs ram "${mountpoint}"
 	mkdir -p "${dest}"
 
 	for webfile in HTTPFS FTPFS FETCH
@@ -855,7 +855,7 @@ do_snap_copy ()
 		if [ -n "${fstype}" ]
 		then
 			# Copying stuff...
-			mount -n -t "${fstype}" -o ro,noatime "${fromdev}" "${tomount}" || log_warning_msg "Error in mount -n -t ${fstype} -o ro,noatime ${fromdev} ${tomount}"
+			mount -t "${fstype}" -o ro,noatime "${fromdev}" "${tomount}" || log_warning_msg "Error in mount -t ${fstype} -o ro,noatime ${fromdev} ${tomount}"
 			cp -a "${tomount}"/* ${todir}
 			umount "${tomount}"
 		else
@@ -1059,7 +1059,7 @@ setup_unionfs ()
 
 			mkdir -p "${croot}/${imagename}"
 			log_begin_msg "Mounting \"${image}\" on \"${croot}${imagename}\" via \"${backdev}\""
-			mount -n -t "${fstype}" -o ro,noatime "${backdev}" "${croot}/${imagename}" || panic "Can not mount ${backdev} (${image}) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
+			mount -t "${fstype}" -o ro,noatime "${backdev}" "${croot}/${imagename}" || panic "Can not mount ${backdev} (${image}) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
 			log_end_msg
 		fi
 	done
@@ -1148,7 +1148,7 @@ setup_unionfs ()
 		nfsmount ${nfs_cow_opts} ${cowdevice} /cow || \
 			panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on /cow"
 	else
-		mount -n -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} /cow || \
+		mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} /cow || \
 			panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on /cow"
 	fi
 
@@ -1162,7 +1162,7 @@ setup_unionfs ()
 		fi
 		exposedrootfs=${rofslist%% }
 
-		mount -n --bind ${exposedrootfs} ${rootmnt} || \
+		mount --bind ${exposedrootfs} ${rootmnt} || \
 			panic "bind mount of ${exposedrootfs} failed"
 
 		cow_dirs='/var/tmp /var/lock /var/run /var/log /var/spool
@@ -1170,14 +1170,14 @@ setup_unionfs ()
 
 		for dir in ${cow_dirs}; do
 			mkdir -p /cow${dir}
-			mount -n -t ${UNIONTYPE} \
+			mount -t ${UNIONTYPE} \
 				-o rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro \
 				${UNIONTYPE} "${rootmnt}${dir}" || \
 				panic "mount ${UNIONTYPE} on ${rootmnt}${dir} failed with option \
 					rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro"
 		done
 	else
-		mount -n -t ${UNIONTYPE} -o noatime,dirs=/cow=rw:${rofsstring} \
+		mount -t ${UNIONTYPE} -o noatime,dirs=/cow=rw:${rofsstring} \
 			${UNIONTYPE} "${rootmnt}" || panic "mount ${UNIONTYPE} on \
 			${rootmnt} failed with option noatime,dirs=/cow=rw:${rofsstring}"
 	fi
@@ -1185,7 +1185,7 @@ setup_unionfs ()
 	# tmpfs file systems
 	touch /etc/fstab
 	mkdir -p "${rootmnt}/live"
-	mount -n -t tmpfs tmpfs ${rootmnt}/live
+	mount -t tmpfs tmpfs ${rootmnt}/live
 
 	# Adding other custom mounts
 	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
@@ -1196,7 +1196,7 @@ setup_unionfs ()
 
 		if [ -b "${homecow}" ]
 		then
-			mount -n -t $(get_fstype "${homecow}") -o rw,noatime "${homecow}" "${rootmnt}/home"
+			mount -t $(get_fstype "${homecow}") -o rw,noatime "${homecow}" "${rootmnt}/home"
 			export HOMEMOUNTED=1 # used to proper calculate free space in do_snap_copy()
 		else
 			log_warning_msg "Unable to find the persistent home medium"
@@ -1219,7 +1219,7 @@ setup_unionfs ()
 					;;
 
 				*)
-					mount -n -o move "${d}" "${rootmnt}/live/${d##*/}"
+					mount -o move "${d}" "${rootmnt}/live/${d##*/}"
 					;;
 			esac
 		done
@@ -1227,7 +1227,7 @@ setup_unionfs ()
 
 	# shows cow fs on /cow for use by live-snapshot
 	mkdir -p "${rootmnt}/live/cow"
-	mount -n -o move /cow "${rootmnt}/live/cow" >/dev/null 2>&1 || mount -n -o bind /cow "${rootmnt}/live/cow" || log_warning_msg "Unable to move or bind /cow to ${rootmnt}/live/cow"
+	mount -o move /cow "${rootmnt}/live/cow" >/dev/null 2>&1 || mount -o bind /cow "${rootmnt}/live/cow" || log_warning_msg "Unable to move or bind /cow to ${rootmnt}/live/cow"
 }
 
 check_dev ()
@@ -1243,7 +1243,7 @@ check_dev ()
 
 	if [ -d "${devname}" ]
 	then
-		mount -n -o bind "${devname}" $mountpoint || continue
+		mount -o bind "${devname}" $mountpoint || continue
 
 		if is_live_path $mountpoint
 		then
@@ -1264,7 +1264,7 @@ check_dev ()
 
 	if is_supported_fs ${fstype}
 	then
-		mount -n -t ${fstype} -o ro,noatime "${devname}" ${mountpoint} || continue
+		mount -t ${fstype} -o ro,noatime "${devname}" ${mountpoint} || continue
 
 		if is_live_path ${mountpoint} && \
 			([ "${skip_uuid_check}" ] || matches_uuid ${mountpoint})
