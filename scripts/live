@@ -921,7 +921,7 @@ try_snap ()
 	else
 		dev=$(find_cow_device "${snap_label}")
 
-		if [ -b ${dev} ]
+		if [ -b "${dev}" ]
 		then
 			if echo "${dev}" | grep -qs loop
 			then
