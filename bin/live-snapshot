@@ -30,7 +30,12 @@
 ROOTSNAP=""
 HOMESNAP=""
 
-set -eu
+if [ -n "${LIVE_SNAPSHOT_CHECK_UNBOUND}" ]
+then
+	set -eu
+else
+	set -e
+fi
 
 . /usr/share/initramfs-tools/scripts/live-helpers
 
