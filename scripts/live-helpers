@@ -269,6 +269,7 @@ try_mount ()
 	dev="${1}"
 	mountp="${2}"
 	opts="${3}"
+	fstype="${4}"
 
 	old_mountp="$(where_is_mounted ${dev})"
 
@@ -277,7 +278,11 @@ try_mount ()
 		mount -o remount,"${opts}" "${dev}" "${old_mountp}" || panic "Remounting ${dev} ${opts} on ${old_mountp} failed"
 		mount -o bind "${old_mountp}" "${mountp}" || panic "Cannot bind-mount ${old_mountp} on ${mountp}"
 	else
-		mount -t $(get_fstype "${dev}") -o "${opts}" "${dev}" "${mountp}" || panic "Cannot mount ${dev} on ${mountp}"
+		if [ -z "${fstype}" ]
+		then
+			fstype=$(get_fstype "${dev}")
+		fi
+		mount -t "${fstype}" -o "${opts}" "${dev}" "${mountp}" || panic "Cannot mount ${dev} on ${mountp}, fstype=${fstype}, options=${opts}"
 	fi
 }
 
@@ -336,7 +341,7 @@ find_files ()
 			if is_supported_fs ${devfstype}
 			then
 				mkdir -p "${snap_backing}"
-				try_mount "${devname}" "${snap_backing}" "ro"
+				try_mount "${devname}" "${snap_backing}" "ro" ${devfstype}
 
 				for filename in ${filenames}
 					do
