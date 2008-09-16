@@ -128,6 +128,15 @@ fi
 # Program: md5sum
 copy_exec /usr/bin/md5sum /bin
 
+# Program: cpio
+# busybox and klibc lacks --no-absolute-filenames and --sparse, needed for snapshots
+if [ -e "${DESTDIR}/bin/cpio" ]
+then
+	# Override already present cpio's, mostly klibc's
+	rm "${DESTDIR}/bin/cpio"
+fi
+copy_exec /bin/cpio /bin
+
 # Program: udev
 if [ -x /sbin/udevadm ]
 then
