@@ -906,7 +906,7 @@ try_snap ()
 		else
 			# cpio.gz snapshot
 			cd "${snap_mount}"
-			zcat "${snapback}/${snapfile}" | cpio --extract --preserve-modification-time --no-absolute-filenames --sparse --unconditional --make-directories > /dev/null 2>&1
+			zcat "${snapback}/${snapfile}" | /bin/cpio --extract --preserve-modification-time --no-absolute-filenames --sparse --unconditional --make-directories > /dev/null 2>&1
 			RES=$?
 			cd "${OLDPWD}"
 		fi
