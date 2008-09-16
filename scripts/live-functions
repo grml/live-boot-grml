@@ -60,6 +60,16 @@ lang2locale() {
 	fi
 }
 
+# Override maybe_break from scripts/functions
+maybe_break()
+{
+	if [ "${break}" = "$1" ]; then
+		# Call original panic
+		. /scripts/functions
+		panic "Spawning shell within the initramfs"
+	fi
+}
+
 # Override panic from scripts/functions
 panic() {
 
