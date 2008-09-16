@@ -341,16 +341,18 @@ find_files ()
 			if is_supported_fs ${devfstype}
 			then
 				mkdir -p "${snap_backing}"
-				try_mount "${devname}" "${snap_backing}" "ro" ${devfstype}
 
-				for filename in ${filenames}
+				if try_mount "${devname}" "${snap_backing}" "ro" "${devfstype}"
+				then
+					for filename in ${filenames}
 					do
-					if [ -f "${snap_backing}/${filename}" ]
-					then
-						echo "${devname} ${snap_backing} ${filename}"
-						return 0
-					fi
-				done
+						if [ -f "${snap_backing}/${filename}" ]
+						then
+							echo "${devname} ${snap_backing} ${filename}"
+							return 0
+						fi
+					done
+				fi
 
 				umount ${snap_backing}
 			fi
