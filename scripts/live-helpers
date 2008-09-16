@@ -146,7 +146,7 @@ fs_size ()
 			mountp="/mnt/tmp_fs_size"
 
 			mkdir -p "${mountp}"
-			mount -t $(get_fstype "${dev}") -o ro "${dev}" "${mountp}"
+			mount -t $(get_fstype "${dev}") -o ro "${dev}" "${mountp}" || log_warning_msg "cannot mount -t $(get_fstype ${dev}) -o ro ${dev} ${mountp}"
 
 			doumount=1
 		fi
@@ -163,7 +163,7 @@ fs_size ()
 
 	if [ -n "${doumount}" ]
 	then
-		umount "${mountp}"
+		umount "${mountp}" || log_warning_msg "cannot umount ${mountp}"
 		rmdir "${mountp}"
 	fi
 
@@ -349,6 +349,7 @@ find_files ()
 						if [ -f "${snap_backing}/${filename}" ]
 						then
 							echo "${devname} ${snap_backing} ${filename}"
+							# return without mounting, it will be umounted later
 							return 0
 						fi
 					done

@@ -908,10 +908,14 @@ try_snap ()
 			cd "${snap_mount}"
 			zcat "${snapback}/${snapfile}" | /bin/cpio --extract --preserve-modification-time --no-absolute-filenames --sparse --unconditional --make-directories > /dev/null 2>&1
 			RES=$?
+			if [ "${RES}" != "0" ]
+			then
+				log_warning_msg "failure to \"zcat ${snapback}/${snapfile} | /bin/cpio --extract --preserve-modification-time --no-absolute-filenames --sparse --unconditional --make-directories\""
+			fi
 			cd "${OLDPWD}"
 		fi
 
-		umount "${snapback}"
+		umount "${snapback}" ||  log_warning_msg "failure to \"umount ${snapback}\""
 
 		if [ "${RES}" != "0" ]
 		then
@@ -919,10 +923,12 @@ try_snap ()
 		fi
 
 	else
+		# Try to find if it could be a snapshot partition
 		dev=$(find_cow_device "${snap_label}")
 
 		if [ -b "${dev}" ]
 		then
+			log_success_msg "found snapshot device on ${dev}"
 			if echo "${dev}" | grep -qs loop
 			then
 				# strange things happens, user confused?
