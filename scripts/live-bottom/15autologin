@@ -20,12 +20,14 @@ esac
 
 # live-initramfs header
 
-. /scripts/live-functions
+. /live.vars
 
 if [ -n "${NOXAUTOLOGIN}" ] || [ -z "${USERNAME}" ]
 then
 	exit 0
 fi
+
+. /scripts/live-functions
 
 log_begin_msg "Setting up automatic login"
 
