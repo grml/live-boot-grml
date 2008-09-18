@@ -320,23 +320,49 @@ Mount_device ()
 	esac
 }
 
+Entry_is_modified ()
+{
+	# Returns true if file exists and it is also present in "cow" directory
+	# This means it is modified in respect to read-only media, so it deserve
+	# to be saved
+
+	entry="${1}"
+
+	if [ -e "${entry}" ] || [ -L "${entry}" ]
+	then
+		if [ -e "${DEF_SNAP_COW}/${entry}" ] || [ -L "${DEF_SNAP_COW}/${entry}" ]
+		then
+			return 0
+		fi
+	fi
+	return 1
+}
+
 Do_filelist ()
 {
-	# BUGS: supports only cpio.gz types right now
+	# BUGS: supports only cpio.gz types, and do not handle deleted files yet
+
 	TMP_FILELIST=$1
 	if [ -f "${SNAP_LIST}" ]
 	then
 		# Generate include list
 		for entry in $(cat "${SNAP_LIST}" | grep -v '^#.*$' | grep -v '^ *$')
 		do
-			if [ -f "${entry}" ]
-			then
-				printf "%s\000" "${entry}" >> "${TMP_FILELIST}"
-			elif [ -d "${entry}" ]
+			if [ -d "${entry}" ]
 			then
 				cd /
-				find "${entry}" -print0 >> "${TMP_FILELIST}"
+				find "${entry}" | while read line
+				do
+					if Entry_is_modified "${line}"
+					then
+						printf "%s\000" "${line}" >> "${TMP_FILELIST}"
+					fi
+				done
 				cd "${OLDPWD}"
+			elif Entry_is_modified "${entry}"
+			then
+				# if file exists and it is modified
+				printf "%s\000" "${entry}" >> "${TMP_FILELIST}"
 			fi
 		done
 
