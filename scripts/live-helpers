@@ -288,14 +288,24 @@ try_mount ()
 
 find_cow_device ()
 {
+	# Returns a device containing a partition labeled "${pers_label}" or containing a file named the same way
+	#  in the latter case the partition containing the file is left mounted
+	#  if is not in black_listed_devices
 	pers_label="${1}"
 	cow_backing="/${pers_label}-backing"
+	black_listed_devices="${2}"
 
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
 	do
 		for dev in $(subdevices "${sysblock}")
 		do
 			devname=$(sys2dev "${dev}")
+
+			if echo "${black_listed_devices}" | grep -q "${devname}"
+			then
+				# skip this device enterely
+				break
+			fi
 
 			if [ "$(/lib/udev/vol_id -l ${devname} 2>/dev/null)" = "${pers_label}" ]
 			then
@@ -306,7 +316,10 @@ find_cow_device ()
 			case "$(get_fstype ${devname})" in
 				vfat|ext2|ext3|jffs2)
 					mkdir -p "${cow_backing}"
-					try_mount "${devname}" "${cow_backing}" "rw"
+					if ! try_mount "${devname}" "${cow_backing}" "rw"
+					then
+						break
+					fi
 
 					if [ -f "${cow_backing}/${pers_label}" ]
 					then
@@ -325,11 +338,12 @@ find_cow_device ()
 
 find_files ()
 {
-	# return the first of ${filenames} found on vfat and ext2/ext3 devices
+	# return the a string composed by device name, mountpoint an the first of ${filenames} found on a supported partition
 	# FIXME: merge with above function
 
 	filenames="${1}"
 	snap_backing="/snap-backing"
+	black_listed_devices="${2}"
 
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
 	do
@@ -337,6 +351,12 @@ find_files ()
 		do
 			devname=$(sys2dev "${dev}")
 			devfstype="$(get_fstype ${devname})"
+
+			if echo "${black_listed_devices}" | grep -q "${devname}"
+			then
+				# skip this device enterely
+				break
+			fi
 
 			if is_supported_fs ${devfstype}
 			then
@@ -349,7 +369,7 @@ find_files ()
 						if [ -f "${snap_backing}/${filename}" ]
 						then
 							echo "${devname} ${snap_backing} ${filename}"
-							# return without mounting, it will be umounted later
+							umount ${snap_backing}
 							return 0
 						fi
 					done
