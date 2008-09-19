@@ -1,3 +1,36 @@
+live-initramfs (1.139.1-3) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Remove local overiddes of log_*_msg - #494257 is now fixed in testing.
+
+  [ Daniel Baumann ]
+  * Removing currently unused Upstream-Depends field in control.
+  * Updating vcs fields in control file.
+  * Sourcing live.vars in 15autologin directly, rather than to inherit
+    from live-functions.
+
+  [ Marco Amadori ]
+  * Removed some useless spaces.
+  * Fix default user handling.
+  * Added a pretty vital mount debug string.
+  * Create /etc/mtab on the initramfs ASAP.
+  * Removed mount -n option, since mtab is there.
+  * Re-enable "break=live-premount" debug.
+  * Skipped some runtime duplicated execution.
+  * Add real cpio to initramfs for snapshot's uses.
+  * Fixed try_snap() umounting on error.
+  * Override maybe_break from initramfs-tools.
+  * Forces use of initramfs cpio over busybox's one.
+  * Fixed a wrong trial to copy an unexistant snapshot.
+  * Check for files and umount only if you can mount it first.
+  * Included more debug and comments on persistence code.
+  * Set -u in live-snapshot only in debug mode.
+
+  [ Michael Prokop ]
+  * Ignore errors from fstype.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 19 Sep 2008 14:00:00 +0200
+
 live-initramfs (1.139.1-2) unstable; urgency=medium
 
   [ Daniel Baumann ]
