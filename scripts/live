@@ -1155,7 +1155,9 @@ setup_unionfs ()
 		# homecow just mount something on /home, this should be generalized some way
 		homecow=$(find_cow_device "${home_persistence}" "${blacklistdev}")
 		root_snapdata=$(find_snap "${root_snapshot_label}" "${blacklistdev}")
-		# This second type should be removed when snapshot grow smarter
+		# This second type should be removed when snapshot will get smarter,
+		# hence when "/etc/live-snapshot*list" will be supported also by
+		# ext2|ext3|jffs2 snapshot types.
 		home_snapdata=$(find_snap "${home_snapshot_label}" "${blacklistdev}")
 
 		if [ -b "${cowprobe}" ]

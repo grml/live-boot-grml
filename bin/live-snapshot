@@ -63,6 +63,7 @@ SNAP_OUTPUT=""
 SNAP_RESYNC_STRING=""
 SNAP_TYPE="cpio"
 SNAP_LIST="/etc/live-snapshot.list"
+EXCLUDE_LIST="/etc/live-snapshot.exclude_list"
 
 Error ()
 {
@@ -392,6 +393,13 @@ Do_snapshot ()
 			# Removing whiteheads of unionfs
 			cd "${SNAP_COW}"
 			find . -name '*.wh.*' >> "${TMP_FILELIST}"
+
+			if [ -e "${EXCLUDE_LIST}" ]
+			then
+				# Add explicitly excluded files
+				cat "${EXCLUDE_LIST}" | grep -v '^#.*$' | grep -v '^ *$' >> "${TMP_FILELIST}"
+			fi
+
 			cd "${OLDPWD}"
 			mksquashfs "${SNAP_COW}" "${DEST}" -ef "${TMP_FILELIST}"
 			;;
@@ -399,10 +407,18 @@ Do_snapshot ()
 		cpio)
 			WORKING_DIR=$(Do_filelist "${TMP_FILELIST}")
 			cd "${WORKING_DIR}"
-			cat "${TMP_FILELIST}" | cpio --quiet -o0 -H newc | gzip -9c > "${DEST}" || exit 1
+			if [ -e "${EXCLUDE_LIST}" ]
+			then
+				# Convert \0 to \n and tag existing (rare but possible) \n in filenames,
+				# this to let grep -F -v do a proper work in filtering out
+				cat "${TMP_FILELIST}" | tr '\n' '\1' | tr '\0' '\n' | grep -F -v -f "${EXCLUDE_LIST}" | tr '\n' '\0' | tr '\1' '\n' | cpio --quiet -o0 -H newc | gzip -9c > "${DEST}" || exit 1
+			else
+				cat "${TMP_FILELIST}" | cpio --quiet -o0 -H newc | gzip -9c > "${DEST}" || exit 1
+			fi
 			cd "${OLDPWD}"
 			;;
 
+		# ext2|ext3 and jffs2 does not support easely an exclude list, files should be copied in another directory in order to filter content
 		ext2|ext3)
 			DU_DIM="$(du -ks ${SNAP_COW} | cut -f1)"
 			REAL_DIM="$(expr ${DU_DIM} + ${DU_DIM} / 20)" # Just 5% more to be sure, need something more sophistcated here...
