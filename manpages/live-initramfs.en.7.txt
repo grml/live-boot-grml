@@ -290,6 +290,11 @@ in this file will be the "lowest" point in the aufs, and the last file in
 this list will be on the "top" of the aufs, directly below /cow.  Without
 this file, any images in the "/live" directory are loaded in alphanumeric order.
 
+ /etc/live-persistence.binds
+
+This optional file, which resides in the rootfs system, not in the live media as above mentioned files, if exists will be used as a list of directories which not need to be persistent and which their content does not need to survive reboots. This is achieved by bind mounting for each directory listed there a tmpfs on the original path. This will permits to save precious writes and speed up operations for content like web caches and temporary files (like e.g.  /tmp and .mozilla) which are regenerated each time.
+
+
 See also
 --------
 
