@@ -313,6 +313,13 @@ find_cow_device ()
 				return
 			fi
 
+			if [ "${PERSISTENT}" = "nofiles" ]
+			then
+				# do not mount the device to find for image files
+				# just skip this
+				break
+			fi
+
 			case "$(get_fstype ${devname})" in
 				vfat|ext2|ext3|jffs2)
 					mkdir -p "${cow_backing}"
