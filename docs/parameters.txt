@@ -38,7 +38,7 @@ live nosudo
 live swapon
 live nouser
 live noxautoconfig
-live persistent
+live persistent[=nofiles]
 live {preseed/file|file}=FILE
 live package/question=VALUE
 live quickreboot

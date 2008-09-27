@@ -197,14 +197,16 @@ This parameter disables Xorg auto-reconfiguration at boot time. This is valuable
 if you either do the detection on your own, or, if you want to ship a custom,
 premade xorg.conf in your live system.
 
-  persistent::
+  persistent[=nofiles]::
 
 live-initramfs will look for persistent and snapshot partitions or files labeled
 "live-rw", "home-rw", and files called "live-sn*", "home-sn*" and will try to,
 in order: mount as /cow the first, mount the second in /home, and just copy the
 contents of the latter in appropriate locations (snapshots). Snapshots will be
 tried to be updated on reboot/shutdown. Look at live-snapshot(1) for more
-informations.
+informations. If "nofiles" is specified too, only labels will be searched and no
+filesystems will be mounted for searching file images or archives; this will
+results in improved boot times.
 
   {preseed/file|file}=**FILE**::
 
