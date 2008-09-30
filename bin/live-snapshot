@@ -341,7 +341,7 @@ Entry_is_modified ()
 
 Do_filelist ()
 {
-	# BUGS: supports only cpio.gz types, and do not handle deleted files yet
+	# BUGS: supports only cpio.gz types, and does not handle deleted files yet
 
 	TMP_FILELIST=$1
 	if [ -f "${SNAP_LIST}" ]
@@ -418,7 +418,8 @@ Do_snapshot ()
 			cd "${OLDPWD}"
 			;;
 
-		# ext2|ext3 and jffs2 does not support easely an exclude list, files should be copied in another directory in order to filter content
+		# ext2|ext3 and jffs2 does not easily support an exclude list; files
+		# should be copied to another directory in order to filter content
 		ext2|ext3)
 			DU_DIM="$(du -ks ${SNAP_COW} | cut -f1)"
 			REAL_DIM="$(expr ${DU_DIM} + ${DU_DIM} / 20)" # Just 5% more to be sure, need something more sophistcated here...

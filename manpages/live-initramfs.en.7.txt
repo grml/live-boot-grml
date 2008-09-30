@@ -204,9 +204,9 @@ live-initramfs will look for persistent and snapshot partitions or files labeled
 in order: mount as /cow the first, mount the second in /home, and just copy the
 contents of the latter in appropriate locations (snapshots). Snapshots will be
 tried to be updated on reboot/shutdown. Look at live-snapshot(1) for more
-informations. If "nofiles" is specified too, only labels will be searched and no
-filesystems will be mounted for searching file images or archives; this will
-results in improved boot times.
+informations. If "nofiles" is specified, only filesystems with matching labels
+will be searched; no filesystems will be traversed looking for snapshot files.
+This results in shorter boot times.
 
   {preseed/file|file}=**FILE**::
 
@@ -292,7 +292,14 @@ this file, any images in the "/live" directory are loaded in alphanumeric order.
 
  /etc/live-persistence.binds
 
-This optional file, which resides in the rootfs system, not in the live media as above mentioned files, if exists will be used as a list of directories which not need to be persistent and which their content does not need to survive reboots. This is achieved by bind mounting for each directory listed there a tmpfs on the original path. This will permits to save precious writes and speed up operations for content like web caches and temporary files (like e.g.  /tmp and .mozilla) which are regenerated each time.
+This optional file (which resides in the rootfs system, not in the live media)
+is used as a list of directories which not need be persistent: ie. their
+content does not need to survive reboots when using the persistence features.
+
+This saves expensive writes and speeds up operations on volatile data such as
+web caches and temporary files (like e.g. /tmp and .mozilla) which are
+regenerated each time. This is achieved by bind mounting each listed directory
+with a tmpfs on the original path.
 
 
 See also
