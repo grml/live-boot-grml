@@ -1151,14 +1151,14 @@ setup_unionfs ()
 			# snapshots to be sure to really store some e.g key config files,
 			# but not on the same media
 			blacklistdev="${cowprobe}"
-			PERSISTENCE_IS_ON="Yes"
+			PERSISTENCE_IS_ON="1"
 			export PERSISTENCE_IS_ON
 		fi
 		# homecow just mount something on /home, this should be generalized some way
 		homecow=$(find_cow_device "${home_persistence}" "${blacklistdev}")
 		if [ -b "${homecow}" ]
 		then
-			PERSISTENCE_IS_ON="Yes"
+			PERSISTENCE_IS_ON="1"
 			export PERSISTENCE_IS_ON
 		fi
 		root_snapdata=$(find_snap "${root_snapshot_label}" "${blacklistdev}")
