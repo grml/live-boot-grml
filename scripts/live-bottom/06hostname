@@ -32,7 +32,7 @@ log_begin_msg "Setting hostname"
 # live-initramfs script
 
 # Change hostname only if it is not set
-if [ ! -f /root/etc/hostname ] || grep -q localhost\.localdomain /root/etc/hostname
+if [ ! -f /root/etc/hostname ] || grep -qs localhost\.localdomain /root/etc/hostname
 then
 	echo "${HOSTNAME}" > /root/etc/hostname
 else
