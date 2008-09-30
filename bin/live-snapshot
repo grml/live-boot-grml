@@ -411,9 +411,18 @@ Do_snapshot ()
 			then
 				# Convert \0 to \n and tag existing (rare but possible) \n in filenames,
 				# this to let grep -F -v do a proper work in filtering out
-				cat "${TMP_FILELIST}" | tr '\n' '\1' | tr '\0' '\n' | grep -F -v -f "${EXCLUDE_LIST}" | tr '\n' '\0' | tr '\1' '\n' | cpio --quiet -o0 -H newc | gzip -9c > "${DEST}" || exit 1
+				cat "${TMP_FILELIST}" | \
+					tr '\n' '\1' | \
+					tr '\0' '\n' | \
+					grep -F -v -f "${EXCLUDE_LIST}" | \
+					tr '\n' '\0' | \
+					tr '\1' '\n' | \
+					cpio --quiet -o0 -H newc | \
+					gzip -9c > "${DEST}" || exit 1
 			else
-				cat "${TMP_FILELIST}" | cpio --quiet -o0 -H newc | gzip -9c > "${DEST}" || exit 1
+				cat "${TMP_FILELIST}" | \
+					cpio --quiet -o0 -H newc | \
+					gzip -9c > "${DEST}" || exit 1
 			fi
 			cd "${OLDPWD}"
 			;;
