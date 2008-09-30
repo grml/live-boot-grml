@@ -41,7 +41,7 @@ else
 fi
 
 # Create /etc/hosts only if it is not present or empty
-if [ ! -f /root/etc/hosts ] || [ "$(/root/usr/bin/stat -c %s root/etc/hosts)" == "0" ]
+if [ ! -s /root/etc/hosts ]
 then
 	cat > /root/etc/hosts << EOF
 127.0.0.1 localhost
