@@ -397,7 +397,7 @@ Do_snapshot ()
 			if [ -e "${EXCLUDE_LIST}" ]
 			then
 				# Add explicitly excluded files
-				cat "${EXCLUDE_LIST}" | grep -v '^#.*$' | grep -v '^ *$' >> "${TMP_FILELIST}"
+				grep -v '^#.*$' "${EXCLUDE_LIST}" | grep -v '^ *$' >> "${TMP_FILELIST}"
 			fi
 
 			cd "${OLDPWD}"
