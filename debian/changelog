@@ -1,9 +1,3 @@
-live-initramfs (1.139.1-3.1) unstable; urgency=low
-
-  * Non-maintainer upload.
-
- -- Marco Amadori <marco.amadori@vdavda.com>  Mon, 29 Sep 2008 11:53:00 +0200
-
 live-initramfs (1.139.1-3) unstable; urgency=medium
 
   [ Chris Lamb ]
