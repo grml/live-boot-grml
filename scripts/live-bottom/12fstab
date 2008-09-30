@@ -33,7 +33,7 @@ log_begin_msg "Configuring fstab"
 # live-initramfs script
 
 # Create a fake fstab only if it is not already there
-if [ ! -f "${FSTAB}" ] || grep -q 'UNCONFIGURED FSTAB FOR BASE SYSTEM' "${FSTAB}"
+if [ ! -f "${FSTAB}" ] || grep -qs 'UNCONFIGURED FSTAB FOR BASE SYSTEM' "${FSTAB}"
 then
 	cat >> ${FSTAB} << EOF
 # /etc/fstab: static file system information.
