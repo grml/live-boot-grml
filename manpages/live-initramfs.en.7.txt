@@ -205,8 +205,8 @@ in order: mount as /cow the first, mount the second in /home, and just copy the
 contents of the latter in appropriate locations (snapshots). Snapshots will be
 tried to be updated on reboot/shutdown. Look at live-snapshot(1) for more
 informations. If "nofiles" is specified, only filesystems with matching labels
-will be searched; no filesystems will be traversed looking for snapshot files.
-This results in shorter boot times.
+will be searched; no filesystems will be traversed looking for archives or image
+files. This results in shorter boot times.
 
   {preseed/file|file}=**FILE**::
 
