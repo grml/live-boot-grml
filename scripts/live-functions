@@ -21,7 +21,7 @@ really_export ()
 	STRING="${1}"
 	VALUE="$(eval echo -n \${$STRING})"
 
-	if [ -f /live.vars ] && cat /live.vars | grep -sq "export ${STRING}"
+	if [ -f /live.vars ] && grep -sq "export ${STRING}" /live.vars
 	then
 		sed -i -e 's/\('${STRING}'=\).*$/\1'${VALUE}'/' /live.vars
 	else

@@ -35,7 +35,7 @@ fi
 
 # live-initramfs script
 
-dirs="$(cat /root/etc/live-persistence.binds | grep -v '^#.*$' | grep -v '^ *$' | tr '\n' '\0')"
+dirs="$(sed -e '/^ *$/d' -e '/^#.*$/d' /root/etc/live-persistence.binds | tr '\n' '\0')"
 if [ -z "${dirs}" ]
 then
 	exit 0
