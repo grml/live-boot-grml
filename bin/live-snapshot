@@ -346,8 +346,8 @@ Do_filelist ()
 	TMP_FILELIST=$1
 	if [ -f "${SNAP_LIST}" ]
 	then
-		# Generate include list
-		for entry in $(cat "${SNAP_LIST}" | grep -v '^#.*$' | grep -v '^ *$')
+		# Generate include list removing empty and commented lines
+		for entry in $(sed -e '/^ *$/d' -e '/^#.*$/d' "${SNAP_LIST}")
 		do
 			if [ -d "${entry}" ]
 			then

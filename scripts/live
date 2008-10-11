@@ -613,7 +613,7 @@ copy_live_to ()
 	if [ "${copytodev}" = "ram" ]
 	then
 		# copying to ram:
-		freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( cat /proc/meminfo | grep Cached | head -n 1 | awk '/Cached/{print $2}' - ) )
+		freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( awk '/\<Cached/{print $2}' /proc/meminfo ) )
 		mount_options="-o size=${size}k"
 		free_string="memory"
 		fstype="tmpfs"
@@ -846,10 +846,10 @@ do_snap_copy ()
 		# look for free mem
 		if [ -n "${HOMEMOUNTED}" -a "${snap_type}" = "HOME" ]
 		then
-			todev=$(cat /proc/mounts | grep -s " $(base_path ${todir}) " | awk '{print $1}' )
-			freespace=$(df -k  | grep -s ${todev} | awk '{print $4}')
+			todev=$(awk -v pat="$(base_path ${todir})" '$2 == pat { print $1 }' /proc/mounts)
+			freespace=$(df -k | awk '/'${todev}'/{print $4}')
 		else
-			freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( cat /proc/meminfo | grep Cached | head -n 1 | awk '/Cached/{print $2}' - ))
+			freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( awk '/\<Cached/{print $2}' /proc/meminfo))
 		fi
 
 		tomount="/mnt/tmpsnap"
@@ -963,7 +963,7 @@ try_snap ()
 			# strange things happens, user confused?
 			snaploop=$( losetup ${dev} | awk '{print $3}' | tr -d '()' )
 			snapfile=$(basename ${snaploop})
-			snapdev=$(cat /proc/mounts | awk '{print $2,$1}' | grep -es "^$( dirname ${snaploop} )" | cut -f2 -d ' ')
+			snapdev=$(awk -v pat="$( dirname ${snaploop})" '$2 == pat { print $1 }' /proc/mounts)
 		else
 			snapdev="${dev}"
 		fi
