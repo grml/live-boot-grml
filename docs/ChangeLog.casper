@@ -1,3 +1,14 @@
+casper (1.153) jaunty; urgency=low
+
+  * scripts/casper-bottom/10adduser:
+    - Create links for Mythbuntu items on the Desktop too.
+    - Don't show removable drives on Mythbuntu desktop
+  * scripts/casper-bottom/46disable_services:
+    - New script for disabling services unnecessary to Live
+      mode that should still start after being installed.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 04 Nov 2008 01:25:59 -0600
+
 casper (1.152) intrepid; urgency=low
 
   * Use kde4rc now for accessibility profiles
