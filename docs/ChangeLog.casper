@@ -1,3 +1,13 @@
+casper (1.144) intrepid; urgency=low
+
+  * Bump media detection timeout to a minute; thanks to Tormod Volden and
+    Steve Beattie for analysis (LP: #258432).
+  * Note that this changes (fixes?) the semantics of LIVEMEDIA_TIMEOUT due
+    to not using hex values in a for loop which aren't understood by test
+    -lt (thanks, Steve Beattie).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 26 Sep 2008 18:35:13 +0100
+
 casper (1.143) intrepid; urgency=low
 
   * scripts/casper-bottom/30accessibility &
