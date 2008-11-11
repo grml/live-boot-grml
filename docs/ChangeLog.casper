@@ -1,9 +1,21 @@
+casper (1.149) intrepid; urgency=low
+
+  * scripts/casper-bottom/30accessibility &
+    ubiquity-hooks/30accessibility:
+    - Revert to using gconf keys for starting orca, as this is now what
+      orca does when the user chooses to automatically start orca from Orca's
+      preferences window.
+    - Explicitly set orca as the program to start up for magnification,
+      speech, and braille.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Thu, 16 Oct 2008 11:33:02 +1100
+
 casper (1.148) intrepid; urgency=low
 
   * Skip remounting read-only in try_mount as it's unnecessary and
     breaks persistence.  Thanks James Westby (LP: #274076).
 
- -- Evan Dandrea <evand@ubuntu.com>  Wed, 15 Oct 2008 13:13:38 -0400
+ -- Evan Dandrea <evand@ubuntu.com>  Wed, 15 Oct 2008 13:09:57 -0400
 
 casper (1.147) intrepid; urgency=low
 
