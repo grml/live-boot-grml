@@ -1,3 +1,10 @@
+casper (1.148) intrepid; urgency=low
+
+  * Skip remounting read-only in try_mount as it's unnecessary and
+    breaks persistence.  Thanks James Westby (LP: #274076).
+
+ -- Evan Dandrea <evand@ubuntu.com>  Wed, 15 Oct 2008 13:13:38 -0400
+
 casper (1.147) intrepid; urgency=low
 
   * Fix path to Kubuntu help file in 10adduser

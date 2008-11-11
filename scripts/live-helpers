@@ -275,7 +275,11 @@ try_mount ()
 
 	if [ -n "${old_mountp}" ]
 	then
-		mount -o remount,"${opts}" "${dev}" "${old_mountp}" || panic "Remounting ${dev} ${opts} on ${old_mountp} failed"
+		if [ "${opts}" != "ro" ]
+		then
+			mount -o remount,"${opts}" "${dev}" "${old_mountp}" || panic "Remounting ${dev} ${opts} on ${old_mountp} failed"
+		fi
+
 		mount -o bind "${old_mountp}" "${mountp}" || panic "Cannot bind-mount ${old_mountp} on ${mountp}"
 	else
 		if [ -z "${fstype}" ]
