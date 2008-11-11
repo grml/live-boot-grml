@@ -1,3 +1,22 @@
+casper (1.141) intrepid; urgency=low
+
+  [ Johannes Ballé ]
+  * Handle spaces in file names in md5sum.txt (LP: #251112).
+
+  [ Colin Watson ]
+  * Support ?= (set value but don't mark as seen) preseeding syntax in
+    preseed script; previously we only supported it in the keyboard script,
+    which confusingly doesn't deal with propagating console-setup/* preseeds
+    to the target filesystem (LP: #253749).
+  * Update to localechooser's new languagelist format.
+
+  [ Tormod Volden ]
+  * scripts/casper: don't scan floppy drives for livefs images (LP: #97306)
+  * scripts/casper: fix broken RE in is_nice_device() (LP: #250328)
+  * scripts/casper: properly use argument $1 in matches_uuid()
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 19 Sep 2008 02:14:05 +0100
+
 casper (1.140) intrepid; urgency=low
 
   [ Colin Watson ]

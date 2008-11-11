@@ -509,7 +509,7 @@ matches_uuid ()
 	path="${1}"
 	uuid="$(cat /conf/uuid.conf)"
 
-	for try_uuid_file in "${mountpoint}/.disk/live-uuid"*
+	for try_uuid_file in "${path}/.disk/live-uuid"*
 	do
 		[ -e "${try_uuid_file}" ] || continue
 
@@ -578,7 +578,7 @@ is_nice_device ()
 {
 	sysfs_path="${1#/sys}"
 
-	if /lib/udev/path_id "${sysfs_path}" | grep -E -q "ID_PATH=(usb|pci-[^-]*-[ide|scsi|usb])"
+	if /lib/udev/path_id "${sysfs_path}" | grep -E -q "ID_PATH=(usb|pci-[^-]*-(ide|scsi|usb))"
 	then
 		return 0
 	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
@@ -1369,7 +1369,7 @@ find_livefs ()
 	fi
 
 	# or do the scan of block devices
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v 'dm-' | grep -v fd )
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)"
 	do
 		devname=$(sys2dev "${sysblock}")
 		fstype=$(get_fstype "${devname}")
