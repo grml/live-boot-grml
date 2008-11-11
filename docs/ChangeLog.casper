@@ -1,3 +1,13 @@
+casper (1.143) intrepid; urgency=low
+
+  * scripts/casper-bottom/30accessibility &
+    ubiquity-hooks/30accessibility: Change the way that orca is set to
+    automatically start. Orca can be started via a gconf key, however this
+    is not reflected in the orca UI, and doesn't easily allow the user to
+    prevent orca from autostarting on an installed system.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Wed, 24 Sep 2008 10:37:35 +1000
+
 casper (1.142) intrepid; urgency=low
 
   * Fix syntax error introduced by is_nice_device regex fix.
