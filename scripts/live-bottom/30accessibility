@@ -67,8 +67,8 @@ case ${ACCESS} in
 	access=v2)
 		# Moderate Visual Impairment
 		gct -s -t bool /desktop/gnome/interface/accessibility true
-		gct -s -t bool /desktop/gnome/applications/at/visual/startup true
 		gct -s -t bool /apps/gksu/disable-grab true
+		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
 
 		if [ -x /root/usr/bin/orca ]
 		then
@@ -77,6 +77,10 @@ case ${ACCESS} in
 			echo "orca.settings.enableSpeech = False" >> /root/home/${USERNAME}/.orca/user-settings.py
 			echo "orca.settings.enableMagnifier = True" >> /root/home/${USERNAME}/.orca/user-settings.py
 			chroot /root chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.orca
+
+			mkdir -p /root/home/${USERNAME}/.config/autostart
+			cp /root/usr/share/applications/orca.desktop /root/home/${USERNAME}/.config/autostart
+			chroot /root chown -R ${USERNAME}.${USERNAME} /home/${USERNAME}/.config
 		fi
 		;;
 
@@ -85,15 +89,20 @@ case ${ACCESS} in
 		# Disabled for now, until we know eSpeak works.
 		#gct -s -t bool /desktop/gnome/sound/enable_esd false
 		gct -s -t bool /desktop/gnome/interface/accessibility true
-		gct -s -t bool /desktop/gnome/applications/at/visual/startup true
 		gct -s -t bool /apps/gksu/disable-grab true
 		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
+
+		if [ -x /root/usr/bin/orca ]
+		then
+			mkdir -p /root/home/${USERNAME}/.config/autostart
+			cp /root/usr/share/applications/orca.desktop /root/home/${USERNAME}/.config/autostart
+			chroot /root chown -R ${USERNAME}.${USERNAME} /home/${USERNAME}/.config
+		fi
 		;;
 
 	braille=ask)
 		# Braille
 		gct -s -t bool /desktop/gnome/interface/accessibility true
-		gct -s -t bool /desktop/gnome/applications/at/visual/startup true
 		gct -s -t bool /apps/gksu/disable-grab true
 		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
 
@@ -104,6 +113,10 @@ case ${ACCESS} in
 			echo "orca.settings.enableSpeech = False" >> /root/home/${USERNAME}/.orca/user-settings.py
 			echo "orca.settings.enableBraille = True" >> /root/home/${USERNAME}/.orca/user-settings.py
 			chroot /root chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.orca
+
+			mkdir -p /root/home/${USERNAME}/.config/autostart
+			cp /root/usr/share/applications/orca.desktop /root/home/${USERNAME}/.config/autostart
+			chroot /root chown -R ${USERNAME}.${USERNAME} /home/${USERNAME}/.config
 		fi
 		;;
 
