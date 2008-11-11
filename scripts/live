@@ -286,9 +286,9 @@ Arguments ()
 				export NOPROGRAMCRASHES
 				;;
 
-			norestrictedmanager)
-				NORESTRICTEDMANAGER="Yes"
-				export NORESTRICTEDMANAGER
+			nojockey)
+				NOJOCKEY="Yes"
+				export NOJOCKEY
 				;;
 
 			nosudo)
