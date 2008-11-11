@@ -1,3 +1,9 @@
+casper (1.152) intrepid; urgency=low
+
+  * Use kde4rc now for accessibility profiles
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Sat, 25 Oct 2008 23:44:54 +0100
+
 casper (1.151) intrepid; urgency=low
 
   * Force ubiquity to --automatic mode for ubuntu-mid
