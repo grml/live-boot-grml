@@ -1,3 +1,9 @@
+casper (1.151) intrepid; urgency=low
+
+  * Force ubiquity to --automatic mode for ubuntu-mid
+
+ -- Emmet Hikory <persia@ubuntu.com>  Thu, 16 Oct 2008 15:31:16 +0100
+
 casper (1.150) intrepid; urgency=low
 
   * Fix path to Kubuntu help file in 10adduser (really)
