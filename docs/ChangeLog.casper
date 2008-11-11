@@ -1,3 +1,9 @@
+casper (1.147) intrepid; urgency=low
+
+  * Fix path to Kubuntu help file in 10adduser
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 15 Oct 2008 12:49:29 +0100
+
 casper (1.146) intrepid; urgency=low
 
   * Update About Kubuntu link in 10adduser for KDE 4
