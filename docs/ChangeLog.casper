@@ -1,3 +1,18 @@
+casper (1.140) intrepid; urgency=low
+
+  [ Colin Watson ]
+  * Disable jockey as well as the old restricted-manager. While jockey does
+    do more than restricted-manager did, it also still uses a good chunk of
+    memory for a use case that's fairly limited on the live CD.
+
+  [ Luke Yelavich ]
+  * scripts/casper-bottom/30accessibility &
+    ubiquity-hooks/30accessibility:
+    - Check that usr/bin/orca exists and is executable before creating user
+      settings files.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Fri, 12 Sep 2008 19:23:41 +1000
+
 casper (1.139) intrepid; urgency=low
 
   * add compcache conf.d configuration for initramfs-tools
