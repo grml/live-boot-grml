@@ -570,7 +570,7 @@ mount_images_in_directory ()
 		[ -n "${mac}" ] && adddirectory="${directory}/${LIVE_MEDIA_PATH}/${mac}"
 		setup_unionfs "${directory}/${LIVE_MEDIA_PATH}" "${rootmnt}" "${adddirectory}"
 	else
-		:
+		log_warning_msg "Error: no filesystem images found at /${LIVE_MEDIA_PATH}."
 	fi
 }
 
