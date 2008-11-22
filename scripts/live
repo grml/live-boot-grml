@@ -1369,7 +1369,7 @@ find_livefs ()
 	fi
 
 	# or do the scan of block devices
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)"
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
 	do
 		devname=$(sys2dev "${sysblock}")
 		fstype=$(get_fstype "${devname}")

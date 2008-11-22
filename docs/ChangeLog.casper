@@ -1,3 +1,9 @@
+casper (1.142) intrepid; urgency=low
+
+  * Fix syntax error introduced by is_nice_device regex fix.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 19 Sep 2008 02:30:59 +0100
+
 casper (1.141) intrepid; urgency=low
 
   [ Johannes Ballé ]
