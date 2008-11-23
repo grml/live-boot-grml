@@ -692,6 +692,14 @@ do_netmount ()
 	[ -z ${HOSTNAME} ] && HOSTNAME=${OLDHOSTNAME}
 	export HOSTNAME
 
+	# Check if we have a network device at all
+	if ! ls /sys/class/net/eth0 > /dev/null 2>&1 && \
+	   ! ls /sys/class/net/wlan0 > /dev/null 2>&1 && \
+	   ! ls /sys/class/net/ath0 > /dev/null 2>&1
+	then
+		panic "No supported network device found, maybe a non-mainline driver is required."
+	fi
+
 	if [ "${NFSROOT}" = "auto" ]
 	then
 		NFSROOT=${ROOTSERVER}:${ROOTPATH}
