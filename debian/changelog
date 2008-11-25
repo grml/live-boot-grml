@@ -1,3 +1,16 @@
+live-initramfs (1.154.1-1) unstable; urgency=low
+
+  * Merging casper 1.140-1.154.
+  * Add a warning message when no image can be found.
+  * Adding a panic message when we netboot and have no supported network
+    device (Closes: #496684).
+  * Turning 'no supported filesystem images found' into a panic message,
+    rather than a warning.
+  * Also adding ralink to network device check.
+  * Removing spurious 'livefs_root' in copy_live_to();.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 25 Nov 2008 12:00:00 +0100
+
 live-initramfs (1.139.1-4) unstable; urgency=medium
 
   [ Chris Lamb ]
