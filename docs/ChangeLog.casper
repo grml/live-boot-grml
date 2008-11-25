@@ -1,3 +1,17 @@
+casper (1.154) jaunty; urgency=low
+
+  [ Evan Dandrea ]
+  * scripts/casper-bottom/02timezone:
+    - Remove as it's no longer needed and resets the timezone when
+      persistence is enabled (LP: #296855).
+
+  [ Colin Watson ]
+  * Preseed console-setup/optionscode and console-setup/codesetcode to the
+    empty string on boot to avoid debris from the live filesystem build
+    process getting in the way of installation (LP: #94177).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Sun, 23 Nov 2008 12:44:45 +0000
+
 casper (1.153) jaunty; urgency=low
 
   * scripts/casper-bottom/10adduser:
