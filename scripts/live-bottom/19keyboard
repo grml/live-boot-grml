@@ -89,6 +89,9 @@ then
 		live-preseed /root console-setup/modelcode '' false
 	fi
 
+	live-preseed /root console-setup/optionscode '' false
+	live-preseed /root console-setup/codesetcode '' false
+
 	sed -i 's/CONSOLE_SCREEN=$/CONSOLE_SCREEN=setupcon/; t END; b; : END; n; b END' /root/etc/init.d/usplash
 else
 	chroot /root /usr/sbin/install-keymap ${kbd}
