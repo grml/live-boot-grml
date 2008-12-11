@@ -1,3 +1,14 @@
+live-initramfs (1.154.2-1) unstable; urgency=medium
+
+  [ Daniel Baumann ]
+  * Updating authors file.
+
+  [ Marco Amadori ]
+  * Reworked integrity-check (Closes: #507477).
+  * Cleaned the boot log a bit.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 11 Dec 2008 06:00:00 +0100
+
 live-initramfs (1.154.1-1) unstable; urgency=low
 
   * Merging casper 1.140-1.154.
