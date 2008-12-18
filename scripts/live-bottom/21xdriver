@@ -36,6 +36,8 @@ log_begin_msg "Configuring X video driver"
 
 # live-initramfs script
 
+. /live.vars
+
 if [ -n "$XDRIVER" ]
 then
 	mount -o bind /sys /root/sys
