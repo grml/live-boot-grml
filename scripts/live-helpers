@@ -299,6 +299,13 @@ find_cow_device ()
 	cow_backing="/${pers_label}-backing"
 	black_listed_devices="${2}"
 
+	if [ -z "${PERSISTENT_PATH}" ]
+	then
+		pers_fpath=${cow_backing}/${pers_label}
+	else
+		pers_fpath=${cow_backing}/${PERSISTENT_PATH}/${pers_label}
+	fi
+
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
 	do
 		for dev in $(subdevices "${sysblock}")
@@ -332,9 +339,9 @@ find_cow_device ()
 						break
 					fi
 
-					if [ -f "${cow_backing}/${pers_label}" ]
+					if [ -f "${pers_fpath}" ]
 					then
-						echo $(setup_loop "${cow_backing}/${pers_label}" "loop" "/sys/block/loop*")
+						echo $(setup_loop "${pers_fpath}" "loop" "/sys/block/loop*")
 						return 0
 					else
 						umount ${cow_backing}

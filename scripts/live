@@ -340,6 +340,11 @@ Arguments ()
 				export PERSISTENT
 				;;
 
+			persistent-path=*)
+				PERSISTENT_PATH="${ARGUMENT#persistent-path=}"
+				export PERSISTENT_PATH
+				;;
+
 			nopersistent)
 				NOPERSISTENT="Yes"
 				export NOPERSISTENT
