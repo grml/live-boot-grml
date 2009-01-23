@@ -20,6 +20,7 @@ test:
 	fi
 
 build:
+	$(MAKE) -C manpages
 
 install: test build
 	# Installing configuration
@@ -126,6 +127,7 @@ update:
 		"http://svn.debian.org/viewsvn/*checkout*/d-i/trunk/packages/localechooser/languagelist"
 
 clean:
+	$(MAKE) -C manpages clean
 
 distclean:
 
