@@ -1,3 +1,17 @@
+live-initramfs (1.154.6-1) unstable; urgency=medium
+
+  * Replacing casper with live in live-new-uuid.
+  * Including wc in initramfs (Closes: #512413).
+  * Added missing variable quoting that lead to broken root persistence, thanks
+    to Thierry Walrant <debian.tgc@walrant.net> (Closes: #512656).
+  * Adding patch from Thierry Walrant <debian.tgc@walrant.net> to allow setting
+    a path for the persistence files through persistent-path boot parameter
+    (Closes: #512661).
+  * Adding persistent-path to parameter list and manpage.
+  * Actually building/cleaning manpages through targets in Makefile.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 26 Jan 2009 02:00:00 +0100
+
 live-initramfs (1.154.5-1) unstable; urgency=low
 
   * Also checking for wicd in 23networking, thanks to Ben Armstrong
