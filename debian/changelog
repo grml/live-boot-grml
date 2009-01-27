@@ -1,3 +1,12 @@
+live-initramfs (1.154.7-1) unstable; urgency=medium
+
+  * Adding note about URL limitations in live-initramfs manpage when
+    using fetch parameter.
+  * Removing wc from hook again, that's an ubuntu only problem they have
+    to care about.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 27 Jan 2009 18:00:00 +0100
+
 live-initramfs (1.154.6-1) unstable; urgency=medium
 
   * Replacing casper with live in live-new-uuid.
