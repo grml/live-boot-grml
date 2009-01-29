@@ -30,6 +30,8 @@ then
 	exit 0
 fi
 
+[ -n "$XVIDEOMODE" ] || exit
+
 . /scripts/live-functions
 
 log_begin_msg "Configuring X video modes"
@@ -38,8 +40,15 @@ log_begin_msg "Configuring X video modes"
 
 . /live.vars
 
-if [ -n "$XVIDEOMODE" ]
+if [ $(cat /root/etc/debian_version | sed 's|\..*$||') -ge 4 ]
 then
+	# lenny or newer
+	if [ -x "$(which xrandr 2>/dev/null)" ]
+	then
+		echo "xrandr -s ${XVIDEOMODE} || /bin/true" >> /root/etc/X11/Xsession.d/21xvidemode
+	fi
+else
+	# etch
 	mount -o bind /sys /root/sys
 	mount -o bind /proc /root/proc
 	mount -o bind /dev /root/dev
