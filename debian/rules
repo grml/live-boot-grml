@@ -1,30 +1,21 @@
 #!/usr/bin/make -f
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
-
-upstream:
-	cd .. && git clone git://git.debian.org/git/users/daniel/live-initramfs.git || true
-	rm -rf ../live-initramfs/.git
-
-build: build-stamp
-build-stamp:
-	dh_testdir
-
-	# Building package
-	$(MAKE) -C manpages
-
-	touch build-stamp
-
 clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp
 
-	# Cleaning package
 	$(MAKE) -C manpages clean
 
 	dh_clean
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+
+	$(MAKE) -C manpages
+
+	touch build-stamp
 
 install: build
 	dh_testdir
@@ -43,9 +34,11 @@ install: build
 	# Installing bug control
 	install -D -m 0755 debian/bug/live-initramfs.script debian/live-initramfs/usr/share/bug/live-initramfs
 
-binary-arch: build install
+binary: binary-indep
 
-binary-indep: build install
+binary-arch:
+
+binary-indep: install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs docs/ChangeLog
@@ -59,5 +52,4 @@ binary-indep: build install
 	dh_md5sums
 	dh_builddeb
 
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install
+.PHONY: clean build install binary binary-arch binary-indep
