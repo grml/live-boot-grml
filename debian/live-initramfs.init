@@ -126,17 +126,16 @@ do_stop ()
 			eject -p -m /live/image >/dev/null 2>&1
 			MESSAGE="Please remove the disc, close the the tray (if any)"
 		fi
-		MESSAGE="${MESSAGE} and press ENTER to continue:"
 
 		[ "$prompt" ] || return 0
 	fi
 
 	stty sane < /dev/console
 
-	echo -n -e "\n\n${MESSAGE}" > /dev/console
+	echo -n -e "\n\n${MESSAGE} and press ENTER to continue:" > /dev/console
 	if [ -x /sbin/usplash_write ]; then
 	    /sbin/usplash_write "TIMEOUT 86400"
-	    /sbin/usplash_write "TEXT-URGENT Please remove the disc, close the tray (if any)"
+	    /sbin/usplash_write "TEXT-URGENT ${MESSAGE}"
 	    /sbin/usplash_write "TEXT-URGENT and press ENTER to continue"
 	fi
 
