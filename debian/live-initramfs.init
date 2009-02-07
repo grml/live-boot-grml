@@ -112,7 +112,7 @@ do_stop ()
     done
 
     if [ -z ${QUICKREBOOT} ]; then
-	# TODO: i18n, dialog
+	# TODO: i18n
 	if [ -x /usr/bin/eject ]
 	then
 		BOOT_DEVICE="$(get_boot_device)"
