@@ -56,6 +56,29 @@ cache_path() {
     fi
 }
 
+get_boot_device() {
+    # search in /proc/mounts for the device that is mounted at /live/image
+    while read DEVICE MOUNT REST; do
+        if [ "${MOUNT}" == "/live/image" ]; then
+            echo "${DEVICE}"
+            exit 0
+        fi
+    done < /proc/mounts
+}
+
+device_is_USB_flash_drive()
+{
+    # remove leading "/dev/" and all trailing numbers from input
+    DEVICE=$(expr substr ${1} 6 3)
+    # check that device starts with "sd"
+    [ "$(expr substr ${DEVICE} 1 2)" != "sd" ] && return 1
+    # check that the device is an USB device
+    if readlink /sys/block/${DEVICE}/device | grep -q usb ; then
+        return 0
+    fi
+    return 1
+}
+
 do_stop ()
 {
     if [ ! -z "${ROOTSNAP}" ]; then
@@ -89,17 +112,30 @@ do_stop ()
     done
 
     if [ -z ${QUICKREBOOT} ]; then
+	# TODO: i18n, dialog
 	if [ -x /usr/bin/eject ]
 	then
-		eject -p -m /live/image >/dev/null 2>&1
+		BOOT_DEVICE="$(get_boot_device)"
+		if device_is_USB_flash_drive ${BOOT_DEVICE}; then
+			# do NOT eject USB flash drives!
+			# otherwise rebooting with most USB flash drives failes because
+			# they actually remember the "ejected" state even after reboot
+  			MESSAGE="Please remove the USB flash drive"
+		else
+			# ejecting is a very good idea here
+			eject -p -m /live/image >/dev/null 2>&1
+			# TODO: detect CD
+			MEDIUM="DVD"
+			MESSAGE="Please remove the ${MEDIUM}, close the ${MEDIUM} tray (if any)"
+		fi
+		MESSAGE="${MESSAGE} and press ENTER:"
 
 		[ "$prompt" ] || return 0
 	fi
 
 	stty sane < /dev/console
 
-	# XXX - i18n
-	echo "Please remove the disc and close the tray (if any) then press ENTER: " > /dev/console
+	echo -n -e "\n\n${MESSAGE}" > /dev/console
 	if [ -x /sbin/usplash_write ]; then
 	    /sbin/usplash_write "TIMEOUT 86400"
 	    /sbin/usplash_write "TEXT-URGENT Please remove the disc, close the tray (if any)"
