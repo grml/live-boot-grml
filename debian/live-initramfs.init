@@ -59,7 +59,7 @@ cache_path() {
 get_boot_device() {
     # search in /proc/mounts for the device that is mounted at /live/image
     while read DEVICE MOUNT REST; do
-        if [ "${MOUNT}" == "/live/image" ]; then
+        if [ "${MOUNT}" = "/live/image" ]; then
             echo "${DEVICE}"
             exit 0
         fi
