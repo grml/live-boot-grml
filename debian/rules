@@ -41,7 +41,7 @@ install: build
 	mv debian/live-initramfs/usr/share/doc/live-initramfs/ChangeLog.casper debian/live-initramfs/usr/share/doc/live-initramfs/changelog.casper
 
 	# Installing bug control
-	install -D -m 0755 debian/bug/script debian/live-initramfs/usr/share/bug/live-initramfs
+	install -D -m 0755 debian/bug/live-initramfs.script debian/live-initramfs/usr/share/bug/live-initramfs
 
 binary-arch: build install
 
