@@ -124,11 +124,9 @@ do_stop ()
 		else
 			# ejecting is a very good idea here
 			eject -p -m /live/image >/dev/null 2>&1
-			# TODO: detect CD
-			MEDIUM="DVD"
-			MESSAGE="Please remove the ${MEDIUM}, close the ${MEDIUM} tray (if any)"
+			MESSAGE="Please remove the disc, close the the tray (if any)"
 		fi
-		MESSAGE="${MESSAGE} and press ENTER:"
+		MESSAGE="${MESSAGE} and press ENTER to continue:"
 
 		[ "$prompt" ] || return 0
 	fi
