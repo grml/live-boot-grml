@@ -134,21 +134,21 @@ do_stop ()
 	if [ -z ${QUICKREBOOT} ]
 	then
 		# TODO: i18n
-		if [ -x /usr/bin/eject ]
+		BOOT_DEVICE="$(get_boot_device)"
+
+		if device_is_USB_flash_drive ${BOOT_DEVICE}
 		then
-			BOOT_DEVICE="$(get_boot_device)"
+			# do NOT eject USB flash drives!
+			# otherwise rebooting with most USB flash drives
+			# failes because they actually remember the
+			# "ejected" state even after reboot
+			MESSAGE="Please remove the USB flash drive"
+		else
+			# ejecting is a very good idea here
+			MESSAGE="Please remove the disc, close the the tray (if any)"
 
-			if device_is_USB_flash_drive ${BOOT_DEVICE}
+			if [ -x /usr/bin/eject ]
 			then
-				# do NOT eject USB flash drives!
-				# otherwise rebooting with most USB flash drives
-				# failes because they actually remember the
-				# "ejected" state even after reboot
-				MESSAGE="Please remove the USB flash drive"
-			else
-				# ejecting is a very good idea here
-				MESSAGE="Please remove the disc, close the the tray (if any)"
-
 				eject -p -m /live/image >/dev/null 2>&1
 			fi
 
