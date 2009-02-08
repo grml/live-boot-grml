@@ -1,3 +1,13 @@
+casper (1.156) jaunty; urgency=low
+
+  * scripts/casper-bottom/30accessibility &
+    ubiquity-hooks/30accessibility:
+    - If using a laptop, enable the laptop keyboard layout
+    - There is no longer a need to set gconf values as root in only-ubiquity
+      mode
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Fri, 06 Feb 2009 08:59:52 +0100
+
 casper (1.155) jaunty; urgency=low
 
   [ Colin Watson ]
