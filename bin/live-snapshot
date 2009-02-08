@@ -99,7 +99,7 @@ Help ()
 	echo "  -o, --output: output image file (default: ${DEST})."
 	echo "  -r, --resync-string: internally used to resync previous made snapshots."
 	echo "  -f, --refresh: try to sync a running snapshot."
-	echo "  -t, --type: snapshot filesystem type. Options: \"squashfs\", \"ext2\", \"ext3\", \"jffs2\" or \"cpio\".gz archive (default: ${SNAP_TYPE})"
+	echo "  -t, --type: snapshot filesystem type. Options: \"squashfs\", \"ext2\", \"ext3\", \"ext4\", \"jffs2\" or \"cpio\".gz archive (default: ${SNAP_TYPE})"
 	echo
 	echo "Look at live-snapshot(1) man page for more information."
 
@@ -257,6 +257,11 @@ Defaults ()
 			""|*.ext2|*.ext3)
 				SNAP_TYPE="ext2"
 				;;
+
+			*.ext4)
+				SNAP_TYPE="ext4"
+				;;
+
 			*)
 				Error "unrecognized resync string"
 				;;
@@ -276,6 +281,10 @@ Defaults ()
 			ext3)
 				DEST="${MOUNTP}/live-sn.ext2"
 				;;
+
+			ext4)
+				DEST="${MOUNTP}/live-sn.ext4"
+				;;
 		esac
 	else
 		DEST="${SNAP_OUTPUT}"
@@ -285,7 +294,7 @@ Defaults ()
 Validate_input ()
 {
 	case "${SNAP_TYPE}" in
-		cpio|squashfs|jffs2|ext2|ext3)
+		cpio|squashfs|jffs2|ext2|ext3|ext4)
 			;;
 
 		*)
@@ -427,9 +436,9 @@ Do_snapshot ()
 			cd "${OLDPWD}"
 			;;
 
-		# ext2|ext3 and jffs2 does not easily support an exclude list; files
+		# ext2|ext3|ext4 and jffs2 does not easily support an exclude list; files
 		# should be copied to another directory in order to filter content
-		ext2|ext3)
+		ext2|ext3|ext4)
 			DU_DIM="$(du -ks ${SNAP_COW} | cut -f1)"
 			REAL_DIM="$(expr ${DU_DIM} + ${DU_DIM} / 20)" # Just 5% more to be sure, need something more sophistcated here...
 			genext2fs --size-in-blocks=${REAL_DIM} --reserved-percentage=0 --root="${SNAP_COW}" "${DEST}"
@@ -462,7 +471,7 @@ Warn_user ()
 	if [ -z "${SNAP_RESYNC_STRING}" ]
 	then
 		case ${SNAP_TYPE} in
-			cpio|ext2|ext3)
+			cpio|ext2|ext3|ext4)
 				echo "Please move ${DEST} (if is not already in it)" > /dev/null 1>&2
 				echo "in a supported writable partition (e.g ext3, vfat)." > /dev/null 1>&2
 				;;

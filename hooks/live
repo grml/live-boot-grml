@@ -80,8 +80,9 @@ then
         manual_add_modules cifs
 fi
 
-# Filesystem: ext3
+# Filesystem: ext3/ext4
 manual_add_modules ext3
+manual_add_modules ext4
 
 # Filesystem: jffs2
 manual_add_modules jffs2
