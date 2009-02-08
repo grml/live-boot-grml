@@ -1,3 +1,27 @@
+live-initramfs (1.156.1-1) unstable; urgency=high
+
+  [ Daniel Baumann ]
+  * Revert using debhelper 7 command in rules.
+  * Updating copyright file.
+  * Prefixing debhelper files with package name.
+  * Updating bug script.
+  * Removing bashism in initscript.
+  * Usage of dialog in initscript is not actually a todo.
+  * Correcting medium eject message in initscript.
+  * Making medium removal message working again with usplash.
+  * Rewrapping init script.
+  * Reordering rules file.
+  * Merging casper 1.155.
+  * Adding ext4 support.
+  * Merging casper 1.156.
+  * Correct eject login in initscript.
+  * Updating parameters.txt.
+
+  [ Ronny Standtke ]
+  * Do not eject USB flash drives (Closes: #457070).
+
+ -- Daniel Baumann <daniel@debian.org>  Sun,  8 Feb 2009 15:00:00 +0100
+
 live-initramfs (1.154.8-1) unstable; urgency=high
 
   [ Kai Hendry ]
