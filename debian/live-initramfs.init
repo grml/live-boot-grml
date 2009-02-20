@@ -95,14 +95,19 @@ device_is_USB_flash_drive()
 
 do_stop ()
 {
-	if [ ! -z "${ROOTSNAP}" ]
+	if ! grep -qs nopersistent /proc/cmdline && grep -qs persistent /proc/cmdline
 	then
-		${DO_SNAPSHOT} --resync-string="${ROOTSNAP}"
-	fi
+		if [ ! -z "${ROOTSNAP}" ]
+		then
+			${DO_SNAPSHOT} --resync-string="${ROOTSNAP}"
+		fi
 
-	if [ ! -z "${HOMESNAP}" ]
-	then
-		${DO_SNAPSHOT} --resync-string="${HOMESNAP}"
+		if [ ! -z "${HOMESNAP}" ]
+		then
+			${DO_SNAPSHOT} --resync-string="${HOMESNAP}"
+		fi
+	else
+		return 0
 	fi
 
 	# check for netboot
