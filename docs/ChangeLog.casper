@@ -1,3 +1,20 @@
+casper (1.157) jaunty; urgency=low
+
+  [ Emmet Hikory ]
+  * 10adduser: add Category=Favorites support for netbook-launcher
+    (LP: #334656)
+
+  [ Luke Yelavich ]
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - Remove the fast user switch applet from the top panel, to re-enable
+      the logout/shutdown menu options in the system menu. This is done for
+      the speech and braille accessibility profiles. Requiring several
+      keyboard shortcuts to access something that is not entirely accessible
+      yet only makes things difficult for blind/vision impaired users, and is
+      likely to cause much confusion if sed menu entries are not present.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Tue, 03 Mar 2009 15:49:21 +1100
+
 casper (1.156) jaunty; urgency=low
 
   * scripts/casper-bottom/30accessibility &
