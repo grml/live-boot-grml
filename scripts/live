@@ -391,6 +391,11 @@ Arguments ()
 				export SHOWMOUNTS
 				;;
 
+			silent)
+				SILENT="Yes"
+				export SILENT
+				;;
+
 			textonly)
 				TEXTONLY="Yes"
 				export TEXTONLY

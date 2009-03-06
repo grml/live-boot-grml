@@ -116,7 +116,13 @@ then
 	printf 'LANG="%s"\n' "${LANG}" >> /root/etc/default/locale
 	printf 'LANG="%s"\n' "${LANG}" >> /root/etc/environment
 	printf '%s %s\n' "${LANG}" "${codepage}" > /root/etc/locale.gen
-	chroot /root /usr/sbin/locale-gen
+
+	if [ -z "${SILENT}" ]
+	then
+		chroot /root /usr/sbin/locale-gen
+	else
+		chroot /root /usr/sbin/local-gen > /dev/null 2>&1
+	fi
 fi
 
 log_end_msg

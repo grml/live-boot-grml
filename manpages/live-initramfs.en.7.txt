@@ -245,6 +245,11 @@ This parameter will make live-initramfs to show on "/" the ro filesystems
 lead to problems by applications like "mono" which store binary paths on
 installation.
 
+  silent
+
+If you boot with the normal quiet parameter, live-initramfs hides most messages
+of its own. When adding silent, it hides all.
+
   textonly
 
 Start up to text-mode shell prompts, disabling the graphical user interface.
