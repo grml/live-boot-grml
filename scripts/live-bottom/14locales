@@ -29,6 +29,9 @@ fi
 
 log_begin_msg "Setting up locales"
 
+# Cosmetic line wrapping for output of local-gen
+echo
+
 # live-initramfs script
 
 if [ -e /root/etc/default/locale ]
