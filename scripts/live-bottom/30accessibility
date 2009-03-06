@@ -56,6 +56,24 @@ laptop_detect ()
 	fi
 }
 
+remove_applet ()
+{
+	# Code to remove an applet from the default panel setup
+	# This is rather hacky, but I can't think of a one or two line regular
+	# expression to do this any more efficiently. Patches welcome. In
+	# addition, setting these via gconf also doesn't work for some reason.
+
+	local line_no prior_line next_line
+
+	line_no="$(grep -n "<string>$1</string>" /root/usr/share/gconf/defaults/05_panel-default-setup.entries | cut -f 1 -d :)"
+	prior_line="$((line_no-1))"
+	next_line="$((line_no+1))"
+
+	sed -i -n "${prior_line},${next_line}!p" /root/usr/share/gconf/defaults/05_panel-default-setup.entries
+
+	chroot /root update-gconf-defaults
+}
+
 case ${ACCESS} in
 	access=v1)
 		# Lesser Visual Impairment
@@ -102,6 +120,7 @@ case ${ACCESS} in
 		gct -s -t bool /apps/gksu/disable-grab true
 		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
 
+		remove_applet fast_user_switch
 		;;
 
 	braille=ask)
@@ -121,6 +140,8 @@ case ${ACCESS} in
 			laptop_detect
 			chroot /root chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.orca
 		fi
+
+		remove_applet fast_user_switch
 		;;
 
 	access=m1)
