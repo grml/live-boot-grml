@@ -121,7 +121,7 @@ then
 	then
 		chroot /root /usr/sbin/locale-gen
 	else
-		chroot /root /usr/sbin/local-gen > /dev/null 2>&1
+		chroot /root /usr/sbin/locale-gen > /dev/null 2>&1
 	fi
 fi
 
