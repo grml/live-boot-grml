@@ -114,6 +114,10 @@ to find this device for the "/live" directory where the read-only root
 filesystem should reside. If it did not find something usable, the normal scan
 for block devices is performed.
 
+Instead of specifing an actual device name, the keyword 'removable' can be used
+to limit the search of acceptable live media to removable type only. Note that
+cdrom devices are not removable, but e.g. usb mass storage is.
+
   {live-media-encryption|encryption}=**TYPE**::
 
 live-initramfs will mount the encrypted rootfs TYPE, asking the passphrase,
