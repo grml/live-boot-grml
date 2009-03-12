@@ -1418,6 +1418,22 @@ find_livefs ()
 			done
 			;;
 
+		removable-usb)
+			for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+			do
+				if [ "$(cat ${sysblock}/removable)" = "1" ] && readlink ${sysblock}/device | grep -q usb
+				then
+					for dev in $(subdevices "${sysblock}")
+					do
+						if check_dev "${dev}"
+						then
+							return 0
+						fi
+					done
+				fi
+			done
+			;;
+
 		*)
 			if [ ! -z "${LIVE_MEDIA}" ]
 			then
