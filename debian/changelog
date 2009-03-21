@@ -1,3 +1,31 @@
+live-initramfs (1.157.1-1) unstable; urgency=medium
+
+  [ Daniel Baumann ]
+  * Only snapshotting in initscript when we actually run with persistence.
+
+  [ Rene Mayrhofer ]
+  * Checking if /var/log is writable before trying to copy live.log to the newly
+    mounted root filesystem (Closes: #516914).
+
+  [ Daniel Baumann ]
+  * Improving check in 21xdriver when we don't do anything.
+  * Adding hack to remove live specific filesystems from umounfs initscript
+    (Closes: #506410, #515718).
+  * Adding comsetic line wrapping for output of local-gen messages during boot.
+  * Merging casper 1.157.
+  * Only calling install-keymap if it's actually installed, which is always but
+    in minimal images the case though (Closes: #517153).
+  * Adding silent boot parameter.
+  * Respecting media timeout even when specificing media device manually.
+  * Also allowing to use the removable keyword for specifying a live media.
+  * Correcting accidental syntax error in one of the previous commits in
+    19keyboard bottom script.
+  * Adding removable-usb keyword to further restrict live media selection.
+  * Correcting check for usb when using removable-usb keyword.
+  * Correcting typo in locale bottom script.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 21 Mar 2009 14:00:00 +0100
+
 live-initramfs (1.156.1-1) unstable; urgency=high
 
   [ Daniel Baumann ]
