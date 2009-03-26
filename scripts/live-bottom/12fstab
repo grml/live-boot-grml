@@ -32,17 +32,27 @@ log_begin_msg "Configuring fstab"
 
 # live-initramfs script
 
-# Create a fake fstab only if it is not already there
+# Create a fake fstab only if it doesn't exist or if its the debootstrap template
 if [ ! -f "${FSTAB}" ] || grep -qs 'UNCONFIGURED FSTAB FOR BASE SYSTEM' "${FSTAB}"
 then
-	cat >> ${FSTAB} << EOF
+
+cat > ${FSTAB} << EOF
 # /etc/fstab: static file system information.
 #
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
 
-${UNIONTYPE} / ${UNIONTYPE} rw 0 0
-tmpfs /tmp tmpfs nosuid,nodev 0 0
 EOF
+
+fi
+
+if ! grep -qs  "^${UNIONTYPE}" "${FSTAB}"
+then
+	echo "${UNIONTYPE} / ${UNIONTYPE} rw 0 0" >> "${FSTAB}"
+fi
+
+if ! grep -qs "^tmpfs /tmp" "${FSTAB}"
+then
+	echo "tmpfs /tmp tmpfs nosuid,nodev 0 0" >> "${FSTAB}"
 fi
 
 # disabled for now
