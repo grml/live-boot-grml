@@ -104,7 +104,10 @@ then
 
 	if [ -d /root/etc/default/kdm.d/ ]
 	then
-		printf 'LANGUAGE=%s\n' "${LANG}" >> /root/etc/default/kdm.d/live-autologin
+		if ! grep -qs "^LANGUAGE" "${LANG}"
+		then
+			printf 'LANGUAGE=%s\n' "${LANG}" >> /root/etc/default/kdm.d/live-autologin
+		fi
 	elif [ -f /root/etc/kde3/kdm/kdmrc ]
 	then
 		sed -i -r -e "s/#Language=.*/Language=${language}/" \
