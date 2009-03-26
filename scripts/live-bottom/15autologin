@@ -59,12 +59,16 @@ fi
 
 if [ -d /root/etc/default/kdm.d/ ]
 then
+	if ! grep -qs "^AUTOLOGIN" /root/etc/default/kdm.d/live-autologin
+	then
 
 cat >> /root/etc/default/kdm.d/live-autologin << EOF
 AUTOLOGINUSER=${USERNAME}
 AUTOLOGINAGAIN=true
 AUTOLOGINDELAY=0
 EOF
+
+	fi
 
 elif [ -f /root/etc/kde3/kdm/kdmrc ]
 then
