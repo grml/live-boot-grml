@@ -55,9 +55,10 @@ done
 for device in ${devices}
 do
 
-cat >> ${FSTAB} << EOF
-${device} swap swap defaults 0 0
-EOF
+if ! grep -qs  "^${device} swap" "${FSTAB}"
+then
+	echo "${device} swap swap defaults 0 0" >> "${FSTAB}"
+fi
 
 done
 
