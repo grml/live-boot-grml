@@ -6,10 +6,19 @@ then
 	export PATH="${PATH}:/usr/lib/klibc/bin"
 fi
 
+# handle upgrade path from old udev (using udevinfo) to
+# recent versions of udev (using udevadm info)
+if [ -x /sbin/udevadm ]
+then
+	udevinfo='/sbin/udevadm info'
+else
+	udevinfo='udevinfo'
+fi
+
 sys2dev ()
 {
 	sysdev=${1#/sys}
-	echo "/dev/$(udevinfo -q name -p ${sysdev} 2>/dev/null|| echo ${sysdev##*/})"
+	echo "/dev/$($udevinfo -q name -p ${sysdev} 2>/dev/null|| echo ${sysdev##*/})"
 }
 
 subdevices ()
