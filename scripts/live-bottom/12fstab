@@ -77,12 +77,17 @@ then
 		fi
 	done
 
+	# Remove all auto swap entries
+	if grep -qs  "swap swap" "${FSTAB}"
+	then
+		grep -v "swap swap" "${FSTAB}" > "${FSTAB}".tmp
+		mv "${FSTAB}".tmp "${FSTAB}"
+	fi
+
+	# Add new swap entries
 	for device in ${devices}
 	do
-		if ! grep -qs  "^${device} swap" "${FSTAB}"
-		then
-			echo "${device} swap swap defaults 0 0" >> "${FSTAB}"
-		fi
+		echo "${device} swap swap defaults 0 0" >> "${FSTAB}"
 	done
 fi
 
