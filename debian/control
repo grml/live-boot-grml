@@ -13,7 +13,7 @@ Vcs-Git: git://git.debian.net/git/debian-live/live-initramfs.git
 Package: live-initramfs
 Architecture: all
 Depends: ${misc:Depends}, busybox, file, initramfs-tools, sudo, udev, user-setup
-Recommends: eject, uuid-runtime, wget
+Recommends: cryptsetup, eject, uuid-runtime, wget
 Suggests: loop-aes-utils, curlftpfs, genext2fs (>= 1.4.1), httpfs2, squashfs-tools, mtd-tools
 Description: Debian Live initramfs hook
  live-initramfs is a hook for the initramfs-tools, used to generate a initramfs
