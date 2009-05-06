@@ -106,8 +106,6 @@ do_stop ()
 		then
 			${DO_SNAPSHOT} --resync-string="${HOMESNAP}"
 		fi
-	else
-		return 0
 	fi
 
 	# check for netboot
