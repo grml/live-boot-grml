@@ -944,7 +944,7 @@ try_snap ()
 	snap_mount="${2}"
 	snap_type="${3}"
 
-	if [ ! -z "${snapdata}" ]
+	if [ -n "${snapdata}" ] && [ ! -b "${snapdata}" ]
 	then
 		log_success_msg "found snapshot: ${snapdata}"
 		snapdev="$(echo ${snapdata} | cut -f1 -d ' ')"
