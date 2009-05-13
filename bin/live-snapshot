@@ -59,6 +59,7 @@ TMP_FILELIST="${PROGRAM}.list"
 # Command line defaults and declarations
 SNAP_COW="${DEF_SNAP_COW}"
 SNAP_DEV=""
+SNAP_MNT=""
 SNAP_OUTPUT=""
 SNAP_RESYNC_STRING=""
 SNAP_TYPE="cpio"
@@ -239,9 +240,10 @@ Defaults ()
 	then
 		SNAP_COW=$(echo "${SNAP_RESYNC_STRING}" | cut -f1 -d ':')
 		SNAP_DEV=$(echo "${SNAP_RESYNC_STRING}" | cut -f2 -d ':')
-		DEST="${MOUNTP}/$(echo ${SNAP_RESYNC_STRING} | cut -f3 -d ':')"
+		SNAP_MNT=$(echo "${SNAP_RESYNC_STRING}" | cut -f3 -d ':')
+		DEST="${MOUNTP}/${SNAP_MNT}"
 
-		case "${DEST}" in
+		case "${SNAP_MNT}" in
 			*.cpio.gz)
 				SNAP_TYPE="cpio"
 				;;
@@ -254,8 +256,12 @@ Defaults ()
 				SNAP_TYPE="jffs2"
 				;;
 
-			""|*.ext2|*.ext3)
+			*.ext2|*.ext3)
 				SNAP_TYPE="ext2"
+				;;
+
+			"")
+				SNAP_TYPE="whole_partition"
 				;;
 
 			*.ext4)
@@ -294,7 +300,7 @@ Defaults ()
 Validate_input ()
 {
 	case "${SNAP_TYPE}" in
-		cpio|squashfs|jffs2|ext2|ext3|ext4)
+		cpio|squashfs|jffs2|ext2|ext3|ext4|whole_partition)
 			;;
 
 		*)
@@ -413,7 +419,14 @@ Do_snapshot ()
 			mksquashfs "${SNAP_COW}" "${DEST}" -ef "${TMP_FILELIST}"
 			;;
 
-		cpio)
+		cpio|whole_partition)
+			if [ "${SNAP_TYPE}" = "cpio" ]
+			then
+				COPY_CMD="cpio --quiet -o0 -H newc | gzip -9c > ${DEST}"
+			else
+				COPY_CMD="cpio --quiet -pumd0 ${DEST}/"
+			fi
+
 			WORKING_DIR=$(Do_filelist "${TMP_FILELIST}")
 			cd "${WORKING_DIR}"
 			if [ -e "${EXCLUDE_LIST}" ]
@@ -426,12 +439,10 @@ Do_snapshot ()
 					grep -F -v -f "${EXCLUDE_LIST}" | \
 					tr '\n' '\0' | \
 					tr '\1' '\n' | \
-					cpio --quiet -o0 -H newc | \
-					gzip -9c > "${DEST}" || exit 1
+					$COPY_CMD || exit 1
 			else
 				cat "${TMP_FILELIST}" | \
-					cpio --quiet -o0 -H newc | \
-					gzip -9c > "${DEST}" || exit 1
+					$COPY_CMD || exit 1
 			fi
 			cd "${OLDPWD}"
 			;;
