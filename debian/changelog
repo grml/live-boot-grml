@@ -1,3 +1,26 @@
+live-initramfs (1.157.2-1) unstable; urgency=medium
+
+  * Correcting fstab handling to not always append entries forever when using
+    persistency.
+  * Correcting kdm live-autologin handling to not always append entries forever
+    when using persistency.
+  * Correcting handling of locale default and environment handling to not always
+    append entries forever when using persistency.
+  * Correcting swap partition handling in fstab to not always append entries
+    forever when using persistency.
+  * Applying patch from Michael Prokop <mika@grml.org> to support udev >= 0.140.
+  * Merging swap live-bottom script into fstab script; there is no other sane
+    possibility to prevent appending again and again in persistent mode.
+  * Making sure that old swap entries are removed before new ones are added.
+  * Adding cryptsetup to recommends, it's used for encrypted persistent
+    partitions.
+  * Restoring previous behaviour of ejecting the cd when being in non-persistent
+    mode, thanks to Julien Cristau <jcristau@debian.org>.
+  * Updating eject prevention for USB devices in initscripts for linux 2.6.29
+    and newer.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 14 May 2009 10:00:00 +0200
+
 live-initramfs (1.157.1-1) unstable; urgency=medium
 
   [ Daniel Baumann ]
