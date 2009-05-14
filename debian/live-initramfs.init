@@ -85,7 +85,8 @@ device_is_USB_flash_drive()
 	[ "$(expr substr ${DEVICE} 1 2)" != "sd" ] && return 1
 
 	# check that the device is an USB device
-	if readlink /sys/block/${DEVICE}/device | grep -q usb
+	if readlink /sys/block/${DEVICE} | grep -q usb ||
+	   readlink /sys/block/${DEVICE}/device | grep -q usb # linux < 2.6.29
 	then
 		return 0
 	fi
