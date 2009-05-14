@@ -29,7 +29,7 @@ install: test build
 
 	# Installing executables
 	mkdir -p $(DESTDIR)/sbin
-	cp bin/live-getty bin/live-login bin/live-new-uuid bin/live-snapshot $(DESTDIR)/sbin
+	cp bin/live-getty bin/live-login bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin
 
 	mkdir -p $(DESTDIR)/usr/share/live-initramfs
 	cp bin/live-preseed bin/live-reconfigure contrib/languagelist $(DESTDIR)/usr/share/live-initramfs
@@ -76,7 +76,7 @@ uninstall:
 	rm -f $(DESTDIR)/etc/live.conf
 
 	# Uninstalling executables
-	rm -f $(DESTDIR)/sbin/live-getty $(DESTDIR)/sbin/live-login $(DESTDIR)/sbin/live-snapshot
+	rm -f $(DESTDIR)/sbin/live-getty $(DESTDIR)/sbin/live-login $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
 	rm -rf $(DESTDIR)/usr/share/live-initramfs
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	rm -rf $(DESTDIR)/usr/share/initramfs-tools/scripts/live*
