@@ -82,12 +82,12 @@ Files
 
   /etc/live-snapshot.list
 
-This optional file, if present changes the behaviour of live-snapshot, only files and directories listed there are included (integrally) in the snapshot. It works only for cpio targets.
+This optional file, if present changes the behaviour of live-snapshot, only files and directories listed there are included (integrally) in the snapshot. It works only for cpio and whole partition targets.
 
   /etc/live-snapshot.exclude_list
 
 This optional file, if present will filter the files that will be saved by live-snapshot removing (as in "grep -F -v") all filenames that will be matched by strings listed in it.
-It works for cpio and squashfs snapshot types only; it is pretty useful for filtering temporary files and disk caches.
+It works for cpio, whole partition and squashfs snapshot types only; it is pretty useful for filtering temporary files and disk caches.
 
 
 See also

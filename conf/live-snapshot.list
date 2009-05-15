@@ -5,6 +5,8 @@
 #
 # The syntax for the line is just a full file or directory pathname.
 # Those files and directories, and only those will be included on automatic persistence handling.
+#
+# Note that in home-sn snapshot all those paths are treated as relative to /home
 
 # Include itself for reuse
 /etc/live-snapshot.list
