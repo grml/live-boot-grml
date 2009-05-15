@@ -238,7 +238,7 @@ Defaults ()
 	# Parse resync string
 	if [ -n "${SNAP_RESYNC_STRING}" ]
 	then
-		SNAP_COW=$(echo "${SNAP_RESYNC_STRING}" | cut -f1 -d ':')
+		SNAP_COW=$(echo "${SNAP_RESYNC_STRING/\/root/${DEF_SNAP_COW}}" | cut -f1 -d ':')
 		SNAP_DEV=$(echo "${SNAP_RESYNC_STRING}" | cut -f2 -d ':')
 		SNAP_MNT=$(echo "${SNAP_RESYNC_STRING}" | cut -f3 -d ':')
 		DEST="${MOUNTP}/${SNAP_MNT}"
@@ -346,7 +346,7 @@ Entry_is_modified ()
 
 	if [ -e "${entry}" ] || [ -L "${entry}" ]
 	then
-		if [ -e "${DEF_SNAP_COW}/${entry}" ] || [ -L "${DEF_SNAP_COW}/${entry}" ]
+		if [ -e "${SNAP_COW}/${entry}" ] || [ -L "${SNAP_COW}/${entry}" ]
 		then
 			return 0
 		fi
@@ -356,17 +356,25 @@ Entry_is_modified ()
 
 Do_filelist ()
 {
-	# BUGS: supports only cpio.gz types, and does not handle deleted files yet
-
+	# BUGS: does not handle deleted files yet
 	TMP_FILELIST=$1
+
 	if [ -f "${SNAP_LIST}" ]
 	then
+		# if SNAP_COW == /live/cow/home, SNAP_RW = /home
+		SNAP_RW="${SNAP_COW/${DEF_SNAP_COW}}"
+		if [ -z "${SNAP_RW}" ]
+		then
+			SNAP_RW="/"
+		fi
+
+		cd "${SNAP_RW}"
 		# Generate include list removing empty and commented lines
-		for entry in $(sed -e '/^ *$/d' -e '/^#.*$/d' "${SNAP_LIST}")
+		# and transforming paths to relatives
+		for entry in $(sed -e '/^ *$/d' -e '/^#.*$/d' -e 's#^.*$#./&#' -e 's#/\+#/#g' "${SNAP_LIST}")
 		do
 			if [ -d "${entry}" ]
 			then
-				cd /
 				find "${entry}" | while read line
 				do
 					if Entry_is_modified "${line}"
@@ -374,26 +382,22 @@ Do_filelist ()
 						printf "%s\000" "${line}" >> "${TMP_FILELIST}"
 					fi
 				done
-				cd "${OLDPWD}"
 			elif Entry_is_modified "${entry}"
 			then
 				# if file exists and it is modified
 				printf "%s\000" "${entry}" >> "${TMP_FILELIST}"
 			fi
 		done
+		cd "${OLDPWD}"
 
-		if [ "${SNAP_COW}" = "${DEF_SNAP_COW}" ]
-		then
-			# Relative to rootfs
-			echo "/"
-		else
-			# Mostly "/home"
-			echo "${SNAP_COW}"
-		fi
+		# echo Working dir
+		echo "${SNAP_RW}"
 	else
 		cd "${SNAP_COW}"
+		# removing whiteouts from list
 		find . -path '*.wh.*' -prune -o -print0 >> "${TMP_FILELIST}"
 		cd "${OLDPWD}"
+		# echo Working dir
 		echo "${SNAP_COW}"
 	fi
 }

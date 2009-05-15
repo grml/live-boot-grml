@@ -89,12 +89,12 @@ Files
   /etc/live-snapshot.list
 
 Facoltativo, se presente cambia completamente il funzionamento di live-snapshot; solo i files e le directory elencate verranno effettivamente inclusi nello snapshot.
-Funziona attualmente solo con gli snapshot di tipo "cpio".
+Funziona attualmente solo con gli snapshot di tipo "cpio" e "partizione intera".
 
   /etc/live-snapshot.exclude_list
 
 Facoltativo, se presente verrà utilizzato per filtrare i file da includere negli snapshot. Tutte i file che conterranno le stringhe elecate (come "grep -F -v") non verranno salvati da live-snapshot.
-Funziona attualmente solo con gli snapshot di tipo "cpio" e "squashfs"; è utile per filtrare contenuti poco significativi come i file temporanei e la cache.
+Funziona attualmente solo con gli snapshot di tipo "cpio", "partizione intera" e "squashfs"; è utile per filtrare contenuti poco significativi come i file temporanei e la cache.
 
 See also
 --------
