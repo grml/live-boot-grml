@@ -367,7 +367,7 @@ find_cow_device ()
 			if [ "$(/lib/udev/vol_id -l ${devname} 2>/dev/null)" = "${pers_label}" ]
 			then
 				echo "${devname}"
-				return
+				return 0
 			fi
 
 			if [ "${PERSISTENT}" = "nofiles" ]
@@ -398,6 +398,7 @@ find_cow_device ()
 			esac
 		done
 	done
+	return 1
 }
 
 find_files ()
