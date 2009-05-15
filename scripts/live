@@ -983,12 +983,11 @@ try_snap ()
 			log_warning_msg "Impossible to include the ${snapfile} Snapshot file"
 		fi
 
-
 	elif [ -b "${snapdata}" ]
 	then
 		# Try to find if it could be a snapshot partition
 		dev="${snapdata}"
-		log_success_msg "found snapshot device on ${dev}"
+		log_success_msg "found snapshot ${snap_type} device on ${dev}"
 		if echo "${dev}" | grep -qs loop
 		then
 			# strange things happens, user confused?
