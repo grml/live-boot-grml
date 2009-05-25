@@ -773,9 +773,11 @@ do_httpmount ()
 					then
 						case "$url" in
 							tftp*)
-								ip="$(dirname $url | sed -e 's|tftp://||g')"
-								log_begin_msg "Trying tftp -g -b 10240 -r $(basename ${url})  -l ${dest}/$(basename ${url}) $ip"
-								tftp -g -b 10240 -r $(basename ${url})  -l ${dest}/$(basename ${url}) $ip
+								ip="$(dirname $url | sed -e 's|tftp://||g' -e 's|/.*$||g')"
+								rfile="$(echo $url | sed -e "s|tftp://$ip||g")"
+								lfile="$(basename $url)"
+								log_begin_msg "Trying tftp -g -b 10240 -r $rfile -l ${dest}/$lfile $ip"
+								tftp -g -b 10240 -r $rfile -l ${dest}/$lfile $ip
 							;;
 
 							*)
