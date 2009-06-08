@@ -161,7 +161,7 @@ do_stop ()
 
 		stty sane < /dev/console
 
-		echo -n -e "\n\n${MESSAGE} and press ENTER to continue:" > /dev/console
+		printf "\n\n${MESSAGE} and press ENTER to continue:" > /dev/console
 
 		if [ -x /sbin/usplash_write ]
 		then
