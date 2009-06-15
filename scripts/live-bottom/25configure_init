@@ -87,14 +87,14 @@ then
 fi
 
 # do not try to remove files if using file-rc
-if [ -d /etc/rc0.d ]
+if [ -d /root/etc/rc0.d ]
 then
 	# This has the nice side effect of the cron.{daily,weekly,monthly} jobs in
 	# /etc/crontab remaining disabled, yet also not run by anacron
 	if [ -x /root/usr/sbin/anacron ]
 	then
 		chroot /root dpkg-divert --add --rename --quiet /usr/sbin/anacron
-		ln -s /bin/true /usr/sbin/anacron
+		ln -s /bin/true /root/usr/sbin/anacron
 	fi
 
 	# No point, really
