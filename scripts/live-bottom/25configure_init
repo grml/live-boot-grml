@@ -97,9 +97,6 @@ then
 		ln -s /bin/true /root/usr/sbin/anacron
 	fi
 
-	# No point, really
-	rm -f /root/etc/rc?.d/[SK]??postfix
-
 	# Avoid clobbering the user's clock
 	rm -f /root/etc/rc?.d/K??hwclock.sh
 fi
