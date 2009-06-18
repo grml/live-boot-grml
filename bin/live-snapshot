@@ -238,7 +238,7 @@ Defaults ()
 	# Parse resync string
 	if [ -n "${SNAP_RESYNC_STRING}" ]
 	then
-		SNAP_COW=$(echo "${SNAP_RESYNC_STRING/\/root/${DEF_SNAP_COW}}" | cut -f1 -d ':')
+		SNAP_COW=$(echo "${SNAP_RESYNC_STRING}" | sed -e 's|^/root\([^:.]*\).*$|'"${DEF_SNAP_COW}"'\1|')
 		SNAP_DEV=$(echo "${SNAP_RESYNC_STRING}" | cut -f2 -d ':')
 		SNAP_MNT=$(echo "${SNAP_RESYNC_STRING}" | cut -f3 -d ':')
 		DEST="${MOUNTP}/${SNAP_MNT}"
@@ -362,7 +362,7 @@ Do_filelist ()
 	if [ -f "${SNAP_LIST}" ]
 	then
 		# if SNAP_COW == /live/cow/home, SNAP_RW = /home
-		SNAP_RW="${SNAP_COW/${DEF_SNAP_COW}}"
+		SNAP_RW=$(echo "${SNAP_COW}" | sed -e "s|${DEF_SNAP_COW}||g")
 		if [ -z "${SNAP_RW}" ]
 		then
 			SNAP_RW="/"
