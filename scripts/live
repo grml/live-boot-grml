@@ -1286,6 +1286,9 @@ setup_unionfs ()
 			${rootmnt} failed with option noatime,dirs=/cow=rw:${rofsstring}"
 	fi
 
+	# Correct the permissions of /:
+	chmod 0755 "${rootmnt}"
+
 	# tmpfs file systems
 	touch /etc/fstab
 	mkdir -p "${rootmnt}/live"
