@@ -77,7 +77,8 @@ then
 		then
 			for f in /root/etc/event.d/tty*
 			do
-				sed -i -e "s|^respawn.*|respawn /bin/login -f ${USERNAME} </dev/$(basename ${f}) > /dev/$(basename ${f}) 2>\&1|" ${f}
+				sed -i -e "/^respawn$/!s|^respawn.*|respawn /bin/login -f ${USERNAME} </dev/$(basename ${f}) > /dev/$(basename ${f}) 2>\&1|" ${f}
+				sed -i -e "s|^exec.*|exec /bin/login -f ${USERNAME} </dev/$(basename ${f}) > /dev/$(basename ${f}) 2>\&1|" ${f}
 			done
 		fi
 	fi
