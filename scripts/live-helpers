@@ -104,7 +104,7 @@ where_is_mounted ()
 	if grep -q "^${device} " /proc/mounts
 	then
 		# return the first found
-		grep "^${device} " /proc/mounts | cut -f2 -d ' '
+		grep -m1 "^${device} " /proc/mounts | cut -f2 -d ' '
 	fi
 }
 
