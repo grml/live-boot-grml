@@ -20,7 +20,7 @@ esac
 
 # live-initramfs header
 
-if [ -n "${NOXAUTOCONFIG}" ] || [ ! -x /root/usr/bin/X ] || [ -n "${XDRIVER}" ]
+if [ -n "${NOXAUTOCONFIG}" ] || [ ! -x /root/usr/bin/X ] || [ -z "${XDRIVER}" ]
 then
 	exit 0
 fi
