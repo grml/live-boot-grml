@@ -927,7 +927,7 @@ find_snap ()
 	if [ "${PERSISTENT}" != "nofiles" ]
 	then
 		# search for image files
-		snapdata=$(find_files "${snap_label}.squashfs ${snap_label}.cpio.gz ${snap_label}.ext2 ${snap_label}.ext3 ${snal_label}.ext4 ${snap_label}.jffs2")
+		snapdata=$(find_files "${snap_label}.squashfs ${snap_label}.cpio.gz ${snap_label}.ext2 ${snap_label}.ext3 ${snap_label}.ext4 ${snap_label}.jffs2")
 	fi
 
 	if [ -z "${snapdata}" ]
