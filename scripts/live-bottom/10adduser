@@ -117,4 +117,9 @@ then
 	mv /root/home/${USERNAME}/Examples /root/home/${USERNAME}/Desktop/
 fi
 
+if [ -e /root/usr/share/applications/live-installer-launcher.desktop ]
+then
+	chroot /root install -D -o ${USERNAME} -g ${USERNAME} /usr/share/applications/live-installer-launcher.desktop /home/${USERNAME}/Desktop/live-installer-launcher.desktop
+fi
+
 log_end_msg
