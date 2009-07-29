@@ -1411,7 +1411,8 @@ find_livefs ()
 			do
 				if [ "$(cat ${sysblock}/removable)" = "1" ]
 				then
-					if readlink ${sysblock}/device | grep -q usb
+					if readlink ${sysblock} | grep -q usb ||
+					   readlink ${sysblock}/device | grep -q usb # linux < 2.6.29
 					then
 						for dev in $(subdevices "${sysblock}")
 						do
