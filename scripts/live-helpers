@@ -334,7 +334,7 @@ find_cow_device ()
 				do
 					load_keymap
 
-					/lib/cryptsetup/askpass "Enter passphrase for ${pers_label} on ${devname}: " /sbin/cryptsetup -T 1 luksOpen ${devname} $(basename ${devname}) --key-file=-
+					/lib/cryptsetup/askpass "Enter passphrase for ${pers_label} on ${devname}: " | /sbin/cryptsetup -T 1 luksOpen ${devname} $(basename ${devname}) --key-file=-
 					error=${?}
 
 					devname="/dev/mapper/$(basename ${devname})"
