@@ -1050,37 +1050,26 @@ setup_unionfs ()
 		roopt="ro"
 	fi
 
-	# Read image names from ${MODULE}.module if it exists
-	if [ -e "${image_directory}/filesystem.${MODULE}.module" ]
+	if [ -z "${PLAIN_ROOT}" ]
 	then
-		for IMAGE in $(cat ${image_directory}/filesystem.${MODULE}.module)
-		do
-			image_string="${image_string} ${image_directory}/${IMAGE}"
-		done
-	elif [ -e "${image_directory}/${MODULE}.module" ]
-	then
-		for IMAGE in $(cat ${image_directory}/${MODULE}.module)
-		do
-			image_string="${image_string} ${image_directory}/${IMAGE}"
-		done
-	else
-		# ${MODULE}.module does not exist, create a list of images
-		for FILESYSTEM in squashfs ext2 ext3 ext4 xfs jffs2 dir
-		do
-			for IMAGE in "${image_directory}"/*."${FILESYSTEM}"
-			do
-				if [ -e "${IMAGE}" ]
-				then
-					image_string="${image_string} ${IMAGE}"
-				fi
-			done
-		done
-
-		if [ -n "${addimage_directory}" ] && [ -d "${addimage_directory}" ]
+		# Read image names from ${MODULE}.module if it exists
+		if [ -e "${image_directory}/filesystem.${MODULE}.module" ]
 		then
+			for IMAGE in $(cat ${image_directory}/filesystem.${MODULE}.module)
+			do
+				image_string="${image_string} ${image_directory}/${IMAGE}"
+			done
+		elif [ -e "${image_directory}/${MODULE}.module" ]
+		then
+			for IMAGE in $(cat ${image_directory}/${MODULE}.module)
+			do
+				image_string="${image_string} ${image_directory}/${IMAGE}"
+			done
+		else
+			# ${MODULE}.module does not exist, create a list of images
 			for FILESYSTEM in squashfs ext2 ext3 ext4 xfs jffs2 dir
 			do
-				for IMAGE in "${addimage_directory}"/*."${FILESYSTEM}"
+				for IMAGE in "${image_directory}"/*."${FILESYSTEM}"
 				do
 					if [ -e "${IMAGE}" ]
 					then
@@ -1088,58 +1077,80 @@ setup_unionfs ()
 					fi
 				done
 			done
-		fi
 
-		# Now sort the list
-		image_string="$(echo ${image_string} | sed -e 's/ /\n/g' | sort )"
-	fi
+			if [ -n "${addimage_directory}" ] && [ -d "${addimage_directory}" ]
+			then
+				for FILESYSTEM in squashfs ext2 ext3 ext4 xfs jffs2 dir
+				do
+					for IMAGE in "${addimage_directory}"/*."${FILESYSTEM}"
+					do
+						if [ -e "${IMAGE}" ]
+						then
+							image_string="${image_string} ${IMAGE}"
+						fi
+					done
+				done
+			fi
+
+			# Now sort the list
+			image_string="$(echo ${image_string} | sed -e 's/ /\n/g' | sort )"
+		fi
 
 	[ -n "${MODULETORAMFILE}" ] && image_string="${image_directory}/$(basename ${MODULETORAMFILE})"
 
-	mkdir -p "${croot}"
+		mkdir -p "${croot}"
 
-	for image in ${image_string}
-	do
-		imagename=$(basename "${image}")
+		for image in ${image_string}
+		do
+			imagename=$(basename "${image}")
 
-		export image devname
-		maybe_break live-realpremount
-		log_begin_msg "Running /scripts/live-realpremount"
-		run_scripts /scripts/live-realpremount
-		log_end_msg
-
-		if [ -d "${image}" ]
-		then
-			# it is a plain directory: do nothing
-			rofsstring="${image}=${roopt}:${rofsstring}"
-			rofslist="${image} ${rofslist}"
-		elif [ -f "${image}" ]
-		then
-			if losetup --help 2>&1 | grep -q -- "-r\b"
-			then
-				backdev=$(get_backing_device "${image}" "-r")
-			else
-				backdev=$(get_backing_device "${image}")
-			fi
-			fstype=$(get_fstype "${backdev}")
-
-			if [ "${fstype}" = "unknown" ]
-			then
-				panic "Unknown file system type on ${backdev} (${image})"
-			fi
-
-			if [ -z "${fstype}" ]
-			then
-				fstype="${imagename##*.}"
-				log_warning_msg "Unknown file system type on ${backdev} (${image}), assuming ${fstype}."
-			fi
-
-			mkdir -p "${croot}/${imagename}"
-			log_begin_msg "Mounting \"${image}\" on \"${croot}${imagename}\" via \"${backdev}\""
-			mount -t "${fstype}" -o ro,noatime "${backdev}" "${croot}/${imagename}" || panic "Can not mount ${backdev} (${image}) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
+			export image devname
+			maybe_break live-realpremount
+			log_begin_msg "Running /scripts/live-realpremount"
+			run_scripts /scripts/live-realpremount
 			log_end_msg
-		fi
-	done
+
+			if [ -d "${image}" ]
+			then
+				# it is a plain directory: do nothing
+				rofsstring="${image}=${roopt}:${rofsstring}"
+				rofslist="${image} ${rofslist}"
+			elif [ -f "${image}" ]
+			then
+				if losetup --help 2>&1 | grep -q -- "-r\b"
+				then
+					backdev=$(get_backing_device "${image}" "-r")
+				else
+					backdev=$(get_backing_device "${image}")
+				fi
+				fstype=$(get_fstype "${backdev}")
+
+				if [ "${fstype}" = "unknown" ]
+				then
+					panic "Unknown file system type on ${backdev} (${image})"
+				fi
+
+				if [ -z "${fstype}" ]
+				then
+					fstype="${imagename##*.}"
+					log_warning_msg "Unknown file system type on ${backdev} (${image}), assuming ${fstype}."
+				fi
+
+				mkdir -p "${croot}/${imagename}"
+				log_begin_msg "Mounting \"${image}\" on \"${croot}${imagename}\" via \"${backdev}\""
+				mount -t "${fstype}" -o ro,noatime "${backdev}" "${croot}/${imagename}" || panic "Can not mount ${backdev} (${image}) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
+				log_end_msg
+			fi
+		done
+	else
+		# we have a plain root system
+		mkdir -p "${croot}/filesystem"
+		log_begin_msg "Mounting \"${image_directory}\" on \"${croot}/filesystem\""
+		mount -t $(get_fstype "${image_directory}") -o ro,noatime "${image_directory}" "${croot}/filesystem" || panic "Can not mount ${image_directory} on ${croot}/filesystem" && rofsstring="${croot}/filesystem=${roopt}:${rofsstring}" && rofslist="${croot}/filesystem ${rofslist}"
+		# probably broken:
+		mount -o bind ${croot}/filesystem $mountpoint
+		log_end_msg
+	fi
 
 	rofsstring=${rofsstring%:}
 
@@ -1614,7 +1625,7 @@ mountroot ()
 		log_end_msg
 	fi
 
-	if [ -n "${MODULETORAMFILE}" ]
+	if [ -n "${MODULETORAMFILE}" ] || [ -n "${PLAIN_ROOT}" ]
 	then
 		setup_unionfs "${livefs_root}" "${rootmnt}"
 	else
