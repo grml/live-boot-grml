@@ -367,7 +367,7 @@ find_cow_device ()
 			then
 				# do not mount the device to find for image files
 				# just skip this
-				break
+				continue
 			fi
 
 			case "$(get_fstype ${devname})" in
