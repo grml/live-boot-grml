@@ -328,7 +328,7 @@ find_cow_device ()
 			fi
 
 			# Checking for a luks device
-			if [ -e /sbin/cryptsetup ] && /sbin/cryptsetup isLuks ${devname}
+			if [ "${PERSISTENT}" = "cryptsetup" ] && [ -e /sbin/cryptsetup ] && /sbin/cryptsetup isLuks ${devname}
 			then
 				while true
 				do
