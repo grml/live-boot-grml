@@ -345,6 +345,13 @@ Arguments ()
 				export PERSISTENT_PATH
 				;;
 
+			persistent-subtext=*)
+				root_persistence="${root_persistence}-${ARGUMENT#persistent-subtext=}"
+				home_persistence="${home_persistence}-${ARGUMENT#persistent-subtext=}"
+				root_snapshot_label="${root_snapshot_label}-${ARGUMENT#persistent-subtext=}"
+				home_snapshot_label="${home_snapshot_label}-${ARGUMENT#persistent-subtext=}"
+				;;
+
 			nopersistent)
 				NOPERSISTENT="Yes"
 				export NOPERSISTENT
