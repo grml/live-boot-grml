@@ -1,3 +1,71 @@
+live-initramfs (1.157.3-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Initial commit for having support for swapfiles.
+  * Initial commit for having support for persistency on luks.
+
+  [ Marco Amadori ]
+  * Partition snapshots works again.
+  * Added "whole partition" snapshot resync type.
+  * Two return code consistency fix.
+  * Improved an useful debug string.
+  * Cleaned a bit the snapshot feature.
+
+  [ Steven Shiau ]
+  * Making fetch to work with file on sub dir on tftp server.
+
+  [ Daniel Baumann ]
+  * Avoiding echo bashism in live-initramfs.init by using printf instead
+    (Closes: #530128).
+  * Correcting wrong path when disabling anacron in 25configure_init,
+    thanks to Rui Bernardo <rui.bernardo.pt@gmail.com> (Closes:
+    #533046).
+  * Removing disabling of postfix in 25configure_init, it's not
+    appropriate for debian to do this by default. Thanks to Rui Bernardo
+    <rui.bernardo.pt@gmail.com>.
+  * Correcting typo in description of the ip boot parameter in live-
+    initramfs manpage, thanks to Philippe Leledy <debian@leledy.fr>
+    (Closes: #532471).
+
+  [ Marco Amadori ]
+  * Removed two bashisms on live-snapshot.
+
+  [ Daniel Baumann ]
+  * Correcting wrong abort logic in 21xdriver, thanks to Luigi Capriotti
+    <l.capriotti@xbmc.org>.
+
+  [ Luigi Capriotti ]
+  * Fixing possible invalid results from function where_is_mounted by
+    returning more than one line inwhere_is_mounted();.
+  * Fixing relaxed permissions of / in the live filesystem.
+  * Fixing invalid mangling of /etc/event.d/tty.
+  * Fixing typo in snapshot file list.
+
+  [ Daniel Baumann ]
+  * Correcting cryptsetup calls for persistency on luks.
+  * Copy live-installer-launcher desktop icon on users desktop.
+  * Also updating USB device detection in initramfs script for linux
+    2.6.29 and newer.
+  * Adding missing pipe in cryptsetup call for persistency on luks
+    partitions.
+  * Making plainroot work (Closes: #523120).
+
+  [ Marco Amadori ]
+  * persistent=nofiles fix (Closes: 522383).
+
+  [ Daniel Baumann ]
+  * Looking for persistency partitions on luks devices only if we boot
+    with persistent=cryptsetup.
+  * Fail early in gnome-panel-data bottom script if gnome-panel-data is
+    not installed.
+  * Optimizing gnome-panel-data bottom script by leaving out the stupid
+    things.
+
+  [ Richard Nelson ]
+  * Allow for multiple but unique persistent media.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 04 Sep 2009 13:37:57 +0200
+
 live-initramfs (1.157.2-1) unstable; urgency=medium
 
   * Correcting fstab handling to not always append entries forever when using
