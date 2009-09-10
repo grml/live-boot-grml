@@ -71,6 +71,11 @@ Arguments ()
                                 export FETCH
                                 ;;
 
+			forcepersistentfsck)
+				FORCEPERSISTENTFSCK="Yes"
+				export FORCEPERSISTENTFSCK
+				;;
+
 			hook=*)
 				HOOK="${ARGUMENT#hook=}"
 				export HOOK
@@ -1228,6 +1233,11 @@ setup_unionfs ()
 			cowdevice=${cowprobe}
 			cow_fstype=$(get_fstype "${cowprobe}")
 			cow_mountopt="rw,noatime"
+
+			if [ "${FORCEPERSISTENTFSCK}" = "Yes" ]
+			then
+				fsck -y ${cowdevice}
+			fi
 		else
 			log_warning_msg "Unable to find the persistent medium"
 			cowdevice="tmpfs"
