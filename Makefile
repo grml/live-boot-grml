@@ -113,15 +113,6 @@ uninstall:
 	rm -f $(DESTDIR)/usr/share/man/man7/live-login.7.gz
 
 update:
-	set -e; for FILE in docs/parameters.txt; \
-	do \
-		sed -i	-e 's/2007\\-11\\-19/2007\\-11\\-26/' \
-			-e 's/2007-11-19/2007-11-26/' \
-			-e 's/19.11.2007/26.11.2007/' \
-			-e 's/1.113.1/1.113.2/' \
-		$$FILE; \
-	done
-
 	# Update language list
 	wget -O "contrib/languagelist" \
 		"http://svn.debian.org/viewsvn/*checkout*/d-i/trunk/packages/localechooser/languagelist"
