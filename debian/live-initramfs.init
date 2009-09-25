@@ -137,6 +137,11 @@ do_stop ()
 
 	if [ -z ${QUICKREBOOT} ]
 	then
+		# in order to deal with the aufs unmount problem, we do a sync here.
+		sync
+		sleep 1
+		sync
+
 		# TODO: i18n
 		BOOT_DEVICE="$(get_boot_device)"
 
