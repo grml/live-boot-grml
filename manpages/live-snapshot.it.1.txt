@@ -1,5 +1,7 @@
 live-snapshot(1)
 ================
+:man source: 1.157.3
+:man manual: Debian Live
 
 Name
 ----
