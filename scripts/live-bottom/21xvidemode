@@ -40,6 +40,13 @@ log_begin_msg "Configuring X video modes"
 
 . /live.vars
 
+if [ "${XVIDEOMODE}" = "auto" ]
+then
+	rm -f /root/etc/X11/Xsession.d/21xvidemode
+
+	exit 0
+fi
+
 if [ $(cat /root/etc/debian_version | sed 's|\..*$||') -ge 4 ]
 then
 	# lenny or newer
