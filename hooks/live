@@ -58,6 +58,15 @@ do
 	fi
 done
 
+# udev dependencies (squeeze and newer)
+for FILE in /lib/udev/*_id
+do
+	if [ ! -e "${DESTDIR}"/"${FILE}" ]
+	then
+		copy_exec "${FILE}" /lib/udev/
+	fi
+done
+
 # Handling other stuff
 
 # Configuration: keymap (usefull when using encryption)
