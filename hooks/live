@@ -61,9 +61,10 @@ done
 # udev dependencies (squeeze and newer)
 for FILE in /lib/udev/*_id
 do
-	if [ ! -e "${DESTDIR}"/"${FILE}" ]
+	if [ ! -e "${DESTDIR}/${FILE}" ]
 	then
-		copy_exec "${FILE}" /lib/udev/
+		mkdir -p "${DESTDIR}/lib/udev"
+		copy_exec "${FILE}" /lib/udev
 	fi
 done
 
