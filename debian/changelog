@@ -1,3 +1,35 @@
+live-initramfs (1.157.4-1) unstable; urgency=medium
+
+  [ Daniel Baumann ]
+  * Forcing run of dexconf when booting with xdriver=dexconf.
+  * Adding (experimental) forcepersistentfsck bootoption to force fsck
+    on root persistency device.
+  * Adding presubj for reportbug.
+  * Removing unused sed call in update target of Makefile.
+  * Updating included languagelist from d-i.
+  * Correcting install calls for reportbug files in rules.
+  * Including d-i languagelist in initrd in order evaluate l10n
+    settings.
+  * Updating lang2locale(); to match new d-i langualgelist format.
+  * Adding additional two sync calls before powerof happens in order to
+    deal with 'does not cleanly unmount' problem when using root
+    persistency.
+  * Updating vcs fields.
+  * Adding auto value for xvideomode where we ensure that no
+    configuration from the persistency layer is respected.
+
+  [ Marco Amadori ]
+  * Fixed FIXME sections in manpages.
+
+  [ Daniel Baumann ]
+  * Including udev binaries in initramfs manually for squeeze and newer
+    (Closes: #547149).
+  * Applying patch from Holger Brunn <holger.brunn@web.de> to live-
+    media-path when toram is used (Closes: #534878).
+  * Simplyfing and correcting udev inclusion in initramfs hook.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 18 Oct 2009 20:29:31 +0200
+
 live-initramfs (1.157.3-1) unstable; urgency=low
 
   [ Daniel Baumann ]
