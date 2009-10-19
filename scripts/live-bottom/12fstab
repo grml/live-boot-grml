@@ -55,7 +55,7 @@ then
 	echo "tmpfs /tmp tmpfs nosuid,nodev 0 0" >> "${FSTAB}"
 fi
 
-if [ -z "${NOSWAP}" ]
+if [ -n "${SWAPON}" ]
 then
 	devices=""
 
