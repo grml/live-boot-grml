@@ -161,8 +161,9 @@ do_stop ()
 				eject -p -m /live/image >/dev/null 2>&1
 			fi
 
-			[ "$prompt" ] || return 0
 		fi
+
+		[ "$prompt" ] || return 0
 
 		stty sane < /dev/console
 
