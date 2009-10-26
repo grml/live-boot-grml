@@ -1,3 +1,10 @@
+casper (1.162) jaunty; urgency=low
+
+  * If /cdrom is writable, call the diverted update-initramfs and copy
+    the resulting kernel and initrd to /cdrom/casper (LP: #292159).
+
+ -- Evan Dandrea <evand@ubuntu.com>  Tue, 10 Mar 2009 14:36:30 +0000
+
 casper (1.161) jaunty; urgency=low
 
   [ Juanje Ojeda ]
