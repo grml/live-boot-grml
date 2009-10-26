@@ -1,3 +1,10 @@
+casper (1.173) jaunty; urgency=low
+
+  * Don't use head -n1 in where_is_mounted, we don't have head in the
+    initramfs.  LP: #363038.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 17 Apr 2009 22:22:06 -0700
+
 casper (1.172) jaunty; urgency=low
 
   * 43disable_updateinitramfs: The /cdrom mount has been moved to
