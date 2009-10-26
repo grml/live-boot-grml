@@ -33,7 +33,7 @@ chroot /root dpkg-divert --add --rename --quiet \
 if [ -w /cdrom ]
 then
 
-cat > /root/usr/sbin/update-initramfs << EOF
+cat > /root/usr/sbin/update-initramfs << 'EOF'
 #!/bin/sh
 
 update-initramfs.distrib "$@"
