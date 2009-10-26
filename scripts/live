@@ -97,6 +97,11 @@ Arguments ()
 				export HOSTNAME LIVECONF
 				;;
 
+			isofrom=*|fromiso=*)
+				FROMISO="${ARGUMENT#*=}"
+				export FROMISO
+				;;
+
 			username=*)
 				USERNAME="${ARGUMENT#username=}"
 				LIVECONF="changed"
@@ -1384,6 +1389,17 @@ check_dev ()
 	devname="${2}"
 	skip_uuid_check="${3}"
 
+	# support for fromiso=.../isofrom=....
+	if [ -n "$FROMISO" ]
+	then
+		mkdir /isofrom
+		ISO_DEVICE="$(echo $FROMISO | sed 's|\(/dev/[a-z]*[0-9]*\).*|\1|')"
+		mount "$ISO_DEVICE" /isofrom
+		ISO_NAME="$(echo $FROMISO | sed 's|/dev/[a-z]*[0-9]*/||')"
+		loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
+		devname="${loopdevname}"
+	fi
+
 	if [ -z "${devname}" ]
 	then
 		devname=$(sys2dev "${sysdev}")
@@ -1653,6 +1669,15 @@ mountroot ()
 		log_begin_msg "Copying live media to ${live_dest}"
 		copy_live_to "${livefs_root}" "${live_dest}"
 		log_end_msg
+	fi
+
+	# if we do not unmount the ISO we can't run "fsck /dev/ice" later on
+	# because the mountpoint is left behind in /proc/mounts, so let's get
+	# rid of it when running from RAM
+	if [ -n "$FROMISO" ] && [ "${TORAM}" ]
+	then
+	  losetup -d /dev/loop0
+	  grep -q /isofrom /proc/mounts && umount /isofrom
 	fi
 
 	if [ -n "${MODULETORAMFILE}" ] || [ -n "${PLAIN_ROOT}" ]
