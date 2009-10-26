@@ -1,3 +1,15 @@
+casper (1.165) jaunty; urgency=low
+
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - When the blindness accessibility profile is chosen, create the .orca
+      directory in the live user's home directory. This seems to allow orca
+      to properly reload and use settings in the live session without needing
+      to be restarted. This is only needed for the blindness profile, due to
+      the other profiles that use orca already creating the .orca directory.
+      (LP: #194992)
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Fri, 20 Mar 2009 08:37:20 +1100
+
 casper (1.164) jaunty; urgency=low
 
   * Update 34disable_kde_services to not start

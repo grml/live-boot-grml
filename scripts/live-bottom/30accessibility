@@ -130,6 +130,8 @@ case ${ACCESS} in
 		laptop_detect
 		touch /root/etc/pulse/a11y_nostart
 		sed -i -e 's/autospawn = yes/autospawn = no/g' /root/etc/pulse/client.conf
+		mkdir -p /root/home/$USERNAME/.orca
+		chroot /root chown -R $USERNAME.$USERNAME /home/$USERNAME/.orca
 		;;
 
 	braille=ask)
