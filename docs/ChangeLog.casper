@@ -1,3 +1,10 @@
+casper (1.164) jaunty; urgency=low
+
+  * Update 34disable_kde_services to not start
+    update-notifier-kde or plasma's contact plugin which uses akonadi
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 18 Mar 2009 18:07:52 +0000
+
 casper (1.163) jaunty; urgency=low
 
   * 34disable_kwallet moved to 34disable_kde_services and disables
