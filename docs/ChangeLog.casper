@@ -1,3 +1,13 @@
+casper (1.159) jaunty; urgency=low
+
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - Disable pulseaudio for the blindness profile, as pulseaudio and espeak
+      and portaudio v19 do not play very well with each other, lots of
+      crackling, cut of speech. At least espeak via ALSA natively is usable,
+      and latency is relatively low.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Tue, 10 Mar 2009 09:03:06 +1100
+
 casper (1.158) jaunty; urgency=low
 
   * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
