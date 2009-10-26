@@ -100,6 +100,8 @@ manual_add_modules ext4
 # Filesystem: jffs2
 manual_add_modules jffs2
 
+copy_exec /usr/bin/rsync /bin
+
 # Filesystem: squashfs
 copy_exec /sbin/losetup /sbin
 manual_add_modules loop

@@ -673,7 +673,7 @@ copy_live_to ()
 
 	# begin copying (or uncompressing)
 	mkdir "${copyto}"
-	echo "mount -t ${fstype} ${mount_options} ${dev} ${copyto}"
+	log_begin_msg "mount -t ${fstype} ${mount_options} ${dev} ${copyto}"
 	mount -t "${fstype}" ${mount_options} "${dev}" "${copyto}"
 
 	if [ "${extension}" = "tgz" ]
@@ -686,10 +686,22 @@ copy_live_to ()
 	else
 		if [ -n "${MODULETORAMFILE}" ]
 		then
-			cp ${MODULETORAMFILE} ${copyto} # copy only the filesystem module
+			if [ -x /bin/rsync ]
+			then
+				echo " * Copying $MODULETORAMFILE to RAM" 1>/dev/console
+				rsync -a --progress ${MODULETORAMFILE} ${copyto} 1>/dev/console # copy only the filesystem module
+			else
+				cp ${MODULETORAMFILE} ${copyto} # copy only the filesystem module
+			fi
 		else
-			mkdir -p ${copyto}/${LIVE_MEDIA_PATH}
-			cp -a ${copyfrom}/${LIVE_MEDIA_PATH}/* ${copyto}/${LIVE_MEDIA_PATH}   # "cp -a" from busybox also copies hidden files
+			if [ -x /bin/rsync ]
+			then
+				echo " * Copying whole medium to RAM" 1>/dev/console
+				rsync -a --progress ${copyfrom}/* ${copyto} 1>/dev/console  # "cp -a" from busybox also copies hidden files
+			else
+				mkdir -p ${copyto}/${LIVE_MEDIA_PATH}
+				cp -a ${copyfrom}/${LIVE_MEDIA_PATH}/* ${copyto}/${LIVE_MEDIA_PATH}   # "cp -a" from busybox also copies hidden files
+			fi
 		fi
 
 		umount ${copyfrom}
