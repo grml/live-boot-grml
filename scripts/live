@@ -66,6 +66,11 @@ Arguments ()
 				set -x
 				;;
 
+			ethdevice=*)
+				DEVICE="${ARGUMENT#ethdevice=}"
+				export DEVICE
+				;;
+
 			fetch=*)
                                 FETCH="${ARGUMENT#fetch=}"
                                 export FETCH
