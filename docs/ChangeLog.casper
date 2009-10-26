@@ -1,3 +1,9 @@
+casper (1.167) jaunty; urgency=low
+
+  * Disable kwallet from KDE 4 in 34disable_kde_services
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 27 Mar 2009 18:40:35 +0000
+
 casper (1.166) jaunty; urgency=low
 
   [ Emmet Hikory ]
