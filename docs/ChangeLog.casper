@@ -1,3 +1,11 @@
+casper (1.171) jaunty; urgency=low
+
+  * Set MP_QUIET to -q instead of -Q on Ubuntu as well, and not just for
+    Debian as the modprobe in the latest upstream release of module-init-tools
+    doesn't accept -Q anymore.
+
+ -- Loic Minier <lool@dooz.org>  Wed, 08 Apr 2009 17:31:40 +0200
+
 casper (1.170) jaunty; urgency=low
 
   * is_nice_device(): allow devices with an ID_PATH of platform-mmc* as well
