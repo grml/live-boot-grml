@@ -30,7 +30,8 @@ chroot /root dpkg-divert --add --rename --quiet \
 	/usr/sbin/update-initramfs
 
 # Running off a USB disk or other writable media.
-if [ -w /cdrom ]
+if [ -w /cdrom ] && \
+   ! grep -q '^[^ ]* /cdrom [^ ]* [^ ]*\<ro\>' /proc/mounts; then
 then
 
 cat > /root/usr/sbin/update-initramfs << 'EOF'

@@ -1,3 +1,17 @@
+casper (1.169) jaunty; urgency=low
+
+  * [ -w /cdrom ] turns out not to be a sufficient test for files under
+    /cdrom being writable; with busybox, it always returns true even for
+    read-only filesystems. Explicitly check for the read-only flag in mount
+    output to work around this.
+  * Fix where_is_mounted helper function to actually produce output (thanks,
+    Steve Dodd; LP: #346941).
+  * Add a comment to find_cow_device explaining why the choice of
+    filesystems is restricted (I asked for this comment in LP #230703 but it
+    apparently never got written).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 07 Apr 2009 01:47:05 +0100
+
 casper (1.168) jaunty; urgency=low
 
   * Fix writing of "$@" to diverted update-initramfs script (here-documents
