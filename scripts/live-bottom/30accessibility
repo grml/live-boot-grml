@@ -49,10 +49,14 @@ gct ()
 
 laptop_detect ()
 {
-	if chroot /root /usr/sbin/laptop-detect
+	if [ -x /root/usr/bin/orca ]
 	then
-		echo "orca.settings.orcaModifierKeys = orca.settings.LAPTOP_MODIFIER_KEYS" >> /root/home/$USERNAME/.orca/user-settings.py
-		echo "orca.settings.keyboardLayout = orca.settings.GENERAL_KEYBOARD_LAYOUT_LAPTOP" >> /root/home/$USERNAME/.orca/user-settings.py
+		if chroot /root /usr/sbin/laptop-detect
+		then
+			mkdir -p /root/home/$USERNAME/.orca
+			echo "orca.settings.orcaModifierKeys = orca.settings.LAPTOP_MODIFIER_KEYS" >> /root/home/$USERNAME/.orca/user-settings.py
+			echo "orca.settings.keyboardLayout = orca.settings.GENERAL_KEYBOARD_LAYOUT_LAPTOP" >> /root/home/$USERNAME/.orca/user-settings.py
+		fi
 	fi
 }
 
@@ -121,6 +125,7 @@ case ${ACCESS} in
 		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
 
 		remove_applet fast_user_switch
+		laptop_detect
 		;;
 
 	braille=ask)
