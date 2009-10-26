@@ -1,3 +1,28 @@
+casper (1.166) jaunty; urgency=low
+
+  [ Emmet Hikory ]
+  * Show the ubiquity icon in kourou (LP: #338730)
+
+  [ Timo Jyrinki ]
+  * Move examples.desktop to Desktop/ if it exists, as an alternative to
+    Examples (LP: #45489).
+
+  [ Luke Yelavich ]
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - Make the special case disabling of pulseaudio per user, and not system
+      wide.
+    - Also disable PulseAudio for the Braille profile.
+    - Fix incorrect paths when chowning files.
+    - Don't use /root for the ubiquity hook accessibility script, /target is
+      where the installed system is located.
+    - Remove laptop detect code. Its not currently working, and getting it to
+      work requires invasive changes.
+    - Only set pulseaudio settings and create the .orca directory if sed
+      packages are installed on the live filesystem and installed system.
+  * ubiquity-hooks/30accessibility: Copy orca settings to the installed system.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Fri, 27 Mar 2009 14:38:20 +1100
+
 casper (1.165) jaunty; urgency=low
 
   * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
