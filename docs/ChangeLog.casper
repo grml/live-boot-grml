@@ -1,3 +1,10 @@
+casper (1.158) jaunty; urgency=low
+
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - use laptop_detect function in blindness profile as well
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Mon, 09 Mar 2009 14:07:17 +1100
+
 casper (1.157) jaunty; urgency=low
 
   [ Emmet Hikory ]
