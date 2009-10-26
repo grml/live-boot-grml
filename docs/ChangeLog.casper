@@ -1,3 +1,10 @@
+casper (1.172) jaunty; urgency=low
+
+  * 43disable_updateinitramfs: The /cdrom mount has been moved to
+    /root/cdrom by the time this script runs, so check that instead.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 09 Apr 2009 18:30:29 +0100
+
 casper (1.171) jaunty; urgency=low
 
   * Set MP_QUIET to -q instead of -Q on Ubuntu as well, and not just for
