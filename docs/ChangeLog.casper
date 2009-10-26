@@ -1,3 +1,13 @@
+casper (1.160) jaunty; urgency=low
+
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - Adjust sudoers file to allow ORBIT_SOCKET_DIR, XDG_SESSION_COOKIE and
+      GTK_MODULES environment variables through to root, for v2, v3, and
+      braille profiles. This allows users to use administrative GTK/GNOME
+      applications executed by gksudo with accessibility tools like orca.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Tue, 10 Mar 2009 15:38:17 +1100
+
 casper (1.159) jaunty; urgency=low
 
   * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
