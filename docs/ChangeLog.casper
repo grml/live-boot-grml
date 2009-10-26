@@ -1,3 +1,11 @@
+casper (1.161) jaunty; urgency=low
+
+  [ Juanje Ojeda ]
+  * Regenerate SSL certificate at boot so that it isn't the same for all
+    live CD users (LP: #337723).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 10 Mar 2009 10:39:21 +0000
+
 casper (1.160) jaunty; urgency=low
 
   * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
