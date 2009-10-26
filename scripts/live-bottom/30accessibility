@@ -102,6 +102,7 @@ case ${ACCESS} in
 		gct -s -t string /desktop/gnome/applications/at/visual/exec orca
 		gct -s -t bool /apps/gksu/disable-grab true
 		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
+		sed -i -e 's/# Host alias specification/Defaults\tenv_keep = "ORBIT_SOCKETDIR XDG_SESSION_COOKIE GTK_MODULES"\n\n# Host alias specification/g' /root/etc/sudoers
 
 		if [ -x /root/usr/bin/orca ]
 		then
@@ -123,6 +124,7 @@ case ${ACCESS} in
 		gct -s -t string /desktop/gnome/applications/at/visual/exec orca
 		gct -s -t bool /apps/gksu/disable-grab true
 		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
+		sed -i -e 's/# Host alias specification/Defaults\tenv_keep = "ORBIT_SOCKETDIR XDG_SESSION_COOKIE GTK_MODULES"\n\n# Host alias specification/g' /root/etc/sudoers
 
 		remove_applet fast_user_switch
 		laptop_detect
@@ -137,6 +139,7 @@ case ${ACCESS} in
 		gct -s -t string /desktop/gnome/applications/at/visual/exec orca
 		gct -s -t bool /apps/gksu/disable-grab true
 		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
+		sed -i -e 's/# Host alias specification/Defaults\tenv_keep = "ORBIT_SOCKETDIR XDG_SESSION_COOKIE GTK_MODULES"\n\n# Host alias specification/g' /root/etc/sudoers
 
 		if [ -x /root/usr/bin/orca ]
 		then
