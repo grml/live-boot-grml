@@ -1,3 +1,10 @@
+casper (1.163) jaunty; urgency=low
+
+  * 34disable_kwallet moved to 34disable_kde_services and disables
+    various services not needed by live CDs
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 13 Mar 2009 14:33:13 +0000
+
 casper (1.162) jaunty; urgency=low
 
   * If /cdrom is writable, call the diverted update-initramfs and copy
