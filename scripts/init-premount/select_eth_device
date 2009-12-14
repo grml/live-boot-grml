@@ -1,0 +1,77 @@
+#!/bin/sh
+
+# Original script by Andreas Teuchert <ant+dl@hsg-kl.de>
+# Modified by Frédéric Boiteux <fboiteux@calistel.com>
+
+
+
+PREREQ="blacklist udev"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+# Boot type in initramfs's config
+bootconf=$(egrep '^BOOT=' /conf/initramfs.conf | tail -1)
+
+# can be superseded by command line (used by Debian-Live's netboot for example)
+for ARGUMENT in $(cat /proc/cmdline); do
+    case "${ARGUMENT}" in
+        netboot=*)
+        NETBOOT="${ARGUMENT#netboot=}"
+        ;;
+    esac
+done
+
+if [ "$bootconf" != "BOOT=nfs" ] && [ "$NETBOOT" = "" ]; then
+    # Not a net boot : nothing to do
+    exit 0
+fi
+
+# we want to do some basic IP
+modprobe -q af_packet
+
+# Available Ethernet interfaces ?
+l_interfaces=$(cd /sys/class/net/ && ls -d eth* 2>/dev/null)
+
+if [ $(echo $l_interfaces | wc -w) -lt 2 ]; then
+    # only one interface : no choice
+    echo "DEVICE=$l_interfaces" >> /conf/param.conf
+    exit 0
+fi
+
+while true; do
+        echo -n "Looking for a connected Ethernet interface ..."
+
+	for interface in $l_interfaces; do
+		# ATTR{carrier} is not set if this is not done
+                echo -n " $interface ?"
+		ipconfig -c none -d $interface -t 1 >/dev/null 2>&1
+        done
+        echo ''
+
+        for step in 1 2 3 4 5; do
+	        for interface in $l_interfaces; do
+                        carrier=$(cat /sys/class/net/$interface/carrier \
+                                  2>/dev/null)
+                        # link detected
+                        if [ "$carrier" = 1 ]; then
+                                echo " found $interface."
+                                # inform initrd's init script :
+                                echo "DEVICE=$interface" >> /conf/param.conf
+                                exit 0
+		        fi
+	        done
+                # wait a bit
+                sleep 1
+        done
+done
