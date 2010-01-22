@@ -287,7 +287,8 @@ try_mount ()
 		then
 			fstype=$(get_fstype "${dev}")
 		fi
-		mount -t "${fstype}" -o "${opts}" "${dev}" "${mountp}" || panic "Cannot mount ${dev} on ${mountp}, fstype=${fstype}, options=${opts}"
+		mount -t "${fstype}" -o "${opts}" "${dev}" "${mountp}" || \
+		( echo "SKIPPING: Cannot mount ${dev} on ${mountp}, fstype=${fstype}, options=${opts}" > live.log && return 0 )
 	fi
 }
 
@@ -376,17 +377,15 @@ find_cow_device ()
 			case "$(get_fstype ${devname})" in
 				vfat|ext2|ext3|ext4|jffs2)
 					mkdir -p "${cow_backing}"
-					if ! try_mount "${devname}" "${cow_backing}" "rw"
+					if try_mount "${devname}" "${cow_backing}" "rw"
 					then
-						break
-					fi
-
-					if [ -f "${pers_fpath}" ]
-					then
-						echo $(setup_loop "${pers_fpath}" "loop" "/sys/block/loop*")
-						return 0
-					else
-						umount ${cow_backing}
+						if [ -f "${pers_fpath}" ]
+						then
+							echo $(setup_loop "${pers_fpath}" "loop" "/sys/block/loop*")
+							return 0
+						else
+							umount ${cow_backing} > /dev/null 2>&1 || true
+						fi
 					fi
 					;;
 				*)
