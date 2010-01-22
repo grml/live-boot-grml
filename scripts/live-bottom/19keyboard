@@ -63,17 +63,17 @@ fi
 
 if [ -x /root/bin/setupcon ]
 then
-	if [ -f /root/etc/default/console-setup ]
-	then
-		# lenny
-		KEYBOARD_FILE="/root/etc/default/console-setup"
-	elif [ -f /root/etc/default/keyboard ]
+	if [ -f /root/etc/default/keyboard ]
 	then
 		# squeeze
-		KEYBOARD_FILE="/root/etc/default/keyboard"
+		KEYBOARD_FILE="/etc/default/keyboard"
+	elif [ -f /root/etc/default/console-setup ]
+	then
+		# lenny
+		KEYBOARD_FILE="/etc/default/console-setup"
 	fi
 
-	if [ -n "${KEYBOARD_FILE}" ]
+	if [ -n "/root${KEYBOARD_FILE}" ]
 	then
 		if [ "${cslayout}" ]
 		then
