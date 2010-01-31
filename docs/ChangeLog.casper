@@ -1,3 +1,11 @@
+casper (1.170) jaunty; urgency=low
+
+  * is_nice_device(): allow devices with an ID_PATH of platform-mmc* as well
+    as used for instance for SD cards on the ARM iMX51 Babbage board;
+    LP: #357700.
+
+ -- Loic Minier <lool@dooz.org>  Wed, 08 Apr 2009 15:34:01 +0200
+
 casper (1.169) jaunty; urgency=low
 
   * [ -w /cdrom ] turns out not to be a sufficient test for files under
