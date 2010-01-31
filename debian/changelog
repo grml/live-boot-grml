@@ -1,3 +1,16 @@
+live-initramfs (1.157.4-2) unstable; urgency=high
+
+  [ Michael Prokop ]
+  * Avoid the use of fstype in a running live system, as it's
+    a executable and not a shell function and causes problems
+    for example within live-snapshot.
+  * Switch from vol_id to blkid if using udev >=146-1 (Closes: #555529).
+
+  [ Tzafrir Cohen ]
+  * Adjusting grep call in is_nice_device to match new output of vol_id.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 21 Nov 2009 19:07:41 +0100
+
 live-initramfs (1.157.4-1) unstable; urgency=medium
 
   [ Daniel Baumann ]
