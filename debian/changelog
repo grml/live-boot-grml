@@ -1,3 +1,75 @@
+live-initramfs (1.173.1-1) unstable; urgency=medium
+
+  [ intrigeri ]
+  * Taking noprompt into account for USB flash drives as well.
+  * Restoring opt-in behavior for local swap partitions.
+
+  [ Daniel Baumann ]
+  * Updating package to debhelper 7.
+  * Updating package to standards 3.8.3.
+  * Don't use dh_clean in favour of dh_prep.
+
+  [ Luigi Capriotti ]
+  * Also allowing hook= to specify files inside the image through
+    file:// prefix.
+
+  [ Daniel Baumann ]
+  * Forwardporting and extending usage of rsync when booting with toram
+    based on a patch from Michael Prokop <mika@grml.org>.
+
+  [ Michael Prokop ]
+  * Adding support for isofrom/fromiso bootoption.
+
+  [ Daniel Baumann ]
+  * Adapting a patch from Michael Prokop <mika@grml.org> to set all
+    harddisk devices to read-only mode for forensics investigations.
+
+  [ Michael Prokop ]
+  * Adding support for ethdevice bootoption.
+
+  [ Daniel Baumann ]
+  * Merging casper 1.158.
+  * Merging casper 1.159.
+  * Merging casper 1.160.
+  * Merging casper 1.161.
+  * Merging casper 1.162.
+  * Merging casper 1.163.
+  * Merging casper 1.164.
+  * Merging casper 1.165.
+  * Merging casper 1.166.
+  * Merging casper 1.167.
+  * Merging casper 1.168.
+  * Merging casper 1.169.
+  * Merging casper 1.170.
+  * Merging casper 1.171.
+  * Merging casper 1.172.
+  * Merging casper 1.173.
+  * Adding skipconfig parameter to disable most customization.
+
+  [ Marco Amadori ]
+  * cpio snapshots: eval commands fix.
+
+  [ Daniel Baumann ]
+  * Updating defaults file of console-setup for squeeze, thanks to Jun
+    NOGATA <nogajun@gmail.com> (Closes: #560187).
+  * Adding explicit debian source version 1.0 until switch to 3.0.
+  * Adding select_eth_device script from Frederic Boiteux
+    <fboiteux@calistel.com>.
+  * Including rsync conditionally.
+  * Updating year in copyright file.
+  * Don't panic with persistency when we can't correctly mount the
+    filesystem (Closes: #565456).
+
+  [ Ben Armstrong ]
+  * Correcting keyboard handling for squeeze.
+  * Only edit usplash init script if it exists.
+  * Use klayout= for layout instead of kbd=.
+
+  [ Daniel Baumann ]
+  * Updating to standards version 3.8.4.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 31 Jan 2010 16:44:08 +0100
+
 live-initramfs (1.157.4-2) unstable; urgency=high
 
   [ Michael Prokop ]
