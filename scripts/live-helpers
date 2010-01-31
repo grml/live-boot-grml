@@ -76,24 +76,6 @@ is_supported_fs ()
 
 get_fstype ()
 {
-	local FSTYPE
-	local FSSIZE
-
-	# fstype misreports LUKS devices
-	if is_luks "${1}"
-	then
-	    /lib/udev/vol_id -t ${1} 2>/dev/null
-	    return
-	fi
-
-	eval $(fstype ${1} 2>/dev/null)
-
-	if [ "${FSTYPE}" != "unknown" ]
-	then
-		echo ${FSTYPE}
-		return 0
-	fi
-
 	/lib/udev/vol_id -t ${1} 2>/dev/null
 }
 
