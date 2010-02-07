@@ -1515,6 +1515,7 @@ find_livefs ()
 					fi
 				fi
 			done
+			return 1
 			;;
 
 		removable)
@@ -1531,6 +1532,7 @@ find_livefs ()
 					done
 				fi
 			done
+			return 1
 			;;
 
 		*)
