@@ -1101,13 +1101,8 @@ setup_unionfs ()
 	# Let's just mount the read-only file systems first
 	rofsstring=""
 	rofslist=""
-	minor_kernel_version=$(uname -r|cut -c 5-|sed 's/[^0-9].*//')
 
-	if [ "${NETBOOT}" = "nfs" ] && [ "${minor_kernel_version}" -lt 22 ]
-	then
-		# go aroung a bug in nfs-unionfs locking for unionfs <= 1.4
-		roopt="nfsro"
-	elif [ "${UNIONTYPE}" = "aufs" ]
+	if [ "${UNIONTYPE}" = "aufs" ]
 	then
 		roopt="rr"
 	else
