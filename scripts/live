@@ -401,6 +401,11 @@ Arguments ()
 				export NOPERSISTENT
 				;;
 
+			quickusbmodules)
+				QUICKUSBMODULES="Yes"
+				export QUICKUSBMODULES
+				;;
+
 			preseed/file=*|file=*)
 				LOCATION="${ARGUMENT#*=}"
 				export LOCATION
@@ -1218,37 +1223,40 @@ setup_unionfs ()
 	# Looking for "${root_persistence}" device or file
 	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
 	then
-		# Load USB modules
-		num_block=$(ls -l /sys/block | wc -l)
-		for module in sd_mod uhci-hcd ehci-hcd ohci-hcd usb-storage
-		do
-			modprobe -q -b ${module}
-		done
-
-		if [ -x /sbin/udevadm ]
+		if [ -z "${QUICKUSBMODULES}" ]
 		then
-			# lenny
-			udevadm trigger
-			udevadm settle
-		else
-			# etch
-			udevtrigger
-			udevsettle
-		fi
+			# Load USB modules
+			num_block=$(ls -l /sys/block | wc -l)
+			for module in sd_mod uhci-hcd ehci-hcd ohci-hcd usb-storage
+			do
+				modprobe -q -b ${module}
+			done
 
-		# For some reason, udevsettle does not block in this scenario,
-		# so we sleep for a little while.
-		#
-		# See https://bugs.launchpad.net/ubuntu/+source/casper/+bug/84591
-		for timeout in 5 4 3 2 1
-		do
-			sleep 1
-
-			if [ $(ls -l /sys/block | wc -l) -gt ${num_block} ]
+			if [ -x /sbin/udevadm ]
 			then
-				break
+				# lenny
+				udevadm trigger
+				udevadm settle
+			else
+				# etch
+				udevtrigger
+				udevsettle
 			fi
-		done
+
+			# For some reason, udevsettle does not block in this scenario,
+			# so we sleep for a little while.
+			#
+			# See https://bugs.launchpad.net/ubuntu/+source/casper/+bug/84591
+			for timeout in 5 4 3 2 1
+			do
+				sleep 1
+
+				if [ $(ls -l /sys/block | wc -l) -gt ${num_block} ]
+				then
+					break
+				fi
+			done
+		fi
 
 		# search for label and files (this could be hugely optimized)
 		cowprobe=$(find_cow_device "${root_persistence}")
