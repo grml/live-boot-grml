@@ -1,3 +1,10 @@
+live-initramfs (1.173.3-1) unstable; urgency=low
+
+  * Using noxino instead of xino, as the latter is not supported by
+    aufs2 as we need to use it.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 20 Feb 2010 16:16:46 +0100
+
 live-initramfs (1.173.2-1) unstable; urgency=low
 
   [ Daniel Baumann ]
