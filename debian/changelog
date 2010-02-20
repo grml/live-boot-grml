@@ -1,3 +1,25 @@
+live-initramfs (1.173.2-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating homepage field in control.
+
+  [ amnesia ]
+  * Correcting live-media=removeable{,-usb} behaviour to match the
+    documented one.
+
+  [ Daniel Baumann ]
+  * Removing unionfs workaround for kernel versions << 2.6.22, not
+    usefull anymore.
+  * Mounting aufs layer with detached inode index, this solves the
+    'leaving unclean filesystem when using persistency' problem.
+  * Removing unused syncs in initscript.
+
+  [ Luigi Capriotti ]
+  * Skip loading usb modules when quickusbmodules parameter is
+    specified.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 20 Feb 2010 11:55:41 +0100
+
 live-initramfs (1.173.1-1) unstable; urgency=medium
 
   [ intrigeri ]
