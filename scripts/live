@@ -1109,7 +1109,7 @@ setup_unionfs ()
 
 	if [ "${UNIONTYPE}" = "aufs" ]
 	then
-		roopt="rr,xino=/tmp/aufs.xino"
+		roopt="rr,noxino"
 	else
 		roopt="ro"
 	fi
