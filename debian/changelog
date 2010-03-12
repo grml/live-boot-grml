@@ -1,3 +1,12 @@
+live-initramfs (1.173.4-1) unstable; urgency=low
+
+  * Only disabling kpersonalizer when using kde3, kde4 doesn't need that
+    hack.
+  * Correcting path in previous commit.
+  * Disabling kaboom (Closes: #556368).
+
+ -- Daniel Baumann <daniel@debian.127011.localhost>  Fri, 12 Mar 2010 18:21:00 +0100
+
 live-initramfs (1.173.3-1) unstable; urgency=low
 
   * Using noxino instead of xino, as the latter is not supported by
