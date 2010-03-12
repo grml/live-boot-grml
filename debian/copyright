@@ -1,5 +1,5 @@
-Author: Daniel Baumann <daniel@debian.org>
-Download: http://debian-live.alioth.debian.org/
+Upstream-Contact: Debian Live Project <debian-live@lists.debian.org>
+Upstream-Homepage: http://live.debian.net/
 
 live-initramfs is a fork of casper <http://packages.ubuntu.com/casper/>.
 casper was originally written by Tollef Fog Heen <tfheen@canonical.com>
