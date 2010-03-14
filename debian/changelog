@@ -1,3 +1,22 @@
+live-initramfs (1.173.5-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating contact information in copyright file.
+  * Simplyfing initramfs triggers (Closes: #521129, #545842).
+  * Wrapping fields in control file.
+  * Using minimized rules file.
+  * Simplifying wording in bug-presubj file.
+
+  [ Andreas Teuchert ]
+  * Calling udevadm settle in scripts/init-premount/select_eth_device
+    (Closes: #570100).
+
+  [ Tanguy Ortolo ]
+  * Also respecting persistent-path parameter for snapshots (Closes:
+    #570162).
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 14 Mar 2010 23:27:57 +0100
+
 live-initramfs (1.173.4-1) unstable; urgency=low
 
   * Only disabling kpersonalizer when using kde3, kde4 doesn't need that
