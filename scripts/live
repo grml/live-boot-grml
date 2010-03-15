@@ -762,16 +762,8 @@ do_netmount ()
 
 	modprobe -q af_packet # For DHCP
 
-	if [ -x /sbin/udevadm ]
-	then
-		# lenny
-		udevadm trigger
-		udevadm settle
-	else
-		# etch
-		udevtrigger
-		udevsettle
-	fi
+	udevadm trigger
+	udevadm settle
 
 	ipconfig ${DEVICE} | tee /netboot.config
 
@@ -1232,16 +1224,8 @@ setup_unionfs ()
 				modprobe -q -b ${module}
 			done
 
-			if [ -x /sbin/udevadm ]
-			then
-				# lenny
-				udevadm trigger
-				udevadm settle
-			else
-				# etch
-				udevtrigger
-				udevsettle
-			fi
+			udevadm trigger
+			udevadm settle
 
 			# For some reason, udevsettle does not block in this scenario,
 			# so we sleep for a little while.

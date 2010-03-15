@@ -191,14 +191,7 @@ setup_loop ()
 
 	modprobe -q -b "${module}"
 
-	if [ -x /sbin/udevadm ]
-	then
-		# lenny
-		udevadm settle
-	else
-		# etch
-		udevsettle
-	fi
+	udevadm settle
 
 	for loopdev in ${pattern}
 	do
