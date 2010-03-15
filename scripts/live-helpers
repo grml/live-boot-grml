@@ -76,11 +76,13 @@ is_supported_fs ()
 
 get_fstype ()
 {
-	# udev >=146-1 no longer provides vol_id:
+	# udev (>= 146) no longer provides vol_id
 	if [ -x /lib/udev/vol_id ]
 	then
+		# lenny
 		/lib/udev/vol_id -t ${1} 2>/dev/null
 	else
+		# squeeze
 		/sbin/blkid -s TYPE -o value $1 2>/dev/null
 	fi
 }
@@ -339,15 +341,17 @@ find_cow_device ()
 				done
 			fi
 
-			# udev >=146-1 no longer provides vol_id:
+			# udev (>= 146) no longer provides vol_id
 			if [ -x /lib/udev/vol_id ]
 			then
+				# lenny
 				if [ "$(/lib/udev/vol_id -l ${devname} 2>/dev/null)" = "${pers_label}" ]
 				then
 					echo "${devname}"
 					return 0
 				fi
 			else
+				# squeeze
 				if [ "$(/sbin/blkid -s LABEL -o value $devname 2>/dev/null)" = "${pers_label}" ]
 				then
 					echo "${devname}"
