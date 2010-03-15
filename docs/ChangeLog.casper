@@ -1,3 +1,17 @@
+casper (1.174) karmic; urgency=low
+
+  * debian/control: Increase dependency on initramfs-tools to get the version
+    that uses blkid, depend on util-linux as well
+  * hooks/casper: No need to copy vol_id into the initramfs image.·
+  * scripts/casper-bottom/13swap: Use blkid -o udev -p instead of vol_id,
+    there's probably a much cleaner way to check for RAID like this, but
+    this is the direct equivalent.
+  * scripts/casper-helpers (get_fstype): use a blkid call to get the type·
+  * scripts/casper-helpers (find_cow_device): use a blkid call to get the
+    label
+
+ -- Scott James Remnant <scott@ubuntu.com>  Tue, 12 May 2009 13:29:41 +0100
+
 casper (1.173) jaunty; urgency=low
 
   * Don't use head -n1 in where_is_mounted, we don't have head in the
