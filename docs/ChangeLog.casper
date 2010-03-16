@@ -1,3 +1,12 @@
+casper (1.177) karmic; urgency=low
+
+  * Port from Debian (thanks, Daniel Baumann):
+    - Added live-media-path as suggested by Jordi Pujol.
+    - Tail casper.log and show its messages during boot (thanks, Michal
+      Suchanek; LP: #363886).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 04 Jun 2009 03:10:59 +0100
+
 casper (1.176) karmic; urgency=low
 
   [ Colin Watson ]
