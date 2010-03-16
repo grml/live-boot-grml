@@ -1,3 +1,18 @@
+casper (1.176) karmic; urgency=low
+
+  [ Colin Watson ]
+  * Fix symlinking of anacron to /bin/true.
+
+  [ Martin Pitt ]
+  * Drop scripts/casper-bottom/38jockey_disable_check: Some drivers, like wl
+    or printer drivers, do need to be advertised in a live system. Jockey has
+    been fixed to not advertise video drivers automatically if the packages
+    aren't available (such as in the live system), and even if we should ever
+    put them back, it is easier to disable the notifications in jockey's
+    handlers instead of here. (LP: #381687)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Tue, 02 Jun 2009 15:40:05 +0200
+
 casper (1.175) karmic; urgency=low
 
   * Suppress error message if
