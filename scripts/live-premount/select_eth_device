@@ -40,10 +40,6 @@ then
     exit 0
 fi
 
-# be sure this has been run (*should* be done by scripts/init-premount/udev)
-udevadm trigger
-udevadm settle
-
 # we want to do some basic IP
 modprobe -q af_packet
 
