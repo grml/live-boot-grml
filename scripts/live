@@ -1086,7 +1086,17 @@ setup_unionfs ()
 	image_directory="${1}"
 	rootmnt="${2}"
         addimage_directory="${3}"
-	modprobe -q -b ${UNIONTYPE}
+
+	case ${UNIONTYPE} in
+		aufs|unionfs)
+			modprobe -q -b ${UNIONTYPE}
+
+			if ! cut -f2 /proc/filesystems | grep -q "^${UNIONTYPE}\$" && [ -x /bin/unionfs-fuse ]
+			then
+				UNIONTYPE="unionfs-fuse"
+			fi
+			;;
+	esac
 
 	# run-init can't deal with images in a subdir, but we're going to
 	# move all of these away before it runs anyway.  No, we're not,
@@ -1102,6 +1112,9 @@ setup_unionfs ()
 	if [ "${UNIONTYPE}" = "aufs" ]
 	then
 		roopt="rr,noxino"
+	elif [ "${UNIONTYPE}" = "unionfs-fuse" ]
+	then
+		roopt="RO"
 	else
 		roopt="ro"
 	fi
@@ -1341,16 +1354,27 @@ setup_unionfs ()
 
 		for dir in ${cow_dirs}; do
 			mkdir -p /cow${dir}
-			mount -t ${UNIONTYPE} \
-				-o rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro \
-				${UNIONTYPE} "${rootmnt}${dir}" || \
-				panic "mount ${UNIONTYPE} on ${rootmnt}${dir} failed with option \
-					rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro"
+
+			case "${UNIONTYPE}" in
+				unionfs-fuse)
+					(ulimit -n 16384; unionfs-fuse -o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid /cow=RW:${exposedrootfs}${dir} "${rootmnt}${dir}" || panic "mount ${UNIONTYPE} on ${rootmnt}${dir} failed with option cow,noinitgroups,default_permissions,allow_other,use_ino,suid=/cow=RW:${exposedrootfs}${dir}")
+					;;
+
+				*)
+					mount -t ${UNIONTYPE} -o rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro ${UNIONTYPE} "${rootmnt}${dir}" || panic "mount ${UNIONTYPE} on ${rootmnt}${dir} failed with option rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro"
+					;;
+			esac
 		done
 	else
-		mount -t ${UNIONTYPE} -o noatime,dirs=/cow=rw:${rofsstring} \
-			${UNIONTYPE} "${rootmnt}" || panic "mount ${UNIONTYPE} on \
-			${rootmnt} failed with option noatime,dirs=/cow=rw:${rofsstring}"
+		case "${UNIONTYPE}" in
+			unionfs-fuse)
+				(ulimit -n 16384; unionfs-fuse -o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid /cow=RW:${rofsstring} "${rootmnt}" || panic "mount ${UNIONTYPE} on ${rootmnt} failed with option cow,noinitgroups,default_permissions,allow_other,use_ino,suid=/cow:RW:${rofsstring}")
+				;;
+
+			*)
+				mount -t ${UNIONTYPE} -o noatime,dirs=/cow=rw:${rofsstring} ${UNIONTYPE} "${rootmnt}" || panic "mount ${UNIONTYPE} on ${rootmnt} failed with option noatime,dirs=/cow=rw:${rofsstring}"
+				;;
+		esac
 	fi
 
 	# Correct the permissions of /:
@@ -1393,7 +1417,15 @@ setup_unionfs ()
 					;;
 
 				*)
-					mount -o move "${d}" "${rootmnt}/live/${d##*/}"
+					case "${UNIONTYPE}" in
+						unionfs-fuse)
+							mount -o bind "${d}" "${rootmnt}/live/${d##*/}"
+							;;
+
+						*)
+							mount -o move "${d}" "${rootmnt}/live/${d##*/}"
+							;;
+					esac
 					;;
 			esac
 		done
@@ -1714,11 +1746,23 @@ mountroot ()
 
 	log_end_msg
 
+	# unionfs-fuse needs /dev to be bind-mounted for the duration of
+	# live-bottom; udev's init script will take care of things after that
+	if [ "${UNIONTYPE}" = unionfs-fuse ]
+	then
+		mount -n -o bind /dev "${rootmnt}/dev"
+	fi
+
 	maybe_break live-bottom
 	log_begin_msg "Running /scripts/live-bottom\n"
 
 	run_scripts /scripts/live-bottom
 	log_end_msg
+
+	if [ "${UNIONFS}" = unionfs-fuse ]
+	then
+		umount "${rootmnt}/dev"
+	fi
 
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-

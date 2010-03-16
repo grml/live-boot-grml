@@ -1,3 +1,13 @@
+casper (1.175) karmic; urgency=low
+
+  * Suppress error message if
+    /root/usr/share/applications/firefox-fav.desktop doesn't exist.
+  * Add unionfs-fuse support.
+  * Automatically fall back to unionfs-fuse if the default union filesystem
+    is not available but unionfs-fuse is.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Sun, 24 May 2009 12:28:00 +0100
+
 casper (1.174) karmic; urgency=low
 
   * debian/control: Increase dependency on initramfs-tools to get the version
