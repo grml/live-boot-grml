@@ -1093,6 +1093,9 @@ setup_unionfs ()
 
 			if ! cut -f2 /proc/filesystems | grep -q "^${UNIONTYPE}\$" && [ -x /bin/unionfs-fuse ]
 			then
+				echo "${UNIONTYPE} not available, falling back to unionfs-fuse."
+				echo "This might be really slow."
+
 				UNIONTYPE="unionfs-fuse"
 			fi
 			;;
