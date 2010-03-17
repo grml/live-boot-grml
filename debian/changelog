@@ -1,3 +1,26 @@
+live-initramfs (1.177.1-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Removing etch compatibility.
+  * Merging casper 1.174.
+  * Adding proper code comments about vol_id removal.
+  * Merging casper 1.175.
+
+  [ Steven Shiau ]
+  * Making select_eth_device work with 2nd NIC linked only and FETCH
+    assigned.
+  * Moving select_eth_device from init-premount to live-premount where
+    "udevadm" commands are not required.
+
+  [ Daniel Baumann ]
+  * Merging casper 1.176.
+  * Merging casper 1.177.
+  * Adding message to notify users when live-initramfs is falling back
+    to unionfs-fuse.
+  * Manually loading fuse when required.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 17 Mar 2010 20:29:01 +0100
+
 live-initramfs (1.173.5-1) unstable; urgency=low
 
   [ Daniel Baumann ]
