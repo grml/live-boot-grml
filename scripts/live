@@ -1101,6 +1101,11 @@ setup_unionfs ()
 			;;
 	esac
 
+	if [ "${UNIONTYPE}" = unionfs-fuse ]
+	then
+		modprobe fuse
+	fi
+
 	# run-init can't deal with images in a subdir, but we're going to
 	# move all of these away before it runs anyway.  No, we're not,
 	# put them in / since move-mounting them into / breaks mono and
