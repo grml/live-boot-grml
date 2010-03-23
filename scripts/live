@@ -1119,7 +1119,8 @@ setup_unionfs ()
 
 	if [ "${UNIONTYPE}" = "aufs" ]
 	then
-		roopt="rr,noxino"
+		roopt="rr"
+		noxino_opt="noxino,"
 	elif [ "${UNIONTYPE}" = "unionfs-fuse" ]
 	then
 		roopt="RO"
@@ -1380,7 +1381,7 @@ setup_unionfs ()
 				;;
 
 			*)
-				mount -t ${UNIONTYPE} -o noatime,dirs=/cow=rw:${rofsstring} ${UNIONTYPE} "${rootmnt}" || panic "mount ${UNIONTYPE} on ${rootmnt} failed with option noatime,dirs=/cow=rw:${rofsstring}"
+				mount -t ${UNIONTYPE} -o noatime,${noxino_opt}dirs=/cow=rw:${rofsstring} ${UNIONTYPE} "${rootmnt}" || panic "mount ${UNIONTYPE} on ${rootmnt} failed with option noatime,${noxino_opt}dirs=/cow=rw:${rofsstring}"
 				;;
 		esac
 	fi
