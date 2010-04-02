@@ -1506,12 +1506,31 @@ check_dev ()
 	# support for fromiso=.../isofrom=....
 	if [ -n "$FROMISO" ]
 	then
-		mkdir /isofrom
-		ISO_DEVICE="$(echo $FROMISO | sed 's|\(/dev/[a-z]*[0-9]*\).*|\1|')"
-		mount "$ISO_DEVICE" /isofrom
-		ISO_NAME="$(echo $FROMISO | sed 's|/dev/[a-z]*[0-9]*/||')"
-		loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
-		devname="${loopdevname}"
+		ISO_DEVICE=$(dirname $FROMISO)
+		if ! [ -b $ISO_DEVICE ]
+		then
+			# to support unusual device names like /dev/cciss/c0d0p1
+			# as well we have to identify the block device name, let's
+			# do that for up to 15 levels
+			i=15
+			while [ -n "$ISO_DEVICE" ] && [ "$i" -gt 0 ]
+			do
+				ISO_DEVICE=$(dirname ${ISO_DEVICE})
+				[ -b "$ISO_DEVICE" ] && break
+				i=$(($i -1))
+		        done
+		fi
+
+		if [ "$ISO_DEVICE" = "/" ]
+		then
+			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live.log
+		else
+			mkdir /isofrom
+			mount "$ISO_DEVICE" /isofrom
+			ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
+			loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
+			devname="${loopdevname}"
+		fi
 	fi
 
 	if [ -z "${devname}" ]
