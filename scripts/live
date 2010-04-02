@@ -1627,7 +1627,19 @@ find_livefs ()
 	esac
 
 	# or do the scan of block devices
+	# prefer removable devices over non-removable devices, so scan them first
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+	do
+		if [ "$(cat ${sysblock}/removable)" = "1" ]
+		then
+			removable_devices_to_scan="$removable_devices_to_scan $sysblock"
+		else
+			nonremovable_devices_to_scan="$nonremovable_devices_to_scan $sysblock"
+		fi
+	done
+	devices_to_scan="$removable_devices_to_scan $nonremovable_devices_to_scan"
+
+	for sysblock in $devices_to_scan
 	do
 		devname=$(sys2dev "${sysblock}")
 		fstype=$(get_fstype "${devname}")
