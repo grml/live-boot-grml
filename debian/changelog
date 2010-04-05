@@ -1,3 +1,23 @@
+live-initramfs (1.177.2-1) unstable; urgency=low
+
+  [ Marco Amadori ]
+  * Do not specify 'noxino' between directories.
+
+  [ Michael Prokop ]
+  * Support bootoptions ethdevice and ethdevice-timeout for specifying
+    from which device you want to boot from and using which timeout
+    (being 30 seconds if unconfigured), if ethdevice is not specified
+    try to get a working network configuration for each existing network
+    device.
+  * Prefer removable devices over non-removable devices, so scan them
+    first.
+  * Support unusual device names like /dev/cciss/c0d0p1 in isofrom
+    bootoption.
+  * Do not leak modprobe options to avoid booting errors with kernel
+    options like libata.dma=0.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 05 Apr 2010 10:07:12 +0200
+
 live-initramfs (1.177.1-1) unstable; urgency=low
 
   [ Daniel Baumann ]
