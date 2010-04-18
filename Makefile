@@ -118,7 +118,7 @@ update:
 	set -e; for MANPAGE in manpages/*.en.*; \
 	do \
 		sed -i	-e 's/2007\\-06\\-04/2007\\-06\\-11/' \
-			-e 's/1.87.6/1.87.7/' \
+			-e 's/1.88.1/1.90.1/' \
 		$$MANPAGE; \
 	done
 
