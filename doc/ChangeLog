@@ -1,3 +1,31 @@
+2007-05-06  Daniel Baumann  <daniel@debian.org>
+
+	* bin/casper-getty, casper-login, casper-preseed, casper-reconfigure,
+	  casper-snapshot:
+	  - Renamed to live-*.
+	* casper-md5check:
+	  - Moved to bin.
+	  - Renamed to live-md5check.
+	* casper.conf:
+	  - Moved to conf/live.conf.
+	* caspermon:
+	  - Removed.
+	* scripts/casper, casper-bottom, casper-functions, casper-helpers,
+	  casper-premount:
+	  - Renamed to live-*.
+	* bin/live-getty, live-login, conf/live.conf:
+	  - Reformated.
+	* bin/live-snapshot, debian/dirs, debian/install, debian/rules,
+	  hooks/live, scripts/live:
+	  - Replaces casper path names with live.
+	* debian/manpage:
+	  - Moved to manpages.
+	  - Renamed casper.7 to live-initramfs.7.
+	* debian/init:
+	  - Changed activation parameter from boot=casper to boot=live.
+	* scripts/casper-bottom/02_timezone:
+	  - Fixed wrong script description.
+
 2007-04-30  Daniel Baumann  <daniel@debian.org>
 
 	* Forked casper 1.87.
