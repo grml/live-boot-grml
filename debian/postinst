@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ -x /usr/sbin/update-initramfs ]
+then
+	update-initramfs -k all -u
+fi
+
+#DEBHELPER#
