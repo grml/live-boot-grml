@@ -93,7 +93,8 @@ then
 	live-preseed /root console-setup/codesetcode '' false
 
 	sed -i 's/CONSOLE_SCREEN=$/CONSOLE_SCREEN=setupcon/; t END; b; : END; n; b END' /root/etc/init.d/usplash
-else
+elif [ -e /root/usr/sbin/install-keymap ]
+then
 	chroot /root /usr/sbin/install-keymap ${kbd}
 	live-preseed /root debian-installer/keymap "${kbd}"
 	live-preseed /root kbd-chooser/method "${kbd}"

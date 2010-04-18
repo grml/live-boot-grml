@@ -391,6 +391,11 @@ Arguments ()
 				export SHOWMOUNTS
 				;;
 
+			silent)
+				SILENT="Yes"
+				export SILENT
+				;;
+
 			textonly)
 				TEXTONLY="Yes"
 				export TEXTONLY
@@ -1386,15 +1391,6 @@ find_livefs ()
 {
 	timeout="${1}"
 
-	# first look at the one specified in the command line
-	if [ ! -z "${LIVE_MEDIA}" ]
-	then
-		if check_dev "null" "${LIVE_MEDIA}" "skip_uuid_check"
-		then
-			return 0
-		fi
-	fi
-
 	# don't start autodetection before timeout has expired
 	if [ -n "${LIVE_MEDIA_TIMEOUT}" ]
 	then
@@ -1403,6 +1399,54 @@ find_livefs ()
 			return 1
 		fi
 	fi
+
+	# first look at the one specified in the command line
+	case "${LIVE_MEDIA}" in
+		removable-usb)
+			for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+			do
+				if [ "$(cat ${sysblock}/removable)" = "1" ]
+				then
+					if readlink ${sysblock}/device | grep -q usb
+					then
+						for dev in $(subdevices "${sysblock}")
+						do
+							if check_dev "${dev}"
+							then
+								return 0
+							fi
+						done
+					fi
+				fi
+			done
+			;;
+
+		removable)
+			for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+			do
+				if [ "$(cat ${sysblock}/removable)" = "1" ]
+				then
+					for dev in $(subdevices "${sysblock}")
+					do
+						if check_dev "${dev}"
+						then
+							return 0
+						fi
+					done
+				fi
+			done
+			;;
+
+		*)
+			if [ ! -z "${LIVE_MEDIA}" ]
+			then
+				if check_dev "null" "${LIVE_MEDIA}" "skip_uuid_check"
+				then
+					return 0
+				fi
+			fi
+			;;
+	esac
 
 	# or do the scan of block devices
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
@@ -1585,5 +1629,5 @@ mountroot ()
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-
 	kill ${tailpid}
-	cp live.log "${rootmnt}/var/log/"
+	[ -w "${rootmnt}/var/log/" ] && cp live.log "${rootmnt}/var/log/" 2>/dev/null
 }

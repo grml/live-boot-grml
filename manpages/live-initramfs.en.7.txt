@@ -114,6 +114,11 @@ to find this device for the "/live" directory where the read-only root
 filesystem should reside. If it did not find something usable, the normal scan
 for block devices is performed.
 
+Instead of specifing an actual device name, the keyword 'removable' can be used
+to limit the search of acceptable live media to removable type only. Note that
+if you want to further restrict the media to usb mass storage only, you can use
+the 'removable-usb' keyword.
+
   {live-media-encryption|encryption}=**TYPE**::
 
 live-initramfs will mount the encrypted rootfs TYPE, asking the passphrase,
@@ -244,6 +249,11 @@ This parameter will make live-initramfs to show on "/" the ro filesystems
 (mostly compressed) on "/live". This is not enabled by default because could
 lead to problems by applications like "mono" which store binary paths on
 installation.
+
+  silent
+
+If you boot with the normal quiet parameter, live-initramfs hides most messages
+of its own. When adding silent, it hides all.
 
   textonly
 
