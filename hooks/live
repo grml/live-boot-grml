@@ -39,7 +39,6 @@ fi
 mkdir -p "${DESTDIR}"/lib/live-initramfs
 
 # Executables
-copy_exec /usr/lib/live-initramfs/live-md5check /bin
 copy_exec /usr/share/live-initramfs/live-reconfigure /bin
 copy_exec /usr/share/live-initramfs/live-preseed /bin
 
@@ -98,6 +97,9 @@ if [ -x /usr/bin/eject ]
 then
 	copy_exec /usr/bin/eject /bin
 fi
+
+# Program: md5sum
+copy_exec /usr/bin/md5sum /bin
 
 # Program: udev
 if [ "${BUILD_SYSTEM}" = "Ubuntu" ]

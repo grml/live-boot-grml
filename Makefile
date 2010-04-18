@@ -1,6 +1,5 @@
 # Makefile
 
-CFLAGS = -Wall -g -O2
 BUILD_SYSTEM := $(shell lsb_release --short --id)
 
 TRANSLATIONS="it"
@@ -17,15 +16,9 @@ build:
 	# Setting BUILD_SYSTEM
 	sed -e 's/\(BUILD_SYSTEM="\).*"/\1'$(BUILD_SYSTEM)'"/g' conf/live.conf > live.conf
 
-	# Building live-md5check
-	CFLAGS="$(CFLAGS)" $(MAKE) -C bin/live-md5check
-
 install: test build
 	# Installing configuration
 	install -D -m 0644 live.conf $(DESTDIR)/etc/live.conf
-
-	# Installing live-md5check
-	install -D -m 0755 bin/live-md5check/live-md5check $(DESTDIR)/usr/lib/live-initramfs/live-md5check
 
 	# Installing executables
 	mkdir -p $(DESTDIR)/sbin
@@ -75,9 +68,6 @@ uninstall:
 	# Uninstalling configuration
 	rm -f $(DESTDIR)/etc/live.conf
 
-	# Uninstalling live-md5check
-	rm -rf $(DESTDIR)/usr/lib/live-initramfs
-
 	# Uninstalling executables
 	rm -f $(DESTDIR)/sbin/live-getty $(DESTDIR)/sbin/live-login $(DESTDIR)/sbin/live-snapshot
 	rm -rf $(DESTDIR)/usr/share/live-initramfs
@@ -118,15 +108,14 @@ uninstall:
 update:
 	set -e; for FILE in docs/parameters.txt manpages/*.en.*; \
 	do \
-		sed -i	-e 's/2007\\-07\\-16/2007\\-07\\-23/' \
-			-e 's/16.07.2007/23.07.2007/' \
-			-e 's/1.91.5/1.91.6/' \
+		sed -i	-e 's/2007\\-07\\-23/2007\\-07\\-30/' \
+			-e 's/23.07.2007/30.07.2007/' \
+			-e 's/1.91.6/1.91.7/' \
 		$$FILE; \
 	done
 
 clean:
 	rm -f live.conf
-	$(MAKE) -C bin/live-md5check clean
 
 distclean:
 
