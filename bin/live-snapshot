@@ -2,11 +2,11 @@
 
 # live-snapshot - utility to manage Debian Live systems snapshots
 #
-#   This program mount a device (fallback to /tmpfs under /mnt/snapshot
-#   and save the /live/cow (or a different dir) filesystem in it for reusing
+#   This program mounts a device (fallback to /tmpfs under $MOUNTP
+#   and saves the /live/cow (or a different dir) filesystem in it for reuse
 #   in another live-initramfs session. Look at manpage for more info.
 #
-# Copyright (C) 2006 Marco Amadori <marco.amadori@gmail.com>
+# Copyright (C) 2006-2008 Marco Amadori <marco.amadori@gmail.com>
 # Copyright (C) 2008 Chris Lamb <chris@chris-lamb.co.uk>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,9 +34,12 @@ set -eu
 export USERNAME USERFULLNAME HOSTNAME
 
 PROGRAM="$(basename $0)"
-VERSION=0.0.2
 
-MOUNTP="/mnt/live-snapshot"
+# Needs to be available at run and reboot time
+SAFE_TMPDIR="/live"
+
+# Permits multiple runs
+MOUNTP="$(mktemp -d -p ${SAFE_TMPDIR} live-snapshot-mnt.XXXXXX)"
 SNAP_COW="/live/cow"
 SNAP_DEV=""
 DEST="${MOUNTP}/live-sn.cpio.gz"
@@ -92,13 +95,13 @@ Usage ()
 
 	exit 0
 }
-	
 
 Version ()
 {
-	echo "${PROGRAM}, version ${VERSION}"
+	echo "${PROGRAM}"
 	echo
 	echo "Copyright (C) 2006 Marco Amadori <marco.amadori@gmail.com>"
+	echo "Copyright (C) 2008 Chris Lamb <chris@chris-lamb.co.uk>"
 	echo
 	echo "This program is free software; you can redistribute it and/or modify"
 	echo "it under the terms of the GNU General Public License as published by"
@@ -194,7 +197,6 @@ Parse_args ()
 
 		esac
 	done
-
 }
 
 Defaults ()
@@ -226,7 +228,6 @@ Defaults ()
 				Error "unrecognized resync string"
 				;;
 		esac
-
 	else
 		# Set target file based on image
 		case "${SNAP_TYPE}" in
@@ -243,14 +244,14 @@ Defaults ()
 				;;
 		esac
 	fi
-
 }
 
 Validate_input ()
 {
-	case "${SNAP_TYPE}" in 
+	case "${SNAP_TYPE}" in
 		cpio|squashfs|jffs2|ext2|ext3)
 			;;
+
 		*)
 			Error "invalid filesystem type \"${SNAP_TYPE}\""
 			;;
@@ -276,6 +277,7 @@ Mount_device ()
 			# create a temp
 			mount -t tmpfs -o rw tmpfs "${MOUNTP}"
 			;;
+
 		*)
 			if [ -b "${SNAP_DEV}" ]
 			then
@@ -289,10 +291,13 @@ Do_snapshot ()
 {
 	case "${SNAP_TYPE}" in
 		squashfs)
-			echo "./tmp/exclude_list" > /tmp/exclude_list
-			( cd "${SNAP_COW}" && find . -name '*.wh.*' >> /tmp/exclude_list )
-			mksquashfs "${SNAP_COW}" "${DEST}" -ef /tmp/exclude_list
-			rm /tmp/exclude_list
+			EXCLUDE_LIST="$(mktemp -p ${SAFE_TMPDIR} live-snapshot-exclude-list.XXXXXX)"
+			echo "./${EXCLUDE_LIST}" > "${EXCLUDE_LIST}"
+			cd "${SNAP_COW}"
+			find . -name '*.wh.*' >> "${EXCLUDE_LIST}"
+			cd "${OLDPWD}"
+			mksquashfs "${SNAP_COW}" "${DEST}" -ef "${EXCLUDE_LIST}"
+			rm -f "${EXCLUDE_LIST}"
 			;;
 
 		cpio)
@@ -313,8 +318,13 @@ Do_snapshot ()
 
 Clean ()
 {
-	umount "${MOUNTP}"
-	rmdir "${MOUNTP}"
+	if echo "${DEST}" | grep -q "${MOUNTP}"
+	then
+		echo "${DEST} is present on ${MOUNTP}, therefore no automatic unmounting the latter." > /dev/null 1>&2
+	else
+		umount "${MOUNTP}"
+		rmdir "${MOUNTP}"
+	fi
 }
 
 Main ()
@@ -322,7 +332,7 @@ Main ()
 	Parse_args "${@}"
 	Defaults
 	Validate_input
-	trap 'Clean' EXIT 
+	trap 'Clean' EXIT
 	Mount_device
 	Do_snapshot
 }

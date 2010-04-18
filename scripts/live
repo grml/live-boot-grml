@@ -498,7 +498,7 @@ get_backing_device ()
 {
 	case "${1}" in
 		*.squashfs|*.ext2|*.ext3|*.jffs2)
-			echo $(setup_loop "${1}" "loop" "/sys/block/loop*" '0' "${LIVE_MEDIA_ENCRYPTION}")
+			echo $(setup_loop "${1}" "loop" "/sys/block/loop*" '0' "${LIVE_MEDIA_ENCRYPTION}" "${2}")
 			;;
 
 		*.dir)
@@ -552,20 +552,6 @@ is_nice_device ()
 	then
 		return 0
 	fi
-
-	return 1
-}
-
-is_supported_fs ()
-{
-	# FIXME: do something better like the scan of supported filesystems
-	fstype="${1}"
-
-	case ${fstype} in
-		vfat|iso9660|udf|ext2|ext3|ntfs|jffs2)
-			return 0
-			;;
-	esac
 
 	return 1
 }
@@ -629,7 +615,7 @@ copy_live_to ()
 		cd "${copyto}"
 		tar zxf "${copyfrom}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
 		rm -f "${copyfrom}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
-		mount -r --move "${copyto}" "${rootmnt}"
+		mount -r -o move "${copyto}" "${rootmnt}"
 		cd "${OLDPWD}"
 	else
 		if [ -n "${MODULETORAMFILE}" ]
@@ -641,7 +627,7 @@ copy_live_to ()
 
 		livefs_root
 		umount ${copyfrom}
-		mount -r --move ${copyto} ${copyfrom}
+		mount -r -o move ${copyto} ${copyfrom}
 	fi
 
 	rmdir ${copyto}
@@ -979,7 +965,7 @@ setup_unionfs ()
 			rofslist="${image} ${rofslist}"
 		elif [ -f "${image}" ]
 		then
-			backdev=$(get_backing_device "${image}")
+			backdev=$(get_backing_device "${image}" "-r")
 			fstype=$(get_fstype "${backdev}")
 
 			if [ "${fstype}" = "unknown" ]
@@ -1136,7 +1122,7 @@ setup_unionfs ()
 					;;
 
 				*)
-					mount --move "${d}" "${rootmnt}/live/${d##*/}"
+					mount -o move "${d}" "${rootmnt}/live/${d##*/}"
 					;;
 			esac
 		done
@@ -1162,6 +1148,19 @@ check_dev ()
 	then
 		loopdevname=$(setup_loop "${devname}" "loop" "/sys/block/loop*" "${LIVE_MEDIA_OFFSET}" '')
 		devname="${loopdevname}"
+	fi
+
+	if [ -d "${devname}" ]
+	then
+		mount -o bind "${devname}" $mountpoint || continue
+
+		if is_live_path $mountpoint
+		then
+			echo $mountpoint
+			return 0
+		else
+			umount $mountpoint
+		fi
 	fi
 
 	fstype=$(get_fstype "${devname}")
@@ -1211,7 +1210,7 @@ find_livefs ()
 	fi
 
 	# or do the scan of block devices
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v 'dm-')
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v 'dm-' | grep -v fd )
 	do
 		devname=$(sys2dev "${sysblock}")
 		fstype=$(get_fstype "${devname}")
@@ -1267,6 +1266,8 @@ mountroot ()
 	exec 7>&2
 	exec > live.log
 	exec 2>&1
+	tail -f live.log >&7 &
+	tailpid="${!}"
 
 	Arguments
 
@@ -1348,5 +1349,6 @@ mountroot ()
 
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-
+	kill ${tailpid}
 	cp live.log "${rootmnt}/var/log/"
 }
