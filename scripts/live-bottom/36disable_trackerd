@@ -20,17 +20,18 @@ esac
 
 # live-initramfs header
 
+if [ -n "${NOTIMEZONE}" ]
+then
+	exit 0
+fi
+
 . /scripts/live-functions
 
-log_begin_msg "Preconfiguring /etc/modules..."
+log_begin_msg "Disabling trackerd..."
 
 # live-initramfs script
 
-# load the right modules
-case "${DPKG_ARCH}" in
-	powerpc|ppc64)
-		echo snd_powermac >> /root/etc/modules
-		;;
-esac
+rm -f /root/etc/xdg/autostart/trackerd.desktop \
+      /root/usr/share/autostart/trackerd.desktop
 
 log_end_msg

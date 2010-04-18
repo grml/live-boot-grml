@@ -1,3 +1,36 @@
+casper (1.107) gutsy; urgency=low
+
+  * Fix gconf keys for suspend and hibernate (thanks, Oliver Grawert;
+    LP: #144790).
+  * Enable suspend again since as far as I can see we no longer need to
+    probe DMI while figuring out whether to enable it (see #61535).
+  * Add a 'textonly' boot option to disable X (LP: #65818).
+  * Write the please-remove-CD message to /dev/console so that it works even
+    if usplash isn't running, and make sure to set /dev/console into a sane
+    state so that pressing Enter doesn't just result in ^M being displayed.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 02 Oct 2007 15:12:57 +0100
+
+casper (1.106) gutsy; urgency=low
+
+  * Support preseed/early_command; code supplied here will be run using 'sh
+    -c' from casper-bottom, and can chroot to /root if needed (LP: #144845).
+  * Make sure we don't accidentally continue to boot if casper-md5check
+    fails (LP: #82856).
+  * Clear out debconf database backup files after preseeding to save memory
+    (LP: #43706).
+  * Mount everything as noatime to avoid unnecessary metadata writes.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 28 Sep 2007 15:27:52 +0100
+
+casper (1.105) gutsy; urgency=low
+
+  * scripts/casper-bottom/36disable_trackerd: Disable trackerd in the live
+    session; it's not very useful in this context and it uses a fair bit of
+    memory.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 24 Sep 2007 17:25:50 +0100
+
 casper (1.104) gutsy; urgency=low
 
   * casper-md5check: Fall back to text output if opening the usplash FIFO

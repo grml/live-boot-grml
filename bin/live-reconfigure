@@ -8,31 +8,31 @@ frontend=noninteractive
 
 findcommandinroot ()
 {
-	ROOT="$1/"
+	ROOT="${1}/"
 	shift
 
-	while [ "$#" -ge 1 ]
+	while [ "${#}" -ge 1 ]
 	do
-		P="$PATH"
+		P="${PATH}"
 
-		while [ "$P" ]
+		while [ "${P}" ]
 		do
 			D=${P%%:*}
 			P=${P#*:}
 
-			if [ "$D" = "$P" ]
+			if [ "${D}" = "${P}" ]
 			then
 				P=
 			fi
 
-			if [ -z "$D" ]
+			if [ -z "${D}" ]
 			then
 				D=.
 			fi
 
-			if [ -x "$ROOT$D/$1" ]
+			if [ -x "${ROOT}${D}/${1}" ]
 			then
-				echo "$D/$1"
+				echo "${D}/${1}"
 				return 0
 			fi
 		done
@@ -45,26 +45,26 @@ findcommandinroot ()
 
 runcommandinroot ()
 {
-	C=$(findcommandinroot "$1" "$2")
-	ROOT="$1"
+	C=$(findcommandinroot "${1}" "${2}")
+	ROOT="${1}"
 
 	shift
 	shift
 
-	[ -n "$C" ] && chroot "$ROOT" "$C" "$@"
+	[ -n "${C}" ] && chroot "${ROOT}" "${C}" "${@}"
 }
 
-root="$1"
-package="$2"
+root="${1}"
+package="${2}"
 
-version=$(runcommandinroot "$root" dpkg-query -W --showformat='${Version}' "$package" 2>/dev/null) || version=""
+version=$(runcommandinroot "${root}" dpkg-query -W --showformat='${Version}' "${package}" 2>/dev/null) || version=""
 
-if [ -z "$version" ]
+if [ -z "${version}" ]
 then
-	echo >&2 "$0: package '$package' is not installed"
+	echo >&2 "${0}: package '${package}' is not installed"
 	exit 0
 fi
 
-runcommandinroot "$root" dpkg-reconfigure -fnoninteractive --no-reload "$package"
+runcommandinroot "${root}" dpkg-reconfigure -fnoninteractive --no-reload "${package}"
 
 exit 0

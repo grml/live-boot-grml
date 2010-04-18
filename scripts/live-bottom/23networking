@@ -33,14 +33,14 @@ log_begin_msg "Preconfiguring networking..."
 
 IFFILE="/root/etc/network/interfaces"
 
-if [ "${STATICIP}" = "frommedia" -a -e  "$IFFILE" ]
+if [ "${STATICIP}" = "frommedia" -a -e  "${IFFILE}" ]
 then
 	# will use existent /etc/network/interfaces
 	log_end_msg
 	exit 0
 fi
 
-cat > "$IFFILE" << EOF
+cat > "${IFFILE}" << EOF
 auto lo
 iface lo inet loopback
 
@@ -60,7 +60,7 @@ then
 		ifnetmask="$(echo ${ifline} | cut -f3 -d ',')"
 		ifgateway="$(echo ${ifline} | cut -f4 -d ',')"
 
-cat >> "$IFFILE" << EOF
+cat >> "${IFFILE}" << EOF
 auto ${ifname}
 iface ${ifname} inet static
     address ${ifaddress}
@@ -82,16 +82,16 @@ else
 	fi
 
 	# iterate the physical interfaces and add them to the interfaces list
-	if [ "$method" != dhcp ] || [ ! -x /root/usr/sbin/NetworkManager ]
+	if [ "${method}" != dhcp ] || [ ! -x /root/usr/sbin/NetworkManager ]
 	then
 		for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*
 		do
-			[ -e $interface ] || continue
-			i="$(basename $interface)"
+			[ -e ${interface} ] || continue
+			i="$(basename ${interface})"
 
-cat >> "$IFFILE" << EOF
-auto $i
-iface $i inet $method
+cat >> "${IFFILE}" << EOF
+auto ${i}
+iface ${i} inet ${method}
 
 EOF
 
@@ -132,11 +132,11 @@ fi
 #then
 #	for i in eth0 eth1 eth2 ath0 wlan0
 #	do
-#		grep -q "iface $i" $IFFILE && continue
+#		grep -q "iface ${i}" ${IFFILE} && continue
 #
-#cat >> "$IFFILE" << EOF
-#auto $i
-#iface $i inet dhcp
+#cat >> "${IFFILE}" << EOF
+#auto ${i}
+#iface ${i} inet dhcp
 #
 #EOF
 #

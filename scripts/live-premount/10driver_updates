@@ -40,16 +40,16 @@ is_updates_path ()
 	# subdirectory. Each package contains a module for a specific
 	# kernel flavour.
 
-	path=$1
+	path=${1}
 	kbase=$(uname -r | sed 's/^\([0-9]*\.[0-9]*\.[0-9]*\)-.*/\1/')
-	update_dir="$path/ubuntu-drivers/$kbase"
+	update_dir="${path}/ubuntu-drivers/${kbase}"
 
-	if [ -d "$update_dir" ]
+	if [ -d "${update_dir}" ]
 	then
-		if [ "$(echo $update_dir/*_$DPKG_ARCH.deb)" != \
-			"$update_dir/*_$DPKG_ARCH.deb" ]
+		if [ "$(echo ${update_dir}/*_${DPKG_ARCH}.deb)" != \
+			"${update_dir}/*_${DPKG_ARCH}.deb" ]
 		then
-			echo "$update_dir"
+			echo "${update_dir}"
 			return 0;
 		fi
 	fi
@@ -99,11 +99,11 @@ check_dev_updates ()
 	then
 		mount -t ${fstype} -o ro "${devname}" $mountpoint || continue
 
-		if is_updates_path $mountpoint
+		if is_updates_path ${mountpoint}
 		then
 			return 0
 		else
-			umount $mountpoint
+			umount ${mountpoint}
 		fi
 	fi
 
@@ -150,14 +150,14 @@ updates="false"
 
 for x in $(cat /proc/cmdline)
 do
-	case $x in
+	case ${x} in
 		debian-installer/driver-update=*)
 			updates=${x#debian-installer/driver-update=}
 			;;
 	esac
 done
 
-if [ "$updates" != "true" ]
+if [ "${updates}" != "true" ]
 then
 	log_end_msg
 	exit 0
@@ -183,7 +183,7 @@ then
 	eject
 fi
 
-log_wait_msg "Insert a driver CD and press ENTER ($DPKG_ARCH)"
+log_wait_msg "Insert a driver CD and press ENTER (${DPKG_ARCH})"
 
 log_begin_msg "Looking for driver update CD"
 
@@ -211,8 +211,8 @@ fi
 log_begin_msg "Copying driver updates to temporary location"
 
 mkdir -p /tmp/driver-updates
-cp $updates_root/*_$DPKG_ARCH.deb /tmp/driver-updates/
-umount $mountpoint
+cp ${updates_root}/*_${DPKG_ARCH}.deb /tmp/driver-updates/
+umount ${mountpoint}
 
 if [ -x /usr/bin/eject ]
 then
