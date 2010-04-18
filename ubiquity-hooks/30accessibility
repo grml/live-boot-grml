@@ -27,6 +27,7 @@ for x in $(cat /proc/cmdline); do
                         gct -s -t string /desktop/gnome/background/color_shading_type solid
                         gct -s -t int /desktop/gnome/peripherals/mouse/cursor_size 48
                         gct -s -t string /desktop/gnome/peripherals/mouse/cursor_theme whiteglass
+                        sed -i s.prefixes=/usr/share/kubuntu-default-settings/kde-profile/default/.prefixes=/usr/share/kubuntu-default-settings/kde-profile/default/,/usr/share/kubuntu-default-settings/kde-profile/lesser-visual-imparement/. /etc/kderc
                         ;;
                         # Moderate Visual Impairment
                         access=v2)
@@ -34,6 +35,7 @@ for x in $(cat /proc/cmdline); do
                         gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats [gnopernicus]
                         gct -s -t bool /apps/gnopernicus/srcore/mag_active true
                         gct -s -t bool /apps/gnopernicus/srcore/sp_active false
+                        sed -i s.prefixes=/usr/share/kubuntu-default-settings/kde-profile/default/.prefixes=/usr/share/kubuntu-default-settings/kde-profile/default/,/usr/share/kubuntu-default-settings/kde-profile/lesser-visual-imparement/,/usr/share/kubuntu-default-settings/kde-profile/moderate-visual-imparement/. /etc/kderc
                         ;;
                         # Blindness
                         access=v3)
@@ -53,6 +55,7 @@ for x in $(cat /proc/cmdline); do
                         gct -s -t bool /desktop/gnome/peripherals/keyboard/repeat true
                         gct -s -t int /desktop/gnome/peripherals/keyboard/delay 700
                         gct -s -t int /desktop/gnome/peripherals/keyboard/rate 10
+                        sed -i s.prefixes=/usr/share/kubuntu-default-settings/kde-profile/default/.prefixes=/usr/share/kubuntu-default-settings/kde-profile/default/,/usr/share/kubuntu-default-settings/kde-profile/minor-motor-difficulties/. /etc/kderc
                         ;;
                         # Motor Difficulties - pointing devices
                         access=m2)
@@ -62,6 +65,7 @@ for x in $(cat /proc/cmdline); do
                         gct -s -t bool /desktop/accessibility/gnome/keyboard/stickykeys_two_key_off false
                         gct -s -t bool /desktop/gnome/interface/accessibility true
                         gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats gok
+                        sed -i s.prefixes=/usr/share/kubuntu-default-settings/kde-profile/default/.prefixes=/usr/share/kubuntu-default-settings/kde-profile/default/,/usr/share/kubuntu-default-settings/kde-profile/minor-motor-difficulties/,/usr/share/kubuntu-default-settings/kde-profile/motor-difficulties-pointing-devices/. /etc/kderc                        
                         ;;
 		esac
 done

@@ -100,6 +100,23 @@ void usplash_text(int fd, char *format, ...) {
   free(s1);
 }
 
+void usplash_urgent(int fd, char *format, ...) {
+  char *s, *s1;
+  va_list argp;
+
+  va_start(argp, format);
+  vasprintf(&s, format, argp);
+  va_end(argp);
+
+  asprintf(&s1, "TEXT-URGENT %s", s);
+
+  write_and_retry(fd, s1);
+
+  free(s);
+  free(s1);
+}
+
+
 void usplash_success(int fd, char *format, ...) {
   char *s, *s1;
   va_list argp;
@@ -173,10 +190,13 @@ int main(int argc, char **argv) {
   
   if (pipe_fd == -1) {
     /* We can't really do anything useful here */
+    perror("Opening pipe");
     exit(1);
   }
   
+
   usplash_progress(pipe_fd, 0);
+  usplash_urgent(pipe_fd, "Checking integrity, this may take some time");
   md5_file = fopen(argv[2], "r");
   if (!md5_file) {
           perror("fopen md5_file");
@@ -214,7 +234,7 @@ int main(int argc, char **argv) {
 
     while (rsize > 0) {
       csize += rsize;
-      usplash_progress(pipe_fd, floorl(100*csize/tsize));
+      usplash_progress(pipe_fd, floorl(100*((long double)csize)/tsize));
 
       md5_append(&state, (const md5_byte_t *)buf, rsize);
       rsize = read(check_fd, buf, sizeof(buf));
@@ -235,9 +255,9 @@ int main(int argc, char **argv) {
     free(checksum);
     free(checkfile);
   }
-  usplash_text(pipe_fd, "Check finished, %d checksums failed", failed);
-  usplash_text(pipe_fd, "Press any key to reboot your system");
-  usplash_timeout(pipe_fd, 0);
+  usplash_urgent(pipe_fd, "Check finished, %d checksums failed", failed);
+  usplash_urgent(pipe_fd, "Press any key to reboot your system");
+  usplash_timeout(pipe_fd, 86400);
   set_nocanonical_tty(0);
   getchar();
   reboot(LINUX_REBOOT_CMD_RESTART);
