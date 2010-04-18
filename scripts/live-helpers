@@ -268,7 +268,7 @@ find_files ()
 			devname=$(sys2dev "${dev}")
 			devfstype="$(get_fstype ${devname})"
 
-			if [ "${devfstype}" = "vfat" ] ||  [ "${devfstype}" = "ext2" ] || [ "${devfstype}" = "ext3" ]
+			if [ "${devfstype}" = "vfat" ] ||  [ "${devfstype}" = "ext2" ] || [ "${devfstype}" = "ext3" ] || [ "${devfstype}" = "jffs2" ]
 			then
 				# FIXME: all supported block devices should be scanned
 				mkdir -p "${snap_backing}"

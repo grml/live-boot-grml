@@ -57,7 +57,7 @@ internally used on resyncs.
 
   -t, --type **TYPE**::
 
-Type could be one of "cpio", "squashfs" or "ext2".
+Type could be one of "cpio", "squashfs", "ext2", "ext3" or "jffs2".
 
   -h, --help::
 
