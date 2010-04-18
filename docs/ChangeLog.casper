@@ -1,3 +1,51 @@
+casper (1.177) karmic; urgency=low
+
+  * Port from Debian (thanks, Daniel Baumann):
+    - Added live-media-path as suggested by Jordi Pujol.
+    - Tail casper.log and show its messages during boot (thanks, Michal
+      Suchanek; LP: #363886).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 04 Jun 2009 03:10:59 +0100
+
+casper (1.176) karmic; urgency=low
+
+  [ Colin Watson ]
+  * Fix symlinking of anacron to /bin/true.
+
+  [ Martin Pitt ]
+  * Drop scripts/casper-bottom/38jockey_disable_check: Some drivers, like wl
+    or printer drivers, do need to be advertised in a live system. Jockey has
+    been fixed to not advertise video drivers automatically if the packages
+    aren't available (such as in the live system), and even if we should ever
+    put them back, it is easier to disable the notifications in jockey's
+    handlers instead of here. (LP: #381687)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Tue, 02 Jun 2009 15:40:05 +0200
+
+casper (1.175) karmic; urgency=low
+
+  * Suppress error message if
+    /root/usr/share/applications/firefox-fav.desktop doesn't exist.
+  * Add unionfs-fuse support.
+  * Automatically fall back to unionfs-fuse if the default union filesystem
+    is not available but unionfs-fuse is.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Sun, 24 May 2009 12:28:00 +0100
+
+casper (1.174) karmic; urgency=low
+
+  * debian/control: Increase dependency on initramfs-tools to get the version
+    that uses blkid, depend on util-linux as well
+  * hooks/casper: No need to copy vol_id into the initramfs image.·
+  * scripts/casper-bottom/13swap: Use blkid -o udev -p instead of vol_id,
+    there's probably a much cleaner way to check for RAID like this, but
+    this is the direct equivalent.
+  * scripts/casper-helpers (get_fstype): use a blkid call to get the type·
+  * scripts/casper-helpers (find_cow_device): use a blkid call to get the
+    label
+
+ -- Scott James Remnant <scott@ubuntu.com>  Tue, 12 May 2009 13:29:41 +0100
+
 casper (1.173) jaunty; urgency=low
 
   * Don't use head -n1 in where_is_mounted, we don't have head in the

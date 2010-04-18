@@ -116,6 +116,12 @@ manual_add_modules unlzma
 manual_add_modules aufs
 manual_add_modules unionfs
 
+# Filesystem: unionfs-fuse
+if [ -x /usr/bin/unionfs-fuse ]
+then
+	copy_exec /usr/bin/unionfs-fuse /bin
+fi
+
 # Filesystem: vfat
 manual_add_modules nls_cp437
 manual_add_modules nls_iso8859-1
