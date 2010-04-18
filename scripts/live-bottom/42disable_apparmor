@@ -20,17 +20,17 @@ esac
 
 # live-initramfs header
 
-if [ -n "${NOAPTCDROM}" ]
+if [ -n "${NOAPPARMOR}" ]
 then
 	exit 0
 fi
 
 . /scripts/live-functions
 
-log_begin_msg "Adding APT-CDROM source..."
+log_begin_msg "Disabling AppArmor (does not work with stacked file systems)..."
 
 # live-initramfs script
 
-chroot /root apt-cdrom -m add
+chroot /root update-rc.d -f apparmor remove
 
 log_end_msg

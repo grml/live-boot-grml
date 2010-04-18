@@ -1,3 +1,198 @@
+commit 52da405cf94972bd036065b10be99bb414541dcb
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Sun Sep 16 23:39:42 2007 +0200
+
+    debian/control
+    
+      * Sorting Depends.
+
+commit 3cd5081adeeb14a7d380744f81cd2180276f0365
+Author: Michael Prokop <mika@grml.org>
+Date:   Sun Sep 16 22:46:41 2007 +0200
+
+    Depend on busybox.
+    
+    live-initramfs uses touch(1) which does not seem to be available
+    using klibc-utils. initramfs-tools version 0.91a (current
+    Debian/unstable) just depends on klibc-utils now and busybox is
+    in recommends only. If busybox isn't installed the generated
+    initramfs might not work due to lack of the touch command'
+
+commit 15f50dd4f009afb5f6ea7fa4b3c67d4bafe882aa
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Fri Sep 14 18:06:22 2007 +0200
+
+    Makefile
+    debian/changelog
+    docs/parameters.txt
+    
+      * Bumping version to 1.102.1-1.
+
+commit 70e4f061298282c026bf018ce93314a0da5e5311
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Fri Sep 14 18:05:25 2007 +0200
+
+    docs/ChangeLog.casper
+    scripts/live-bottom/42disable_apparmor
+    
+      * Merging casper 1.102.
+
+commit 57f2af1f2f32b4ac8ab96fa937ac4fa74673acce
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Thu Sep 13 09:06:27 2007 +0200
+
+    manpages/live-initramfs.en.7.txt
+    
+      * Removing Marco Amadori <marco.amadori@gmail.com>.
+
+commit e823a3bea161604ca9fc610a972bcd209eb8a318
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Thu Sep 13 09:05:12 2007 +0200
+
+    scripts/live
+    scripts/live-bottom/42disable_cups_apparmor
+    
+      * Adding noapparmor boot parameter.
+
+commit 7fbf30f8b110e717260d8784348924334441dd52
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Thu Sep 13 09:00:00 2007 +0200
+
+    Makefile
+    debian/changelog
+    docs/parameters.txt
+    
+      * Bumping version to 1.101.1-1.
+
+commit ba448e1d11f36e19ad1cb8b9b0ef4ada520dc15a
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Thu Sep 13 08:58:19 2007 +0200
+
+    scripts/live-bottom/42disable_cups_apparmor
+    
+      * Adjusting to live-initramfs.
+
+commit 8f5e698bfc5292a45196ada567758de53eaeb8cb
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Thu Sep 13 08:56:05 2007 +0200
+
+    docs/ChangeLog.casper
+    scripts/live-bottom/42disable_cups_apparmor
+    
+      * Merging casper 1.101.
+
+commit 588f83250352c5d6568fe12cbd5c4a589f01c713
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Thu Sep 13 08:53:53 2007 +0200
+
+    docs/ChangeLog.casper
+    scripts/live-bottom/41apt_cdrom
+    
+      * Merging casper 1.100.
+
+commit df615e599339d96d0baa25799cb6cb9316bee6db
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Wed Sep 12 20:55:21 2007 +0200
+
+    debian/control
+    
+      * Using new Homepage field now.
+
+commit 1ec08c8bd0541df14e544d368adf55bbe1b615d6
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Wed Sep 12 20:54:32 2007 +0200
+
+    scripts/live
+    
+      [ Frederic Boiteux <fboiteux@calistel.com> ]
+      * Patch for live-initramfs with NFSROOT=auto:
+        <http://lists.alioth.debian.org/pipermail/debian-live-devel/2007-September/002173.html>
+
+commit 7dc88b8ee5316f0c057f99ccd87af126fb6a6177
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Wed Sep 12 20:53:43 2007 +0200
+
+    manpages/Makefile
+    manpages/live-snapshot.en.1
+    manpages/live-snapshot.en.1.txt
+    manpages/live-snapshot.it.1
+    manpages/live-snapshot.it.1.txt
+    
+      [ Michael Prokop <mika@grml.org> ]
+      * Migrate live-snapshot.en.1 and live-snapshot.it.1 to asciidoc as well.
+
+commit e877a84275ea002afad615ee8c733a2949789465
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Wed Sep 12 20:50:53 2007 +0200
+
+    docs/CREDITS
+    
+      * Adding Marco Amadori <marco.amadori@gmail.com>.
+
+commit 342a640d73b0556fe8e5b61eea2df860be606259
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Wed Sep 12 20:50:22 2007 +0200
+
+    debian/control
+    
+      * Sorting Build-Depends.
+
+commit 693d13515d462a50e90ff9b9a6ad5a34ea5f6a2f
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Wed Sep 12 20:50:04 2007 +0200
+
+    debian/rules
+    
+      * Simplifying make calls.
+
+commit a91b809bc489027b2f0539d96b9de6a2adcb69fb
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Wed Sep 12 20:49:40 2007 +0200
+
+    manpages/live-initramfs.en.7
+    
+      [ Michael Prokop <mika@grml.org> ]
+      * Remove deprecated manpages/live-initramfs.en.7 (switched to asiidoc).
+
+commit 26fcf5653d0c326406d039fe4e3666fcf295d75c
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Wed Sep 12 20:49:16 2007 +0200
+
+    debian/control
+    debian/rules
+    
+      [ Michael Prokop <mika@grml.org> ]
+      * Update debian/control and debian/rules for use of asciidoc.
+
+commit a3ac04f2e4eee9d4a489641d150e1256ce1366f3
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Wed Sep 12 20:48:51 2007 +0200
+
+    manpages/Makefile
+    manpages/live-initramfs.en.7.txt
+    
+      [ Michael Prokop <mika@grml.org> ]
+      * Switch to asciidoc for documentation.
+
+commit 993133a8c47a512d075b439598bba9806ddc0514
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Wed Sep 12 20:47:33 2007 +0200
+
+    debian/control
+    
+      * Fixing typing error.
+
+commit 4b09e99f0118b0aad6610469db1cf37896df7a6c
+Author: Daniel Baumann <daniel@debian.org>
+Date:   Wed Sep 12 20:47:20 2007 +0200
+
+    Makefile
+    debian/changelog
+    docs/parameters.txt
+    manpages/*
+    
+      * Preparing live-initramfs 1.99.3-1.
+
 2007-09-09  Daniel Baumann  <daniel@debian.org>
 
 	* Using common indenting.

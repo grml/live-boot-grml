@@ -170,6 +170,11 @@ Arguments ()
 				export NOACCESSIBILITY
 				;;
 
+			noapparmor)
+				NOAPPARMOR="Yes"
+				export NOAPPARMOR
+				;;
+
 			noaptcdrom)
 				NOAPTCDROM="Yes"
 				export NOAPTCDROM
@@ -585,16 +590,16 @@ do_netmount ()
 
 	ipconfig ${DEVICE} | tee /netboot.config
 
-	if [ "${NFSROOT}" = "auto" ]
-	then
-		NFSROOT=${ROOTSERVER}:${ROOTPATH}
-	fi
-
 	# source relevant ipconfig output
 	OLDHOSTNAME=$HOSTNAME
 	. /tmp/net-${DEVICE}.conf
 	[ -z $HOSTNAME ] && HOSTNAME=$OLDHOSTNAME
 	export HOSTNAME
+
+	if [ "${NFSROOT}" = "auto" ]
+	then
+		NFSROOT=${ROOTSERVER}:${ROOTPATH}
+	fi
 
 	if [ -n "${FETCH}" ] && do_httpmount
 	then
