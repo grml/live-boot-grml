@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Executing custom hook script..."
+log_begin_msg "Executing custom hook script"
 
 # live-initramfs script
 

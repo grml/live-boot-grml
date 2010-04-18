@@ -27,8 +27,6 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Configuring X..."
-
 # live-initramfs script
 
 if [ "${TERM_TYPE}" = "serial" ]
@@ -42,6 +40,13 @@ if [ -n "${TEXTONLY}" ]
 then
 	exit 0
 fi
+
+if [ ! -x /root/usr/bin/X ]
+then
+	exit 0
+fi
+
+log_begin_msg "Configuring X"
 
 locale=en_US.UTF-8
 
@@ -77,7 +82,9 @@ ${setmodel}
 ${setoptions}
 EOF
 
-DEBUG_XORG_PACKAGE=1 DEBUG_XORG_DEBCONF=1 live-reconfigure /root xserver-xorg
+DEBUG_XORG_PACKAGE=1 DEBUG_XORG_DEBCONF=1 live-reconfigure /root xserver-xorg 2>&1 \
+	| grep -v "overwriting possibly-customised configuration" \
+	| grep -v "file; backup in /etc/X11/xorg.conf"
 umount /root/sys
 umount /root/proc
 umount /root/dev

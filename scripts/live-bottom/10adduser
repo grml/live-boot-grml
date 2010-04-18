@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Adding live session user..."
+log_begin_msg "Adding live session user"
 
 # live-initramfs script
 
@@ -40,12 +40,13 @@ set passwd/root-password-crypted *
 set passwd/user-password-crypted ${user_crypted}
 set passwd/user-fullname ${USERFULLNAME}
 set passwd/username ${USERNAME}
-set passwd/user-uid 999
+set passwd/user-uid 1000
 EOF
 
 chroot /root /usr/bin/env -i HOME="/root" \
 	TERM="${TERM}" PATH="/usr/sbin:/usr/bin:/sbin:/bin" \
-	/usr/lib/user-setup/user-setup-apply > /dev/null
+	/usr/lib/user-setup/user-setup-apply 2>&1 \
+		| grep -v "Shadow passwords are now on"
 
 # Clear out debconf database again to avoid confusing ubiquity later.
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
@@ -64,8 +65,12 @@ then
 		echo "${USERNAME}  ALL=(ALL) NOPASSWD: ALL" >> /root/etc/sudoers
 
 		chroot /root sudo -u "${USERNAME}" sh -c "echo 'SU_TO_ROOT_SU=sudo' >> /home/${USERNAME}/.su-to-rootrc"
-		chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gksu/sudo-mode true
-		chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gksu/display-no-pass-info false
+
+		if [ -x /root/usr/bin/gconftool-2 ]
+		then
+			chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gksu/sudo-mode true
+			chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/gksu/display-no-pass-info false
+		fi
 
 chroot /root sudo -u "${USERNAME}" sh -c "umask 0077 && mkdir -p /home/${USERNAME}/.kde/share/config && cat > /home/${USERNAME}/.kde/share/config/kdesurc" << EOF
 [super-user-command]

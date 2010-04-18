@@ -27,15 +27,13 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Enabling notifications about program crashes..."
+log_begin_msg "Enabling detection of crashes"
 
 # live-initramfs script
 
-update_notifier_version=$(chroot /root dpkg-query -W --showformat='${Version}' update-notifier 2>/dev/null) || update_notifier_version=""
-
-if [ -n "${update_notifier_version}" ]
+if [ -e /root/etc/default/apport ]
 then
-	chroot /root sudo -u "${USERNAME}" gconftool-2 -t bool -s /apps/update-notifier/show_apport_crashes true
+	sed -i 's/enabled=0/enabled=1/' /root/etc/default/apport
 fi
 
 log_end_msg

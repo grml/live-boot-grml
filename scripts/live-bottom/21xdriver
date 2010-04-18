@@ -25,9 +25,14 @@ then
 	exit 0
 fi
 
+if [ ! -x /root/usr/bin/X ]
+then
+	exit 0
+fi
+
 . /scripts/live-functions
 
-log_begin_msg "Configuring X kludges..."
+log_begin_msg "Configuring X video driver"
 
 # live-initramfs script
 
@@ -49,3 +54,4 @@ EOF
 	umount /root/dev
 fi
 
+log_end_msg

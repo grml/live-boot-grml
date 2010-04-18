@@ -20,16 +20,16 @@ esac
 
 # live-initramfs header
 
-. /scripts/live-functions
-
-log_begin_msg "Setting up automatic login..."
-
-# live-initramfs script
-
 if [ -n "${NOXAUTOLOGIN}" ]
 then
 	exit 0
 fi
+
+. /scripts/live-functions
+
+log_begin_msg "Setting up automatic login"
+
+# live-initramfs script
 
 # chroot needed to handle symlinks correctly
 if chroot /root [ -f /etc/gdm/gdm-cdd.conf ]
@@ -71,13 +71,13 @@ then
 		  -e "s/^#?AutoLoginUser=.*\$/AutoLoginUser=${USERNAME}/" \
 		  -e "s/^#?AutoReLogin=.*\$/AutoReLogin=true/" \
 	/root/etc/kde3/kdm/kdmrc
-elif [ -f /root/usr/lib/kde4/etc/kde4/kdm/kdmrc ]
+elif [ -f /root/etc/kde4/kdm/kdmrc ]
 then
 	# Configure KDM-KDE4 autologin
 	sed -i -r -e "s/^#?AutoLoginEnable=.*\$/AutoLoginEnable=true/" \
 		  -e "s/^#?AutoLoginUser=.*\$/AutoLoginUser=$USERNAME/" \
 		  -e "s/^#?AutoReLogin=.*\$/AutoReLogin=true/" \
-	/root/usr/lib/kde4/etc/kde4/kdm/kdmrc
+	/root/etc/kde4/kdm/kdmrc
 fi
 
 log_end_msg

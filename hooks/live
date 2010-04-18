@@ -103,6 +103,9 @@ manual_add_modules nls_iso8859-1
 manual_add_modules nls_utf8
 manual_add_modules vfat
 
+# Filesystem: ntfs
+manual_add_modules ntfs
+
 # Hardware: cdrom
 manual_add_modules ide-cd
 manual_add_modules ide-generic

@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Fixing language selector..."
+log_begin_msg "Fixing language selector"
 
 # live-initramfs script
 

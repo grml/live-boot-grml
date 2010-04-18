@@ -28,7 +28,7 @@ then
 	exit 0
 fi
 
-log_begin_msg "Configuring fstab..."
+log_begin_msg "Configuring fstab"
 
 # live-initramfs script
 

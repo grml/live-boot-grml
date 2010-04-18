@@ -25,9 +25,14 @@ then
 	exit 0
 fi
 
+if [ ! -x /root/usr/bin/X ]
+then
+	exit 0
+fi
+
 . /scripts/live-functions
 
-log_begin_msg "Configuring X kludges..."
+log_begin_msg "Configuring X video modes"
 
 # live-initramfs script
 

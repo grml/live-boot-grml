@@ -2,8 +2,6 @@
 
 PREREQ=""
 
-. /scripts/live-functions
-
 prereqs()
 {
        echo "$PREREQ"
@@ -22,7 +20,9 @@ then
 	exit 0
 fi
 
-log_begin_msg "Disabling restricted-manager..."
+. /scripts/live-functions
+
+log_begin_msg "Disabling restricted-manager"
 
 rm -f /root/etc/xdg/autostart/restricted-manager.desktop
 rm -f /root/etc/xdg/autostart/restricted-manager-kde.desktop
@@ -30,7 +30,10 @@ rm -f /root/etc/xdg/autostart/restricted-manager-kde.desktop
 # Since we disable restricted-manager, there isn't much point generating the
 # fglrx or nvidia modules either. The other restricted modules may still be
 # useful.
-sed -i 's/^DISABLED_MODULES=""/DISABLED_MODULES="fglrx nv"/' \
-	/root/etc/default/linux-restricted-modules-common
+if [ -e /root/etc/default/linux-restricted-modules-common ]
+then
+	sed -i 's/^DISABLED_MODULES=""/DISABLED_MODULES="fglrx nv"/' \
+		/root/etc/default/linux-restricted-modules-common
+fi
 
 log_end_msg

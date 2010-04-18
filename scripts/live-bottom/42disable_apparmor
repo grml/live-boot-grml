@@ -27,10 +27,13 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Disabling AppArmor (does not work with stacked file systems)..."
+log_begin_msg "Disabling AppArmor (does not work with stacked file systems)"
 
 # live-initramfs script
 
-chroot /root update-rc.d -f apparmor remove
+if [ -x /root/etc/init.d/apparmor ]
+then
+	chroot /root update-rc.d -f apparmor remove
+fi
 
 log_end_msg

@@ -1,3 +1,31 @@
+casper (1.139) intrepid; urgency=low
+
+  * add compcache conf.d configuration for initramfs-tools
+
+ -- Oliver Grawert <ogra@ubuntu.com>  Thu, 14 Aug 2008 00:25:54 +0200
+
+casper (1.138) intrepid; urgency=low
+
+  [ Tormod Volden ]
+  * use full path for vol_id in swap-on-raid detection (LP: #136804)
+
+  [ Martin Pitt ]
+  * 33enable_apport_crashes: Change the apport default file, not the
+    update-notifier gconf keys, to undo the corresponding change for disabling
+    apport right before the release.
+  * Add 45disable_guest_account: Purge the gdm-guest-session package from the
+    live system, since having guest sessions in a live session does not make
+    much sense. (See gdm-guest-login spec)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Thu, 31 Jul 2008 14:19:07 +0200
+
+casper (1.137) intrepid; urgency=low
+
+  * Update scripts/casper-bottom/15autologin for KDM from KDE 4.
+  * Update 32disable_hibernation for KDE 4.
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 17 Jul 2008 13:41:38 +0100
+
 casper (1.136) intrepid; urgency=low
 
   * Remove bad-and-wrong setting of PATH to include directories under /root;
@@ -38,9 +66,27 @@ casper (1.133) intrepid; urgency=low
     loopfile
   * Reverted changes to casper-helpers as requested by Mithrandir since
     replaying the journal on a hibernated system would lead to file system
-    corruption.
+    corruption (LP: #230703).
 
  -- Evan Dandrea <evand@ubuntu.com>  Wed, 18 Jun 2008 12:34:58 -0400
+
+casper (1.132ubuntu0.2) hardy-proposed; urgency=low
+
+  * Test if livemedia is a directory before trying to mount it as a
+    loopfile
+  * Reverted changes to casper-helpers as requested by Mithrandir since
+    replaying the journal on a hibernated system would lead to file system
+    corruption (LP: #230703).
+
+ -- Agostino Russo <agostino.russo@gmail.com>  Tue, 10 Jun 2008 00:27:12 +0100
+
+casper (1.132ubuntu0.1) hardy-proposed; urgency=low
+
+  * Do not scan only vfat volumes when looking for cow devices (LP: #230703)
+  * Allow casper to use a squashfs filesystem within an arbitrary path (LP:
+    #230716, #207137)
+
+ -- Agostino Russo <agostino.russo@gmail.com>  Thu, 15 May 2008 22:10:50 +0100
 
 casper (1.132) intrepid; urgency=low
 

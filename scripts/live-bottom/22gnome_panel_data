@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Configuring gnome-panel-data..."
+log_begin_msg "Configuring gnome-panel-data"
 
 # live-initramfs script
 

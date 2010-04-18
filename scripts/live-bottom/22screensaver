@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Configuring screensaver..."
+log_begin_msg "Configuring screensaver"
 
 # live-initramfs script
 

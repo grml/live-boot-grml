@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Disabling update-notifier..."
+log_begin_msg "Disabling update-notifier"
 
 # live-initramfs script
 
@@ -37,7 +37,10 @@ log_begin_msg "Disabling update-notifier..."
 chroot /root dpkg-divert --add --rename --quiet \
 	/usr/lib/update-notifier/apt-check
 
-ln -s /bin/true /root/usr/lib/update-notifier/apt-check
+if [ -e /root/usr/lib/update-notifier/apt-check ]
+then
+	ln -s /bin/true /root/usr/lib/update-notifier/apt-check
+fi
 
 # For KDE, adept_notifier's only useful function at the moment is an
 # 'apt-get update' equivalent, so we disable it entirely.

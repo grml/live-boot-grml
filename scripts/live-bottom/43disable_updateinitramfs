@@ -22,7 +22,7 @@ esac
 
 . /scripts/live-functions
 
-log_begin_msg "Disabling update-initramfs (useless on a live CD)..."
+log_begin_msg "Disabling update-initramfs"
 
 # live-initramfs script
 

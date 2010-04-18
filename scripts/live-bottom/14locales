@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-log_begin_msg "Setting up locales..."
+log_begin_msg "Setting up locales"
 
 # live-initramfs script
 
@@ -75,34 +75,44 @@ then
 		locale="${locale}_${uploc}.UTF-8"
 	fi
 
-	LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 | sed -e 's, .*,,' -e q)
+	LANG=
+	language="$(echo ${locale} | cut -d. -f1)"
+	eval $(awk '/^'"${locale}"'/ { print "LANG=" $1 " codepage=" $2; exit; }' /root/usr/share/i18n/SUPPORTED)
 
-	language="${LANG%%.UTF-8*}"
+	if [ -z "${LANG}" ]
+	then
+		# Try and fallback to another codepage for this language.
+		eval $(awk '/^'"${language}"'/ { print "LANG=" $1 " codepage=" $2; exit; }' /root/usr/share/i18n/SUPPORTED)
+
+		if [ -n "${LANG}" ]
+		then
+			log_warning_msg "Choosing locale '${LANG}' as '${locale}' is unsupported."
+		fi
+	fi
+
+	if [ -z "${LANG}" ]
+	then
+		log_warning_msg "Locale '${locale}' is unsupported."
+		codepage="UTF-8"
+		language="en_US"
+		locale="${language}.${codepage}"
+		LANG="${language}.${codepage}"
+	fi
+
 	if [ -d /root/etc/default/kdm.d/ ]
 	then
-
-cat > /root/etc/default/kdm.d/live-autologin << EOF
-LANGUAGE=${language}
-EOF
-
+		printf 'LANGUAGE=%s\n' "${LANG}" >> /root/etc/default/kdm.d/live-autologin
 	elif [ -f /root/etc/kde3/kdm/kdmrc ]
 	then
 		sed -i -r -e "s/#Language=.*/Language=${language}/" \
 			/root/etc/kde3/kdm/kdmrc
 	fi
 
-	if [ -z "${LANG}" ]
-	then
-		log_warning_msg "Locale ${locale} is unsupported."
-		locale="en_US.UTF-8"
-		LANG="${locale}"
-	fi
-
 	really_export LANG
 
 	printf 'LANG="%s"\n' "${LANG}" >> /root/etc/default/locale
 	printf 'LANG="%s"\n' "${LANG}" >> /root/etc/environment
-	printf '%s UTF-8\n' "${LANG}" > /root/etc/locale.gen
+	printf '%s %s\n' "${LANG}" "${codepage}" > /root/etc/locale.gen
 	chroot /root /usr/sbin/locale-gen
 fi
 
