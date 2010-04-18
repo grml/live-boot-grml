@@ -41,6 +41,7 @@ done
 
 mount -n -o bind /sys /root/sys
 mount -n -o bind /proc /root/proc
+mount -n -o bind /dev /root/dev
 
 if [ -n "${XDEBCONF}" -a -x /root/usr/sbin/xdebconfigurator ]; then
     # xdebconfigurator
@@ -55,5 +56,6 @@ EOF
 DEBUG_XORG_PACKAGE=1 DEBUG_XORG_DEBCONF=1 LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 | sed -e 's, .*,,' -e q) casper-reconfigure /root xserver-xorg
 umount /root/sys
 umount /root/proc
+umount /root/dev
 
 log_end_msg

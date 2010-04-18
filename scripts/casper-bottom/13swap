@@ -27,7 +27,7 @@ for device in /dev/[hs]d[a-z][0-9]*; do
         continue
     fi
 
-    magic=$(dd if="$device" bs=4086 skip=1 count=1 2>/dev/null | dd bs=10 count=1 2>/dev/null) || continue
+    magic=$(/bin/dd if="$device" bs=4086 skip=1 count=1 2>/dev/null | /bin/dd bs=10 count=1 2>/dev/null) || continue
     
     if [ "$magic" = "SWAPSPACE2" -o "$magic" = "SWAP-SPACE" ]; then
 #        log "Found $device"

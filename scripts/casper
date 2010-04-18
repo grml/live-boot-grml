@@ -4,6 +4,9 @@
 
 export PATH=/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin:/bin:/sbin
 
+echo "/root/lib" >> /etc/ld.so.conf
+echo "/root/usr/lib" >> /etc/ld.so.conf
+
 mountpoint=/cdrom
 
 USERNAME=casper
@@ -135,6 +138,9 @@ do_netmount() {
     rc=1
 
     modprobe "${MP_QUIET}" af_packet # For DHCP
+
+    udevtrigger
+    udevsettle
 
     ipconfig ${DEVICE} /tmp/net-${DEVICE}.conf | tee /netboot.config
 
@@ -498,7 +504,7 @@ mountroot() {
         if do_netmount ; then
             livefs_root="${mountpoint}"
         else
-            panic "Unable to find a the network rootfs live file system"
+            panic "Unable to find a live file system on the network"
         fi
     else
         # Scan local devices for the image

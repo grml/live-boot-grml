@@ -60,8 +60,8 @@ for x in $(cat /proc/cmdline); do
                         access=v2)
                         gct -s -t bool /desktop/gnome/interface/accessibility true
                         gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats [orca]
-                        if [ -e /root/usr/share/python-support/gnome-orca/orca/settings.py ]; then
-                            sed -i '/^enableSpeech\W/ s/True/False/;/^enableMagnifier/ s/False/True/' /root/usr/share/python-support/gnome-orca/orca/settings.py
+                        if [ -e /root/usr/share/pycentral/gnome-orca/site-packages/orca/settings.py ]; then
+                            sed -i '/^enableSpeech\W/ s/True/False/;/^enableMagnifier/ s/False/True/' /root/usr/share/pycentral/gnome-orca/site-packages/orca/settings.py
                         fi
                         kderc_addtoprefixes /usr/share/kubuntu-default-settings/kde-profile/lesser-visual-impairment/,/usr/share/kubuntu-default-settings/kde-profile/moderate-visual-impairment/
                         ;;

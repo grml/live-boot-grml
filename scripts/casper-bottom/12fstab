@@ -26,6 +26,6 @@ unionfs / unionfs rw 0 0
 tmpfs /tmp tmpfs nosuid,nodev 0 0
 EOF
 
-rm -f /root/etc/rcS.d/S10checkroot.sh
+rm -f /root/etc/rcS.d/S*checkroot.sh
 
 log_end_msg
