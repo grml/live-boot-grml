@@ -208,6 +208,12 @@ informations. If "nofiles" is specified, only filesystems with matching labels
 will be searched; no filesystems will be traversed looking for archives or image
 files. This results in shorter boot times.
 
+  persistent-path=PATH
+
+live-initramfs will look for persistency files in the root directory of a partition,
+with this parameter, the path can be configured so that you can have multiple
+directories on the same partition to store persistency files.
+
   {preseed/file|file}=**FILE**::
 
 A path to a file present on the rootfs could be used to preseed debconf

@@ -1,9 +1,9 @@
 #!/bin/sh
 # -*- coding: utf-8 -*-
 #
-# «casper-new-uuid» - Creates and injects new UUIDs for casper disks
+# «live-new-uuid» - Creates and injects new UUIDs for live disks
 #
-# Create new UUIDs for disks to prevent conflicts and booting the wrong casper
+# Create new UUIDs for disks to prevent conflicts and booting the wrong live
 # directory.  Particularly useful in creating recovery disks that need to be
 # able to also work with recovery partitioning schemes.
 #
@@ -31,14 +31,14 @@ set -e
 
 help() {
  echo
- echo "USAGE: $0 initrd.gz <path-to-new-initrd.gz> <path-to-new-casper-uuid> "
+ echo "USAGE: $0 initrd.gz <path-to-new-initrd.gz> <path-to-new-live-uuid> "
  echo
  echo "initrd.gz is the absolute path to the original gzipped initramfs"
  echo "<path-to-new-initrd.gz> is the destination directory for the new gzipped initramfs"
- echo "<path-to-new-casper-uuid> is the destination directory for the new casper-uuid-TYPE "
+ echo "<path-to-new-live-uuid> is the destination directory for the new live-uuid-TYPE "
  echo
  echo "if either path is absent, they will end up in the current directory "
- echo "TYPE is determined by an already existing casper-uuid-* or by 'uname -s'"
+ echo "TYPE is determined by an already existing live-uuid-* or by 'uname -s'"
 }
 
 if [ "$#" = "0" ] || [ "x$1" = x-h ] || [ "x$1" = x--help ]; then
@@ -57,19 +57,19 @@ else
 fi
 
 if [ -z "$3" ] || [ ! -d "$3" ] || [ "$3" = "." ]; then
-	CASPERDIR="$CWD"
+	LIVEDIR="$CWD"
 else
-	CASPERDIR="$3"
+	LIVEDIR="$3"
 fi
 
 cd "$TEMPDIR"
 zcat "$1" | cpio -id
 uuidgen -r > conf/uuid.conf
 find . | cpio --quiet --dereference -o -H newc | gzip > "$GZIPDIR/initrd.gz"
-if [ "$(ls "$CASPERDIR/casper-uuid"-* >/dev/null 2>&1 | wc -l)" = 1 ]; then
-    cp conf/uuid.conf "$CASPERDIR/casper-uuid"-*
+if [ "$(ls "$LIVEDIR/live-uuid"-* >/dev/null 2>&1 | wc -l)" = 1 ]; then
+    cp conf/uuid.conf "$LIVEDIR/live-uuid"-*
 else
-    cp conf/uuid.conf "$CASPERDIR/casper-uuid-$TYPE"
+    cp conf/uuid.conf "$LIVEDIR/live-uuid-$TYPE"
 fi
 cd "$CWD"
 rm -rf "$TEMPDIR"
