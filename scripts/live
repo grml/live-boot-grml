@@ -427,6 +427,11 @@ Arguments ()
 				export PLAIN_ROOT
 				;;
 
+			skipunion)
+                                SKIP_UNION_MOUNTS="Yes"
+                                export SKIP_UNION_MOUNTS
+                                ;;
+
 			root=*)
 				ROOT="${ARGUMENT#root=}"
 				export ROOT
@@ -1085,6 +1090,12 @@ setup_unionfs ()
 	do
 		imagename=$(basename "${image}")
 
+		export image devname
+		maybe_break live-realpremount
+		log_begin_msg "Running /scripts/live-realpremount"
+		run_scripts /scripts/live-realpremount
+		log_end_msg
+
 		if [ -d "${image}" ]
 		then
 			# it is a plain directory: do nothing
@@ -1242,8 +1253,12 @@ setup_unionfs ()
 		mount --bind ${exposedrootfs} ${rootmnt} || \
 			panic "bind mount of ${exposedrootfs} failed"
 
-		cow_dirs='/var/tmp /var/lock /var/run /var/log /var/spool
-			/home /var/lib/live'
+		if [ -z "${SKIP_UNION_MOUNTS}" ]
+		then
+			cow_dirs='/var/tmp /var/lock /var/run /var/log /var/spool /home /var/lib/live'
+		else
+			cow_dirs=''
+		fi
 
 		for dir in ${cow_dirs}; do
 			mkdir -p /cow${dir}
