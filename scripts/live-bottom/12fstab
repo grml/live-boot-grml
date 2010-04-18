@@ -28,23 +28,18 @@ then
 	exit 0
 fi
 
-if [ -s ${FSTAB} ]
-then
-	log_begin_msg "Not touching preexisting fstab..."
-else
-	log_begin_msg "Configuring fstab..."
-
-	cat >> ${FSTAB} <<-EOF
-	# /etc/fstab: static file system information.
-	#
-	# <file system> <mount point>   <type>  <options>       <dump>  <pass>
-	${UNIONTYPE} / ${UNIONTYPE} rw 0 0
-	tmpfs /tmp tmpfs nosuid,nodev 0 0
-	EOF
-fi
+log_begin_msg "Configuring fstab..."
 
 # live-initramfs script
 
+cat >> ${FSTAB} << EOF
+# /etc/fstab: static file system information.
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+
+${UNIONTYPE} / ${UNIONTYPE} rw 0 0
+tmpfs /tmp tmpfs nosuid,nodev 0 0
+EOF
 
 # disabled for now
 #rm -f /root/etc/rcS.d/S*checkroot.sh
