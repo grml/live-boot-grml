@@ -20,6 +20,11 @@ esac
 
 # live-initramfs header
 
+if [ -n "${NOHOSTS}" ]
+then
+        exit 0
+fi
+
 . /scripts/live-functions
 
 log_begin_msg "Setting hostname..."
@@ -27,7 +32,8 @@ log_begin_msg "Setting hostname..."
 # live-initramfs script
 
 echo "$HOSTNAME" > /root/etc/hostname
-cat >> /root/etc/hosts <<EOF
+
+cat >> /root/etc/hosts << EOF
 127.0.0.1 localhost
 127.0.1.1 $HOSTNAME
 
@@ -38,7 +44,6 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
-
 EOF
 
 log_end_msg

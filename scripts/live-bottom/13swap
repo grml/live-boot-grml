@@ -20,7 +20,7 @@ esac
 
 # live-initramfs header
 
-if [ -n "${NOSWAP}" ]
+if [ -n "${NOSWAP}" ] || [ -n "${NOFSTAB}" ]
 then
 	exit 0
 fi
@@ -32,25 +32,31 @@ log_begin_msg "Setting up swap..."
 # live-initramfs script
 
 FSTAB=/root/etc/fstab
-
 devices=""
-for device in /dev/[hs]d[a-z][0-9]*; do
-    if ! [ -b "$device" ]; then
-        continue
-    fi
 
-    magic=$(/bin/dd if="$device" bs=4086 skip=1 count=1 2>/dev/null | /bin/dd bs=10 count=1 2>/dev/null) || continue
+for device in /dev/[hs]d[a-z][0-9]*
+do
+	if ! [ -b "$device" ]
+	then
+		continue
+	fi
 
-    if [ "$magic" = "SWAPSPACE2" -o "$magic" = "SWAP-SPACE" ]; then
-#        log "Found $device"
-        devices="$devices $device"
-        fi
+	magic=$(/bin/dd if="$device" bs=4086 skip=1 count=1 2>/dev/null | /bin/dd bs=10 count=1 2>/dev/null) || continue
+
+	if [ "$magic" = "SWAPSPACE2" -o "$magic" = "SWAP-SPACE" ]
+	then
+		#log "Found $device"
+		devices="$devices $device"
+	fi
 done
 
-for device in $devices; do
-    cat >> $FSTAB <<EOF
+for device in $devices
+do
+
+cat >> $FSTAB << EOF
 $device swap swap defaults 0 0
 EOF
+
 done
 
 log_end_msg

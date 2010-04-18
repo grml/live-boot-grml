@@ -26,55 +26,45 @@ log_begin_msg "Setting up automatic login..."
 
 # live-initramfs script
 
-if [ -z "${NOXAUTOLOGIN}" ]
+if [ -n "${NOXAUTOLOGIN}" ]
 then
+	exit 0
+fi
 
 # chroot needed to handle symlinks correctly
-if chroot /root [ -f /etc/gdm/gdm-cdd.conf ]; then
-    GDMCONF=/etc/gdm/gdm-cdd.conf
+if chroot /root [ -f /etc/gdm/gdm-cdd.conf ]
+then
+	GDMCONF=/etc/gdm/gdm-cdd.conf
 else
-    GDMCONF=/etc/gdm/gdm.conf
+	GDMCONF=/etc/gdm/gdm.conf
 fi
 
 # chroot needed to handle symlinks correctly
-if chroot /root [ -f ${GDMCONF} ]; then
-    if [ "${BUILD_SYSTEM}" = "Debian" ]; then
-        # true hack ! -- nohar
-        chroot /root cp /usr/share/gdm/defaults.conf /etc/gdm/gdm.conf
-    fi
+if chroot /root [ -f ${GDMCONF} ]
+then
+	if [ "${BUILD_SYSTEM}" = "Debian" ]
+	then
+		# true hack ! -- nohar
+		chroot /root cp /usr/share/gdm/defaults.conf /etc/gdm/gdm.conf
+	fi
 
-    # Configure GDM autologin
-    chroot /root sed -i \
-        -e "s/^AutomaticLoginEnable=.*\$/AutomaticLoginEnable=true/" \
-        -e "s/^AutomaticLogin=.*\$/AutomaticLogin=$USERNAME/" \
-        -e "s/^TimedLoginEnable=.*\$/TimedLoginEnable=true/" \
-        -e "s/^TimedLogin=.*\$/TimedLogin=$USERNAME/" \
-        -e "s/^TimedLoginDelay=.*\$/TimedLoginDelay=10/" \
-        ${GDMCONF}
+	# Configure GDM autologin
+	chroot /root \
+	sed -i -e "s/^AutomaticLoginEnable=.*\$/AutomaticLoginEnable=true/" \
+	       -e "s/^AutomaticLogin=.*\$/AutomaticLogin=$USERNAME/" \
+	       -e "s/^TimedLoginEnable=.*\$/TimedLoginEnable=true/" \
+	       -e "s/^TimedLogin=.*\$/TimedLogin=$USERNAME/" \
+	       -e "s/^TimedLoginDelay=.*\$/TimedLoginDelay=10/" \
+	${GDMCONF}
 fi
 
-if [ -f /root/etc/kde3/kdm/kdmrc ]; then
-    # Configure KDM autologin
-    sed -i -r \
-        -e "s/^#?AutoLoginEnable=.*\$/AutoLoginEnable=true/" \
-        -e "s/^#?AutoLoginUser=.*\$/AutoLoginUser=$USERNAME/" \
-        -e "s/^#?AutoReLogin=.*\$/AutoReLogin=true/" \
-        /root/etc/kde3/kdm/kdmrc
-fi
-
-fi
-
-if chroot /root /usr/bin/which kpersonalizer >/dev/null; then
-    # Disable first-login wizard for KDE
-    if [ ! -f /root/etc/kde3/kpersonalizerrc ]; then
-        cat > /root/etc/kde3/kpersonalizerrc <<EOF
-[General]
-FirstLogin=false
-EOF
-    else
-        echo "I'm not smart enough to disable kpersonalizer startup" >&2
-        echo "Because kpersonalizerrc already exists" >&2
-    fi
+if [ -f /root/etc/kde3/kdm/kdmrc ]
+then
+	# Configure KDM autologin
+	sed -i -r -e "s/^#?AutoLoginEnable=.*\$/AutoLoginEnable=true/" \
+		  -e "s/^#?AutoLoginUser=.*\$/AutoLoginUser=$USERNAME/" \
+		  -e "s/^#?AutoReLogin=.*\$/AutoReLogin=true/" \
+	/root/etc/kde3/kdm/kdmrc
 fi
 
 log_end_msg
