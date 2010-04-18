@@ -38,7 +38,7 @@ is_updates_path() {
 
 is_nice_device() {
     sysfs_path="${1#/sys}"
-    if /lib/udev/path_id "${sysfs_path}" | grep -E -q "ID_PATH=(usb|pci-[^-]*-[ide|scsi|usb])"; then
+    if /lib/udev/path_id "${sysfs_path}" | grep -E -q "ID_PATH=(usb|pci-[^-]*-(ide|scsi|usb))"; then
         return 0
     fi
     return 1

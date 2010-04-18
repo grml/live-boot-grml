@@ -66,8 +66,23 @@ if [ -n "$USERNAME" ]; then
             for f in /root/etc/event.d/tty*; do
                 sed -i -e "s|^respawn.*|respawn /bin/login -f $USERNAME </dev/$(basename $f) > /dev/$(basename $f) 2>\&1|" $f
             done
+
+	    if [ "${BUILD_SYSTEM}" = "Ubuntu" ]; then
+	    	for x in $(cat /proc/cmdline); do
+		    case $x in
+			noninteractive)
+			    sed -i -e "s|^exec.*|exec /usr/bin/ubiquity noninteractive </dev/tty1 > /dev/tty1 2>\&1|" /root/etc/event.d/tty1
+			    rm -f /root/etc/rc?.d/[SK]??gdm
+			    rm -f /root/etc/rc?.d/[SK]??kdm
+			;;
+		    esac
+		done
+	    fi
         fi
      fi
+
+    # Since we use autologin, lastlog doesn't make sense on the console.
+    sed -i '/^[^#].*pam_lastlog\.so/s/^/# /' /root/etc/pam.d/login
 fi
 
 fi
