@@ -126,8 +126,15 @@ fi
 copy_exec /usr/bin/md5sum /bin
 
 # Program: udev
-copy_exec /sbin/udevadm /sbin
-copy_exec /sbin/udevsettle /sbin
+if [ -x /sbin/udevadm ]
+then
+	# lenny
+	copy_exec /sbin/udevadm /sbin
+else
+	# etch
+	copy_exec /sbin/udevtrigger /sbin
+	copy_exec /sbin/udevsettle /sbin
+fi
 copy_exec /usr/bin/udevinfo /bin
 
 # Program: wget
@@ -139,15 +146,13 @@ fi
 # FUSE kernel module
 manual_add_modules fuse
 
-# FUSE filesystem: httpfs
-if [ -x /usr/bin/httpfs_ssl ]
+# FUSE filesystem: httpfs2
+if [ -x /usr/bin/httpfs2_ssl ]
 then
 	copy_exec /usr/bin/httpfs2_ssl /bin/httpfs
-else
-	if [ -x /usr/bin/httpfs ]
-	then
-		copy_exec /usr/bin/httpfs2 /bin/httpfs
-	fi
+elif [ -x /usr/bin/httpfs2 ]
+then
+	copy_exec /usr/bin/httpfs2 /bin/httpfs
 fi
 
 # FUSE filesystem: curlftpfs
@@ -155,4 +160,3 @@ if [ -x /usr/bin/curlftpfs ]
 then
 	copy_exec /usr/bin/curlftpfs /bin
 fi
-
