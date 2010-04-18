@@ -47,39 +47,21 @@ copy_exec /usr/share/live-initramfs/live-preseed /bin
 cp /usr/share/initramfs-tools/scripts/live-functions "${DESTDIR}"/scripts
 cp /usr/share/initramfs-tools/scripts/live-helpers "${DESTDIR}"/scripts
 
-# Handling binaries
+# Handling other stuff
 
-# losetup
-copy_exec /sbin/losetup /sbin
-
-# mount.cifs
-if [ -x /sbin/mount.cifs ]
+# Configuration: keymap (usefull when using encryption)
+if [ -x /bin/loadkeys ] && [ -r /etc/console/boottime.kmap.gz ]
 then
-	copy_exec /sbin/mount.cifs /sbin
+	copy_exec /bin/loadkeys /bin
+
+	mkdir -p "${DESTDIR}"/etc
+	cp /etc/console/boottime.kmap.gz "${DESTDIR}"/etc
 fi
-
-# eject
-copy_exec /usr/bin/eject /bin
-
-# udev
-if [ "${BUILD_SYSTEM}" = "Ubuntu" ]
-then
-	mkdir -p "${DESTDIR}"/lib/udev
-
-	copy_exec /lib/udev/cdrom_id /lib/udev
-	copy_exec /lib/udev/path_id /lib/udev
-	copy_exec /lib/udev/vol_id /lib/udev
-fi
-
-copy_exec /sbin/udevtrigger /sbin
-copy_exec /sbin/udevsettle /sbin
-copy_exec /usr/bin/udevinfo /bin
-
-# Handling kernel modules
 
 # Filesystem: cifs
 if [ -x /sbin/mount.cifs ]
 then
+	copy_exec /sbin/mount.cifs /sbin
         manual_add_modules cifs
 fi
 
@@ -87,6 +69,7 @@ fi
 manual_add_modules ext3
 
 # Filesystem: squashfs
+copy_exec /sbin/losetup /sbin
 manual_add_modules loop
 manual_add_modules squashfs
 
@@ -108,11 +91,19 @@ manual_add_modules sr_mod
 # Hardware: network
 auto_add_modules net
 
-# Custom keymap (usefull when using encryption)
-if [ -x /bin/loadkeys ] && [ -r /etc/console/boottime.kmap.gz ]
-then
-	copy_exec /bin/loadkeys /bin
+# Program: eject
+copy_exec /usr/bin/eject /bin
 
-	mkdir -p "${DESTDIR}"/etc
-	cp /etc/console/boottime.kmap.gz "${DESTDIR}"/etc
+# Program: udev
+if [ "${BUILD_SYSTEM}" = "Ubuntu" ]
+then
+	mkdir -p "${DESTDIR}"/lib/udev
+
+	copy_exec /lib/udev/cdrom_id /lib/udev
+	copy_exec /lib/udev/path_id /lib/udev
+	copy_exec /lib/udev/vol_id /lib/udev
 fi
+
+copy_exec /sbin/udevtrigger /sbin
+copy_exec /sbin/udevsettle /sbin
+copy_exec /usr/bin/udevinfo /bin

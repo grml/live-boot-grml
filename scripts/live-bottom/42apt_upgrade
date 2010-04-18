@@ -1,0 +1,49 @@
+#!/bin/sh
+
+#set -e
+
+# initramfs-tools header
+
+PREREQ=""
+
+prereqs()
+{
+	echo "${PREREQ}"
+}
+
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
+esac
+
+# live-initramfs header
+
+if [ -z "${UPGRADE}" ]
+then
+	exit 0
+fi
+
+. /scripts/live-functions
+
+log_begin_msg "Enabling apt upgrade..."
+
+# live-initramfs script
+
+cat > /root/etc/init.d/apt-upgrade << EOF
+#!/bin/sh
+
+NOTTY="-q -y -o DPkg::Options::=--force-confdef"
+UPGRADEOPTS="dist-upgrade"
+DEBIAN_FRONTEND="noninteractive"
+export DEBIAN_FRONTEND
+
+apt-get -q=2 update && apt-get \${NOTTY} -u \${UPGRADEOPTS}
+EOF
+
+chmod 0755 /root/etc/init.d/apt-upgrade
+
+chroot /root update-rc.d apt-upgrade defaults 99
+
+log_end_msg

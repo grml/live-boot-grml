@@ -76,7 +76,7 @@ parse_cmdline ()
                 export PERSISTENT="" ;;
             ip*)
                 STATICIP=${x#ip=}
-                if [ "${STATICIP}" == "" ]; then
+                if [ "${STATICIP}" = "" ]; then
                     STATICIP="frommedia"
                 fi
                 export STATICIP ;;
@@ -106,6 +106,8 @@ parse_cmdline ()
                 export MODULE=${x#module=} ;;
             preseed/file=*|file=*)
                 export LOCATION="${x#*=}" ;;
+	    upgrade)
+	    	export UPGRADE="Yes" ;;
             */*=*)
                 question="${x%%=*}"
                 value="${x#*=}"
@@ -118,10 +120,10 @@ parse_cmdline ()
 
     # sort of compatibility with netboot.h from linux docs
     if [ -z "${NETBOOT}" ]; then
-        if [ "${ROOT}" == "/dev/nfs" ]; then
+        if [ "${ROOT}" = "/dev/nfs" ]; then
             NETBOOT="nfs"
             export NETBOOT
-        elif [ "${ROOT}" == "/dev/cifs" ]; then
+        elif [ "${ROOT}" = "/dev/cifs" ]; then
             NETBOOT="cifs"
             export NETBOOT
         fi
