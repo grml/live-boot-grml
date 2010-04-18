@@ -2,25 +2,25 @@
 
 # set -e
 
-export PATH=/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+export PATH="/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
 
 echo "/root/lib" >> /etc/ld.so.conf
 echo "/root/usr/lib" >> /etc/ld.so.conf
 
-mountpoint=/live/image
-LIVE_MEDIA_PATH="/live"
+mountpoint="/live/image"
+LIVE_MEDIA_PATH="live"
 
 root_persistence="live-rw"
 home_persistence="home-rw"
 root_snapshot_label="live-sn"
 home_snapshot_label="home-sn"
 
-USERNAME=user
+USERNAME="user"
 USERFULLNAME="Live user"
-HOSTNAME=host
-BUILD_SYSTEM=Custom
+HOSTNAME="host"
+BUILD_SYSTEM="Custom"
 
-mkdir -p $mountpoint
+mkdir -p "${mountpoint}"
 
 [ -f /etc/live.conf ] && . /etc/live.conf
 export USERNAME USERFULLNAME HOSTNAME BUILD_SYSTEM
@@ -31,22 +31,20 @@ if [ ! -f /live.vars ]; then
     touch /live.vars
 fi
 
-parse_cmdline ()
+Arguments ()
 {
-	PRESEEDS=
+	PRESEEDS=""
 
-	# looking for live-initramfs specifics options as kernel parameters
-
-	for x in $(cat /proc/cmdline)
+	for ARGUMENT in `cat /proc/cmdline`
 	do
-		case $x in
+		case "${ARGUMENT}" in
 			access=*)
-				ACCESS=${x#access=}
+				ACCESS="${ARGUMENT#access=}"
 				export ACCESS
 				;;
 
 			console=*)
-				DEFCONSOLE="${x#*=}"
+				DEFCONSOLE="${ARGUMENT#*=}"
 				export DEFCONFSOLE
 				;;
 
@@ -57,26 +55,31 @@ parse_cmdline ()
 				set -x
 				;;
 
+			fetch=*)
+                                FETCH="${ARGUMENT#fetch=}"
+                                export FETCH
+                                ;;
+
 			hostname=*)
-				HOSTNAME=${x#hostname=}
+				HOSTNAME="${ARGUMENT#hostname=}"
 				LIVECONF="changed"
 				export HOSTNAME LIVECONF
 				;;
 
 			username=*)
-				USERNAME=${x#username=}
+				USERNAME="${ARGUMENT#username=}"
 				LIVECONF="changed"
 				export USERNAME LIVECONF
 				;;
 
 			userfullname=*)
-				USERFULLNAME=${x#userfullname=}
+				USERFULLNAME="${ARGUMENT#userfullname=}"
 				LIVECONF="changed"
 				export USERFULLNAME LIVECONF
 				;;
 
 			ip=*)
-				STATICIP=${x#ip=}
+				STATICIP="${ARGUMENT#ip=}"
 
 				if [ -z "${STATICIP}" ]
 				then
@@ -87,77 +90,77 @@ parse_cmdline ()
 				;;
 
 			keyb=*|kbd-chooser/method=*)
-				KBD=${x#*=}
+				KBD="${ARGUMENT#*=}"
 				export KBD
 				;;
 
 			klayout=*|console-setup/layoutcode=*)
-				KLAYOUT=${x#*=}
+				KLAYOUT="${ARGUMENT#*=}"
 				export KLAYOUT
 				;;
 
 			kvariant=*|console-setup/variantcode=*)
-				KVARIANT=${x#*=}
+				KVARIANT="${ARGUMENT#*=}"
 				export KVARIANT
 				;;
 
 			kmodel=*|console-setup/modelcode=*)
-				KMODEL=${x#*=}
+				KMODEL="${ARGUMENT#*=}"
 				export KMODEL
 				;;
 
 			koptions=*)
-				KOPTIONS=${x#koptions=}
+				KOPTIONS="${ARGUMENT#koptions=}"
 				export KOPTIONS
 				;;
 
 			live-getty)
-				LIVE_GETTY=1
+				LIVE_GETTY="1"
 				export LIVE_GETTY
 				;;
 
 			live-media=*|bootfrom=*)
-				LIVE_MEDIA=${x#*=}
+				LIVE_MEDIA="${ARGUMENT#*=}"
 				export LIVE_MEDIA
 				;;
 
 			live-media-encryption=*|encryption=*)
-				LIVE_MEDIA_ENCRYPTION=${x#*=}
+				LIVE_MEDIA_ENCRYPTION="${ARGUMENT#*=}"
 				export LIVE_MEDIA_ENCRYPTION
 				;;
 
 			live-media-offset=*)
-				LIVE_MEDIA_OFFSET=${x#live-media-offset=}
+				LIVE_MEDIA_OFFSET="${ARGUMENT#live-media-offset=}"
 				export LIVE_MEDIA_OFFSET
 				;;
 
 			live-media-path=*)
-				LIVE_MEDIA_PATH="${x#live-media-path=}"
+				LIVE_MEDIA_PATH="${ARGUMENT#live-media-path=}"
 				export LIVE_MEDIA_PATH
 				;;
 
 			live-media-timeout=*)
-				LIVE_MEDIA_TIMEOUT=${x#live-media-timeout=}
+				LIVE_MEDIA_TIMEOUT="${ARGUMENT#live-media-timeout=}"
 				export LIVE_MEDIA_TIMEOUT
 				;;
 
 			locale=*|debian-installer/locale=*)
-				LOCALE=${x#*=}
+				LOCALE="${ARGUMENT#*=}"
 				export LOCALE
 				;;
 
 			module=*)
-				MODULE=${x#module=}
+				MODULE="${ARGUMENT#module=}"
 				export MODULE
 				;;
 
 			netboot=*)
-				NETBOOT=${x#netboot=}
+				NETBOOT="${ARGUMENT#netboot=}"
 				export NETBOOT
 				;;
 
 			nfsopts=*)
-				NFSOPTS=${x#nfsopts=}
+				NFSOPTS="${ARGUMENT#nfsopts=}"
 				export NFSOPTS
 				;;
 
@@ -197,12 +200,12 @@ parse_cmdline ()
 				;;
 
 			preseed/file=*|file=*)
-				LOCATION="${x#*=}"
+				LOCATION="${ARGUMENT#*=}"
 				export LOCATION
 				;;
 
 			url=*)
-				LOCATION="${x#url=}"
+				location="${ARGUMENT#url=}"
 
 				mount -n -o bind /sys /root/sys
 				mount -n -o bind /proc /root/proc
@@ -221,10 +224,9 @@ parse_cmdline ()
 				;;
 
 			*/*=*)
-				question="${x%%=*}"
-				value="${x#*=}"
+				question="${ARGUMENT%%=*}"
+				value="${ARGUMENT#*=}"
 				PRESEEDS="${PRESEEDS}\"${question}=${value}\" "
-
 				export PRESEEDS
 				;;
 
@@ -234,12 +236,12 @@ parse_cmdline ()
 				;;
 
 			timezone=*)
-				TIMEZONE="${x#timezone=}"
+				TIMEZONE="${ARGUMENT#timezone=}"
 				export TIMEZONE
 				;;
 
 			todisk=*)
-				TODISK=${x#todisk=}
+				TODISK="${ARGUMENT#todisk=}"
 				export TODISK
 				;;
 
@@ -249,12 +251,12 @@ parse_cmdline ()
 				;;
 
 			union=*)
-				UNIONTYPE="${x#union=}"
+				UNIONTYPE="${ARGUMENT#union=}"
 				export UNIONTYPE
 				;;
 
 			utc=*)
-				UTC="${x#utc=}"
+				UTC="${ARGUMENT#utc=}"
 				export UTC
 				;;
 
@@ -264,7 +266,7 @@ parse_cmdline ()
 				;;
 
 			xvideomode=*)
-				XVIDEOMODE="${x#xvideomode=}"
+				XVIDEOMODE="${ARGUMENT#xvideomode=}"
 				export XVIDEOMODE
 				;;
 		esac
@@ -342,6 +344,7 @@ match_files_in_dir() {
 mount_images_in_directory() {
     directory="$1"
     rootmnt="$2"
+
     if match_files_in_dir "$directory/${LIVE_MEDIA_PATH}/*.squashfs" ||
         match_files_in_dir "$directory/${LIVE_MEDIA_PATH}/*.ext2" ||
         match_files_in_dir "$directory/${LIVE_MEDIA_PATH}/*.ext3" ||
@@ -402,13 +405,22 @@ copy_live_to() {
         return 1
     fi
 
-    # begin copying..
+    # begin copying (or uncompressing)
     mkdir "${copyto}"
     echo "mount -t ${fstype} ${mount_options} ${dev} ${copyto}"
     mount -t "${fstype}" ${mount_options} "${dev}" "${copyto}"
-    cp -a ${copyfrom}/* ${copyto} # "cp -a" from busybox also copies hidden files
-    umount ${copyfrom}
-    mount -r --move ${copyto} ${copyfrom}
+
+    if [ "$extension" == "tgz" ]; then
+	cd "${copyto}"
+	tar zxf "${copyfrom}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
+	rm -f "${copyfrom}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
+	mount -r --move "${copyto}" "${rootmnt}"
+	cd "${OLDPWD}"
+    else
+	cp -a ${copyfrom}/* ${copyto} # "cp -a" from busybox also copies hidden files
+	umount ${copyfrom}
+	mount -r --move ${copyto} ${copyfrom}
+    fi
     rmdir ${copyto}
     return 0
 }
@@ -431,6 +443,11 @@ do_netmount() {
     . /tmp/net-${DEVICE}.conf
     export HOSTNAME
 
+    if [ -n "${FETCH}" ] && do_httpmount; then
+	rc=0
+	return ${rc}
+    fi
+
     if [ "${NFSROOT#*:}" = "$NFSROOT" ] && [ "$NETBOOT" != "cifs" ]; then
 	NFSROOT=${ROOTSERVER}:${NFSROOT}
     fi
@@ -446,6 +463,23 @@ do_netmount() {
     fi
 
     [ "$quiet" != "y" ] && log_end_msg
+    return ${rc}
+}
+
+do_httpmount() {
+    rc=1
+    extension=`echo "${FETCH}" | sed 's/\(.*\)\.\(.*\)/\2/'`
+    case "${extension}" in
+	squashfs|tgz|tar)
+	    [ "$quiet" != "y" ] && log_begin_msg "Trying wget ${FETCH} -O ${mountpoint}/$(basename ${FETCH})"
+	    mkdir -p "${mountpoint}/${LIVE_MEDIA_PATH}"
+	    wget "${FETCH}" -O "${mountpoint}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
+	    [ $? -eq 0 ] && rc=0
+	    [ "${extension}" == "tgz" ] && live_dest="ram"
+	    ;;
+	*)
+	    [ "$quiet" != "y" ] && log_begin_msg "Unrecognized archive extension for ${FETCH}"
+    esac
     return ${rc}
 }
 
@@ -798,7 +832,7 @@ mountroot() {
     exec > live.log
     exec 2>&1
 
-    parse_cmdline
+    Arguments
 
     set_usplash_timeout
     [ "$quiet" != "y" ] && log_begin_msg "Running /scripts/live-premount"
@@ -811,7 +845,7 @@ mountroot() {
 
     set_usplash_timeout
 
-    if [ ! -z "${NETBOOT}" ]; then
+    if [ ! -z "${NETBOOT}" ] || [ ! -z "${FETCH}" ]; then
         if do_netmount ; then
             livefs_root="${mountpoint}"
         else

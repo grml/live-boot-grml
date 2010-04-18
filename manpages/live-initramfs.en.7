@@ -1,4 +1,4 @@
-.TH LIVE\-INITRAMFS 7 "2007\-07\-30" "1.95.1" "live\-initramfs"
+.TH LIVE\-INITRAMFS 7 "2007\-08\-06" "1.95.2" "live\-initramfs"
 
 .SH NAME
 live\-initramfs \- Debian Live initramfs hook
@@ -24,6 +24,8 @@ Set the accessibility level for physically or visually impared users. ACCESS mus
 Set the default console to be used with the "live\-getty" option. Example: "console=ttyS0,115200"
 .IP "\fBdebug\fR" 4
 Makes initramfs boot process more verbose.
+.IP "\fBfetch=\fR\fIURL\fR" 4
+Another form of netboot by downloading a squashfs image from a given url, copying to ram and booting it.
 .IP "\fBhostname=\fR\fIHOSTNAME\fR, \fBusername=\fR\fIUSER\fR, \fBuserfullname=\fR\fIUSERFULLNAME\fR"4
 Those parameters lets you override values read from the config file.
 .IP "\fBintegrity\-check\fR" 4
@@ -110,7 +112,7 @@ This optional file (inside the live media) contains a list of white\-space or ca
 \fIlive\-webhelper\fR(7)
 
 .SH BUGS
-Report bugs against live\-initramfs <\fIhttp://packages.qa.debian.org/live\-initramfs/\fR>.
+Report bugs against live\-initramfs <\fIhttp://packages.qa.debian.org/live\-initramfs\fR>.
 
 .SH HOMEPAGE
 More information about the Debian Live project can be found at <\fIhttp://debian\-live.alioth.debian.org/\fR> and <\fIhttp://wiki.debian.org/DebianLive/\fR>.
