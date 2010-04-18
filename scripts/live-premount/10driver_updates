@@ -130,7 +130,11 @@ fi
 #    GDMCONF=/etc/gdm/gdm.conf
 #fi
 
-eject
+if [ -x /usr/bin/eject ]
+then
+	eject
+fi
+
 log_wait_msg "Insert a driver CD and press ENTER ($DPKG_ARCH)"
 
 log_begin_msg "Looking for driver update CD"
@@ -156,7 +160,11 @@ log_begin_msg "Copying driver updates to temporary location"
 mkdir -p /tmp/driver-updates
 cp $updates_root/*_$DPKG_ARCH.deb /tmp/driver-updates/
 umount $mountpoint
-eject
+
+if [ -x /usr/bin/eject ]
+then
+	eject
+fi
 
 log_end_msg
 

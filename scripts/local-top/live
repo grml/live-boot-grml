@@ -20,4 +20,12 @@ esac
 
 # live-initramfs script
 
+# The following modprobe entry is a workaround to live-initramfs not
+# finding the root filesytem.
+#
+# See also:
+#  * http://lists.alioth.debian.org/pipermail/debian-live-devel/2007-May/001459.html
+#  * http://lists.alioth.debian.org/pipermail/debian-live-devel/2007-June/001517.html
+#  * http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=363047
+
 modprobe ide-generic

@@ -93,7 +93,10 @@ manual_add_modules sr_mod
 auto_add_modules net
 
 # Program: eject
-copy_exec /usr/bin/eject /bin
+if [ -x /usr/bin/eject ]
+then
+	copy_exec /usr/bin/eject /bin
+fi
 
 # Program: udev
 if [ "${BUILD_SYSTEM}" = "Ubuntu" ]
