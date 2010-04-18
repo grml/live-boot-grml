@@ -46,7 +46,7 @@ iface lo inet loopback
 
 EOF
 
-udevtrigger
+udevadm trigger
 udevsettle
 
 if [ -z "${NETBOOT}" -a -n "${STATICIP}" -a "${STATICIP}" != "frommedia" ]

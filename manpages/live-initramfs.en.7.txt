@@ -21,7 +21,7 @@ This includes the Debian Live isos, netboot tarballs, and usb stick images.
 At boot time it will look for a (read-only) media containing a "/live"
 directory where a root filesystems (often a compressed filesystem image like
 squashfs) is stored. If found, it will create a writable environment, using
-unionfs, for Debian like systems to boot from.
+aufs, for Debian like systems to boot from.
 
 You probably do not want to install this package onto a non-live system,
 although it will do no harm.
@@ -252,10 +252,10 @@ Adding this parameter, live-initramfs will try to copy the whole read-only media
 to the computer's RAM before mounting the root filesystem. This could need a lot
 of ram, according to the space used by the read-only media.
 
-  union=**unionfs**|**aufs**::
+  union=**aufs**|**unionfs**::
 
-By default, live-initramfs uses unionfs. With this parameter, you can switch to
-aufs.
+By default, live-initramfs uses aufs. With this parameter, you can switch to
+unionfs.
 
   utc=**yes**|**no**::
 
@@ -283,9 +283,9 @@ Some variables can be configured via this config file (inside the live system).
 This optional file (inside the live media) contains a list of white-space or
 carriage-return-separated file names corresponding to disk images in the "/live"
 directory. If this file exists, only images listed here will be merged into the
-root unionfs, and they will be loaded in the order listed here. The first entry
-in this file will be the "lowest" point in the unionfs, and the last file in
-this list will be on the "top" of the unionfs, directly below /cow.  Without
+root aufs, and they will be loaded in the order listed here. The first entry
+in this file will be the "lowest" point in the aufs, and the last file in
+this list will be on the "top" of the aufs, directly below /cow.  Without
 this file, any images in the "/live" directory are loaded in alphanumeric order.
 
 See also

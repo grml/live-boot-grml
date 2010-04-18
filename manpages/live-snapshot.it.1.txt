@@ -61,6 +61,12 @@ del device oppure user`a l'intera partizione.
 usato internamente nelle sincronizzazioni dallo script di init di
 live-initramfs. Il formato pu\`o cambiare, usatelo a vostro rischio.
 
+  -f, --refresh::
+
+scatena la stessa operazione che verrebbe fatta al reboot o all'halt della
+macchina, provando a fare il resync degli snapshot trovati al boot, usabile
+per salvare le modifiche in vista di un crash o di una mancanza di corrente.
+
   -t, --type **TYPE**::
 
 il tipo pu`o essere "cpio", "squashfs" o "ext2".
@@ -76,6 +82,15 @@ mostra l'utilizzo ed esce
   -v, --version::
 
 da informazioni sulla versione ed esce
+
+Files
+-----
+
+  /etc/live-snapshot.list
+
+Facoltativo, se presente cambia completamente il funzionamento di live-snapshot; solo i files e le directory elencate verranno effettivamente inclusi nello snapshot.
+Attenzione, e` una funzionalita` sperimentale che funziona attualmente solo con gli snapshot di tipo "cpio".
+
 
 See also
 --------

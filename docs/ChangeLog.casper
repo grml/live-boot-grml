@@ -1,3 +1,47 @@
+casper (1.136) intrepid; urgency=low
+
+  * Remove bad-and-wrong setting of PATH to include directories under /root;
+    now that grep links to more libraries than before, this broke a number
+    of things. Requires initramfs-tools (>= 0.92bubuntu5) because this
+    doesn't work with klibc chroot.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 11 Jul 2008 12:34:35 +0100
+
+casper (1.135) intrepid; urgency=low
+
+  [ Loic Minier ]
+  * Fix use of PREREQ instead of PREREQS in hooks/casper.
+
+  [ Colin Watson ]
+  * Fix mount argument ordering for klibc mount.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Wed, 09 Jul 2008 12:34:26 +0100
+
+casper (1.134) intrepid; urgency=low
+
+  [ Evan Dandrea ]
+  * Do not use mode= when mounting /cow using persistent mode (LP: #219192).
+
+  [ Colin Watson ]
+  * Support ?= (set value but don't mark as seen) preseeding syntax for
+    console-setup/* (LP: #64058).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 30 Jun 2008 23:52:41 +0100
+
+casper (1.133) intrepid; urgency=low
+
+  [ Tormod Volden ]
+  * Do not use swap on RAID raw devices (LP: #136804)
+
+  [ Agostino Russo ]
+  * Test if livemedia is a directory before trying to mount it as a
+    loopfile
+  * Reverted changes to casper-helpers as requested by Mithrandir since
+    replaying the journal on a hibernated system would lead to file system
+    corruption.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Wed, 18 Jun 2008 12:34:58 -0400
+
 casper (1.132) intrepid; urgency=low
 
   [ Colin Watson ]

@@ -65,6 +65,16 @@ Arguments ()
 				export HOOK
 				;;
 
+			ftpfs=*)
+				FTPFS="${ARGUMENT#ftpfs=}"
+				export FTPFS
+				;;
+
+			httpfs=*)
+				HTTPFS="${ARGUMENT#httpfs=}"
+				export HTTPFS
+				;;
+
 			hostname=*)
 				HOSTNAME="${ARGUMENT#hostname=}"
 				LIVECONF="changed"
@@ -446,7 +456,7 @@ Arguments ()
 
 	if [ -z "${UNIONTYPE}" ]
 	then
-		UNIONTYPE="unionfs"
+		UNIONTYPE="aufs"
 		export UNIONTYPE
 	fi
 }
@@ -479,7 +489,7 @@ matches_uuid ()
 	path="${1}"
 	uuid="$(cat /conf/uuid.conf)"
 
-	for try_uuid_file in "${mountpoint}/.disk/casper-uuid"*
+	for try_uuid_file in "${mountpoint}/.disk/live-uuid"*
 	do
 		[ -e "${try_uuid_file}" ] || continue
 
@@ -640,7 +650,7 @@ do_netmount ()
 
 	modprobe -q af_packet # For DHCP
 
-	udevtrigger
+	udevadm trigger
 	udevsettle
 
 	ipconfig ${DEVICE} | tee /netboot.config
@@ -656,7 +666,7 @@ do_netmount ()
 		NFSROOT=${ROOTSERVER}:${ROOTPATH}
 	fi
 
-	if [ -n "${FETCH}" ] && do_httpmount
+	if ( [ -n "${FETCH}" ] || [ -n "${HTTPFS}" ] || [ -n "${FTPFS}" ] ) && do_httpmount
 	then
 		rc=0
 		return ${rc}
@@ -686,20 +696,53 @@ do_netmount ()
 do_httpmount ()
 {
 	rc=1
-	extension=$(echo "${FETCH}" | sed 's/\(.*\)\.\(.*\)/\2/')
+	dest="${mountpoint}/${LIVE_MEDIA_PATH}"
+	mount -t ramfs ram "${mountpoint}"
+	mkdir -p "${dest}"
 
-	case "${extension}" in
-		squashfs|tgz|tar)
-			[ "${quiet}" != "y" ] && log_begin_msg "Trying wget ${FETCH} -O ${mountpoint}/$(basename ${FETCH})"
-			mkdir -p "${mountpoint}/${LIVE_MEDIA_PATH}"
-			wget "${FETCH}" -O "${mountpoint}/${LIVE_MEDIA_PATH}/$(basename ${FETCH})"
-			[ ${?} -eq 0 ] && rc=0
-			[ "${extension}" = "tgz" ] && live_dest="ram"
-			;;
+	for webfile in HTTPFS FTPFS FETCH
+	do
+		url="$(eval echo \"\$\{${webfile}\}\")"
+		extension="$(echo "${url}" | sed 's/\(.*\)\.\(.*\)/\2/')"
 
-		*)
-			[ "${quiet}" != "y" ] && log_begin_msg "Unrecognized archive extension for ${FETCH}"
-	esac
+		if [ -n "$url" ]
+		then
+			case "${extension}" in
+				squashfs|tgz|tar)
+					if [ "${webfile}" = "FETCH" ]
+					then
+						[ "${quiet}" != "y" ] &&
+							log_begin_msg "Trying wget ${url} -O ${dest}/$(basename ${url})"
+						wget "${url}" -O "${dest}/$(basename ${url})"
+					else
+						[ "${quiet}" != "y" ] &&
+							log_begin_msg "Trying to mount ${url} on ${dest}/$(basename ${url})"
+						if [ "${webfile}" = "FTPFS" ]
+						then
+							FUSE_MOUNT="curlftpfs"
+							url="$(dirname ${url})"
+						else
+							FUSE_MOUNT="httpfs"
+						fi
+						modprobe fuse
+						$FUSE_MOUNT "${url}" "${dest}"
+					fi
+					[ ${?} -eq 0 ] && rc=0
+					[ "${extension}" = "tgz" ] && live_dest="ram"
+					break
+					;;
+
+				*)
+					[ "${quiet}" != "y" ] && log_begin_msg "Unrecognized archive extension for ${url}"
+					;;
+			esac
+		fi
+	done
+
+	if [ ${rc} != 0 ]
+	then
+	    umount "${mountpoint}"
+	fi
 
 	return ${rc}
 }
@@ -832,7 +875,7 @@ try_snap ()
 			fi
 		else
 			# cpio.gz snapshot
-			if ! (cd "${snap_mount}" && zcat "${snapback}/${snapfile}" | cpio -i -u -d 2>/dev/null)
+			if ! (cd "${snap_mount}" && zcat "${snapback}/${snapfile}" | cpio --extract --preserve-modification-time --no-absolute-filenames --sparse --unconditional --make-directories > /dev/null 2>&1)
 			then
 				log_warning_msg "Impossible to include the ${snapfile} Snapshot"
 				return 1
@@ -965,7 +1008,12 @@ setup_unionfs ()
 			rofslist="${image} ${rofslist}"
 		elif [ -f "${image}" ]
 		then
-			backdev=$(get_backing_device "${image}" "-r")
+			if /sbin/losetup --help 2>&1 | grep -q -- "-r\b"
+			then
+				backdev=$(get_backing_device "${image}" "-r")
+			else
+				backdev=$(get_backing_device "${image}")
+			fi
 			fstype=$(get_fstype "${backdev}")
 
 			if [ "${fstype}" = "unknown" ]
@@ -993,7 +1041,7 @@ setup_unionfs ()
 			modprobe -q -b ${module}
 		done
 
-		udevtrigger
+		udevadm trigger
 		udevsettle
 
 		# For some reason, udevsettle does not block in this scenario,
@@ -1016,10 +1064,12 @@ setup_unionfs ()
 		then
 			cowdevice=${cowprobe}
 			cow_fstype=$(get_fstype "${cowprobe}")
+			cow_mountopt="rw,noatime"
 		else
 			[ "${quiet}" != "y" ] && log_warning_msg "Unable to find the persistent medium"
 			cowdevice="tmpfs"
 			cow_fstype="tmpfs"
+			cow_mountopt="rw,noatime,mode=755"
 		fi
 	elif [ -n "${NFS_COW}" ] && [ -z "${NOPERSISTENT}" ]
 	then
@@ -1052,7 +1102,7 @@ setup_unionfs ()
 		nfsmount ${nfs_cow_opts} ${cowdevice} /cow || \
 			panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on /cow"
 	else
-		mount -t ${cow_fstype} -o rw,noatime ${cowdevice} /cow || \
+		mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} /cow || \
 			panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on /cow"
 	fi
 
@@ -1130,7 +1180,7 @@ setup_unionfs ()
 
 	# shows cow fs on /cow for use by live-snapshot
 	mkdir -p "${rootmnt}/live/cow"
-	mount -o move /cow "${rootmnt}/live/cow"
+	mount -o move /cow "${rootmnt}/live/cow" || mount -o bind /cow "${rootmnt}/live/cow" || [ "${quiet}" != "y" ] && log_warning_msg "Unable to move or bind /cow to ${rootmnt}/live/cow"
 }
 
 check_dev ()
@@ -1144,12 +1194,6 @@ check_dev ()
 		devname=$(sys2dev "${sysdev}")
 	fi
 
-	if [ -n "${LIVE_MEDIA_OFFSET}" ]
-	then
-		loopdevname=$(setup_loop "${devname}" "loop" "/sys/block/loop*" "${LIVE_MEDIA_OFFSET}" '')
-		devname="${loopdevname}"
-	fi
-
 	if [ -d "${devname}" ]
 	then
 		mount -o bind "${devname}" $mountpoint || continue
@@ -1161,6 +1205,12 @@ check_dev ()
 		else
 			umount $mountpoint
 		fi
+	fi
+
+	if [ -n "${LIVE_MEDIA_OFFSET}" ]
+	then
+		loopdevname=$(setup_loop "${devname}" "loop" "/sys/block/loop*" "${LIVE_MEDIA_OFFSET}" '')
+		devname="${loopdevname}"
 	fi
 
 	fstype=$(get_fstype "${devname}")
@@ -1281,7 +1331,7 @@ mountroot ()
 
 	set_usplash_timeout
 
-	if [ ! -z "${NETBOOT}" ] || [ ! -z "${FETCH}" ]
+	if [ ! -z "${NETBOOT}" ] || [ ! -z "${FETCH}" ] || [ ! -z "${HTTPFS}" ] || [ ! -z "${FTPFS}" ]
 	then
 		if do_netmount
 		then

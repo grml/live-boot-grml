@@ -55,6 +55,12 @@ the filename/label used for the output file/partition. If left blank, live-snaps
 
 internally used on resyncs.
 
+  -f, --refresh::
+
+try to do the same operation that should be done at reboot or halt, resyncing
+boot-time auto discovered snapshots. Useful to prevent a crash or surge
+power-off.
+
   -t, --type **TYPE**::
 
 Type could be one of "cpio", "squashfs", "ext2", "ext3" or "jffs2".
@@ -70,6 +76,14 @@ show usage and exit
   -v, --version::
 
 output version information and exit
+
+Files
+-----
+
+  /etc/live-snapshot.list
+
+This optional file, if present changes the behaviour of live-snapshot, only files and directories listed there are included (integrally) in the snapshot.
+Beware, it is an experimental feature that only works for cpio targets now.
 
 See also
 --------
