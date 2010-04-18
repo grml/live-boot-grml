@@ -31,9 +31,19 @@ log_begin_msg "Setting hostname"
 
 # live-initramfs script
 
-echo "${HOSTNAME}" > /root/etc/hostname
+# Change hostname only if it is not set
+if [ ! -f /root/etc/hostname ] || grep -qs localhost\.localdomain /root/etc/hostname
+then
+	echo "${HOSTNAME}" > /root/etc/hostname
+else
+	HOSTNAME="$(cat /root/etc/hostname)"
+	really_export HOSTNAME
+fi
 
-cat >> /root/etc/hosts << EOF
+# Create /etc/hosts only if it is not present or empty
+if [ ! -s /root/etc/hosts ]
+then
+	cat > /root/etc/hosts << EOF
 127.0.0.1 localhost
 127.0.1.1 ${HOSTNAME}
 
@@ -45,6 +55,7 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
 EOF
+fi
 
 hostname "${HOSTNAME}"
 

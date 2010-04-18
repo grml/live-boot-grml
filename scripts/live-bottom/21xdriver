@@ -38,9 +38,9 @@ log_begin_msg "Configuring X video driver"
 
 if [ -n "$XDRIVER" ]
 then
-	mount -n -o bind /sys /root/sys
-	mount -n -o bind /proc /root/proc
-	mount -n -o bind /dev /root/dev
+	mount -o bind /sys /root/sys
+	mount -o bind /proc /root/proc
+	mount -o bind /dev /root/dev
 
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
 set xserver-xorg/autodetect_video_card false

@@ -27,6 +27,12 @@ fi
 
 . /scripts/live-functions
 
+if [ -z "${USERNAME}" ]
+then
+	echo "No default user for accessibility options."
+	exit 0
+fi
+
 log_begin_msg "Configuring accessibility options"
 
 # live-initramfs script
@@ -62,9 +68,11 @@ case ${ACCESS} in
 		# Moderate Visual Impairment
 		gct -s -t bool /desktop/gnome/interface/accessibility true
 		gct -s -t bool /desktop/gnome/applications/at/visual/startup true
+		gct -s -t string /desktop/gnome/applications/at/visual/exec orca
 		gct -s -t bool /apps/gksu/disable-grab true
+		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
 
-		if type orca > /dev/null 2>&1
+		if [ -x /root/usr/bin/orca ]
 		then
 			mkdir -p /root/home/${USERNAME}/.orca
 			echo "import orca.settings" >> /root/home/${USERNAME}/.orca/user-settings.py
@@ -80,18 +88,21 @@ case ${ACCESS} in
 		#gct -s -t bool /desktop/gnome/sound/enable_esd false
 		gct -s -t bool /desktop/gnome/interface/accessibility true
 		gct -s -t bool /desktop/gnome/applications/at/visual/startup true
+		gct -s -t string /desktop/gnome/applications/at/visual/exec orca
 		gct -s -t bool /apps/gksu/disable-grab true
 		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
+
 		;;
 
 	braille=ask)
 		# Braille
 		gct -s -t bool /desktop/gnome/interface/accessibility true
 		gct -s -t bool /desktop/gnome/applications/at/visual/startup true
+		gct -s -t string /desktop/gnome/applications/at/visual/exec orca
 		gct -s -t bool /apps/gksu/disable-grab true
 		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
 
-		if type orca > /dev/null 2>&1
+		if [ -x /root/usr/bin/orca ]
 		then
 			mkdir -p /root/home/${USERNAME}/.orca
 			echo "import orca.settings" >> /root/home/${USERNAME}/.orca/user-settings.py

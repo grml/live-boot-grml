@@ -30,7 +30,12 @@
 ROOTSNAP=""
 HOMESNAP=""
 
-set -eu
+if [ -n "${LIVE_SNAPSHOT_CHECK_UNBOUND}" ]
+then
+	set -eu
+else
+	set -e
+fi
 
 . /usr/share/initramfs-tools/scripts/live-helpers
 
@@ -58,6 +63,7 @@ SNAP_OUTPUT=""
 SNAP_RESYNC_STRING=""
 SNAP_TYPE="cpio"
 SNAP_LIST="/etc/live-snapshot.list"
+EXCLUDE_LIST="/etc/live-snapshot.exclude_list"
 
 Error ()
 {
@@ -315,23 +321,49 @@ Mount_device ()
 	esac
 }
 
+Entry_is_modified ()
+{
+	# Returns true if file exists and it is also present in "cow" directory
+	# This means it is modified in respect to read-only media, so it deserve
+	# to be saved
+
+	entry="${1}"
+
+	if [ -e "${entry}" ] || [ -L "${entry}" ]
+	then
+		if [ -e "${DEF_SNAP_COW}/${entry}" ] || [ -L "${DEF_SNAP_COW}/${entry}" ]
+		then
+			return 0
+		fi
+	fi
+	return 1
+}
+
 Do_filelist ()
 {
-	# BUGS: supports only cpio.gz types right now
+	# BUGS: supports only cpio.gz types, and does not handle deleted files yet
+
 	TMP_FILELIST=$1
 	if [ -f "${SNAP_LIST}" ]
 	then
-		# Generate include list
-		for entry in $(cat "${SNAP_LIST}" | grep -v '^#.*$' | grep -v '^ *$')
+		# Generate include list removing empty and commented lines
+		for entry in $(sed -e '/^ *$/d' -e '/^#.*$/d' "${SNAP_LIST}")
 		do
-			if [ -f "${entry}" ]
-			then
-				printf "%s\000" "${entry}" >> "${TMP_FILELIST}"
-			elif [ -d "${entry}" ]
+			if [ -d "${entry}" ]
 			then
 				cd /
-				find "${entry}" -print0 >> "${TMP_FILELIST}"
+				find "${entry}" | while read line
+				do
+					if Entry_is_modified "${line}"
+					then
+						printf "%s\000" "${line}" >> "${TMP_FILELIST}"
+					fi
+				done
 				cd "${OLDPWD}"
+			elif Entry_is_modified "${entry}"
+			then
+				# if file exists and it is modified
+				printf "%s\000" "${entry}" >> "${TMP_FILELIST}"
 			fi
 		done
 
@@ -361,6 +393,13 @@ Do_snapshot ()
 			# Removing whiteheads of unionfs
 			cd "${SNAP_COW}"
 			find . -name '*.wh.*' >> "${TMP_FILELIST}"
+
+			if [ -e "${EXCLUDE_LIST}" ]
+			then
+				# Add explicitly excluded files
+				grep -v '^#.*$' "${EXCLUDE_LIST}" | grep -v '^ *$' >> "${TMP_FILELIST}"
+			fi
+
 			cd "${OLDPWD}"
 			mksquashfs "${SNAP_COW}" "${DEST}" -ef "${TMP_FILELIST}"
 			;;
@@ -368,10 +407,28 @@ Do_snapshot ()
 		cpio)
 			WORKING_DIR=$(Do_filelist "${TMP_FILELIST}")
 			cd "${WORKING_DIR}"
-			cat "${TMP_FILELIST}" | cpio --quiet -o0 -H newc | gzip -9c > "${DEST}" || exit 1
+			if [ -e "${EXCLUDE_LIST}" ]
+			then
+				# Convert \0 to \n and tag existing (rare but possible) \n in filenames,
+				# this to let grep -F -v do a proper work in filtering out
+				cat "${TMP_FILELIST}" | \
+					tr '\n' '\1' | \
+					tr '\0' '\n' | \
+					grep -F -v -f "${EXCLUDE_LIST}" | \
+					tr '\n' '\0' | \
+					tr '\1' '\n' | \
+					cpio --quiet -o0 -H newc | \
+					gzip -9c > "${DEST}" || exit 1
+			else
+				cat "${TMP_FILELIST}" | \
+					cpio --quiet -o0 -H newc | \
+					gzip -9c > "${DEST}" || exit 1
+			fi
 			cd "${OLDPWD}"
 			;;
 
+		# ext2|ext3 and jffs2 does not easily support an exclude list; files
+		# should be copied to another directory in order to filter content
 		ext2|ext3)
 			DU_DIM="$(du -ks ${SNAP_COW} | cut -f1)"
 			REAL_DIM="$(expr ${DU_DIM} + ${DU_DIM} / 20)" # Just 5% more to be sure, need something more sophistcated here...

@@ -77,7 +77,7 @@ get_fstype ()
 	    return
 	fi
 
-	eval $(fstype < ${1})
+	eval $(fstype < ${1} 2>/dev/null)
 
 	if [ "${FSTYPE}" != "unknown" ]
 	then
@@ -146,7 +146,7 @@ fs_size ()
 			mountp="/mnt/tmp_fs_size"
 
 			mkdir -p "${mountp}"
-			mount -n -t $(get_fstype "${dev}") -o ro "${dev}" "${mountp}"
+			mount -t $(get_fstype "${dev}") -o ro "${dev}" "${mountp}" || log_warning_msg "cannot mount -t $(get_fstype ${dev}) -o ro ${dev} ${mountp}"
 
 			doumount=1
 		fi
@@ -163,7 +163,7 @@ fs_size ()
 
 	if [ -n "${doumount}" ]
 	then
-		umount "${mountp}"
+		umount "${mountp}" || log_warning_msg "cannot umount ${mountp}"
 		rmdir "${mountp}"
 	fi
 
@@ -269,22 +269,35 @@ try_mount ()
 	dev="${1}"
 	mountp="${2}"
 	opts="${3}"
+	fstype="${4}"
 
 	old_mountp="$(where_is_mounted ${dev})"
 
 	if [ -n "${old_mountp}" ]
 	then
-		mount -n -o remount,"${opts}" "${dev}" "${old_mountp}" || panic "Remounting ${dev} ${opts} on ${old_mountp} failed"
-		mount -n -o bind "${old_mountp}" "${mountp}" || panic "Cannot bind-mount ${old_mountp} on ${mountp}"
+		if [ "${opts}" != "ro" ]
+		then
+			mount -o remount,"${opts}" "${dev}" "${old_mountp}" || panic "Remounting ${dev} ${opts} on ${old_mountp} failed"
+		fi
+
+		mount -o bind "${old_mountp}" "${mountp}" || panic "Cannot bind-mount ${old_mountp} on ${mountp}"
 	else
-		mount -n -t $(get_fstype "${dev}") -o "${opts}" "${dev}" "${mountp}" || panic "Cannot mount ${dev} on ${mountp}"
+		if [ -z "${fstype}" ]
+		then
+			fstype=$(get_fstype "${dev}")
+		fi
+		mount -t "${fstype}" -o "${opts}" "${dev}" "${mountp}" || panic "Cannot mount ${dev} on ${mountp}, fstype=${fstype}, options=${opts}"
 	fi
 }
 
 find_cow_device ()
 {
+	# Returns a device containing a partition labeled "${pers_label}" or containing a file named the same way
+	#  in the latter case the partition containing the file is left mounted
+	#  if is not in black_listed_devices
 	pers_label="${1}"
 	cow_backing="/${pers_label}-backing"
+	black_listed_devices="${2}"
 
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
 	do
@@ -292,16 +305,32 @@ find_cow_device ()
 		do
 			devname=$(sys2dev "${dev}")
 
+			if echo "${black_listed_devices}" | grep -q "${devname}"
+			then
+				# skip this device enterely
+				break
+			fi
+
 			if [ "$(/lib/udev/vol_id -l ${devname} 2>/dev/null)" = "${pers_label}" ]
 			then
 				echo "${devname}"
 				return
 			fi
 
+			if [ "${PERSISTENT}" = "nofiles" ]
+			then
+				# do not mount the device to find for image files
+				# just skip this
+				break
+			fi
+
 			case "$(get_fstype ${devname})" in
 				vfat|ext2|ext3|jffs2)
 					mkdir -p "${cow_backing}"
-					try_mount "${devname}" "${cow_backing}" "rw"
+					if ! try_mount "${devname}" "${cow_backing}" "rw"
+					then
+						break
+					fi
 
 					if [ -f "${cow_backing}/${pers_label}" ]
 					then
@@ -320,11 +349,12 @@ find_cow_device ()
 
 find_files ()
 {
-	# return the first of ${filenames} found on vfat and ext2/ext3 devices
+	# return the a string composed by device name, mountpoint an the first of ${filenames} found on a supported partition
 	# FIXME: merge with above function
 
 	filenames="${1}"
 	snap_backing="/snap-backing"
+	black_listed_devices="${2}"
 
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
 	do
@@ -333,19 +363,28 @@ find_files ()
 			devname=$(sys2dev "${dev}")
 			devfstype="$(get_fstype ${devname})"
 
+			if echo "${black_listed_devices}" | grep -q "${devname}"
+			then
+				# skip this device enterely
+				break
+			fi
+
 			if is_supported_fs ${devfstype}
 			then
 				mkdir -p "${snap_backing}"
-				try_mount "${devname}" "${snap_backing}" "ro"
 
-				for filename in ${filenames}
+				if try_mount "${devname}" "${snap_backing}" "ro" "${devfstype}"
+				then
+					for filename in ${filenames}
 					do
-					if [ -f "${snap_backing}/${filename}" ]
-					then
-						echo "${devname} ${snap_backing} ${filename}"
-						return 0
-					fi
-				done
+						if [ -f "${snap_backing}/${filename}" ]
+						then
+							echo "${devname} ${snap_backing} ${filename}"
+							umount ${snap_backing}
+							return 0
+						fi
+					done
+				fi
 
 				umount ${snap_backing}
 			fi

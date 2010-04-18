@@ -183,9 +183,9 @@ Do not prompt to eject the CD on reboot.
 
 This parameter disables the automatic configuration of sudo.
 
-  noswap::
+  swapon::
 
-This parameter disables usage of local swap partitions.
+This parameter enables usage of local swap partitions.
 
   nouser::
 
@@ -197,14 +197,16 @@ This parameter disables Xorg auto-reconfiguration at boot time. This is valuable
 if you either do the detection on your own, or, if you want to ship a custom,
 premade xorg.conf in your live system.
 
-  persistent::
+  persistent[=nofiles]::
 
 live-initramfs will look for persistent and snapshot partitions or files labeled
 "live-rw", "home-rw", and files called "live-sn*", "home-sn*" and will try to,
 in order: mount as /cow the first, mount the second in /home, and just copy the
 contents of the latter in appropriate locations (snapshots). Snapshots will be
 tried to be updated on reboot/shutdown. Look at live-snapshot(1) for more
-informations.
+informations. If "nofiles" is specified, only filesystems with matching labels
+will be searched; no filesystems will be traversed looking for archives or image
+files. This results in shorter boot times.
 
   {preseed/file|file}=**FILE**::
 
@@ -287,6 +289,18 @@ root aufs, and they will be loaded in the order listed here. The first entry
 in this file will be the "lowest" point in the aufs, and the last file in
 this list will be on the "top" of the aufs, directly below /cow.  Without
 this file, any images in the "/live" directory are loaded in alphanumeric order.
+
+ /etc/live-persistence.binds
+
+This optional file (which resides in the rootfs system, not in the live media)
+is used as a list of directories which not need be persistent: ie. their
+content does not need to survive reboots when using the persistence features.
+
+This saves expensive writes and speeds up operations on volatile data such as
+web caches and temporary files (like e.g. /tmp and .mozilla) which are
+regenerated each time. This is achieved by bind mounting each listed directory
+with a tmpfs on the original path.
+
 
 See also
 --------

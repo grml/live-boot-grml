@@ -2,47 +2,6 @@
 . /scripts/functions
 . /live.vars
 
-# Override log_*_msg until #494257 is merged
-
-_log_msg()
-{
-	if [ "$quiet" = "y" ]; then return; fi
-	printf "$@"
-}
-
-log_success_msg()
-{
-	_log_msg "Success: $@\n"
-}
-
-log_failure_msg()
-{
-	_log_msg "Failure: $@\n"
-}
-
-log_warning_msg()
-{
-	_log_msg "Warning: $@\n"
-}
-
-log_begin_msg()
-{
-	if [ -x /sbin/usplash_write ]; then
-		/sbin/usplash_write "TEXT $@"
-	fi
-	_log_msg "Begin: $@ ... "
-}
-
-log_end_msg()
-{
-	if [ -x /sbin/usplash_write ]; then
-		/sbin/usplash_write "SUCCESS ok"
-	fi
-	_log_msg "done.\n"
-}
-
-##
-
 log_wait_msg ()
 {
 	# Print a message and wait for enter
@@ -50,7 +9,9 @@ log_wait_msg ()
 	then
 		/sbin/usplash_write "INPUTENTER ${@}"
 		read nunya < /dev/.initramfs/usplash_outfifo
-	fi
+	else if [ -x /sbin/splashy_update ] ; then
+		/sbin/splashy_update "getstring ${@}" | read nunya
+	fi ; fi
 
 	_log_msg "Waiting: ${@} ... \n"
 }
@@ -60,7 +21,7 @@ really_export ()
 	STRING="${1}"
 	VALUE="$(eval echo -n \${$STRING})"
 
-	if [ -f /live.vars ] && cat /live.vars | grep -sq "export ${STRING}"
+	if [ -f /live.vars ] && grep -sq "export ${STRING}" /live.vars
 	then
 		sed -i -e 's/\('${STRING}'=\).*$/\1'${VALUE}'/' /live.vars
 	else
@@ -99,6 +60,16 @@ lang2locale() {
 	fi
 }
 
+# Override maybe_break from scripts/functions
+maybe_break()
+{
+	if [ "${break}" = "$1" ]; then
+		# Call original panic
+		. /scripts/functions
+		panic "Spawning shell within the initramfs"
+	fi
+}
+
 # Override panic from scripts/functions
 panic() {
 
@@ -122,9 +93,8 @@ panic() {
 	printf "     ${DEB_4}  This Debian Live image failed to boot.\n\n"
 
 	printf "  Please file a bug against the 'live-initramfs' package or email the Debian\n"
-	printf "  Live mailing list at <debian-live-devel@lists.alioth.debian.org>, making\n"
-	printf "  sure to note the exact version, name and distribution of the image you were\n"
-	printf "  attempting to boot.\n\n"
+	printf "  Live mailing list at <debian-live@lists.debian.org>, making sure to note the\n"
+	printf "  exact version, name and distribution of the image you were attempting to boot.\n\n"
 
 	printf "  The file ${LIVELOG} contains some debugging information but booting with the\n"
 	printf "  ${DEBUG} command-line parameter will greatly increase its verbosity which is\n"

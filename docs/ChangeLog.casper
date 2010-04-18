@@ -1,3 +1,145 @@
+casper (1.154) jaunty; urgency=low
+
+  [ Evan Dandrea ]
+  * scripts/casper-bottom/02timezone:
+    - Remove as it's no longer needed and resets the timezone when
+      persistence is enabled (LP: #296855).
+
+  [ Colin Watson ]
+  * Preseed console-setup/optionscode and console-setup/codesetcode to the
+    empty string on boot to avoid debris from the live filesystem build
+    process getting in the way of installation (LP: #94177).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Sun, 23 Nov 2008 12:44:45 +0000
+
+casper (1.153) jaunty; urgency=low
+
+  * scripts/casper-bottom/10adduser:
+    - Create links for Mythbuntu items on the Desktop too.
+    - Don't show removable drives on Mythbuntu desktop
+  * scripts/casper-bottom/46disable_services:
+    - New script for disabling services unnecessary to Live
+      mode that should still start after being installed.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 04 Nov 2008 01:25:59 -0600
+
+casper (1.152) intrepid; urgency=low
+
+  * Use kde4rc now for accessibility profiles
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Sat, 25 Oct 2008 23:44:54 +0100
+
+casper (1.151) intrepid; urgency=low
+
+  * Force ubiquity to --automatic mode for ubuntu-mid
+
+ -- Emmet Hikory <persia@ubuntu.com>  Thu, 16 Oct 2008 15:31:16 +0100
+
+casper (1.150) intrepid; urgency=low
+
+  * Fix path to Kubuntu help file in 10adduser (really)
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 16 Oct 2008 12:16:54 +0100
+
+casper (1.149) intrepid; urgency=low
+
+  * scripts/casper-bottom/30accessibility &
+    ubiquity-hooks/30accessibility:
+    - Revert to using gconf keys for starting orca, as this is now what
+      orca does when the user chooses to automatically start orca from Orca's
+      preferences window.
+    - Explicitly set orca as the program to start up for magnification,
+      speech, and braille.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Thu, 16 Oct 2008 11:33:02 +1100
+
+casper (1.148) intrepid; urgency=low
+
+  * Skip remounting read-only in try_mount as it's unnecessary and
+    breaks persistence.  Thanks James Westby (LP: #274076).
+
+ -- Evan Dandrea <evand@ubuntu.com>  Wed, 15 Oct 2008 13:09:57 -0400
+
+casper (1.147) intrepid; urgency=low
+
+  * Fix path to Kubuntu help file in 10adduser
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 15 Oct 2008 12:49:29 +0100
+
+casper (1.146) intrepid; urgency=low
+
+  * Update About Kubuntu link in 10adduser for KDE 4
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 06 Oct 2008 17:54:15 +0100
+
+casper (1.145) intrepid; urgency=low
+
+  * 38disable_restricted_manager: Remove some obsolete l-r-m and
+    restricted-manager code, and rename the script to 38jockey_disable_check
+    to better reflect its purpose.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 06 Oct 2008 09:21:40 +0200
+
+casper (1.144) intrepid; urgency=low
+
+  * Bump media detection timeout to a minute; thanks to Tormod Volden and
+    Steve Beattie for analysis (LP: #258432).
+  * Note that this changes (fixes?) the semantics of LIVEMEDIA_TIMEOUT due
+    to not using hex values in a for loop which aren't understood by test
+    -lt (thanks, Steve Beattie).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 26 Sep 2008 18:35:13 +0100
+
+casper (1.143) intrepid; urgency=low
+
+  * scripts/casper-bottom/30accessibility &
+    ubiquity-hooks/30accessibility: Change the way that orca is set to
+    automatically start. Orca can be started via a gconf key, however this
+    is not reflected in the orca UI, and doesn't easily allow the user to
+    prevent orca from autostarting on an installed system.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Wed, 24 Sep 2008 10:37:35 +1000
+
+casper (1.142) intrepid; urgency=low
+
+  * Fix syntax error introduced by is_nice_device regex fix.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 19 Sep 2008 02:30:59 +0100
+
+casper (1.141) intrepid; urgency=low
+
+  [ Johannes Ballé ]
+  * Handle spaces in file names in md5sum.txt (LP: #251112).
+
+  [ Colin Watson ]
+  * Support ?= (set value but don't mark as seen) preseeding syntax in
+    preseed script; previously we only supported it in the keyboard script,
+    which confusingly doesn't deal with propagating console-setup/* preseeds
+    to the target filesystem (LP: #253749).
+  * Update to localechooser's new languagelist format.
+
+  [ Tormod Volden ]
+  * scripts/casper: don't scan floppy drives for livefs images (LP: #97306)
+  * scripts/casper: fix broken RE in is_nice_device() (LP: #250328)
+  * scripts/casper: properly use argument $1 in matches_uuid()
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 19 Sep 2008 02:14:05 +0100
+
+casper (1.140) intrepid; urgency=low
+
+  [ Colin Watson ]
+  * Disable jockey as well as the old restricted-manager. While jockey does
+    do more than restricted-manager did, it also still uses a good chunk of
+    memory for a use case that's fairly limited on the live CD.
+
+  [ Luke Yelavich ]
+  * scripts/casper-bottom/30accessibility &
+    ubiquity-hooks/30accessibility:
+    - Check that usr/bin/orca exists and is executable before creating user
+      settings files.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Fri, 12 Sep 2008 19:23:41 +1000
+
 casper (1.139) intrepid; urgency=low
 
   * add compcache conf.d configuration for initramfs-tools

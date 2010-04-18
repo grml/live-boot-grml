@@ -32,7 +32,10 @@ log_begin_msg "Configuring fstab"
 
 # live-initramfs script
 
-cat >> ${FSTAB} << EOF
+# Create a fake fstab only if it is not already there
+if [ ! -f "${FSTAB}" ] || grep -qs 'UNCONFIGURED FSTAB FOR BASE SYSTEM' "${FSTAB}"
+then
+	cat >> ${FSTAB} << EOF
 # /etc/fstab: static file system information.
 #
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
@@ -40,6 +43,7 @@ cat >> ${FSTAB} << EOF
 ${UNIONTYPE} / ${UNIONTYPE} rw 0 0
 tmpfs /tmp tmpfs nosuid,nodev 0 0
 EOF
+fi
 
 # disabled for now
 #rm -f /root/etc/rcS.d/S*checkroot.sh
