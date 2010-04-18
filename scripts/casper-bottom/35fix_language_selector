@@ -25,4 +25,8 @@ if [ -e /root/usr/share/applications/language-selector.desktop ]; then
 
 fi
 
+if [ -x /root/usr/bin/fontconfig-voodoo ]; then
+    chroot /root fontconfig-voodoo --auto --quiet || true
+fi
+
 log_end_msg
