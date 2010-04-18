@@ -42,6 +42,11 @@ done
 mount -n -o bind /sys /root/sys
 mount -n -o bind /proc /root/proc
 
+if [ -n "${XDEBCONF}" -a -x /root/usr/sbin/xdebconfigurator ]; then
+    # xdebconfigurator
+    chroot /root /usr/sbin/xdebconfigurator
+fi
+
 chroot /root debconf-communicate -fnoninteractive casper > /dev/null <<EOF
 set xserver-xorg/autodetect_keyboard true
 fset xserver-xorg/autodetect_keyboard seen true

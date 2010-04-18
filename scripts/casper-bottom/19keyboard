@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PREREQ=""
-DESCRIPTION="Setting up keyboard..."
+DESCRIPTION="Setting up console keyboard..."
 
 . /scripts/casper-functions
 
