@@ -35,6 +35,9 @@ then
 	cp /etc/live.conf "${DESTDIR}"/etc
 fi
 
+mkdir -p "${DESTDIR}"/usr/share/live-initramfs
+cp /usr/share/live-initramfs/languagelist "${DESTDIR}"/usr/share/live-initramfs
+
 # Directories
 mkdir -p "${DESTDIR}"/lib/live-initramfs
 
@@ -52,6 +55,16 @@ do
 	if [ ! -e "${DESTDIR}"/"${FILE}" ]
 	then
 		cp -a "${FILE}" "${DESTDIR}"/"${FILE}"
+	fi
+done
+
+# udev dependencies (squeeze and newer)
+for FILE in /lib/udev/*_id
+do
+	if [ ! -e "${DESTDIR}/${FILE}" ]
+	then
+		mkdir -p "${DESTDIR}/lib/udev"
+		copy_exec "${FILE}" /lib/udev
 	fi
 done
 

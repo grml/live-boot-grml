@@ -71,6 +71,11 @@ Arguments ()
                                 export FETCH
                                 ;;
 
+			forcepersistentfsck)
+				FORCEPERSISTENTFSCK="Yes"
+				export FORCEPERSISTENTFSCK
+				;;
+
 			hook=*)
 				HOOK="${ARGUMENT#hook=}"
 				export HOOK
@@ -625,7 +630,7 @@ copy_live_to ()
 
 	if [ -z "${MODULETORAM}" ]
 	then
-		size=$(fs_size "" ${copyfrom} "used")
+		size=$(fs_size "" ${copyfrom}/${LIVE_MEDIA_PATH} "used")
 	else
 		MODULETORAMFILE="${copyfrom}/${LIVE_MEDIA_PATH}/${MODULETORAM}"
 
@@ -683,7 +688,8 @@ copy_live_to ()
 		then
 			cp ${MODULETORAMFILE} ${copyto} # copy only the filesystem module
 		else
-			cp -a ${copyfrom}/* ${copyto}   # "cp -a" from busybox also copies hidden files
+			mkdir -p ${copyto}/${LIVE_MEDIA_PATH}
+			cp -a ${copyfrom}/${LIVE_MEDIA_PATH}/* ${copyto}/${LIVE_MEDIA_PATH}   # "cp -a" from busybox also copies hidden files
 		fi
 
 		umount ${copyfrom}
@@ -1228,6 +1234,11 @@ setup_unionfs ()
 			cowdevice=${cowprobe}
 			cow_fstype=$(get_fstype "${cowprobe}")
 			cow_mountopt="rw,noatime"
+
+			if [ "${FORCEPERSISTENTFSCK}" = "Yes" ]
+			then
+				fsck -y ${cowdevice}
+			fi
 		else
 			log_warning_msg "Unable to find the persistent medium"
 			cowdevice="tmpfs"

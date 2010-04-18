@@ -37,10 +37,15 @@ mount -o bind /sys /root/sys
 mount -o bind /proc /root/proc
 mount -o bind /dev /root/dev
 
+if [ "${XDRIVER}" != "dexconf" ]
+then
+
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
 set xserver-xorg/autodetect_video_card false
 set xserver-xorg/config/device/driver ${XDRIVER}
 EOF
+
+fi
 
 chroot /root dexconf
 
