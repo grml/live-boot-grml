@@ -8,27 +8,26 @@ mountpoint=/cdrom
 
 mkdir -p $mountpoint
 
-overlay_method=unionfs
-if [ "${DPKG_ARCH}" = "ia64" ] || [ "${DPKG_ARCH}" = "hppa" ] || [ "${DPKG_ARCH}" = "sparc" ]; then
-    overlay_method=devmapper
-fi
+#overlay_method=unionfs
+#if [ "${DPKG_ARCH}" = "ia64" ] || [ "${DPKG_ARCH}" = "hppa" ] || [ "${DPKG_ARCH}" = "sparc" ]; then
+#    overlay_method=devmapper
+#fi
 
-USERNAME=ubuntu
-USERFULLNAME="Ubuntu LiveCD user"
-HOST=ubuntu
+USERNAME=casper
+USERFULLNAME="Live session user"
+HOST=live
 
 [ -f /etc/casper.conf ] && . /etc/casper.conf
 
 export USERNAME USERFULLNAME HOST
 
-casper_path() {
+is_casper_path() {
     path=$1
-    if [ -e "$path/casper/filesystem.cloop" ]; then
-        echo "$path/casper/filesystem.cloop"
-        return 0
-    elif [ -e "$path/casper/filesystem.squashfs" ]; then
-        echo "$path/casper/filesystem.squashfs"
-        return 0
+    if [ -d "$path/casper" ]; then
+        if [ "$(echo $path/casper/*.cloop)" != "$path/casper/*.cloop" ] || 
+            [ "$(echo $path/casper/*.squashfs)" != "$path/casper/*.squashfs" ]; then
+            return 0
+        fi
     fi
     return 1
 }
@@ -58,14 +57,27 @@ get_backing_device() {
 	esac
 }
 
-setup_cow() {
-	case "$1" in
-            unionfs)
-                setup_unionfs "$2" "$rootmnt"
-                ;;
-            devmapper)
-                setup_devmapper "$2" "$rootmnt"
-	esac
+match_files_in_dir() {
+    # Does any files match pattern $1 ?
+
+    local pattern="$1"
+    if [ "$(echo $pattern)" != "$pattern" ]; then
+        return 0
+    fi
+    return 1
+}
+
+mount_images_in_directory() {
+    directory="$1"
+    rootmnt="$2"
+    if match_files_in_dir "$directory/casper/*.cloop"; then
+        # Let's hope there's just one matching *.cloop... FIXME
+        setup_devmapper $(get_backing_device "$directory/casper/*.cloop") "$rootmnt"
+    elif match_files_in_dir "$directory/casper/*.squashfs"; then
+        setup_unionfs "$directory/casper" "$rootmnt"
+    else 
+        :
+    fi
 }
 
 sys2dev() {
@@ -173,60 +185,82 @@ find_cow_device() {
 }
 
 setup_unionfs() {
-	backdev="$1"
-	rootmnt="$2"
-        modprobe -Qb unionfs
-        mkdir -p /cow
+    image_directory="$1"
+    rootmnt="$2"
+    modprobe -Qb unionfs
 
-        if grep -q persistent /proc/cmdline; then
-            i=0
-            # We love udev and the kernel!
-            while [ "$i" -lt 300 ]; do
-                cowdevice=$(find_cow_device) 
-                if [ -b "$cowdevice" ]; then
-                    mount -t $(get_fstype "$cowdevice") -o rw "$cowdevice" /cow || panic "Can not mount $cowdevice on /cow"
-                    break
-                fi
-                sleep 5
-#                sleep 0.1
-                i=$(( $i + 1 ))
-            done
-        else
-            mount -t tmpfs tmpfs /cow
+    croot="" # Should really be /casper, but run-init doesn't handle
+             # mount-points in subdirectories at all
+
+    # Let's just mount the read-only file systems first
+    mkdir -p "${croot}"
+    for image in "${image_directory}"/*.squashfs; do
+        imagename=$(basename "${image}")
+        backdev=$(get_backing_device "$image")
+        fstype=$(get_fstype "${backdev}")
+        if [ "${fstype}" = "unknown" ]; then
+            panic "Unknown file system type on ${backdev} (${image})"
         fi
+        mkdir -p "${croot}/${imagename}"
+        mount -t "${fstype}" -o ro "${backdev}" "${croot}/${imagename}" || panic "Can not mount $backdev ($image) on ${croot}/${imagename}"
+    done
 
-	mkdir -p /rofs
-    if [ "$(get_fstype $backdev)" = "unknown" ]; then
-        panic "Unknown file system type on $backdev"
+    rofsstring=""
+    for dir in $(mount -t squashfs | cut -d\  -f 3); do
+        rofsstring="$dir=ro:$rofsstring"
+    done
+    rofsstring=${rofsstring%:}
+
+    mkdir -p /cow
+    
+    if grep -q persistent /proc/cmdline; then
+        i=0
+        # We love udev and the kernel!
+        while [ "$i" -lt 300 ]; do
+            cowdevice=$(find_cow_device) 
+            if [ -b "$cowdevice" ]; then
+                mount -t $(get_fstype "$cowdevice") -o rw "$cowdevice" /cow || panic "Can not mount $cowdevice on /cow"
+                break
+            fi
+            sleep 0.1
+            i=$(( $i + 1 ))
+        done
+    else
+        mount -t tmpfs tmpfs /cow
     fi
-	mount -t $(get_fstype "$backdev") -o ro "$backdev" /rofs || panic "Can not mount $backdev on /rofs"
+    
+    mount -t unionfs -o dirs=/cow=rw:$rofsstring unionfs "$rootmnt"
 
-	mount -t unionfs -o dirs=/cow=rw:/rofs=ro unionfs "$rootmnt"
-        if grep -q show-cow /proc/cmdline; then
-            mkdir -p "$rootmnt/cow"
-            mount -o bind /cow "$rootmnt/cow"
-        fi
-        mkdir -p "$rootmnt/rofs"
-        mount -o bind /rofs "$rootmnt/rofs"
+    for d in $(mount -t squashfs | cut -d\  -f 3); do
+        mkdir -p "${rootmnt}/casper/${d}"
+        mount -o bind "${d}" "${rootmnt}/${d}"
+        umount "${d}"
+    done
+
+    if grep -q show-cow /proc/cmdline; then
+        mkdir -p "$rootmnt/cow"
+        mount -o bind /cow "$rootmnt/cow"
+    fi
+
 }
 
 is_usb_device() {
     sysfs_path="${1#/sys}"
-    if /lib/udev/path_id "${sysfs_path}" | grep -q "ID_PATH=usb"; then
+    if /lib/udev/path_id "${sysfs_path}" | grep -q "ID_PATH=(usb|pci-[^-]*-usb)"; then
         return 0
     fi
     return 1
 }
 
-find_cd() {
+find_livefs() {
 	mounted=
         for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram); do
             devname=$(sys2dev "${sysblock}")
             fstype=$(get_fstype "${devname}")
             if /lib/udev/cdrom_id ${devname} > /dev/null; then
                 mount -t ${fstype} -o ro "$devname" $mountpoint || continue
-                if casper_path $mountpoint; then
-                    echo $(casper_path $mountpoint)
+                if is_casper_path $mountpoint; then
+                    echo $mountpoint
                     return
                 else
                     umount $mountpoint
@@ -238,8 +272,8 @@ find_cd() {
                     case ${fstype} in
                         vfat|iso9660|udf)
                             mount -t ${fstype} -o ro "${devname}" $mountpoint || continue
-                            if casper_path $mountpoint; then
-                                echo $(casper_path $mountpoint)
+                            if is_casper_path $mountpoint; then
+                                echo $mountpoint
                                 return
                             else
                                 umount $mountpoint
@@ -271,7 +305,7 @@ mountroot() {
     exec 7>&2
     exec > casper.log
     exec 2>&1
-
+    
     set_usplash_timeout
     [ "$quiet" != "y" ] && log_begin_msg "Running /scripts/casper-premount"
     run_scripts /scripts/casper-premount
@@ -283,18 +317,17 @@ mountroot() {
     set_usplash_timeout
 
     for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12 13; do
-        live_image=$(find_cd)
-        if [ "${live_image}" ]; then
+        livefs_root=$(find_livefs)
+        if [ "${livefs_root}" ]; then
             break
         fi
         sleep 1
     done
     if [ "$?" -gt 0 ]; then
-        panic "Unable to find a CD-ROM containing a live file system"
+        panic "Unable to find a medium containing a live file system"
     fi
     
-    setup_cow "$overlay_method" "$(get_backing_device $live_image)" "$rootmnt"
-
+    mount_images_in_directory "$livefs_root" "$rootmnt"
     log_end_msg
 
     maybe_break casper-bottom

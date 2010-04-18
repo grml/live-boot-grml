@@ -18,8 +18,6 @@ esac
 
 . /usr/share/initramfs-tools/hook-functions
 
-# cloop is needed
-manual_add_modules cloop
 manual_add_modules unionfs
 
 # We need losetup
@@ -36,10 +34,15 @@ copy_exec /lib/udev/vol_id /lib/udev
 copy_exec /lib/udev/path_id /lib/udev
 copy_exec /usr/bin/udevinfo /bin
 
-# Needed for devmapper
-copy_exec /sbin/blockdev /sbin
-copy_exec /sbin/dmsetup /sbin
-manual_add_modules dm-snapshot
+# cloop is needed for dmsetup
+if [ -x /sbin/dmsetup ]; then
+    manual_add_modules cloop
+
+    # Needed for devmapper
+    copy_exec /sbin/blockdev /sbin
+    copy_exec /sbin/dmsetup /sbin
+    manual_add_modules dm-snapshot
+fi
 
 # squashfs
 manual_add_modules squashfs
@@ -63,3 +66,8 @@ manual_add_modules ohci1394
 copy_exec /usr/lib/casper/casper-md5check /bin
 
 auto_add_modules net
+
+if [ -e /etc/casper.conf ]; then
+    mkdir -p ${DESTDIR}/etc
+    cp /etc/casper.conf ${DESTDIR}/etc
+fi
