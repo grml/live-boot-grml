@@ -992,8 +992,32 @@ setup_unionfs ()
 	mkdir -p /cow
 
 	# Looking for "${root_persistence}" device or file
-	if [ -n "${PERSISTENT}" ]
+	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
 	then
+		# Load USB modules
+		num_block=$(ls -l /sys/block | wc -l)
+		for module in sd_mod uhci-hcd ehci-hcd ohci-hcd usb-storage
+		do
+			modprobe -q -b ${module}
+		done
+
+		udevtrigger
+		udevsettle
+
+		# For some reason, udevsettle does not block in this scenario,
+		# so we sleep for a little while.
+		#
+		# See https://bugs.launchpad.net/ubuntu/+source/casper/+bug/84591
+		for timeout in 5 4 3 2 1
+		do
+			sleep 1
+
+			if [ $(ls -l /sys/block | wc -l) -gt ${num_block} ]
+			then
+				break
+			fi
+		done
+
 		cowprobe=$(find_cow_device "${root_persistence}")
 
 		if [ -b "${cowprobe}" ]
@@ -1005,7 +1029,7 @@ setup_unionfs ()
 			cowdevice="tmpfs"
 			cow_fstype="tmpfs"
 		fi
-	elif [ -n "${NFS_COW}" ]
+	elif [ -n "${NFS_COW}" ] && [ -z "${NOPERSISTENT}" ]
 	then
 		# check if there are any nfs options
 		if echo ${NFS_COW}|grep -q ','
@@ -1075,7 +1099,7 @@ setup_unionfs ()
 	mount -t tmpfs tmpfs ${rootmnt}/live
 
 	# Adding other custom mounts
-	if [ -n "${PERSISTENT}" ]
+	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
 	then
 		# directly mount /home
 		# FIXME: add a custom mounts configurable system

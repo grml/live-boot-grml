@@ -35,8 +35,8 @@ get_fstype ()
 	local FSSIZE
 
 	# fstype misreports LUKS devices
-	is_luks "${1}"
-	if [ $? -eq 0 ]; then
+	if is_luks "${1}"
+	then
 	    /lib/udev/vol_id -t ${1} 2>/dev/null
 	    return
 	fi
@@ -234,7 +234,7 @@ find_cow_device ()
 	pers_label="${1}"
 	cow_backing="/${pers_label}-backing"
 
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop)
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram)
 	do
 		for dev in $(subdevices "${sysblock}")
 		do
@@ -244,20 +244,24 @@ find_cow_device ()
 			then
 				echo "${devname}"
 				return
-			elif [ "$(get_fstype ${devname})" = "vfat" ]
-			then
-				# FIXME: all supported block devices should be scanned
-				mkdir -p "${cow_backing}"
-				try_mount "${devname}" "${cow_backing}" "rw"
-
-				if [ -e "${cow_backing}/${pers_label}" ]
-				then
-					echo $(setup_loop "${cow_backing}/${pers_label}" "loop" "/sys/block/loop*")
-					return 0
-				else
-					umount ${cow_backing}
-				fi
 			fi
+
+			case "$(get_fstype ${devname})" in
+				vfat|ext2|ext3|jffs2)
+					mkdir -p "${cow_backing}"
+					try_mount "${devname}" "${cow_backing}" "rw"
+
+					if [ -f "${cow_backing}/${pers_label}" ]
+					then
+						echo $(setup_loop "${cow_backing}/${pers_label}" "loop" "/sys/block/loop*")
+						return 0
+					else
+						umount ${cow_backing}
+					fi
+					;;
+				*)
+					;;
+			esac
 		done
 	done
 }
@@ -270,30 +274,31 @@ find_files ()
 	filenames="${1}"
 	snap_backing="/snap-backing"
 
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop)
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram)
 	do
 		for dev in $(subdevices "${sysblock}")
 		do
 			devname=$(sys2dev "${dev}")
 			devfstype="$(get_fstype ${devname})"
 
-			if [ "${devfstype}" = "vfat" ] ||  [ "${devfstype}" = "ext2" ] || [ "${devfstype}" = "ext3" ] || [ "${devfstype}" = "jffs2" ]
-			then
-				# FIXME: all supported block devices should be scanned
-				mkdir -p "${snap_backing}"
-				try_mount "${devname}" "${snap_backing}" "ro"
+			case "${devfstype}" in
+				vfat|ext2|ext3|jffs2)
+					# FIXME: all supported block devices should be scanned
+					mkdir -p "${snap_backing}"
+					try_mount "${devname}" "${snap_backing}" "ro"
 
-				for filename in ${filenames}
-				do
-					if [ -e "${snap_backing}/${filename}" ]
-					then
-						echo "${devname} ${snap_backing} ${filename}"
-						return 0
-					fi
-				done
+					for filename in ${filenames}
+					do
+						if [ -f "${snap_backing}/${filename}" ]
+						then
+							echo "${devname} ${snap_backing} ${filename}"
+							return 0
+						fi
+					done
 
-				umount ${snap_backing}
-			fi
+					umount ${snap_backing}
+					;;
+			esac
 		done
 	done
 }
@@ -321,8 +326,8 @@ is_luks()
     devname="${1}"
     if [ -x /sbin/cryptsetup ]
     then
-	/sbin/cryptsetup isLuks "${devname}" 2>/dev/null
-	return $?
+	/sbin/cryptsetup isLuks "${devname}" 2>/dev/null || ret=${?}
+	return ${ret}
     else
 	return 1
     fi

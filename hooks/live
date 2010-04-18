@@ -101,6 +101,9 @@ manual_add_modules ohci1394
 manual_add_modules sbp2
 manual_add_modules sr_mod
 
+# Hardware: usb
+manual_add_modules sd_mod
+
 # Hardware: network
 auto_add_modules net
 
