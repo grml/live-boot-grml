@@ -95,10 +95,12 @@ parse_cmdline ()
 
 			kmodel=*|console-setup/modelcode=*)
 				KMODEL=${x#*=}
+				export KMODEL
 				;;
 
 			koptions=*)
 				KOPTIONS=${x#koptions=}
+				export KOPTIONS
 				;;
 
 			live-getty)
@@ -156,6 +158,11 @@ parse_cmdline ()
 				export NOXAUTOLOGIN
 				;;
 
+			nofastboot)
+				NOFASTBOOT="Yes"
+				export NOFASTBOOT
+				;;
+
 			nopersistent)
 				PERSISTENT=""
 				export PERSISTENT
@@ -194,6 +201,11 @@ parse_cmdline ()
 				export SHOWMOUNTS
 				;;
 
+		       timezone=*)
+				TIMEZONE="${x#timezone=}"
+				export TIMEZONE
+				;;
+
 			todisk=*)
 				TODISK=${x#todisk=}
 				export TODISK
@@ -202,6 +214,11 @@ parse_cmdline ()
 			toram)
 				TORAM="Yes"
 				export TORAM
+				;;
+
+			union=*)
+				UNIONTYPE="${x#union=}"
+				export UNIONTYPE
 				;;
 
 			xdebconf)
@@ -233,6 +250,13 @@ parse_cmdline ()
 	if [ -z "${MODULE}" ]
 	then
 		MODULE="filesystem"
+		export MODULE
+	fi
+
+	if [ -z "${UNIONTYPE}" ]
+	then
+		UNIONTYPE="unionfs"
+		export UNIONTYPE
 	fi
 }
 
@@ -520,7 +544,7 @@ setup_unionfs() {
     image_directory="$1"
     rootmnt="$2"
 
-    modprobe "${MP_QUIET}" -b unionfs
+    modprobe "${MP_QUIET}" -b ${UNIONTYPE}
 
     # run-init can't deal with images in a subdir, but we're going to
     # move all of these away before it runs anyway.  No, we're not,
@@ -604,7 +628,7 @@ setup_unionfs() {
 
     mount ${cowdevice} -t ${cow_fstype} -o rw /cow || panic "Can not mount $cowdevice on /cow"
 
-    mount -t unionfs -o dirs=/cow=rw:$rofsstring unionfs "$rootmnt" || panic "Unionfs mount failed"
+    mount -t ${UNIONTYPE} -o dirs=/cow=rw:$rofsstring ${UNIONTYPE} "$rootmnt" || panic "${UNIONTYPE} mount failed"
 
     # Adding other custom mounts
     if [ -n "${PERSISTENT}" ]; then

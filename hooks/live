@@ -73,8 +73,9 @@ copy_exec /sbin/losetup /sbin
 manual_add_modules loop
 manual_add_modules squashfs
 
-# Filesystem: unionfs
+# Filesystem: unionfs/aufs
 manual_add_modules unionfs
+manual_add_modules aufs
 
 # Filesystem: vfat
 manual_add_modules nls_cp437
