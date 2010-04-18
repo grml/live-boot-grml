@@ -55,7 +55,16 @@ then
 	${GDMCONF}
 fi
 
-if [ -f /root/etc/kde3/kdm/kdmrc ]
+if [ -d /root/etc/default/kdm.d/ ]
+then
+
+cat >> /root/etc/default/kdm.d/live-autologin << EOF
+AUTOLOGINUSER=${USERNAME}
+AUTOLOGINAGAIN=true
+AUTOLOGINDELAY=0
+EOF
+
+elif [ -f /root/etc/kde3/kdm/kdmrc ]
 then
 	# Configure KDM autologin
 	sed -i -r -e "s/^#?AutoLoginEnable=.*\$/AutoLoginEnable=true/" \
