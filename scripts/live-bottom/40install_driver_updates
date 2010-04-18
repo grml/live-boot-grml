@@ -38,8 +38,10 @@ cp -a /tmp/driver-updates/*.deb "/root$install_dir/"
 # We cannot leave packages in a bad state. So if the install fails, remove
 # it. This will get caught in live.log.
 for deb in "/root$install_dir"/*; do
-	if ! chroot /root dpkg -i "$install_dir/$deb"; then
-		chroot /root dpkg -P "${deb%%_*}"
+	[ -f "$deb" ] || continue
+	debbase="${deb##*/}"
+	if ! chroot /root dpkg -i "$install_dir/$debbase"; then
+	    chroot /root dpkg -P "${debbase%%_*}"
 	fi
 done
 
