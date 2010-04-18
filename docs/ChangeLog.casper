@@ -1,3 +1,28 @@
+casper (1.156) jaunty; urgency=low
+
+  * scripts/casper-bottom/30accessibility &
+    ubiquity-hooks/30accessibility:
+    - If using a laptop, enable the laptop keyboard layout
+    - There is no longer a need to set gconf values as root in only-ubiquity
+      mode
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Fri, 06 Feb 2009 08:59:52 +0100
+
+casper (1.155) jaunty; urgency=low
+
+  [ Colin Watson ]
+  * Add myself to debian/copyright as an author, as I've done fairly
+    significant work on this.
+  * Eliminate casper-md5check's libm linkage; patch from "SurJector" who
+    points out that the automatic conversion is sufficient (LP: #293613).
+  * Restore showmounts/show-cow option (thanks, Carlo de Wolf and "probono";
+    LP: #159006, #290330).
+
+  [ Evan Dandrea ]
+  * Add support for ext4.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 30 Jan 2009 12:14:00 +0000
+
 casper (1.154) jaunty; urgency=low
 
   [ Evan Dandrea ]

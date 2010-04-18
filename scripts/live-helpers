@@ -332,7 +332,7 @@ find_cow_device ()
 			fi
 
 			case "$(get_fstype ${devname})" in
-				vfat|ext2|ext3|jffs2)
+				vfat|ext2|ext3|ext4|jffs2)
 					mkdir -p "${cow_backing}"
 					if ! try_mount "${devname}" "${cow_backing}" "rw"
 					then

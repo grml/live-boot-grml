@@ -47,6 +47,15 @@ gct ()
 	fi
 }
 
+laptop_detect ()
+{
+	if chroot /root /usr/sbin/laptop-detect
+	then
+		echo "orca.settings.orcaModifierKeys = orca.settings.LAPTOP_MODIFIER_KEYS" >> /root/home/$USERNAME/.orca/user-settings.py
+		echo "orca.settings.keyboardLayout = orca.settings.GENERAL_KEYBOARD_LAYOUT_LAPTOP" >> /root/home/$USERNAME/.orca/user-settings.py
+	fi
+}
+
 case ${ACCESS} in
 	access=v1)
 		# Lesser Visual Impairment
@@ -78,6 +87,7 @@ case ${ACCESS} in
 			echo "import orca.settings" >> /root/home/${USERNAME}/.orca/user-settings.py
 			echo "orca.settings.enableSpeech = False" >> /root/home/${USERNAME}/.orca/user-settings.py
 			echo "orca.settings.enableMagnifier = True" >> /root/home/${USERNAME}/.orca/user-settings.py
+			laptop_detect
 			chroot /root chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.orca
 		fi
 		;;
@@ -108,6 +118,7 @@ case ${ACCESS} in
 			echo "import orca.settings" >> /root/home/${USERNAME}/.orca/user-settings.py
 			echo "orca.settings.enableSpeech = False" >> /root/home/${USERNAME}/.orca/user-settings.py
 			echo "orca.settings.enableBraille = True" >> /root/home/${USERNAME}/.orca/user-settings.py
+			laptop_detect
 			chroot /root chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.orca
 		fi
 		;;
