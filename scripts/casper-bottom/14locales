@@ -34,6 +34,10 @@ for x in $(cat /proc/cmdline); do
 			locale=${x#debian-installer/locale=}
 			set_locale="true"
 			;;
+		locale=*)
+			locale=${x#locale=}
+			set_locale="true"
+			;;
 	esac
 done
 

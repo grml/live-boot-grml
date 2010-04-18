@@ -91,7 +91,7 @@ setup_loop() {
     local pattern=$3
 
     modprobe -Qb "$module"
-    udevplug -W
+    udevsettle
  
     for loopdev in $pattern; do
         if [ "$(cat $loopdev/size)" -eq 0 ]; then
@@ -189,8 +189,9 @@ setup_unionfs() {
     rootmnt="$2"
     modprobe -Qb unionfs
 
-    croot="" # Should really be /casper, but run-init doesn't handle
-             # mount-points in subdirectories at all
+    # run-init can't deal with this, but we're going to move all of these
+    # away before it runs anyway.
+    croot="/casper"
 
     # Let's just mount the read-only file systems first
     mkdir -p "${croot}"
@@ -232,9 +233,8 @@ setup_unionfs() {
     mount -t unionfs -o dirs=/cow=rw:$rofsstring unionfs "$rootmnt"
 
     for d in $(mount -t squashfs | cut -d\  -f 3); do
-        mkdir -p "${rootmnt}/casper/${d}"
-        mount -o bind "${d}" "${rootmnt}/${d}"
-        umount "${d}"
+        mkdir -p "${rootmnt}/casper/${d##*/}"
+        mount -o move "${d}" "${rootmnt}/casper/${d##*/}"
     done
 
     if grep -q show-cow /proc/cmdline; then
