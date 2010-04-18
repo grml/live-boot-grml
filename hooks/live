@@ -148,7 +148,10 @@ else
 	copy_exec /sbin/udevtrigger /sbin
 	copy_exec /sbin/udevsettle /sbin
 fi
-copy_exec /usr/bin/udevinfo /bin
+if [ -x /usr/bin/udevinfo ]
+then
+	copy_exec /usr/bin/udevinfo /bin
+fi
 
 # Program: wget
 if [ -x /usr/bin/wget ]
