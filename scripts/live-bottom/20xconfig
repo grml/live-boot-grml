@@ -75,8 +75,13 @@ then
 	setmodel="set xserver-xorg/config/inputdevice/keyboard/model ${KMODEL}"
 fi
 
+if [ -n "${KLAYOUT}" ]
+then
+	setlayout="set xserver-xorg/config/inputdevice/keyboard/layout ${KLAYOUT}"
+fi
+
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
-set xserver-xorg/config/inputdevice/keyboard/layout ${kbd}
+${setlayout}
 ${setvariant}
 ${setmodel}
 ${setoptions}

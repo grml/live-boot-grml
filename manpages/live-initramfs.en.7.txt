@@ -192,7 +192,7 @@ been installed with persistent enabled.
 
   noprompt
 
-Do not prompt to eject the CD on reboot.
+Do not prompt to eject the CD or remove the USB flash drive on reboot.
 
   nosudo::
 

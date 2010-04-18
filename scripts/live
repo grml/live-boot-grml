@@ -49,6 +49,35 @@ Arguments ()
 	for ARGUMENT in $(cat /proc/cmdline)
 	do
 		case "${ARGUMENT}" in
+			skipconfig)
+				NOACCESSIBILITY="Yes"
+				NOAPPARMOR="Yes"
+				NOAPTCDROM="Yes"
+				NOAUTOLOGIN="Yes"
+				NOCONSOLEKEYBOARD="Yes"
+				NOFASTBOOT="Yes"
+				NOFSTAB="Yes"
+				NOGNOMEPANEL="Yes"
+				NOHOSTS="Yes"
+				NOJOCKEY="Yes"
+				NOKPERSONALIZER="Yes"
+				NOLANGUAGESELECTOR="Yes"
+				NOLOCALES="Yes"
+				NONETWORKING="Yes"
+				NOPOLKITCONF="Yes"
+				NOPOWERMANAGEMENT="Yes"
+				NOPROGRAMCRASHES="Yes"
+				NOSUDO="Yes"
+				NOTIMEZONE="Yes"
+				NOUPDATENOTIFIER="Yes"
+				NOUSER="Yes"
+				NOXAUTOCONFIG="Yes"
+				NOXAUTOLOGIN="Yes"
+				NOXSCREENSAVER="Yes"
+
+				export NOACCESSIBILITY NOAPPARMOR NOAPTCDROM NOAUTOLOGIN NOCONSOLEKEYBOARD NOFASTBOOT NOFSTAB NOGNOMEPANEL NOHOSTS NOJOCKEY NOKPERSONALIZER NOLANGUAGESELECTOR NOLOCALES NONETWORKING NOPOLKITCONF NOPOWERMANAGEMENT NOPROGRAMCRASHES NOSUDO NOTIMEZONE NOUPDATENOTIFIER NOUSER NOXAUTOCONFIG NOXAUTOLOGIN NOXSCREENSAVER
+				;;
+
 			access=*)
 				ACCESS="${ARGUMENT#access=}"
 				export ACCESS
@@ -64,6 +93,11 @@ Arguments ()
 				export DEBUG
 
 				set -x
+				;;
+
+			ethdevice=*)
+				DEVICE="${ARGUMENT#ethdevice=}"
+				export DEVICE
 				;;
 
 			fetch=*)
@@ -95,6 +129,11 @@ Arguments ()
 				HOSTNAME="${ARGUMENT#hostname=}"
 				LIVECONF="changed"
 				export HOSTNAME LIVECONF
+				;;
+
+			isofrom=*|fromiso=*)
+				FROMISO="${ARGUMENT#*=}"
+				export FROMISO
 				;;
 
 			username=*)
@@ -380,9 +419,9 @@ Arguments ()
 				mount -o bind /dev /root/dev
 
 				mkdir -p /root/var/run/network
-				chroot /root dhclient eth0
+				[ "${NETBOOT}" ] || chroot /root dhclient eth0
 				chroot /root wget -P /tmp "${location}"
-				chroot /root ifconfig eth0 down
+				[ "${NETBOOT}" ] || chroot /root ifconfig eth0 down
 
 				umount /root/sys
 				umount /root/proc
@@ -611,7 +650,7 @@ is_nice_device ()
 {
 	sysfs_path="${1#/sys}"
 
-	if /lib/udev/path_id "${sysfs_path}" | grep -E -q "ID_PATH=(usb|pci-[^-]*-(ide|scsi|usb))"
+	if /lib/udev/path_id "${sysfs_path}" | grep -E -q "ID_PATH=(usb|pci-|platform-mmc)"
 	then
 		return 0
 	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
@@ -673,7 +712,7 @@ copy_live_to ()
 
 	# begin copying (or uncompressing)
 	mkdir "${copyto}"
-	echo "mount -t ${fstype} ${mount_options} ${dev} ${copyto}"
+	log_begin_msg "mount -t ${fstype} ${mount_options} ${dev} ${copyto}"
 	mount -t "${fstype}" ${mount_options} "${dev}" "${copyto}"
 
 	if [ "${extension}" = "tgz" ]
@@ -686,10 +725,22 @@ copy_live_to ()
 	else
 		if [ -n "${MODULETORAMFILE}" ]
 		then
-			cp ${MODULETORAMFILE} ${copyto} # copy only the filesystem module
+			if [ -x /bin/rsync ]
+			then
+				echo " * Copying $MODULETORAMFILE to RAM" 1>/dev/console
+				rsync -a --progress ${MODULETORAMFILE} ${copyto} 1>/dev/console # copy only the filesystem module
+			else
+				cp ${MODULETORAMFILE} ${copyto} # copy only the filesystem module
+			fi
 		else
-			mkdir -p ${copyto}/${LIVE_MEDIA_PATH}
-			cp -a ${copyfrom}/${LIVE_MEDIA_PATH}/* ${copyto}/${LIVE_MEDIA_PATH}   # "cp -a" from busybox also copies hidden files
+			if [ -x /bin/rsync ]
+			then
+				echo " * Copying whole medium to RAM" 1>/dev/console
+				rsync -a --progress ${copyfrom}/* ${copyto} 1>/dev/console  # "cp -a" from busybox also copies hidden files
+			else
+				mkdir -p ${copyto}/${LIVE_MEDIA_PATH}
+				cp -a ${copyfrom}/${LIVE_MEDIA_PATH}/* ${copyto}/${LIVE_MEDIA_PATH}   # "cp -a" from busybox also copies hidden files
+			fi
 		fi
 
 		umount ${copyfrom}
@@ -1372,6 +1423,17 @@ check_dev ()
 	devname="${2}"
 	skip_uuid_check="${3}"
 
+	# support for fromiso=.../isofrom=....
+	if [ -n "$FROMISO" ]
+	then
+		mkdir /isofrom
+		ISO_DEVICE="$(echo $FROMISO | sed 's|\(/dev/[a-z]*[0-9]*\).*|\1|')"
+		mount "$ISO_DEVICE" /isofrom
+		ISO_NAME="$(echo $FROMISO | sed 's|/dev/[a-z]*[0-9]*/||')"
+		loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
+		devname="${loopdevname}"
+	fi
+
 	if [ -z "${devname}" ]
 	then
 		devname=$(sys2dev "${sysdev}")
@@ -1641,6 +1703,15 @@ mountroot ()
 		log_begin_msg "Copying live media to ${live_dest}"
 		copy_live_to "${livefs_root}" "${live_dest}"
 		log_end_msg
+	fi
+
+	# if we do not unmount the ISO we can't run "fsck /dev/ice" later on
+	# because the mountpoint is left behind in /proc/mounts, so let's get
+	# rid of it when running from RAM
+	if [ -n "$FROMISO" ] && [ "${TORAM}" ]
+	then
+	  losetup -d /dev/loop0
+	  grep -q /isofrom /proc/mounts && umount /isofrom
 	fi
 
 	if [ -n "${MODULETORAMFILE}" ] || [ -n "${PLAIN_ROOT}" ]

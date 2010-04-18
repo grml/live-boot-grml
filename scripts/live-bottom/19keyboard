@@ -61,38 +61,54 @@ then
 	csmodel="${KMODEL}"
 fi
 
-if [ -x /root/bin/setupcon ] && [ -f /root/etc/default/console-setup ]
+if [ -x /root/bin/setupcon ]
 then
-	if [ "${cslayout}" ]
+	if [ -f /root/etc/default/keyboard ]
 	then
-		chroot /root sed -i "s/^XKBLAYOUT=.*/XKBLAYOUT=\"${cslayout}\"/" \
-		/etc/default/console-setup
-
-		if [ "${csvariant}" ]
-		then
-			chroot /root sed -i "s/^XKBVARIANT=.*/XKBVARIANT=\"${csvariant}\"/" \
-			/etc/default/console-setup
-		else
-			live-preseed /root console-setup/variantcode '' false
-		fi
-
-		if [ "${csmodel}" ]
-		then
-			chroot /root sed -i "s/^XKBMODEL=.*/XKBMODEL=\"${csmodel}\"/" \
-			/etc/default/console-setup
-		else
-			live-preseed /root console-setup/modelcode '' false
-		fi
-	else
-		live-preseed /root console-setup/layoutcode '' false
-		live-preseed /root console-setup/variantcode '' false
-		live-preseed /root console-setup/modelcode '' false
+		# squeeze
+		KEYBOARD_FILE="/etc/default/keyboard"
+	elif [ -f /root/etc/default/console-setup ]
+	then
+		# lenny
+		KEYBOARD_FILE="/etc/default/console-setup"
 	fi
 
-	live-preseed /root console-setup/optionscode '' false
-	live-preseed /root console-setup/codesetcode '' false
+	if [ -n "/root${KEYBOARD_FILE}" ]
+	then
+		if [ "${cslayout}" ]
+		then
+			chroot /root sed -i "s/^XKBLAYOUT=.*/XKBLAYOUT=\"${cslayout}\"/" \
+			${KEYBOARD_FILE}
 
-	sed -i 's/CONSOLE_SCREEN=$/CONSOLE_SCREEN=setupcon/; t END; b; : END; n; b END' /root/etc/init.d/usplash
+			if [ "${csvariant}" ]
+			then
+				chroot /root sed -i "s/^XKBVARIANT=.*/XKBVARIANT=\"${csvariant}\"/" \
+				${KEYBOARD_FILE}
+			else
+				live-preseed /root console-setup/variantcode '' false
+			fi
+
+			if [ "${csmodel}" ]
+			then
+				chroot /root sed -i "s/^XKBMODEL=.*/XKBMODEL=\"${csmodel}\"/" \
+				${KEYBOARD_FILE}
+			else
+				live-preseed /root console-setup/modelcode '' false
+			fi
+		else
+			live-preseed /root console-setup/layoutcode '' false
+			live-preseed /root console-setup/variantcode '' false
+			live-preseed /root console-setup/modelcode '' false
+		fi
+
+		live-preseed /root console-setup/optionscode '' false
+		live-preseed /root console-setup/codesetcode '' false
+
+		if [ -f /root/etc/init.d/usplash ]
+		then
+			sed -i 's/CONSOLE_SCREEN=$/CONSOLE_SCREEN=setupcon/; t END; b; : END; n; b END' /root/etc/init.d/usplash
+		fi
+	fi
 elif [ -e /root/usr/sbin/install-keymap ]
 then
 	chroot /root /usr/sbin/install-keymap ${kbd}

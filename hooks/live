@@ -100,6 +100,11 @@ manual_add_modules ext4
 # Filesystem: jffs2
 manual_add_modules jffs2
 
+if [ -x /usr/bin/rsync ]
+then
+	copy_exec /usr/bin/rsync /bin
+fi
+
 # Filesystem: squashfs
 copy_exec /sbin/losetup /sbin
 manual_add_modules loop
@@ -170,6 +175,12 @@ fi
 if [ -x /usr/bin/wget ]
 then
 	copy_exec /usr/bin/wget /bin
+fi
+
+# Program: blockdev
+if [ -x /sbin/blockdev ]
+then
+	copy_exec /sbin/blockdev /sbin
 fi
 
 # FUSE kernel module

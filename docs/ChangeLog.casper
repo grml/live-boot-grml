@@ -1,3 +1,156 @@
+casper (1.173) jaunty; urgency=low
+
+  * Don't use head -n1 in where_is_mounted, we don't have head in the
+    initramfs.  LP: #363038.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 17 Apr 2009 22:22:06 -0700
+
+casper (1.172) jaunty; urgency=low
+
+  * 43disable_updateinitramfs: The /cdrom mount has been moved to
+    /root/cdrom by the time this script runs, so check that instead.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 09 Apr 2009 18:30:29 +0100
+
+casper (1.171) jaunty; urgency=low
+
+  * Set MP_QUIET to -q instead of -Q on Ubuntu as well, and not just for
+    Debian as the modprobe in the latest upstream release of module-init-tools
+    doesn't accept -Q anymore.
+
+ -- Loic Minier <lool@dooz.org>  Wed, 08 Apr 2009 17:31:40 +0200
+
+casper (1.170) jaunty; urgency=low
+
+  * is_nice_device(): allow devices with an ID_PATH of platform-mmc* as well
+    as used for instance for SD cards on the ARM iMX51 Babbage board;
+    LP: #357700.
+
+ -- Loic Minier <lool@dooz.org>  Wed, 08 Apr 2009 15:34:01 +0200
+
+casper (1.169) jaunty; urgency=low
+
+  * [ -w /cdrom ] turns out not to be a sufficient test for files under
+    /cdrom being writable; with busybox, it always returns true even for
+    read-only filesystems. Explicitly check for the read-only flag in mount
+    output to work around this.
+  * Fix where_is_mounted helper function to actually produce output (thanks,
+    Steve Dodd; LP: #346941).
+  * Add a comment to find_cow_device explaining why the choice of
+    filesystems is restricted (I asked for this comment in LP #230703 but it
+    apparently never got written).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 07 Apr 2009 01:47:05 +0100
+
+casper (1.168) jaunty; urgency=low
+
+  * Fix writing of "$@" to diverted update-initramfs script (here-documents
+    perform parameter expansion unless the delimiter is quoted).
+  * Don't bring up a temporary network interface while fetching the preseed
+    file when netbooting, as that will disconnect our root filesystem
+    (LP: #351982).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 31 Mar 2009 15:39:29 +0100
+
+casper (1.167) jaunty; urgency=low
+
+  * Disable kwallet from KDE 4 in 34disable_kde_services
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 27 Mar 2009 18:40:35 +0000
+
+casper (1.166) jaunty; urgency=low
+
+  [ Emmet Hikory ]
+  * Show the ubiquity icon in kourou (LP: #338730)
+
+  [ Timo Jyrinki ]
+  * Move examples.desktop to Desktop/ if it exists, as an alternative to
+    Examples (LP: #45489).
+
+  [ Luke Yelavich ]
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - Make the special case disabling of pulseaudio per user, and not system
+      wide.
+    - Also disable PulseAudio for the Braille profile.
+    - Fix incorrect paths when chowning files.
+    - Don't use /root for the ubiquity hook accessibility script, /target is
+      where the installed system is located.
+    - Remove laptop detect code. Its not currently working, and getting it to
+      work requires invasive changes.
+    - Only set pulseaudio settings and create the .orca directory if sed
+      packages are installed on the live filesystem and installed system.
+  * ubiquity-hooks/30accessibility: Copy orca settings to the installed system.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Fri, 27 Mar 2009 14:38:20 +1100
+
+casper (1.165) jaunty; urgency=low
+
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - When the blindness accessibility profile is chosen, create the .orca
+      directory in the live user's home directory. This seems to allow orca
+      to properly reload and use settings in the live session without needing
+      to be restarted. This is only needed for the blindness profile, due to
+      the other profiles that use orca already creating the .orca directory.
+      (LP: #194992)
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Fri, 20 Mar 2009 08:37:20 +1100
+
+casper (1.164) jaunty; urgency=low
+
+  * Update 34disable_kde_services to not start
+    update-notifier-kde or plasma's contact plugin which uses akonadi
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 18 Mar 2009 18:07:52 +0000
+
+casper (1.163) jaunty; urgency=low
+
+  * 34disable_kwallet moved to 34disable_kde_services and disables
+    various services not needed by live CDs
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 13 Mar 2009 14:33:13 +0000
+
+casper (1.162) jaunty; urgency=low
+
+  * If /cdrom is writable, call the diverted update-initramfs and copy
+    the resulting kernel and initrd to /cdrom/casper (LP: #292159).
+
+ -- Evan Dandrea <evand@ubuntu.com>  Tue, 10 Mar 2009 14:36:30 +0000
+
+casper (1.161) jaunty; urgency=low
+
+  [ Juanje Ojeda ]
+  * Regenerate SSL certificate at boot so that it isn't the same for all
+    live CD users (LP: #337723).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 10 Mar 2009 10:39:21 +0000
+
+casper (1.160) jaunty; urgency=low
+
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - Adjust sudoers file to allow ORBIT_SOCKET_DIR, XDG_SESSION_COOKIE and
+      GTK_MODULES environment variables through to root, for v2, v3, and
+      braille profiles. This allows users to use administrative GTK/GNOME
+      applications executed by gksudo with accessibility tools like orca.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Tue, 10 Mar 2009 15:38:17 +1100
+
+casper (1.159) jaunty; urgency=low
+
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - Disable pulseaudio for the blindness profile, as pulseaudio and espeak
+      and portaudio v19 do not play very well with each other, lots of
+      crackling, cut of speech. At least espeak via ALSA natively is usable,
+      and latency is relatively low.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Tue, 10 Mar 2009 09:03:06 +1100
+
+casper (1.158) jaunty; urgency=low
+
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - use laptop_detect function in blindness profile as well
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Mon, 09 Mar 2009 14:07:17 +1100
+
 casper (1.157) jaunty; urgency=low
 
   [ Emmet Hikory ]
