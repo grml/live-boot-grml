@@ -235,6 +235,13 @@ setup_unionfs() {
     
     mount -t unionfs -o dirs=/cow=rw:$rofsstring unionfs "$rootmnt"
 
+    # move the first mount; no head in busybox-initramfs
+    for d in $(mount -t squashfs | cut -d\  -f 3); do
+        mkdir -p "${rootmnt}/rofs"
+        mount -o move "${d}" "${rootmnt}/rofs"
+        break
+    done
+
     if grep -q showmounts /proc/cmdline; then
         for d in $(mount -t squashfs | cut -d\  -f 3); do
             mkdir -p "${rootmnt}/casper/${d##*/}"

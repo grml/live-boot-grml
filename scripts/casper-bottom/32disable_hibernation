@@ -28,9 +28,9 @@ if [ -n "$gpm_version" ]; then
     chroot /root sudo -u "$USERNAME" gconftool-2 -s -t bool /apps/gnome-power-manager/can_suspend false
 fi
 
-if [ -f /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config/kcmlaptoprc ]; then
-    sed -i s/EnableHibernate=true/EnableHibernate=false/ \
-        /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config/kcmlaptoprc
+if [ -d /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config ]; then
+    echo "disableSuspend=1" >> /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config/power-managerrc
+    echo "disableHibernate=1" >> /root/usr/share/kubuntu-default-settings/kde-profile/default/share/config/power-managerrc
 fi
 
 log_end_msg
