@@ -1,8 +1,20 @@
+casper (1.96) gutsy; urgency=low
+
+  [ Colin Watson ]
+  * Fix name and executability of timezone script.
+
+  [ Jonathan Riddell ]
+  * In 10adduser add About Kubuntu document to desktop and remove
+    restricted-manager autostart files
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 07 Aug 2007 12:51:02 +0100
+
 casper (1.95) gutsy; urgency=low
 
   * Fix regex syntax error while looking for non-CD devices for driver
     updates.
   * Fix ip= boot parameter, documented but not properly merged from Debian.
+    (LP: #128689).
 
  -- Colin Watson <cjwatson@ubuntu.com>  Fri, 27 Jul 2007 15:03:41 +0100
 

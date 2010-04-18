@@ -1,0 +1,27 @@
+#!/bin/sh
+
+PREREQ=""
+DESCRIPTION="Disabling restricted-manager..."
+
+. /scripts/casper-functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+rm -f /root/usr/share/autostart/restricted-manager.desktop
+
+rm -f /root/usr/share/autostart/restricted-manager-kde.desktop
+
+log_end_msg
