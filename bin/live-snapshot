@@ -302,7 +302,7 @@ Do_snapshot ()
 		ext2|ext3)
 			DU_DIM="$(du -ks ${SNAP_COW} | cut -f1)"
 			REAL_DIM="$(expr ${DU_DIM} + ${DU_DIM} / 20)" # Just 5% more to be sure, need something more sophistcated here...
-			genext2fs --size-in-blocks=${REAL_DIM} --reserved-blocks=0 --root="${SNAP_COW}" "${DEST}"
+			genext2fs --size-in-blocks=${REAL_DIM} --reserved-percentage=0 --root="${SNAP_COW}" "${DEST}"
 			;;
 
 		jffs2)
