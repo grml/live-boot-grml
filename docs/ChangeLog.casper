@@ -1,3 +1,31 @@
+casper (1.110) gutsy; urgency=low
+
+  * Don't generate fglrx or the nvidia modules in the live session at boot;
+    we disable restricted-manager in the live session anyway so they aren't
+    straightforward to use (see #43706). Saves about 19 MB of memory.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 05 Oct 2007 21:28:29 +0100
+
+casper (1.109) gutsy; urgency=low
+
+  * Cache the stty binary before ejecting the CD.
+  * Skip the CD eject prompt if 'noprompt' is on the kernel command line
+    (LP: #149159).
+  * Try each of (e.g.) 2.6.22-13-generic, 2.6.22-13, and 2.6.22 in turn as
+    directory names for driver updates (LP: #122430).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 05 Oct 2007 03:24:43 +0100
+
+casper (1.108) gutsy; urgency=low
+
+  * If CASPER_GENERATE_UUID is set, generate a random UUID in the initramfs,
+    and check it against the discovered medium (unless booting with the
+    ignore_uuid parameter). This allows live CD images to be safely copied
+    to the hard disk without causing problems when booting future live CDs
+    (LP: #144800).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 04 Oct 2007 14:23:37 +0100
+
 casper (1.107) gutsy; urgency=low
 
   * Fix gconf keys for suspend and hibernate (thanks, Oliver Grawert;

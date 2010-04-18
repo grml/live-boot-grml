@@ -57,6 +57,13 @@ then
 	cp /etc/console/boottime.kmap.gz "${DESTDIR}"/etc
 fi
 
+# Configuration: Unique ID
+if [ -n "${LIVE_GENERATE_UUID}" ]
+then
+	mkdir -p "${DESTDIR}"/conf
+	uuidgen -r > "${DESTDIR}"/conf/uuid.conf
+fi
+
 # Filesystem: cifs
 if [ -x /sbin/mount.cifs ]
 then
