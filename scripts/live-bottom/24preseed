@@ -26,6 +26,10 @@ log_begin_msg "Loading preseed file..."
 
 # live-initramfs script
 
+if [ -e /preseed.cfg ]; then
+       chroot /root debconf-set-selections < /preseed.cfg
+fi
+
 if [ -f "/root/${LOCATION}" ]; then
     chroot /root debconf-set-selections < "/root/${LOCATION}"
 fi

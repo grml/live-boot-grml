@@ -1,3 +1,25 @@
+casper (1.99) gutsy; urgency=low
+
+  [ Luke Yelavich ]
+  * scripts/casper-bottom/30accessibility &
+    ubiquity-hooks/30accessibility:
+    - Change gconf setting used to automatically start Orca (LP: #131808).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 31 Aug 2007 13:09:46 +0100
+
+casper (1.98) gutsy; urgency=low
+
+  * Load /preseed.cfg if it exists in the initramfs.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Wed, 29 Aug 2007 16:18:27 +0100
+
+casper (1.97) gutsy; urgency=low
+
+  * Fix paths in scripts/casper-bottom/10adduser and
+    scripts/casper-bottom/38disable_restricted_manager
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 29 Aug 2007 15:26:33 +0100
+
 casper (1.96) gutsy; urgency=low
 
   [ Colin Watson ]

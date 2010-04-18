@@ -64,7 +64,7 @@ case ${ACCESS} in
                         # Moderate Visual Impairment
                         access=v2)
                         gct -s -t bool /desktop/gnome/interface/accessibility true
-                        gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats [orca]
+                        gct -s -t bool /desktop/gnome/applications/at/visual/startup true
                         if [ -e /root/usr/share/pycentral/gnome-orca/site-packages/orca/settings.py ]; then
                             sed -i '/^enableSpeech\W/ s/True/False/;/^enableMagnifier/ s/False/True/' /root/usr/share/pycentral/gnome-orca/site-packages/orca/settings.py
                         fi
@@ -76,13 +76,13 @@ case ${ACCESS} in
                         # Disabled for now, until we know eSpeak works.
                         #gct -s -t bool /desktop/gnome/sound/enable_esd false
                         gct -s -t bool /desktop/gnome/interface/accessibility true
-                        gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats [orca]
+			gct -s -t bool /desktop/gnome/applications/at/visual/startup true
                         gct -s -t bool /apps/gksu/disable-grab true
                         ;;
                         # Braille
                         braille=ask)
                         gct -s -t bool /desktop/gnome/interface/accessibility true
-                        gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats [orca]
+                        gct -s -t bool /desktop/gnome/applications/at/visual/startup true
                         if [ -e /root/usr/share/pycentral/gnome-orca/site-packages/orca/settings.py ]; then
                             sed -i '/^enableSpeech\W/ s/True/False/;/^enableBraille/ s/False/True/' /root/usr/share/pycentral/gnome-orca/site-packages/orca/settings.py
                         fi
