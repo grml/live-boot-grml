@@ -1,0 +1,59 @@
+#! /usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+VERSION:=$(shell dpkg-parsechangelog |sed -n -e '/^Version:/s/^Version: //p')
+DEB_BUILD_PROG:=dpkg-buildpackage -us -uc -rfakeroot
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+	cd casper-md5check && make
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	rm -f build-stamp
+	-cd casper-md5check && make clean
+
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_clean -k
+	dh_installdirs
+	dh_install
+	install -m755 casper-md5check/casper-md5check debian/casper/usr/lib/casper
+
+# Build architecture-independent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installexamples -i casper.conf
+	dh_installdocs -i
+	dh_installchangelogs -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installdocs -a
+	dh_installinit -a -r --no-start -- start 89 0 6 .
+	dh_installchangelogs -a
+	dh_link -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_installdeb -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

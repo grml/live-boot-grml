@@ -1,0 +1,37 @@
+#! /bin/sh
+
+PREREQ=""
+DESCRIPTION="Setting up locales..."
+
+. /scripts/functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+locale=en_US.UTF-8
+for x in $(cat /proc/cmdline); do
+                case $x in
+                        debian-installer/locale=*)
+                                locale=${x#debian-installer/locale=}
+                                ;;
+                esac
+done
+
+LANG=$(grep "^${locale}" /root/usr/share/i18n/SUPPORTED | grep UTF-8 |sed -e 's, .*,,' -e q)
+
+printf 'LANG="%s"\n' "${LANG}" >> /root/etc/environment
+chroot /root /usr/sbin/locale-gen "${LANG}"
+
+log_end_msg

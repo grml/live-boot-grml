@@ -1,0 +1,35 @@
+#!/bin/sh
+
+PREREQ=""
+DESCRIPTION="Setting up keyboard..."
+
+. /scripts/functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+kbd=us
+
+for x in $(cat /proc/cmdline); do
+                case $x in
+                        kbd-chooser/method=*)
+                                kbd=${x#kbd-chooser/method=}
+                                ;;
+                esac
+done
+
+chroot /root /usr/sbin/install-keymap $kbd
+casper-preseed /root debian-installer/keymap "$kbd"
+log_end_msg

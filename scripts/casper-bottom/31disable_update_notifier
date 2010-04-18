@@ -1,0 +1,26 @@
+#!/bin/sh
+
+PREREQ=""
+DESCRIPTION="Disabling update-notifier..."
+
+. /scripts/functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+rm -f /root/etc/xdg/autostart/update-notifier.desktop
+rm -f /root/usr/share/autostart/adept_notifier_auto.desktop
+
+log_end_msg
