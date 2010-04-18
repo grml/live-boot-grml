@@ -3,7 +3,7 @@
 PREREQ=""
 DESCRIPTION="Setting up automatic login..."
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {

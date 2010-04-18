@@ -1,7 +1,7 @@
-#!/bin/sh
+#! /bin/sh
 
 PREREQ=""
-DESCRIPTION="Disabling update-notifier..."
+DESCRIPTION="Disabling kwallet..."
 
 . /scripts/casper-functions
 
@@ -20,7 +20,6 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
-rm -f /root/etc/xdg/autostart/update-notifier.desktop
-rm -f /root/usr/share/autostart/adept_notifier_auto.desktop
+rm -f /root/usr/share/services/kded/kwalletd.desktop
 
 log_end_msg

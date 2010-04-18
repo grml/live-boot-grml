@@ -3,7 +3,7 @@
 PREREQ=""
 DESCRIPTION="Setting hostname..."
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {

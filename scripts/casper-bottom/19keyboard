@@ -3,7 +3,7 @@
 PREREQ=""
 DESCRIPTION="Setting up keyboard..."
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {
@@ -39,7 +39,7 @@ for x in $(cat /proc/cmdline); do
 done
 
 if [ "$cslayout" ] && [ -x /root/bin/setupcon ] && \
-   [ -f /etc/default/console-setup ]; then
+   [ -f /root/etc/default/console-setup ]; then
         chroot /root sed -i "s/^XKBLAYOUT=.*/XKBLAYOUT=\"$cslayout\"/" \
                 /etc/default/console-setup
         if [ "$csvariant" ]; then

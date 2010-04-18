@@ -189,9 +189,12 @@ setup_unionfs() {
     rootmnt="$2"
     modprobe -Qb unionfs
 
-    # run-init can't deal with this, but we're going to move all of these
-    # away before it runs anyway.
-    croot="/casper"
+    # run-init can't deal with images in a subdir, but we're going to
+    # move all of these away before it runs anyway.  No, we're not,
+    # put them in / since move-mounting them into / breaks mono and
+    # some other apps.
+
+    croot="/"
 
     # Let's just mount the read-only file systems first
     mkdir -p "${croot}"
@@ -232,12 +235,12 @@ setup_unionfs() {
     
     mount -t unionfs -o dirs=/cow=rw:$rofsstring unionfs "$rootmnt"
 
-    for d in $(mount -t squashfs | cut -d\  -f 3); do
-        mkdir -p "${rootmnt}/casper/${d##*/}"
-        mount -o move "${d}" "${rootmnt}/casper/${d##*/}"
-    done
+    if grep -q showmounts /proc/cmdline; then
+        for d in $(mount -t squashfs | cut -d\  -f 3); do
+            mkdir -p "${rootmnt}/casper/${d##*/}"
+            mount -o move "${d}" "${rootmnt}/casper/${d##*/}"
+        done
 
-    if grep -q show-cow /proc/cmdline; then
         mkdir -p "$rootmnt/cow"
         mount -o bind /cow "$rootmnt/cow"
     fi
@@ -246,7 +249,7 @@ setup_unionfs() {
 
 is_usb_device() {
     sysfs_path="${1#/sys}"
-    if /lib/udev/path_id "${sysfs_path}" | grep -q "ID_PATH=(usb|pci-[^-]*-usb)"; then
+    if /lib/udev/path_id "${sysfs_path}" | grep -E -q "ID_PATH=(usb|pci-[^-]*-usb)"; then
         return 0
     fi
     return 1
@@ -294,6 +297,12 @@ find_livefs() {
         done
 }
 
+pulsate() {
+    if [ -x /sbin/usplash_write ]; then
+        /sbin/usplash_write "PULSATE"
+    fi
+}
+
 set_usplash_timeout() {
     if [ -x /sbin/usplash_write ]; then
         /sbin/usplash_write "TIMEOUT 120"
@@ -308,6 +317,7 @@ mountroot() {
     
     set_usplash_timeout
     [ "$quiet" != "y" ] && log_begin_msg "Running /scripts/casper-premount"
+    pulsate
     run_scripts /scripts/casper-premount
     [ "$quiet" != "y" ] && log_end_msg
 
@@ -333,6 +343,7 @@ mountroot() {
     maybe_break casper-bottom
     [ "$quiet" != "y" ] && log_begin_msg "Running /scripts/casper-bottom"
 
+    pulsate
     run_scripts /scripts/casper-bottom
     [ "$quiet" != "y" ] && log_end_msg
 

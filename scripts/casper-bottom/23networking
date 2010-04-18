@@ -4,7 +4,7 @@ PREREQ=""
 DESCRIPTION="Preconfiguring networking..."
 IFFILE="/root/etc/network/interfaces"
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {

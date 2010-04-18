@@ -1,0 +1,12 @@
+
+. /scripts/functions
+
+# Override this so we don't call PROGRESS
+log_end_msg()
+{
+	if [ -x /sbin/usplash_write ]; then
+		/sbin/usplash_write "SUCCESS ok"
+	fi
+	_log_msg "Done."
+}
+

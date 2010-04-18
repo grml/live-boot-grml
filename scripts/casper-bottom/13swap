@@ -4,7 +4,7 @@ PREREQ=""
 DESCRIPTION="Setting up swap..."
 FSTAB=/root/etc/fstab
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {

@@ -3,7 +3,7 @@
 PREREQ=""
 DESCRIPTION="Configuring gnome-panel-data..."
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {

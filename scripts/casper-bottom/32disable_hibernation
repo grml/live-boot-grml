@@ -3,7 +3,7 @@
 PREREQ=""
 DESCRIPTION="Configuring power management..."
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs()
 {

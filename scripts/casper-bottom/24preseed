@@ -3,7 +3,7 @@
 PREREQ=""
 DESCRIPTION="Loading preseed file..."
 
-. /scripts/functions
+. /scripts/casper-functions
 
 prereqs ()
 {
@@ -25,6 +25,9 @@ for x in $(cat /proc/cmdline); do
 	case $x in
 		preseed/file=*)
 			location="${x#preseed/file=}"
+			;;
+		file=*)
+			location="${x#file=}"
 			;;
 		*/*=*)
 			question="${x%%=*}"
