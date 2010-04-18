@@ -187,7 +187,11 @@ setup_loop ()
 	local encryption=${5}
 	local readonly=${6}
 
-	modprobe -q -b "${module}"
+	# the output of setup_loop is evaluated in other functions,
+	# modprobe leaks kernel options like "libata.dma=0"
+	# as "options libata dma=0" on stdout, causing serious
+	# problems therefor, so instead always avoid output to stdout
+	modprobe -q -b "${module}" 1>/dev/null
 
 	udevadm settle
 

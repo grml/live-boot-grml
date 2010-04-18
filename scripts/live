@@ -100,6 +100,16 @@ Arguments ()
 				export DEVICE
 				;;
 
+			ethdevice=*)
+				ETHDEVICE="${ARGUMENT#ethdevice=}"
+				export ETHDEVICE
+				;;
+
+			ethdevice-timeout=*)
+				ETHDEV_TIMEOUT="${ARGUMENT#ethdevice-timeout=}"
+				export ETHDEV_TIMEOUT
+				;;
+
 			fetch=*)
                                 FETCH="${ARGUMENT#fetch=}"
                                 export FETCH
@@ -765,7 +775,48 @@ do_netmount ()
 	udevadm trigger
 	udevadm settle
 
-	ipconfig ${DEVICE} | tee /netboot.config
+	# if ethdevice was not specified on the kernel command line
+	# make sure we try to get a working network configuration
+	# for *every* present network device (except for loopback of course)
+	if [ -z "$ETHDEVICE" ] ; then
+		echo "If you want to boot from a specific device use bootoption ethdevice=..."
+		for device in /sys/class/net/*; do
+			dev=${device##*/} ;
+			if [ "$dev" != "lo" ] ; then
+				ETHDEVICE="$ETHDEVICE $dev"
+			fi
+		done
+	fi
+
+	# split args of ethdevice=eth0,eth1 into "eth0 eth1"
+	for device in $(echo $ETHDEVICE | sed 's/,/ /g') ; do
+		devlist="$devlist $device"
+	done
+
+	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
+	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
+
+	# this is tricky (and ugly) because ipconfig sometimes just hangs/runs into
+	# an endless loop; iff execution fails give it two further tries, that's
+	# why we use '$devlist $devlist $devlist' for the other for loop
+	for dev in $devlist $devlist $devlist ; do
+		echo "Executing ipconfig -t $ETHDEV_TIMEOUT $dev"
+		ipconfig -t "$ETHDEV_TIMEOUT" $dev | tee -a /netboot.config &
+		jobid=$!
+		sleep "$ETHDEV_TIMEOUT" ; sleep 1
+		if [ -r /proc/"$jobid"/status ] ; then
+			echo "Killing job $jobid for device $dev as ipconfig ran into recursion..."
+			kill -9 $jobid
+		fi
+
+		# if configuration of device worked we should have an assigned
+		# IP address, iff so let's use the according as $DEVICE for later usage
+		# simple and primitive approach which seems to work fine
+		if ifconfig $dev | grep -q 'inet.*addr:' ; then
+			export DEVICE="$dev"
+			break
+		fi
+	done
 
 	# source relevant ipconfig output
 	OLDHOSTNAME=${HOSTNAME}
@@ -774,7 +825,8 @@ do_netmount ()
 	export HOSTNAME
 
 	# Check if we have a network device at all
-	if ! ls /sys/class/net/eth0 > /dev/null 2>&1 && \
+	if ! ls /sys/class/net/"$DEVICE" > /dev/null 2>&1 && \
+	   ! ls /sys/class/net/eth0 > /dev/null 2>&1 && \
 	   ! ls /sys/class/net/wlan0 > /dev/null 2>&1 && \
 	   ! ls /sys/class/net/ath0 > /dev/null 2>&1 && \
 	   ! ls /sys/class/net/ra0 > /dev/null 2>&1
@@ -1119,7 +1171,8 @@ setup_unionfs ()
 
 	if [ "${UNIONTYPE}" = "aufs" ]
 	then
-		roopt="rr,noxino"
+		roopt="rr"
+		noxino_opt="noxino,"
 	elif [ "${UNIONTYPE}" = "unionfs-fuse" ]
 	then
 		roopt="RO"
@@ -1380,7 +1433,7 @@ setup_unionfs ()
 				;;
 
 			*)
-				mount -t ${UNIONTYPE} -o noatime,dirs=/cow=rw:${rofsstring} ${UNIONTYPE} "${rootmnt}" || panic "mount ${UNIONTYPE} on ${rootmnt} failed with option noatime,dirs=/cow=rw:${rofsstring}"
+				mount -t ${UNIONTYPE} -o noatime,${noxino_opt}dirs=/cow=rw:${rofsstring} ${UNIONTYPE} "${rootmnt}" || panic "mount ${UNIONTYPE} on ${rootmnt} failed with option noatime,${noxino_opt}dirs=/cow=rw:${rofsstring}"
 				;;
 		esac
 	fi
@@ -1453,12 +1506,31 @@ check_dev ()
 	# support for fromiso=.../isofrom=....
 	if [ -n "$FROMISO" ]
 	then
-		mkdir /isofrom
-		ISO_DEVICE="$(echo $FROMISO | sed 's|\(/dev/[a-z]*[0-9]*\).*|\1|')"
-		mount "$ISO_DEVICE" /isofrom
-		ISO_NAME="$(echo $FROMISO | sed 's|/dev/[a-z]*[0-9]*/||')"
-		loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
-		devname="${loopdevname}"
+		ISO_DEVICE=$(dirname $FROMISO)
+		if ! [ -b $ISO_DEVICE ]
+		then
+			# to support unusual device names like /dev/cciss/c0d0p1
+			# as well we have to identify the block device name, let's
+			# do that for up to 15 levels
+			i=15
+			while [ -n "$ISO_DEVICE" ] && [ "$i" -gt 0 ]
+			do
+				ISO_DEVICE=$(dirname ${ISO_DEVICE})
+				[ -b "$ISO_DEVICE" ] && break
+				i=$(($i -1))
+		        done
+		fi
+
+		if [ "$ISO_DEVICE" = "/" ]
+		then
+			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live.log
+		else
+			mkdir /isofrom
+			mount "$ISO_DEVICE" /isofrom
+			ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
+			loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
+			devname="${loopdevname}"
+		fi
 	fi
 
 	if [ -z "${devname}" ]
@@ -1574,7 +1646,19 @@ find_livefs ()
 	esac
 
 	# or do the scan of block devices
+	# prefer removable devices over non-removable devices, so scan them first
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+	do
+		if [ "$(cat ${sysblock}/removable)" = "1" ]
+		then
+			removable_devices_to_scan="$removable_devices_to_scan $sysblock"
+		else
+			nonremovable_devices_to_scan="$nonremovable_devices_to_scan $sysblock"
+		fi
+	done
+	devices_to_scan="$removable_devices_to_scan $nonremovable_devices_to_scan"
+
+	for sysblock in $devices_to_scan
 	do
 		devname=$(sys2dev "${sysblock}")
 		fstype=$(get_fstype "${devname}")
