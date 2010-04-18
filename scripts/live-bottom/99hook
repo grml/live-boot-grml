@@ -34,6 +34,10 @@ log_begin_msg "Executing custom hook script..."
 cd /root
 wget "${HOOK}"
 
-./$(basename ${HOOK})
+FILE="$(basename ${HOOK})"
+
+chmod 0755 "${FILE}"
+./"${FILE}"
+rm -f "${FILE}"
 
 log_end_msg

@@ -98,22 +98,24 @@ EOF
 		done
 	fi
 
-	if [ ! -f /root/etc/resolv.conf -a -f /netboot.config ]
+	if [ ! -f /root/etc/resolv.conf ] || [ -z "$(cat /root/etc/resolv.conf)" ]
 	then
-		# create a resolv.conf if it is not present
-		cp /netboot.config /root/var/log/netboot.config
-
-		rc_search=$(cat netboot.config | awk '/domain/{print $3}')
-		rc_server0=$(cat netboot.config | awk '/dns0/{print $5}')
-		rc_server1=$(cat netboot.config | awk '/dns0/{print $8}')
-		rc_server0="nameserver ${rc_server0}"
-
-		if [ "${rc_server1}" = "0.0.0.0" ]
+		if [ -f /netboot.config ]
 		then
-			rc_server1=""
-		else
-			rc_server1="nameserver ${rc_server1}"
-		fi
+			# create a resolv.conf if it is not present or empty
+			cp /netboot.config /root/var/log/netboot.config
+
+			rc_search=$(cat netboot.config | awk '/domain/{print $3}')
+			rc_server0=$(cat netboot.config | awk '/dns0/{print $5}')
+			rc_server1=$(cat netboot.config | awk '/dns0/{print $8}')
+			rc_server0="nameserver ${rc_server0}"
+
+			if [ "${rc_server1}" = "0.0.0.0" ]
+			then
+				rc_server1=""
+			else
+				rc_server1="nameserver ${rc_server1}"
+			fi
 
 cat > /root/etc/resolv.conf << EOF
 # /etc/resolv.conf
@@ -124,7 +126,8 @@ ${rc_server0}
 ${rc_server1}
 EOF
 
-		cat /root/etc/resolv.conf >> /root/var/log/netboot.config
+			cat /root/etc/resolv.conf >> /root/var/log/netboot.config
+		fi
 	fi
 fi
 

@@ -1,3 +1,19 @@
+casper (1.119) hardy; urgency=low
+
+  [ Luke Yelavich ]
+  * scripts/casper-bottom/30accessibility &
+    ubiquity-hooks/30accessibility:
+    - Disable compiz for screen reader and braille terminal accessibility
+      profiles. It is currently not possible to get feedback about open
+      windows when cycling through them using ALT + Tab with Compiz.
+  * ubiquity-hooks/30accessibility: Add braille terminal profile.
+
+  [ Colin Watson ]
+  * Always set language in both /etc/default/locale and /etc/environment
+    (thanks, Sebastien Bacher).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 03 Mar 2008 10:21:42 +0000
+
 casper (1.118) hardy; urgency=low
 
   [ Julian Andres Klode, Colin Watson ]
