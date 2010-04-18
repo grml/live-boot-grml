@@ -149,9 +149,6 @@ else
 fi
 copy_exec /usr/bin/udevinfo /bin
 
-# Program: wc
-copy_exec /usr/bin/wc /bin
-
 # Program: wget
 if [ -x /usr/bin/wget ]
 then

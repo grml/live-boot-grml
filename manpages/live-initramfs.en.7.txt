@@ -54,7 +54,15 @@ Makes initramfs boot process more verbose.
   fetch=*URL*::
 
 Another form of netboot by downloading a squashfs image from a given url,
-copying to ram and booting it.
+copying to ram and booting it. Due to current limitations in busyboxs wget
+and DNS resolution, an URL can not contain a hostname but an IP only.
+
+Not working: http://example.com/path/to/your_filesystem.squashfs
+Working: http://1.2.3.4/path/to/your_filesystem.squashfs
+
+Also note that therefore it's currently not possible to fetch an image from a
+namebased virtualhost of an httpd if it is sharing the ip with the main httpd
+instance.
 
   hostname=*HOSTNAME*, username=*USER*, userfullname=*USERFULLNAME*::
 
