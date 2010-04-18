@@ -90,7 +90,7 @@ else
 	fi
 
 	# iterate the physical interfaces and add them to the interfaces list
-	if [ "${method}" != dhcp ] || [ ! -x /root/usr/sbin/NetworkManager ]
+	if [ "${method}" != dhcp ] || ([ ! -x /root/usr/sbin/NetworkManager ] && [ ! -x /root/usr/sbin/wicd ])
 	then
 		for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*
 		do

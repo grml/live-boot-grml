@@ -77,7 +77,7 @@ get_fstype ()
 	    return
 	fi
 
-	eval $(fstype < ${1} 2>/dev/null)
+	eval $(fstype ${1} 2>/dev/null)
 
 	if [ "${FSTYPE}" != "unknown" ]
 	then

@@ -82,7 +82,7 @@ ${setmodel}
 ${setoptions}
 EOF
 
-DEBUG_XORG_PACKAGE=1 DEBUG_XORG_DEBCONF=1 live-reconfigure /root xserver-xorg 2>&1 \
+live-reconfigure /root xserver-xorg 2>&1 \
 	| grep -v "overwriting possibly-customised configuration" \
 	| grep -v "file; backup in /etc/X11/xorg.conf"
 umount /root/sys
