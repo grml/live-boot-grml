@@ -1,3 +1,12 @@
+2007-08-29  Daniel Baumann  <daniel@debian.org>
+
+	* scripts/live-bottom/12fstab:
+	  - By default, we do not have fstab, so it is save to just append the
+	    unionfs mount rather than overwritting it.
+	* hooks/live:
+	  - Including wget if available.
+	* Uploaded 1.96.2-1.
+
 2007-08-21  Daniel Baumann  <daniel@debian.org>
 
 	* Merging changes from casper 1.96.

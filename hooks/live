@@ -114,3 +114,9 @@ fi
 copy_exec /sbin/udevtrigger /sbin
 copy_exec /sbin/udevsettle /sbin
 copy_exec /usr/bin/udevinfo /bin
+
+# Program: wget
+if [ -x /usr/bin/wget ]
+then
+	copy_exec /usr/bin/wget /bin
+fi
