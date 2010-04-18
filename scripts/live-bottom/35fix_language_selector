@@ -1,24 +1,30 @@
-#! /bin/sh
+#!/bin/sh
+
+#set -e
+
+# initramfs-tools header
 
 PREREQ=""
-DESCRIPTION="Fixing language selector..."
-
-. /scripts/live-functions
 
 prereqs()
 {
-       echo "$PREREQ"
+	echo "${PREREQ}"
 }
 
-case $1 in
-# get pre-requisites
-prereqs)
-       prereqs
-       exit 0
-       ;;
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
 esac
 
-log_begin_msg "$DESCRIPTION"
+# live-initramfs header
+
+. /scripts/live-functions
+
+log_begin_msg "Fixing language selector..."
+
+# live-initramfs script
 
 if [ -e /root/usr/share/applications/language-selector.desktop ]; then
     sed -i '/^Exec/ s|/usr/bin/gnome-language-selector|"& -n"|' /root/usr/share/applications/language-selector.desktop

@@ -1,24 +1,30 @@
 #!/bin/sh
 
-PREREQ=""
-DESCRIPTION="Disabling update-notifier..."
+#set -e
 
-. /scripts/live-functions
+# initramfs-tools header
+
+PREREQ=""
 
 prereqs()
 {
-       echo "$PREREQ"
+	echo "${PREREQ}"
 }
 
-case $1 in
-# get pre-requisites
-prereqs)
-       prereqs
-       exit 0
-       ;;
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
 esac
 
-log_begin_msg "$DESCRIPTION"
+# live-initramfs header
+
+. /scripts/live-functions
+
+log_begin_msg "Disabling update-notifier..."
+
+# live-initramfs script
 
 # For GNOME, we divert away apt-check to avoid a regular 'apt-get update'
 # equivalent in the live session. We want to run update-notifier for crash

@@ -1,24 +1,33 @@
 #!/bin/sh
 
-PREREQ=""
-DESCRIPTION="Setting up automatic login..."
+#set -e
 
-. /scripts/live-functions
+# initramfs-tools header
+
+PREREQ=""
 
 prereqs()
 {
-       echo "$PREREQ"
+	echo "${PREREQ}"
 }
 
-case $1 in
-# get pre-requisites
-prereqs)
-       prereqs
-       exit 0
-       ;;
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
 esac
 
-log_begin_msg "$DESCRIPTION"
+# live-initramfs header
+
+. /scripts/live-functions
+
+log_begin_msg "Setting up automatic login..."
+
+# live-initramfs script
+
+if [ -z "${NOXAUTOLOGIN}" ]
+then
 
 if chroot /root [ -f /etc/gdm/gdm-cdd.conf ]; then
     GDMCONF=/etc/gdm/gdm-cdd.conf
@@ -49,6 +58,8 @@ if [ -f /root/etc/kde3/kdm/kdmrc ]; then
         -e "s/^#?AutoLoginUser=.*\$/AutoLoginUser=$USERNAME/" \
         -e "s/^#?AutoReLogin=.*\$/AutoReLogin=true/" \
         /root/etc/kde3/kdm/kdmrc
+fi
+
 fi
 
 if chroot /root /usr/bin/which kpersonalizer >/dev/null; then

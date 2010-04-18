@@ -1,24 +1,30 @@
 #!/bin/sh
 
-PREREQ=""
-DESCRIPTION="Adding live session user..."
+#set -e
 
-. /scripts/live-functions
+# initramfs-tools header
+
+PREREQ=""
 
 prereqs()
 {
-       echo "$PREREQ"
+	echo "${PREREQ}"
 }
 
-case $1 in
-# get pre-requisites
-prereqs)
-       prereqs
-       exit 0
-       ;;
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
 esac
 
-log_begin_msg "$DESCRIPTION"
+# live-initramfs header
+
+. /scripts/live-functions
+
+log_begin_msg "Adding live session user..."
+
+# live-initramfs script
 
 if [ "${BUILD_SYSTEM}" == "Debian" ]; then
     user_crypted="8Ab05sVQ4LLps" # as in `echo "live" | mkpasswd -s`
@@ -51,6 +57,9 @@ set passwd/user-fullname
 set passwd/username
 set passwd/user-uid
 EOF
+
+if [ -z "${NOSUDO}" ]
+then
 
 if [ -f /root/etc/sudoers ]; then
     if [ "${BUILD_SYSTEM}" == "Ubuntu" ]; then
@@ -88,6 +97,8 @@ EOF
 		chroot /root sudo -u "${USERNAME}" sh -c "umask 0077 && mkdir -p /home/${USERNAME}/.kde/share/apps/konsole && sed -e's/Exec=su.*$/Exec=sudo -i/' /usr/share/apps/konsole/su.desktop > /home/${USERNAME}/.kde/share/apps/konsole/su.desktop"
 	fi
     fi
+fi
+
 fi
 
 if [ -L /root/home/$USERNAME/Examples ]; then

@@ -60,8 +60,14 @@ parse_cmdline ()
                 export TORAM="Yes" ;;
             todisk=*)
                 export TODISK=${x#todisk=} ;;
-	    swapoff)
-	        export SWAPOFF="Yes" ;;
+	    noswap)
+	        export NOSWAP="Yes" ;;
+	    noautologin)
+	    	export NOAUTOLOGIN="Yes" ;;
+	    noxautologin)
+	    	export NOXAUTOLOGIN="Yes" ;;
+	    nosudo)
+	    	export NOSUDO="Yes" ;;
             showmounts)
                 export SHOWMOUNTS="Yes" ;;
             persistent)
@@ -131,6 +137,7 @@ is_live_path() {
     if [ -d "$path/live" ]; then
         if [ "$(echo $path/live/*.squashfs)" != "$path/live/*.squashfs" ] ||
             [ "$(echo $path/live/*.ext2)" != "$path/live/*.ext2" ] ||
+            [ "$(echo $path/live/*.ext3)" != "$path/live/*.ext3" ] ||
             [ "$(echo $path/live/*.dir)" != "$path/live/*.dir" ]; then
             return 0
         fi
@@ -140,7 +147,7 @@ is_live_path() {
 
 get_backing_device() {
     case "$1" in
-        *.squashfs|*.ext2)
+        *.squashfs|*.ext2|*.ext3)
             echo $(setup_loop "$1" "loop" "/sys/block/loop*" '0' "${LIVE_MEDIA_ENCRYPTION}")
             ;;
         *.dir)
@@ -167,6 +174,7 @@ mount_images_in_directory() {
     rootmnt="$2"
     if match_files_in_dir "$directory/live/*.squashfs" ||
         match_files_in_dir "$directory/live/*.ext2" ||
+        match_files_in_dir "$directory/live/*.ext3" ||
         match_files_in_dir "$directory/live/*.dir"; then
         setup_unionfs "$directory/live" "$rootmnt"
     else
@@ -230,7 +238,7 @@ copy_live_to() {
     mount -t "${fstype}" ${mount_options} "${dev}" "${copyto}"
     cp -a ${copyfrom}/* ${copyto} # "cp -a" from busybox also copies hidden files
     umount ${copyfrom}
-    mount -r -o move ${copyto} ${copyfrom}
+    mount -r --move ${copyto} ${copyfrom}
     rmdir ${copyto}
     return 0
 }
@@ -350,13 +358,13 @@ try_snap ()
     snap_mount="${2}"
     snap_type="${3}"
 
-    snapdata=$(find_files "${snap_label}.squashfs ${snap_label}.cpio.gz ${snap_label}.ext2")
+    snapdata=$(find_files "${snap_label}.squashfs ${snap_label}.cpio.gz ${snap_label}.ext2 ${snap_label}.ext3")
     if [ ! -z "${snapdata}" ]; then
         snapdev="$(echo ${snapdata} | cut -f1 -d ' ')"
         snapback="$(echo ${snapdata} | cut -f2 -d ' ')"
         snapfile="$(echo ${snapdata} | cut -f3 -d ' ')"
-        if echo "${snapfile}" | grep -qs '\(squashfs\|ext2\)'; then
-            # squashfs or ext2 snapshot
+        if echo "${snapfile}" | grep -qs '\(squashfs\|ext2\|ext3\)'; then
+            # squashfs or ext2/ext3 snapshot
             dev=$(get_backing_device "${snapback}/${snapfile}")
             if ! do_snap_copy "${dev}" "${snap_mount}" "${snap_type}"; then
                  log_warning_msg "Impossible to include the ${snapfile} Snapshot"
@@ -428,7 +436,7 @@ setup_unionfs() {
         done
     else
         # If ${MODULE}.lst does not exist, create a list of images
-        for image_type in "ext2" "squashfs" "dir"; do
+        for image_type in "ext2" "ext3" "squashfs" "dir"; do
             for image in "${image_directory}"/*."${image_type}"; do
 	        if [ -e "${image}" ]; then
 		    image_string="${image_string} ${image}";
@@ -499,7 +507,7 @@ setup_unionfs() {
             case d in
                 *.dir) # do nothing # mount -o bind "${d}" "${rootmnt}/live/${d##*/}"
                     ;;
-                *) mount -o move "${d}" "${rootmnt}/live/${d##*/}"
+                *) mount --move "${d}" "${rootmnt}/live/${d##*/}"
                     ;;
             esac
         done
@@ -569,8 +577,8 @@ find_livefs() {
                 fi
             done
         elif [ "${fstype}" = "squashfs" -o \
-                "${fstype}" = "ext3" -o \
-                "${fstype}" = "ext2" ]; then
+                "${fstype}" = "ext2" -o \
+                "${fstype}" = "ext3" ]; then
             # This is an ugly hack situation, the block device has
             # an image directly on it.  It's hopefully
             # live-initramfs, so take it and run with it.
