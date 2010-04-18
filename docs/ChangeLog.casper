@@ -1,3 +1,15 @@
+casper (1.125) hardy; urgency=low
+
+  [ Colin Watson ]
+  * Stop quoting Exec arguments in .desktop files. Apparently this used to
+    work but now the system conforms more strictly to the desktop entry
+    specification (LP: #204185).
+
+  [ Jonathan Riddell ]
+  * scripts/casper-bottom/15autologin: Enable auto-login for KDM-KDE4
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 20 Mar 2008 10:20:17 +0000
+
 casper (1.124) hardy; urgency=low
 
   [ Colin Watson ]

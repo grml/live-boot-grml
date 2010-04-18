@@ -71,6 +71,13 @@ then
 		  -e "s/^#?AutoLoginUser=.*\$/AutoLoginUser=${USERNAME}/" \
 		  -e "s/^#?AutoReLogin=.*\$/AutoReLogin=true/" \
 	/root/etc/kde3/kdm/kdmrc
+elif [ -f /root/usr/lib/kde4/etc/kde4/kdm/kdmrc ]
+then
+	# Configure KDM-KDE4 autologin
+	sed -i -r -e "s/^#?AutoLoginEnable=.*\$/AutoLoginEnable=true/" \
+		  -e "s/^#?AutoLoginUser=.*\$/AutoLoginUser=$USERNAME/" \
+		  -e "s/^#?AutoReLogin=.*\$/AutoReLogin=true/" \
+	/root/usr/lib/kde4/etc/kde4/kdm/kdmrc
 fi
 
 log_end_msg
