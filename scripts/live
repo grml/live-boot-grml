@@ -18,12 +18,11 @@ home_snapshot_label="home-sn"
 USERNAME="user"
 USERFULLNAME="Live user"
 HOSTNAME="host"
-BUILD_SYSTEM="Custom"
 
 mkdir -p "${mountpoint}"
 
 [ -f /etc/live.conf ] && . /etc/live.conf
-export USERNAME USERFULLNAME HOSTNAME BUILD_SYSTEM
+export USERNAME USERFULLNAME HOSTNAME
 
 . /scripts/live-helpers
 
@@ -46,7 +45,7 @@ Arguments ()
 
 			console=*)
 				DEFCONSOLE="${ARGUMENT#*=}"
-				export DEFCONFSOLE
+				export DEFCONSOLE
 				;;
 
 			debug)
@@ -372,6 +371,11 @@ Arguments ()
 				export TORAM MODULETORAM
 				;;
 
+			exposedroot)
+				EXPOSED_ROOT="Yes"
+				export EXPOSED_ROOT
+				;;
+
 			union=*)
 				UNIONTYPE="${ARGUMENT#union=}"
 				export UNIONTYPE
@@ -618,7 +622,7 @@ do_netmount ()
 {
 	rc=1
 
-	modprobe "${MP_QUIET}" af_packet # For DHCP
+	modprobe -q af_packet # For DHCP
 
 	udevtrigger
 	udevsettle
@@ -688,7 +692,7 @@ do_nfsmount ()
 {
 	rc=1
 
-	modprobe "${MP_QUIET}" nfs
+	modprobe -q nfs
 
 	if [ -z "${NFSOPTS}" ]
 	then
@@ -721,7 +725,7 @@ do_cifsmount ()
 		fi
 
 		[ "${quiet}" != "y" ] && log_begin_msg "Trying mount.cifs ${NFSROOT} ${mountpoint} ${CIFSOPTS}"
-		modprobe "${MP_QUIET}" cifs
+		modprobe -q cifs
 
 		if mount.cifs "${NFSROOT}" "${mountpoint}" "${CIFSOPTS}"
 		then
@@ -861,7 +865,7 @@ setup_unionfs ()
 	image_directory="${1}"
 	rootmnt="${2}"
 
-	modprobe "${MP_QUIET}" -b ${UNIONTYPE}
+	modprobe -q -b ${UNIONTYPE}
 
 	# run-init can't deal with images in a subdir, but we're going to
 	# move all of these away before it runs anyway.  No, we're not,
@@ -962,9 +966,40 @@ setup_unionfs ()
 		fi
 	fi
 
-	mount ${cowdevice} -t ${cow_fstype} -o rw,noatime /cow || panic "Can not mount ${cowdevice} on /cow"
+	rofscount=$(echo ${rofslist} |wc -w)
 
-	mount -t ${UNIONTYPE} -o noatime,dirs=/cow=rw:${rofsstring} ${UNIONTYPE} "${rootmnt}" || panic "${UNIONTYPE} mount failed"
+	if [ -n "${EXPOSED_ROOT}" ]
+	then
+		if [ ${rofscount} -ne 1 ]
+		then
+			panic "only one RO file system supported with exposedroot: ${rofslist}"
+		fi
+		exposedrootfs=${rofslist%% }
+
+		mount --bind ${exposedrootfs} ${rootmnt} || \
+			panic "bind mount of ${exposedrootfs} failed"
+
+		mount ${cowdevice} -t ${cow_fstype} -o rw,noatime /cow || \
+			panic "Can not mount ${cowdevice} on /cow"
+
+		cow_dirs='/tmp /var/tmp /var/lock /var/run /var/log /var/spool
+			/home /live /var/lib/live'
+
+		for dir in ${cow_dirs}; do
+			mkdir -p /cow${dir}
+			mount -t ${UNIONTYPE} \
+				-o rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro \
+				${UNIONTYPE} "${rootmnt}${dir}" || \
+				panic "mount ${UNIONTYPE} on ${rootmnt}${dir} failed with option \
+					rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro"
+		done
+	else
+		mount ${cowdevice} -t ${cow_fstype} -o rw,noatime /cow || \
+			panic "Can not mount ${cowdevice} on /cow"
+		mount -t ${UNIONTYPE} -o noatime,dirs=/cow=rw:${rofsstring} \
+			${UNIONTYPE} "${rootmnt}" || panic "mount ${UNIONTYPE} on \
+			${rootmnt} failed with option noatime,dirs=/cow=rw:${rofsstring}"
+	fi
 
 	# Adding other custom mounts
 	if [ -n "${PERSISTENT}" ]

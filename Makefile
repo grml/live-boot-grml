@@ -1,7 +1,5 @@
 # Makefile
 
-BUILD_SYSTEM := $(shell lsb_release --short --id)
-
 TRANSLATIONS="it"
 
 all: build
@@ -13,12 +11,10 @@ test:
 	done
 
 build:
-	# Setting BUILD_SYSTEM
-	sed -e 's/\(BUILD_SYSTEM="\).*"/\1'$(BUILD_SYSTEM)'"/g' conf/live.conf > live.conf
 
 install: test build
 	# Installing configuration
-	install -D -m 0644 live.conf $(DESTDIR)/etc/live.conf
+	install -D -m 0644 conf/live.conf $(DESTDIR)/etc/live.conf
 
 	# Installing executables
 	mkdir -p $(DESTDIR)/sbin
@@ -108,15 +104,14 @@ uninstall:
 update:
 	set -e; for FILE in docs/parameters.txt; \
 	do \
-		sed -i	-e 's/2007\\-15\\-08/2007\\-10\\-22/' \
-			-e 's/2007-15-08/2007-10-22/' \
-			-e 's/15.10.2007/22.10.2007/' \
-			-e 's/1.110.2/1.110.3/' \
+		sed -i	-e 's/2007\\-10\\-22/2007\\-10\\-29/' \
+			-e 's/2007-10-22/2007-10-29/' \
+			-e 's/22.10.2007/29.10.2007/' \
+			-e 's/1.110.3/1.110.4/' \
 		$$FILE; \
 	done
 
 clean:
-	rm -f live.conf
 
 distclean:
 

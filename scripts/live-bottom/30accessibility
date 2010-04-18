@@ -41,14 +41,6 @@ gct ()
 	fi
 }
 
-kderc_addtoprefixes ()
-{
-	if [ -e "/root/etc/kderc" ]
-	then
-		sed -i "s|\\(prefixes=/usr/share/kubuntu-default-settings/kde-profile/default/\\)|\\1,$1|" /root/etc/kderc
-	fi
-}
-
 case ${ACCESS} in
 	access=v1)
 		# Lesser Visual Impairment
@@ -64,13 +56,6 @@ case ${ACCESS} in
 		gct -s -t string /desktop/gnome/background/color_shading_type solid
 		gct -s -t int /desktop/gnome/peripherals/mouse/cursor_size 48
 		gct -s -t string /desktop/gnome/peripherals/mouse/cursor_theme whiteglass
-
-		kderc_addtoprefixes /usr/share/kubuntu-default-settings/kde-profile/lesser-visual-impairment/
-
-		if [ -d /root/usr/share/xubuntu-default-settings/accessibility ]
-		then
-			cp -a /root/usr/share/xubuntu-default-settings/accessibility/* /root/etc/xdg/
-		fi
 		;;
 
 	access=v2)
@@ -83,8 +68,6 @@ case ${ACCESS} in
 		then
 			sed -i '/^enableSpeech\W/ s/True/False/;/^enableMagnifier/ s/False/True/' /root/usr/share/pycentral/gnome-orca/site-packages/orca/settings.py
 		fi
-
-		kderc_addtoprefixes /usr/share/kubuntu-default-settings/kde-profile/lesser-visual-impairment/,/usr/share/kubuntu-default-settings/kde-profile/moderate-visual-impairment/
 		;;
 
 	access=v3)
@@ -120,8 +103,6 @@ case ${ACCESS} in
 		gct -s -t int /desktop/gnome/peripherals/keyboard/rate 10
 		gct -s -t bool /apps/gksu/disable-grab true
 
-		kderc_addtoprefixes /usr/share/kubuntu-default-settings/kde-profile/minor-motor-difficulties/
-
 		if [ -e /root/etc/xdg/xfce4/mcs_settings/keyboard.xml ]
 		then
 			sed -i 's/0/1/' /root/etc/xdg/xfce4/mcs_settings/keyboard.xml
@@ -136,8 +117,6 @@ case ${ACCESS} in
 		gct -s -t bool /desktop/gnome/accessibility/keyboard/stickykeys_modifier_beep false
 		gct -s -t bool /desktop/accessibility/gnome/keyboard/stickykeys_two_key_off false
 		gct -s -t list --list-type=string /desktop/gnome/accessibility/startup/exec_ats [onboard]
-
-		kderc_addtoprefixes /usr/share/kubuntu-default-settings/kde-profile/minor-motor-difficulties/,/usr/share/kubuntu-default-settings/kde-profile/motor-difficulties-pointing-devices/
 
 		if [ -e /root/etc/xdg/xfce4/mcs_settings/keyboard.xml ]
 		then

@@ -42,11 +42,8 @@ fi
 # chroot needed to handle symlinks correctly
 if chroot /root [ -f ${GDMCONF} ]
 then
-	if [ "${BUILD_SYSTEM}" = "Debian" ]
-	then
-		# true hack ! -- nohar
-		chroot /root cp /usr/share/gdm/defaults.conf /etc/gdm/gdm.conf
-	fi
+	# true hack ! -- nohar
+	chroot /root cp /usr/share/gdm/defaults.conf /etc/gdm/gdm.conf
 
 	# Configure GDM autologin
 	chroot /root \
