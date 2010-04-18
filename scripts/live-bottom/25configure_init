@@ -77,7 +77,8 @@ then
 		then
 			for f in /root/etc/event.d/tty*
 			do
-				sed -i -e "s|^respawn.*|respawn /bin/login -f ${USERNAME} </dev/$(basename ${f}) > /dev/$(basename ${f}) 2>\&1|" ${f}
+				sed -i -e "/^respawn$/!s|^respawn.*|respawn /bin/login -f ${USERNAME} </dev/$(basename ${f}) > /dev/$(basename ${f}) 2>\&1|" ${f}
+				sed -i -e "s|^exec.*|exec /bin/login -f ${USERNAME} </dev/$(basename ${f}) > /dev/$(basename ${f}) 2>\&1|" ${f}
 			done
 		fi
 	fi
@@ -87,18 +88,15 @@ then
 fi
 
 # do not try to remove files if using file-rc
-if [ -d /etc/rc0.d ]
+if [ -d /root/etc/rc0.d ]
 then
 	# This has the nice side effect of the cron.{daily,weekly,monthly} jobs in
 	# /etc/crontab remaining disabled, yet also not run by anacron
 	if [ -x /root/usr/sbin/anacron ]
 	then
 		chroot /root dpkg-divert --add --rename --quiet /usr/sbin/anacron
-		ln -s /bin/true /usr/sbin/anacron
+		ln -s /bin/true /root/usr/sbin/anacron
 	fi
-
-	# No point, really
-	rm -f /root/etc/rc?.d/[SK]??postfix
 
 	# Avoid clobbering the user's clock
 	rm -f /root/etc/rc?.d/K??hwclock.sh

@@ -104,7 +104,7 @@ where_is_mounted ()
 	if grep -q "^${device} " /proc/mounts
 	then
 		# return the first found
-		grep "^${device} " /proc/mounts | cut -f2 -d ' '
+		grep -m1 "^${device} " /proc/mounts | cut -f2 -d ' '
 	fi
 }
 
@@ -327,17 +327,47 @@ find_cow_device ()
 				break
 			fi
 
+			# Checking for a luks device
+			if [ "${PERSISTENT}" = "cryptsetup" ] && [ -e /sbin/cryptsetup ] && /sbin/cryptsetup isLuks ${devname}
+			then
+				while true
+				do
+					load_keymap
+
+					/lib/cryptsetup/askpass "Enter passphrase for ${pers_label} on ${devname}: " | /sbin/cryptsetup -T 1 luksOpen ${devname} $(basename ${devname}) --key-file=-
+					error=${?}
+
+					devname="/dev/mapper/$(basename ${devname})"
+
+					if [ 0 -eq ${error} ]
+					then
+						unset error
+						break
+					fi
+
+					echo
+					echo -n "There was an error decrypting ${devname} ... Retry? [Y/n] " >&6
+					read answer
+
+					if [ "$(echo "${answer}" | cut -b1 | tr A-Z a-z)" = "n" ]
+					then
+						unset answer
+						break
+					fi
+				done
+			fi
+
 			if [ "$(/lib/udev/vol_id -l ${devname} 2>/dev/null)" = "${pers_label}" ]
 			then
 				echo "${devname}"
-				return
+				return 0
 			fi
 
 			if [ "${PERSISTENT}" = "nofiles" ]
 			then
 				# do not mount the device to find for image files
 				# just skip this
-				break
+				continue
 			fi
 
 			case "$(get_fstype ${devname})" in
@@ -361,6 +391,7 @@ find_cow_device ()
 			esac
 		done
 	done
+	return 1
 }
 
 find_files ()

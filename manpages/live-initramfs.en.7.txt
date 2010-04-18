@@ -87,7 +87,7 @@ configured at boot time. Do not specify this if you want to use dhcp (default).
 It will be changed in a future release to mimick official kernel boot param
 specification (e.g. ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp).
 
-  ip[=**frommedia**]::
+  ip=[**frommedia**]::
 
 If this variable is set, dhcp and static configuration are just skipped and the
 system will use the (must be) media-preconfigured /etc/network/interfaces

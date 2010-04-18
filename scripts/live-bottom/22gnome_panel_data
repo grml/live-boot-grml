@@ -20,7 +20,7 @@ esac
 
 # live-initramfs header
 
-if [ -n "${NOGNOMEPANEL}" ]
+if [ ! -e /root/var/lib/dpkg/info/gnome-panel-data.list ] || [ -n "${NOGNOMEPANEL}" ]
 then
 	exit 0
 fi
@@ -31,17 +31,12 @@ log_begin_msg "Configuring gnome-panel-data"
 
 # live-initramfs script
 
-if [ -x /root/usr/sbin/laptop-detect ]
+if chroot /root laptop-detect > /dev/null 2>&1
 then
-	if chroot /root laptop-detect
-	then
-		live-reconfigure /root gnome-panel-data
-	fi
+	live-reconfigure /root gnome-panel-data
 fi
 
-panel_version=$(chroot /root /usr/bin/dpkg-query -W --showformat='${Version}' gnome-panel-data 2>/dev/null) || panel_version=""
-
-if [ -n "${panel_version}" ] && [ -n "${USERNAME}" ]
+if [ -n "${USERNAME}" ]
 then
 	chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/panel/global/disable_lock_screen true
 fi
