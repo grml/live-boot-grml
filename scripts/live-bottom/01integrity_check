@@ -15,4 +15,4 @@ prereqs)
        ;;
 esac
 
-grep integrity-check /proc/cmdline && live-md5check /cdrom /cdrom/md5sum.txt < /dev/tty8
+grep integrity-check /proc/cmdline && live-md5check /live_media /live_media/md5sum.txt < /dev/tty8

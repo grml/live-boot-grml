@@ -1,0 +1,39 @@
+#!/bin/sh
+
+PREREQ=""
+DESCRIPTION="Copying config on real root fs..."
+
+. /scripts/live-functions
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+log_begin_msg "$DESCRIPTION"
+
+if [ -f /etc/live.conf ] ; then
+       if [ ! -z "${LIVECONF}" ]; then
+               # Updating live.conf
+               sed -i -e 's/\(USERNAME="\).*"/\1'"${USERNAME}"'"/g' \
+                   -e 's/\(USERFULLNAME="\).*"/\1'"${USERFULLNAME}"'"/g' \
+                   -e 's/\(HOSTNAME="\).*"/\1'"${HOSTNAME}"'"/g' /etc/live.conf
+       fi
+       cp -p /etc/live.conf /root/etc/live.conf
+
+else
+       cat <<EOF >/root/etc/live.conf
+export USERNAME="$USERNAME"
+export USERFULLNAME="$USERFULLNAME"
+export HOSTNAME="$HOSTNAME"
+EOF
+
+fi

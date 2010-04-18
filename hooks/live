@@ -1,75 +1,118 @@
-#!/bin/sh -e
-# initramfs hook for casper
+#!/bin/sh
 
-PREREQS=""
+# initramfs hook for live-initramfs (Debian Live)
 
-# Output pre-requisites
+set -e
+
+# initramfs-tools header
+
+PREREQ=""
+
 prereqs()
 {
-       echo "$PREREQ"
+	echo "${PREREQ}"
 }
 
-case "$1" in
-    prereqs)
-       prereqs
-       exit 0
-       ;;
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
 esac
 
 . /usr/share/initramfs-tools/hook-functions
 
-manual_add_modules unionfs
+# live-initramfs hook
 
-# We need losetup
-copy_exec /sbin/losetup /sbin
+# Handling live-initramfs
 
-# Casper hooks
-mkdir -p ${DESTDIR}/lib/live-initramfs
+# Configuration
+if [ -r /etc/live.conf ]
+then
+	. /etc/live.conf
+
+	mkdir -p "${DESTDIR}"/etc
+	cp /etc/live.conf "${DESTDIR}"/etc
+fi
+
+# Directories
+mkdir -p "${DESTDIR}"/lib/live-initramfs
+
+# Executables
+copy_exec /usr/lib/live-initramfs/live-md5check /bin
 copy_exec /usr/share/live-initramfs/live-reconfigure /bin
 copy_exec /usr/share/live-initramfs/live-preseed /bin
 
-mkdir -p ${DESTDIR}/lib/udev
-copy_exec /lib/udev/cdrom_id /lib/udev
-copy_exec /lib/udev/vol_id /lib/udev
-copy_exec /lib/udev/path_id /lib/udev
-copy_exec /usr/bin/udevinfo /bin
-copy_exec /usr/bin/eject /bin
+# Scripts
+cp /usr/share/initramfs-tools/scripts/live-functions "${DESTDIR}"/scripts
+cp /usr/share/initramfs-tools/scripts/live-helpers "${DESTDIR}"/scripts
 
-# cifs boot
-if [ -x /sbin/mount.cifs ]; then
-    copy_exec /sbin/mount.cifs /sbin
-    for x in cifs; do
-        manual_add_modules ${x}
-    done
+# Handling binaries
+
+# losetup
+copy_exec /sbin/losetup /sbin
+
+# mount.cifs
+if [ -x /sbin/mount.cifs ]
+then
+	copy_exec /sbin/mount.cifs /sbin
 fi
 
-# squashfs
-manual_add_modules squashfs
-manual_add_modules loop
+# eject
+copy_exec /usr/bin/eject /bin
 
-# random file system modules
-manual_add_modules vfat
+# udev
+if [ "${BUILD_SYSTEM}" = "Ubuntu" ]
+then
+	mkdir -p "${DESTDIR}"/lib/udev
+
+	copy_exec /lib/udev/cdrom_id /lib/udev
+	copy_exec /lib/udev/path_id /lib/udev
+	copy_exec /lib/udev/vol_id /lib/udev
+fi
+
+copy_exec /sbin/udevtrigger /sbin
+copy_exec /sbin/udevsettle /sbin
+copy_exec /usr/bin/udevinfo /bin
+
+# Handling kernel modules
+
+# Filesystem: cifs
+if [ -x /sbin/mount.cifs ]
+then
+        manual_add_modules cifs
+fi
+
+# Filesystem: ext3
 manual_add_modules ext3
-# needed for vfat. :-/
+
+# Filesystem: squashfs
+manual_add_modules loop
+manual_add_modules squashfs
+
+# Filesystem: unionfs
+manual_add_modules unionfs
+
+# Filesystem: vfat
 manual_add_modules nls_cp437
-manual_add_modules nls_utf8
 manual_add_modules nls_iso8859-1
+manual_add_modules nls_utf8
+manual_add_modules vfat
 
-# cdrom modules
-manual_add_modules sr_mod
+# Hardware: cdrom
 manual_add_modules ide-cd
-manual_add_modules sbp2
 manual_add_modules ohci1394
+manual_add_modules sbp2
+manual_add_modules sr_mod
 
-# integrity check
-copy_exec /usr/lib/live-initramfs/live-md5check /bin
-
-cp /usr/share/initramfs-tools/scripts/live-functions $DESTDIR/scripts
-cp /usr/share/initramfs-tools/scripts/live-helpers $DESTDIR/scripts
-
+# Hardware: network
 auto_add_modules net
 
-if [ -e /etc/live.conf ]; then
-    mkdir -p ${DESTDIR}/etc
-    cp /etc/live.conf ${DESTDIR}/etc
+# Custom keymap (usefull when using encryption)
+if [ -x /bin/loadkeys ] && [ -r /etc/console/boottime.kmap.gz ]
+then
+	copy_exec /bin/loadkeys /bin
+
+	mkdir -p "${DESTDIR}"/etc
+	cp /etc/console/boottime.kmap.gz "${DESTDIR}"/etc
 fi

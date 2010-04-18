@@ -20,27 +20,29 @@ esac
 
 log_begin_msg "$DESCRIPTION"
 
-kbd=us
+kbd=
 cslayout=
 csvariant=
 csmodel=
 
-for x in $(cat /proc/cmdline); do
-        case $x in
-                kbd-chooser/method=*)
-                        kbd=${x#kbd-chooser/method=}
-                        ;;
-                console-setup/layoutcode=*)
-                        cslayout=${x#console-setup/layoutcode=}
-                        ;;
-                console-setup/variantcode=*)
-                        csvariant=${x#console-setup/variantcode=}
-                        ;;
-                console-setup/modelcode=*)
-                        csmodel=${x#console-setup/modelcode=}
-                        ;;
-        esac
-done
+# commandline
+if [ -n "${KBD}" ]; then
+    kbd="${KBD}"
+else
+    kbd=us
+fi
+
+really_export kbd
+
+if [ -n "${KLAYOUT}" ]; then
+    cslayout="${KLAYOUT}"
+fi
+if [ -n "${KVARIANT}" ]; then
+    csvariant="${KVARIANT}"
+fi
+if [ -n "${KMODEL}" ]; then
+    csmodel="${KMODEL}"
+fi
 
 if [ -x /root/bin/setupcon ] && [ -f /root/etc/default/console-setup ]; then
         if [ "$cslayout" ]; then
@@ -66,5 +68,6 @@ if [ -x /root/bin/setupcon ] && [ -f /root/etc/default/console-setup ]; then
 else
         chroot /root /usr/sbin/install-keymap $kbd
         live-preseed /root debian-installer/keymap "$kbd"
+	live-preseed /root kbd-chooser/method "$kbd"
 fi
 log_end_msg
