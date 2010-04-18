@@ -21,7 +21,7 @@ esac
 log_begin_msg "$DESCRIPTION"
 
 gct() {
-    chroot /root su $USERNAME -- gconftool-2 "$@"
+    chroot /root sudo -u "$USERNAME" gconftool-2 "$@"
 }
 
 for x in $(cat /proc/cmdline); do

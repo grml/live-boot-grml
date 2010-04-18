@@ -4,10 +4,11 @@
 
 PREREQ=""
 DESCRIPTION="Configuring accessibility options..."
-USERNAME=$(db_get passwd/username)
+db_get passwd/username
+USERNAME="$RET"
 
 gct() {
-    chroot /target su $USERNAME -- gconftool-2 "$@"
+    chroot /target sudo -u "$USERNAME" gconftool-2 "$@"
 }
 
 for x in $(cat /proc/cmdline); do
@@ -21,8 +22,8 @@ for x in $(cat /proc/cmdline); do
                         gct -s -t string /apps/metacity/general/theme Atlanta
                         gct -s -t string /desktop/gnome/background/picture_filename ""
                         gct -s -t string /desktop/gnome/background/picture_options none
-                        gct "-s -t string /desktop/gnome/background/primary_color \#666666"
-                        gct "-s -t string /desktop/gnome/background/secondary_color \#7F7F7F"
+                        gct -s -t string /desktop/gnome/background/primary_color \#666666
+                        gct -s -t string /desktop/gnome/background/secondary_color \#7F7F7F
                         gct -s -t string /desktop/gnome/background/color_shading_type solid
                         gct -s -t int /desktop/gnome/peripherals/mouse/cursor_size 48
                         gct -s -t string /desktop/gnome/peripherals/mouse/cursor_theme whiteglass
