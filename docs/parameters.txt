@@ -1,7 +1,7 @@
 Boot Parameters for Debian Live
 -------------------------------
 
-Updated for live-initramfs 1.110.3-1 on 2007-10-22.
+Updated for live-initramfs 1.110.6-1 on 2007-11-12.
 
 These options (can be combined) work from the bootloader prompt:
 

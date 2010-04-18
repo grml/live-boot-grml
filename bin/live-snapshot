@@ -83,7 +83,7 @@ Usage ()
 
 	if [ ! -z "${MESSAGE}" ]
 	then
-		echo -e "${MESSAGE}"
+		/bin/echo -e "${MESSAGE}"
 		exit 1
 	else
 		exit 0
@@ -99,9 +99,9 @@ Help ()
 	echo "  -c, --cow: specifies the copy on write directory (default: /live/cow)."
 	echo "  -d, --device: specifies the output snapshot device (default: none)."
 	echo "  -o, --output: specifies the output image file (default: ${type} dependent)."
-    echo "  -r, --resync-string: internally used to resync previous made snapshots."
+	echo "  -r, --resync-string: internally used to resync previous made snapshots."
 	echo "  -t, --type: specifies the snapshot type between \"squashfs\", \"ext2\", \"ext3\" or \"cpio\".gz archive (default: cpio)"
-    echo -e "\nLook at live-snapshot(1) man page for more information."
+	/bin/echo -e "\nLook at live-snapshot(1) man page for more information."
 
 	exit 0
 }
