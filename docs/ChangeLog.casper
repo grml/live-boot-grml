@@ -1,3 +1,10 @@
+casper (1.199) karmic; urgency=low
+
+  [ Tormod Volden ]
+  * Scan device-mapper (RAID) devices for live filesystem (LP: #385305).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 06 Oct 2009 23:39:57 +0100
+
 casper (1.198) karmic; urgency=low
 
   * scripts/casper: Send PULSELOGO usplash command at startup. (LP: #438762)
