@@ -55,10 +55,10 @@ then
 	       -e "s/^TimedLogin=.*\$/TimedLogin=${USERNAME}/" \
 	       -e "s/^TimedLoginDelay=.*\$/TimedLoginDelay=10/" \
 	${GDMCONF}
-elif [ -e /root/etc/gdm3 ]
+elif [ -d /root/etc/gdm3 ]
 then
 
-cat > /root/etc/gdm3/daemon.conf << EOF
+cat > /root/etc/gdm3/custom.conf << EOF
 [daemon]
 AutomaticLoginEnable=true
 AutomaticLogin=$USERNAME

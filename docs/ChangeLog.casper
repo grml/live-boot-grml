@@ -1,3 +1,14 @@
+casper (1.180) karmic; urgency=low
+
+  [ Colin Watson ]
+  * scripts/casper-bottom/15autologin: Minor consistency fixes.
+
+  [ Martin Pitt ]
+  * scripts/casper-bottom/15autologin: Update for new gdm custom configuration
+    file (/etc/gdm/custom.conf). (LP: #395861)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 06 Jul 2009 16:40:00 +0200
+
 casper (1.179) karmic; urgency=low
 
   [ Colin Watson ]
