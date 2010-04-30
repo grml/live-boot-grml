@@ -177,11 +177,11 @@ do_stop ()
 }
 
 case "${1}" in
-	start|restart|reload|force-reload|status)
+	restart|reload|force-reload|status)
 		[ "${VERBOSE}" != no ] && log_end_msg 0
 		;;
 
-	stop)
+	start|stop)
 		log_begin_msg "${NAME} is resyncing snapshots and caching reboot files..."
 		do_stop
 
