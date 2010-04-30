@@ -1,3 +1,24 @@
+casper (1.178) karmic; urgency=low
+
+  * Ensure that unionfs-fuse isn't killed by /etc/init.d/sendsigs on
+    shutdown (LP: #386010).
+  * Patches from "phl" (https://launchpad.net/~ubuntu-leledy), adjusted by
+    me, to fix snapshot resync:
+    - Avoid using cpio -u -d options if klibc cpio is in use (LP: #384059).
+    - Copy /etc/casper.conf into /root, otherwise we forget snapshot resync
+      settings (LP: #384061).
+    - Adjust the first field of *SNAP entries in casper.conf to be relative
+      to /cow, not /root (LP: #384066).
+    - Prefix $DEST with $MOUNTP in casper-snapshot (LP: #384068).
+    - /etc/init.d/casper is usually called with 'start', so handle that as
+      well as 'stop' to do snapshot resyncing and CD ejecting (LP: #384076).
+  * Fix casper-snapshot(1) syntax to avoid missing spaces between options
+    and their values.
+  * Fix showmounts when used in conjunction with unionfs-fuse; read-only
+    filesystems need to be bind-mounted rather than move-mounted.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 12 Jun 2009 13:24:28 +0100
+
 casper (1.177) karmic; urgency=low
 
   * Port from Debian (thanks, Daniel Baumann):
