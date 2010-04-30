@@ -1,3 +1,9 @@
+casper (1.189) karmic; urgency=low
+
+  * In 10adduser fix path to ubiquity-kde.desktop file
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 02 Sep 2009 14:54:41 +0100
+
 casper (1.188) karmic; urgency=low
 
   * Allow for platform-orion-ehci in ID_PATH to qualify as a "nice_device"
