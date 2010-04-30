@@ -1,3 +1,10 @@
+casper (1.194) karmic; urgency=low
+
+  * Fix 47unr_ubiquity shell code to make slightly more sense.
+  * Tell mkinitramfs that casper needs usplash (LP: #434980).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 24 Sep 2009 01:29:21 +0100
+
 casper (1.193) karmic; urgency=low
 
   * Sync LSB headers in init script with desired behaviour: don't start
