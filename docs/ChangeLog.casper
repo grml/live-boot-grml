@@ -1,3 +1,10 @@
+casper (1.191) karmic; urgency=low
+
+  * Slightly re-work 47unr_ubiquity, so that ubiquity doesn't keep getting
+    added to the favourites if persistence is used.·
+
+ -- Steve Kowalik <stevenk@ubuntu.com>  Tue, 08 Sep 2009 20:35:00 +1000
+
 casper (1.190) karmic; urgency=low
 
   [ Colin Watson ]
