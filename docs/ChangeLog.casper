@@ -1,3 +1,10 @@
+casper (1.193) karmic; urgency=low
+
+  * Sync LSB headers in init script with desired behaviour: don't start
+    casper at boot, and stop after umountroot but before halt/reboot.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 14 Sep 2009 13:08:23 +0100
+
 casper (1.192) karmic; urgency=low
 
   [ Colin Watson ]

@@ -3,10 +3,11 @@
 ### BEGIN INIT INFO
 # Provides:		live-initramfs
 # Required-Start:	$syslog
-# Required-Stop:	$syslog
+# Required-Stop:
 # Should-Start:		$local_fs
-# Should-Stop:		$local_fs
-# Default-Start:	1 2 3 4 5
+# Should-Stop:		halt reboot
+# X-Stop-After:		umountroot
+# Default-Start:
 # Default-Stop:		0 6
 # Short-Description:	live-initramfs init script
 # Description:		Resyncs snapshots, evantually caches files in order to
