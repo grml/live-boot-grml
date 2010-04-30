@@ -1,3 +1,18 @@
+casper (1.184) karmic; urgency=low
+
+  [ Evan Dandrea ]
+  * Apply the Ubuntu release version to the installer menu entries as well
+    (LP: #406187).
+
+  [ Colin Watson ]
+  * Fix disabling of apt-check (LP: #406191).
+
+  [ Steve Kowalik ]
+  * Remove the UNR ubiquity .desktop hack in 10adduser.
+  * Set ubiquity as a UNR Favourite in 47unr-ubiquity.
+
+ -- Steve Kowalik <stevenk@ubuntu.com>  Fri, 07 Aug 2009 23:11:58 +0100
+
 casper (1.183) karmic; urgency=low
 
   * Remove erroneous /root prefix on the ubiquity desktop files in
