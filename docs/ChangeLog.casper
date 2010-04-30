@@ -1,3 +1,10 @@
+casper (1.181) karmic; urgency=low
+
+  * Insert a version number in the name field for ubiquity's desktop file
+    (LP: #154506).
+
+ -- Evan Dandrea <evand@ubuntu.com>  Wed, 15 Jul 2009 10:11:40 +0100
+
 casper (1.180) karmic; urgency=low
 
   [ Colin Watson ]
