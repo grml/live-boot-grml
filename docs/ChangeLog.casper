@@ -1,3 +1,16 @@
+casper (1.182) karmic; urgency=low
+
+  [ Evan Dandrea ]
+  * Busybox sed does not preserve ownership, so chown after using it.
+
+  [ Colin Watson ]
+  * Set AutomaticLogin=$USERNAME, not =ubuntu (thanks, arky; LP: #401321).
+
+  [ Mario Limonciello ]
+  * Add support for lzma type archives to casper-new-uuid.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Mon, 20 Jul 2009 17:36:55 -0500
+
 casper (1.181) karmic; urgency=low
 
   * Insert a version number in the name field for ubiquity's desktop file
