@@ -1,3 +1,14 @@
+casper (1.197) karmic; urgency=low
+
+  [ Colin Watson ]
+  * Fix tty device name construction to work with new upstart (LP: #438678).
+
+  [ Loïc Minier ]
+  * scripts/casper-bottom/22serialtty: pass -L to getty and set term to vt100.
+  * scripts/casper-bottom/22serialtty: set +x...
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 01 Oct 2009 23:27:45 +0100
+
 casper (1.196) karmic; urgency=low
 
   * Extend our hack that arranges to run setupcon after usplash exits to
