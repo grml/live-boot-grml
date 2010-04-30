@@ -1,3 +1,9 @@
+casper (1.187) karmic; urgency=low
+
+  * Stop recommending unionfs-fuse, as we're using aufs again in Karmic.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 28 Aug 2009 12:07:14 +0100
+
 casper (1.186) karmic; urgency=low
 
   [ Loïc Minier ]
