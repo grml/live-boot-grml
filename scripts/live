@@ -1751,6 +1751,14 @@ integrity_check ()
 	fi
 }
 
+start_usplash_pulse ()
+{
+	if [ -x /sbin/usplash_write ]
+	then
+		/sbin/usplash_write "PULSELOGO"
+	fi
+}
+
 mountroot ()
 {
         if [ -x /scripts/local-top/cryptroot ]; then
@@ -1770,6 +1778,7 @@ mountroot ()
 	Arguments
 
 	set_usplash_timeout
+	start_usplash_pulse
 
 	maybe_break live-premount
 	log_begin_msg "Running /scripts/live-premount"
