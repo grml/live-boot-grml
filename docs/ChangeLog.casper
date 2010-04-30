@@ -1,3 +1,11 @@
+casper (1.188) karmic; urgency=low
+
+  * Allow for platform-orion-ehci in ID_PATH to qualify as a "nice_device"
+    i.e. one which can host a livefs.  This is the name of the USB device
+    driver on Marvell Dove boards.
+
+ -- Loïc Minier <loic.minier@ubuntu.com>  Mon, 31 Aug 2009 14:16:21 +0200
+
 casper (1.187) karmic; urgency=low
 
   * Stop recommending unionfs-fuse, as we're using aufs again in Karmic.
