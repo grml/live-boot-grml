@@ -31,10 +31,10 @@ set -e
 
 help() {
  echo
- echo "USAGE: $0 initrd.gz <path-to-new-initrd.gz> <path-to-new-live-uuid> "
+ echo "USAGE: $0 initrd.{l,g}z <path-to-new-initrd> <path-to-new-live-uuid> "
  echo
- echo "initrd.gz is the absolute path to the original gzipped initramfs"
- echo "<path-to-new-initrd.gz> is the destination directory for the new gzipped initramfs"
+ echo "initrd.{l,g}z is the absolute path to the original gzipped or lzmaed initramfs"
+ echo "<path-to-new-initrd> is the destination directory for the new compressed initramfs"
  echo "<path-to-new-live-uuid> is the destination directory for the new live-uuid-TYPE "
  echo
  echo "if either path is absent, they will end up in the current directory "
@@ -50,10 +50,21 @@ CWD=`pwd`
 TEMPDIR=`mktemp -d /tmp/uuid-XXXXXX`
 TYPE=`uname -r | cut -d '-' -f 3`
 
-if [ -z "$2" ] || [ ! -d "$2" ] || [ "$2" = "." ]; then
-	GZIPDIR="$CWD"
+if echo "$1" | grep ".lz$" >/dev/null; then
+	COMPRESSOR="lzma"
+	SUFFIX=".lz"
+elif echo "$1" | grep ".gz$" >/dev/null; then
+	COMPRESSOR="gzip"
+	SUFFIX=".gz"
 else
-	GZIPDIR="$2"
+	echo "Unsupported archive type."
+	exit 2
+fi
+
+if [ -z "$2" ] || [ ! -d "$2" ] || [ "$2" = "." ]; then
+	COMPRESS_DIR="$CWD"
+else
+	COMPRESS_DIR="$2"
 fi
 
 if [ -z "$3" ] || [ ! -d "$3" ] || [ "$3" = "." ]; then
@@ -63,13 +74,13 @@ else
 fi
 
 cd "$TEMPDIR"
-zcat "$1" | cpio -id
+$COMPRESSOR -cd "$1" -S "$SUFFIX" | cpio -id
 uuidgen -r > conf/uuid.conf
-find . | cpio --quiet --dereference -o -H newc | gzip > "$GZIPDIR/initrd.gz"
+find . | cpio --quiet --dereference -o -H newc | $COMPRESSOR -9c > "$COMPRESS_DIR/initrd$SUFFIX"
 if [ "$(ls "$LIVEDIR/live-uuid"-* >/dev/null 2>&1 | wc -l)" = 1 ]; then
-    cp conf/uuid.conf "$LIVEDIR/live-uuid"-*
+	cp conf/uuid.conf "$LIVEDIR/live-uuid"-*
 else
-    cp conf/uuid.conf "$LIVEDIR/live-uuid-$TYPE"
+	cp conf/uuid.conf "$LIVEDIR/live-uuid-$TYPE"
 fi
 cd "$CWD"
 rm -rf "$TEMPDIR"

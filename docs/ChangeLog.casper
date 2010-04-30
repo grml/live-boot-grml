@@ -1,3 +1,215 @@
+casper (1.199) karmic; urgency=low
+
+  [ Tormod Volden ]
+  * Scan device-mapper (RAID) devices for live filesystem (LP: #385305).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 06 Oct 2009 23:39:57 +0100
+
+casper (1.198) karmic; urgency=low
+
+  * scripts/casper: Send PULSELOGO usplash command at startup. (LP: #438762)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Fri, 02 Oct 2009 13:51:07 +0200
+
+casper (1.197) karmic; urgency=low
+
+  [ Colin Watson ]
+  * Fix tty device name construction to work with new upstart (LP: #438678).
+
+  [ Loïc Minier ]
+  * scripts/casper-bottom/22serialtty: pass -L to getty and set term to vt100.
+  * scripts/casper-bottom/22serialtty: set +x...
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 01 Oct 2009 23:27:45 +0100
+
+casper (1.196) karmic; urgency=low
+
+  * Extend our hack that arranges to run setupcon after usplash exits to
+    cover the new Upstartified usplash as well.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 29 Sep 2009 01:36:55 +0100
+
+casper (1.195) karmic; urgency=low
+
+  [ Oliver Grawert ]
+  * add support for serialtty= cmdline option for debugging purposes in live
+    sessions
+
+  [ Colin Watson ]
+  * Upstart moved /etc/event.d/ to /etc/init/; adjust shell provision on VTs
+    to match (LP: #434769).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 28 Sep 2009 10:52:32 +0100
+
+casper (1.194) karmic; urgency=low
+
+  * Fix 47unr_ubiquity shell code to make slightly more sense.
+  * Tell mkinitramfs that casper needs usplash (LP: #434980).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Thu, 24 Sep 2009 01:29:21 +0100
+
+casper (1.193) karmic; urgency=low
+
+  * Sync LSB headers in init script with desired behaviour: don't start
+    casper at boot, and stop after umountroot but before halt/reboot.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 14 Sep 2009 13:08:23 +0100
+
+casper (1.192) karmic; urgency=low
+
+  [ Colin Watson ]
+  * Upgrade to debhelper v7.
+
+  [ Jonathan Riddell ]
+  * Add 37kubuntu_netbook_installer_link to show ubiquity launcher
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Sat, 12 Sep 2009 00:10:03 +0100
+
+casper (1.191) karmic; urgency=low
+
+  * Slightly re-work 47unr_ubiquity, so that ubiquity doesn't keep getting
+    added to the favourites if persistence is used.·
+
+ -- Steve Kowalik <stevenk@ubuntu.com>  Tue, 08 Sep 2009 20:35:00 +1000
+
+casper (1.190) karmic; urgency=low
+
+  [ Colin Watson ]
+  * Don't produce an invalid sed program when trying to remove an applet
+    which isn't in the panel (LP: #406188).
+
+  [ Tormod Volden ]
+  * do not remount filesystems that already have been probed when
+    searching for the livefs (LP: #424464)
+  * Fix quoting in try_snap (LP: #424742).
+  * Silence error messages for non-existent device nodes (LP: #425159).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 07 Sep 2009 13:10:53 +0100
+
+casper (1.189) karmic; urgency=low
+
+  * In 10adduser fix path to ubiquity-kde.desktop file
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 02 Sep 2009 14:54:41 +0100
+
+casper (1.188) karmic; urgency=low
+
+  * Allow for platform-orion-ehci in ID_PATH to qualify as a "nice_device"
+    i.e. one which can host a livefs.  This is the name of the USB device
+    driver on Marvell Dove boards.
+
+ -- Loïc Minier <loic.minier@ubuntu.com>  Mon, 31 Aug 2009 14:16:21 +0200
+
+casper (1.187) karmic; urgency=low
+
+  * Stop recommending unionfs-fuse, as we're using aufs again in Karmic.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 28 Aug 2009 12:07:14 +0100
+
+casper (1.186) karmic; urgency=low
+
+  [ Loïc Minier ]
+  * Allow for platform-mxsdhci in ID_PATH to qualify as a "nice_device" i.e.
+    one which can host a livefs.  This is the new name of this device in
+    2.6.31 kernels on Babbage i.MX51.
+
+  [ Steve Kowalik ]
+  * Rename 47unr-ubiquity as 47unr_ubiquity, as scripts with dashes don't
+    get installed into the initramfs. (LP: #411616)
+
+ -- Steve Kowalik <stevenk@ubuntu.com>  Fri, 14 Aug 2009 17:39:34 +1000
+
+casper (1.185) karmic; urgency=low
+
+  * Actually set 47unr-ubiquity as executable.·
+
+ -- Steve Kowalik <stevenk@ubuntu.com>  Wed, 12 Aug 2009 10:41:35 +1000
+
+casper (1.184) karmic; urgency=low
+
+  [ Evan Dandrea ]
+  * Apply the Ubuntu release version to the installer menu entries as well
+    (LP: #406187).
+
+  [ Colin Watson ]
+  * Fix disabling of apt-check (LP: #406191).
+
+  [ Steve Kowalik ]
+  * Remove the UNR ubiquity .desktop hack in 10adduser.
+  * Set ubiquity as a UNR Favourite in 47unr-ubiquity.
+
+ -- Steve Kowalik <stevenk@ubuntu.com>  Fri, 07 Aug 2009 23:11:58 +0100
+
+casper (1.183) karmic; urgency=low
+
+  * Remove erroneous /root prefix on the ubiquity desktop files in
+    10adduser.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Tue, 21 Jul 2009 14:02:34 +0100
+
+casper (1.182) karmic; urgency=low
+
+  [ Evan Dandrea ]
+  * Busybox sed does not preserve ownership, so chown after using it.
+
+  [ Colin Watson ]
+  * Set AutomaticLogin=$USERNAME, not =ubuntu (thanks, arky; LP: #401321).
+
+  [ Mario Limonciello ]
+  * Add support for lzma type archives to casper-new-uuid.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Mon, 20 Jul 2009 17:36:55 -0500
+
+casper (1.181) karmic; urgency=low
+
+  * Insert a version number in the name field for ubiquity's desktop file
+    (LP: #154506).
+
+ -- Evan Dandrea <evand@ubuntu.com>  Wed, 15 Jul 2009 10:11:40 +0100
+
+casper (1.180) karmic; urgency=low
+
+  [ Colin Watson ]
+  * scripts/casper-bottom/15autologin: Minor consistency fixes.
+
+  [ Martin Pitt ]
+  * scripts/casper-bottom/15autologin: Update for new gdm custom configuration
+    file (/etc/gdm/custom.conf). (LP: #395861)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 06 Jul 2009 16:40:00 +0200
+
+casper (1.179) karmic; urgency=low
+
+  [ Colin Watson ]
+  * If LIVE_MEDIA_PATH is set on the command line, record it in
+    /etc/casper.conf for the benefit of ubiquity.
+
+  [ Martin Pitt ]
+  * scripts/casper-bottom/15autologin: Update to work with new gdm.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Fri, 03 Jul 2009 14:51:57 +0200
+
+casper (1.178) karmic; urgency=low
+
+  * Ensure that unionfs-fuse isn't killed by /etc/init.d/sendsigs on
+    shutdown (LP: #386010).
+  * Patches from "phl" (https://launchpad.net/~ubuntu-leledy), adjusted by
+    me, to fix snapshot resync:
+    - Avoid using cpio -u -d options if klibc cpio is in use (LP: #384059).
+    - Copy /etc/casper.conf into /root, otherwise we forget snapshot resync
+      settings (LP: #384061).
+    - Adjust the first field of *SNAP entries in casper.conf to be relative
+      to /cow, not /root (LP: #384066).
+    - Prefix $DEST with $MOUNTP in casper-snapshot (LP: #384068).
+    - /etc/init.d/casper is usually called with 'start', so handle that as
+      well as 'stop' to do snapshot resyncing and CD ejecting (LP: #384076).
+  * Fix casper-snapshot(1) syntax to avoid missing spaces between options
+    and their values.
+  * Fix showmounts when used in conjunction with unionfs-fuse; read-only
+    filesystems need to be bind-mounted rather than move-mounted.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 12 Jun 2009 13:24:28 +0100
+
 casper (1.177) karmic; urgency=low
 
   * Port from Debian (thanks, Daniel Baumann):

@@ -73,12 +73,11 @@ then
 			sed -i -e "s|^\([^:]*:[^:]*:[^:]*\):.*getty.*\<\(tty[0-9]*\).*$|\1:/bin/login -f ${USERNAME} </dev/\2 >/dev/\2 2>\&1|" /root/etc/inittab
 		fi
 
-		if [ "/root/etc/event.d/tty*" != "$(echo /root/etc/event.d/tty*)" ]
+		if [ "/root/etc/init/tty*" != "$(echo /root/etc/init/tty*)" ]
 		then
-			for f in /root/etc/event.d/tty*
+			for f in /root/etc/init/tty*
 			do
-				sed -i -e "/^respawn$/!s|^respawn.*|respawn /bin/login -f ${USERNAME} </dev/$(basename ${f}) > /dev/$(basename ${f}) 2>\&1|" ${f}
-				sed -i -e "s|^exec.*|exec /bin/login -f ${USERNAME} </dev/$(basename ${f}) > /dev/$(basename ${f}) 2>\&1|" ${f}
+				sed -i -e "s|^exec.*|exec /bin/login -f $USERNAME </dev/$(basename $f .conf) > /dev/$(basename $f .conf) 2>\&1|" $f
 			done
 		fi
 	fi

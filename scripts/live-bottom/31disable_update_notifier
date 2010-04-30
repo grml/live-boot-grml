@@ -39,7 +39,7 @@ chroot /root dpkg-divert --add --rename --quiet \
 
 if [ -e /root/usr/lib/update-notifier/apt-check ]
 then
-	ln -s /bin/true /root/usr/lib/update-notifier/apt-check
+	ln -sf /bin/true /root/usr/lib/update-notifier/apt-check
 fi
 
 # For KDE, adept_notifier's only useful function at the moment is an

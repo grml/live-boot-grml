@@ -107,6 +107,10 @@ then
 		if [ -f /root/etc/init.d/usplash ]
 		then
 			sed -i 's/CONSOLE_SCREEN=$/CONSOLE_SCREEN=setupcon/; t END; b; : END; n; b END' /root/etc/init.d/usplash
+		elif [ -f /root/etc/init/usplash.conf ]
+		then
+			sed -i '/^post-stop script/a\
+    setupcon' /root/etc/init/usplash.conf
 		fi
 	fi
 elif [ -e /root/usr/sbin/install-keymap ]
