@@ -1,3 +1,16 @@
+casper (1.186) karmic; urgency=low
+
+  [ Loïc Minier ]
+  * Allow for platform-mxsdhci in ID_PATH to qualify as a "nice_device" i.e.
+    one which can host a livefs.  This is the new name of this device in
+    2.6.31 kernels on Babbage i.MX51.
+
+  [ Steve Kowalik ]
+  * Rename 47unr-ubiquity as 47unr_ubiquity, as scripts with dashes don't
+    get installed into the initramfs. (LP: #411616)
+
+ -- Steve Kowalik <stevenk@ubuntu.com>  Fri, 14 Aug 2009 17:39:34 +1000
+
 casper (1.185) karmic; urgency=low
 
   * Actually set 47unr-ubiquity as executable.·
