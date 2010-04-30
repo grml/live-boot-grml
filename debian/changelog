@@ -1,3 +1,32 @@
+live-initramfs (1.199.1-1) unstable; urgency=low
+
+  * Updating maintainer field.
+  * Merging casper 1.178.
+  * Merging casper 1.179.
+  * Merging casper 1.180.
+  * Merging casper 1.181.
+  * Merging casper 1.182.
+  * Merging casper 1.183.
+  * Merging casper 1.184.
+  * Merging casper 1.185.
+  * Merging casper 1.186.
+  * Merging casper 1.187.
+  * Merging casper 1.188.
+  * Merging casper 1.189.
+  * Merging casper 1.190.
+  * Merging casper 1.191.
+  * Merging casper 1.192.
+  * Merging casper 1.193.
+  * Move dummy start target in initscript.
+  * Merging casper 1.194.
+  * Merging casper 1.195.
+  * Merging casper 1.196.
+  * Merging casper 1.197.
+  * Merging casper 1.198.
+  * Merging casper 1.199.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 30 Apr 2010 19:19:23 +0200
+
 live-initramfs (1.177.2-1) unstable; urgency=low
 
   [ Marco Amadori ]
