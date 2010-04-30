@@ -1,3 +1,10 @@
+casper (1.183) karmic; urgency=low
+
+  * Remove erroneous /root prefix on the ubiquity desktop files in
+    10adduser.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Tue, 21 Jul 2009 14:02:34 +0100
+
 casper (1.182) karmic; urgency=low
 
   [ Evan Dandrea ]
