@@ -1,3 +1,15 @@
+casper (1.195) karmic; urgency=low
+
+  [ Oliver Grawert ]
+  * add support for serialtty= cmdline option for debugging purposes in live
+    sessions
+
+  [ Colin Watson ]
+  * Upstart moved /etc/event.d/ to /etc/init/; adjust shell provision on VTs
+    to match (LP: #434769).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 28 Sep 2009 10:52:32 +0100
+
 casper (1.194) karmic; urgency=low
 
   * Fix 47unr_ubiquity shell code to make slightly more sense.
