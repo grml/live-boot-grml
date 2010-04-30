@@ -1,3 +1,10 @@
+casper (1.196) karmic; urgency=low
+
+  * Extend our hack that arranges to run setupcon after usplash exits to
+    cover the new Upstartified usplash as well.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 29 Sep 2009 01:36:55 +0100
+
 casper (1.195) karmic; urgency=low
 
   [ Oliver Grawert ]
