@@ -20,6 +20,7 @@ USERFULLNAME="Live user"
 HOSTNAME="host"
 
 mkdir -p "${mountpoint}"
+tried="/tmp/tried"
 
 # Create /etc/mtab for debug purpose and future syncs
 if [ ! -d /etc ]
@@ -1563,6 +1564,7 @@ check_dev ()
 			umount $mountpoint
 		fi
 	fi
+	[ -e "$devname" ] || continue
 
 	if [ -n "${LIVE_MEDIA_OFFSET}" ]
 	then
@@ -1574,7 +1576,10 @@ check_dev ()
 
 	if is_supported_fs ${fstype}
 	then
+		devuid=$(blkid -o value -s UUID "$devname")
+		[ -n "$devuid" ] && grep -qs "\<$devuid\>" $tried && continue
 		mount -t ${fstype} -o ro,noatime "${devname}" ${mountpoint} || continue
+		[ -n "$devuid" ] && echo "$devuid" >> $tried
 
 		if is_live_path ${mountpoint} && \
 			([ "${skip_uuid_check}" ] || matches_uuid ${mountpoint})
@@ -1674,6 +1679,7 @@ find_livefs ()
 	for sysblock in $devices_to_scan
 	do
 		devname=$(sys2dev "${sysblock}")
+		[ -e "$devname" ] || continue
 		fstype=$(get_fstype "${devname}")
 
 		if /lib/udev/cdrom_id ${devname} > /dev/null

@@ -57,6 +57,7 @@ remove_applet ()
 	local line_no prior_line next_line
 
 	line_no="$(grep -n "<string>$1</string>" /root/usr/share/gconf/defaults/05_panel-default-setup.entries | cut -f 1 -d :)"
+	[ "$line_no" ] || return
 	prior_line="$((line_no-1))"
 	next_line="$((line_no+1))"
 
