@@ -1,3 +1,13 @@
+casper (1.192) karmic; urgency=low
+
+  [ Colin Watson ]
+  * Upgrade to debhelper v7.
+
+  [ Jonathan Riddell ]
+  * Add 37kubuntu_netbook_installer_link to show ubiquity launcher
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Sat, 12 Sep 2009 00:10:03 +0100
+
 casper (1.191) karmic; urgency=low
 
   * Slightly re-work 47unr_ubiquity, so that ubiquity doesn't keep getting
