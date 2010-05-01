@@ -116,6 +116,21 @@ do_stop ()
 		return 0
 	fi
 
+	# Don't prompt to eject the SD card on Babbage board, where we reuse it
+	# as a quasi-boot-floppy. Technically this uses a bit of ubiquity
+	# (archdetect), but since this is mostly only relevant for
+	# installations, who cares ...
+	if type archdetect >/dev/null 2>&1
+	then
+		subarch="$(archdetect)"
+
+		case $subarch in
+			arm*/imx51)
+				return 0
+				;;
+		esac
+	fi
+
 	prompt=1
 	if grep -qs noprompt /proc/cmdline
 	then

@@ -57,4 +57,15 @@ cat << EOF >> /root/etc/PolicyKit/PolicyKit.conf
 </config>
 EOF
 
+mkdir -p /root/var/lib/polkit-1/localauthority/10-vendor.d
+cat << EOF > /root/var/lib/polkit-1/localauthority/10-vendor.d/10-live-cd.pkla
+# Policy to allow the livecd user to bypass policykit
+[Live CD user permissions]
+Identity=unix-user:$USERNAME
+Action=*
+ResultAny=no
+ResultInactive=no
+ResultActive=yes
+EOF
+
 log_end_msg

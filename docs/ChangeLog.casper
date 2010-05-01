@@ -1,3 +1,16 @@
+casper (1.201) karmic; urgency=low
+
+  [ Colin Watson ]
+  * Don't prompt to eject the SD card on Babbage boards, since for now it's
+    reused as a quasi-boot-floppy (LP: #364273).
+
+  [ James Westby ]
+  * scripts/casper-bottom/44pk_allow_ubuntu: update to work for polkit-1
+    as well. Allow the live cd user to perform any action when at the
+    active console. (LP: #447141)
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 09 Oct 2009 16:06:53 +0100
+
 casper (1.200) karmic; urgency=low
 
   * scripts/casper-bottom/20xconfig:
