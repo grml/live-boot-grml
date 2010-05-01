@@ -38,9 +38,22 @@ then
 cat > /root/usr/sbin/update-initramfs << 'EOF'
 #!/bin/sh
 
+set -e
+
 update-initramfs.distrib "$@"
-cp /initrd.img /cdrom/live/initrd.gz
-cp /vmlinuz /cdrom/live/vmlinuz
+
+if [ -e /cdrom/live/initrd.lz ]
+then
+	zcat /initrd.img | lzma -9c >/cdrom/live/initrd.lz.new
+	mv /cdrom/live/initrd.lz.new /cdrom/live/initrd.lz
+else
+	cp /initrd.img /cdrom/live/initrd.gz.new
+	mv /cdrom/live/initrd.gz.new /cdrom/live/initrd.gz
+fi
+
+cp /vmlinuz /cdrom/live/vmlinuz.new
+mv /cdrom/live/vmlinuz.new /cdrom/live/vmlinuz
+
 exit 0
 EOF
 
