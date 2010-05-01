@@ -1,3 +1,11 @@
+casper (1.221) lucid; urgency=low
+
+  * Remove the rest of the mythbuntu delta from 10adduser.  It will be
+    maintained in the mythbuntu-live-autostart package instead so that
+    users from ~mythbuntu-dev can administer it.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 21 Feb 2010 20:22:00 -0600
+
 casper (1.220) lucid; urgency=low
 
   * scripts/casper: calculate memory without "head" utility, thanks to
