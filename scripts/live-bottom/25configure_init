@@ -108,6 +108,11 @@ then
 	chmod -x /root/sbin/readahead-list
 fi
 
+# Disable sreadahead too since we don't ship a pack file for it anyway, so
+# all we'll end up doing is profiling the live CD boot. sreadahead also
+# breaks partman occasionally by reading from its synchronisation FIFOs.
+rm -f /root/etc/init/sreadahead.conf
+
 log_end_msg
 
 exit 0
