@@ -1,3 +1,20 @@
+casper (1.212) lucid; urgency=low
+
+  [ Martin Pitt ]
+  * debian/control: Add ${misc:Depends}.
+  * debian/control: Bump Standards-Version to 3.8.3 (no changes necessary).
+
+  [ Colin Watson ]
+  * 15autologin: Use printf rather than echo -e, since its behaviour is
+    portable across shells.
+
+  [ Evan Dandrea ]
+  * Remove scripts/casper-bottom/42disable_apparmor.  Apparmor
+    2.3.1+bzr1312-0ubuntu3 and ifupdown 0.6.8ubuntu26 now no-op when
+    they detect the live CD environment.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Fri, 08 Jan 2010 19:56:27 +0000
+
 casper (1.211) lucid; urgency=low
 
   * Readd scripts/casper-bottom/15autologin changes: derivatives have
