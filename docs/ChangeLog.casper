@@ -1,3 +1,16 @@
+casper (1.210) lucid; urgency=low
+
+  [ Scott James Remnant ]
+  * Dropped Vcs-Bzr headers, pushed to lp:ubuntu/casper
+  * conf-hooks.d/casper: Changed to FRAMEBUFFER=y
+
+  [ Colin Watson ]
+  * Source /scripts/casper-functions and /scripts/casper-helpers only after
+    processing 'prereqs' argument, to avoid lots of warnings with new
+    initramfs-tools.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 05 Jan 2010 16:54:54 +0000
+
 casper (1.209) lucid; urgency=low
 
   * Revert the previous change to 15autologin and instead just make sure
