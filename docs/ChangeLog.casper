@@ -1,3 +1,12 @@
+casper (1.205) karmic; urgency=low
+
+  * scripts/casper-bottom/25configure_init: Disable sreadahead on live CD
+    boot. Not only does it profile the live CD boot to no benefit, but it
+    also looks as if it may be responsible for breaking Wubi installs by
+    reading from partman's synchronisation FIFOs (LP: #439279).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 20 Oct 2009 17:32:02 +0100
+
 casper (1.204) karmic; urgency=low
 
   * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
