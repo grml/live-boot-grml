@@ -1,3 +1,10 @@
+casper (1.209) lucid; urgency=low
+
+  * Revert the previous change to 15autologin and instead just make sure
+    custom.conf does not exist.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Mon, 04 Jan 2010 11:18:47 +0000
+
 casper (1.208) lucid; urgency=low
 
   [ Martin Pitt ]
