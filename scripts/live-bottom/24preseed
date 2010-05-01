@@ -58,7 +58,10 @@ fi
 
 if db_get preseed/early_command && [ "$RET" ]
 then
-	start_network
+	if db_get preseed/allow-network && [ "$RET" = true ]; then
+		start_network
+	fi
+
 	DEBIAN_HAS_FRONTEND= DEBCONF_REDIR= \
 	DEBIAN_FRONTEND=noninteractive \
 	sh -c "$RET"
