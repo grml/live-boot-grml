@@ -1,3 +1,18 @@
+casper (1.208) lucid; urgency=low
+
+  [ Martin Pitt ]
+  * scripts/casper-bottom/25configure_init: sreadahead is no more, disable
+    ureadahead instead.
+
+  [ Didier Roche ]
+  * scripts/casper-bottom/15autologin: Don't erase /etc/gdm/custom.conf but
+    only append autologin on casper startup if needed. This avoids removing
+    default session set in this file for ubuntu derivatives which use GDM.
+    The script also check if the modification is already there for
+    persistent usb keys. (LP: #498971)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 21 Dec 2009 15:54:36 +0100
+
 casper (1.207) lucid; urgency=low
 
   * Drop 46_disable_services.  It didn't need to be running on "all" systems
