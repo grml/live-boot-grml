@@ -116,8 +116,9 @@ case ${ACCESS} in
 		remove_applet fast_user_switch
 		if [ -x /root/usr/bin/pulse-session ]
 		then
-			touch /root/home/$USERNAME/.pulse_a11y_nostart
-			chroot /root chown $USERNAME.$USERNAME /home/$USERNAME/.pulse_a11y_nostart
+			mkdir -p /root/var/lib/pulseaudio
+			touch /root/var/lib/pulseaudio/.pulse_a11y_nostart
+			chroot /root chown root.root /var/lib/pulseaudio/.pulse_a11y_nostart
 			mkdir -p /root/home/$USERNAME/.pulse
 			echo "autospawn = no" > /root/home/$USERNAME/.pulse/client.conf
 			chroot /root chown -R $USERNAME.$USERNAME /home/$USERNAME/.pulse
@@ -150,8 +151,9 @@ case ${ACCESS} in
 
 		if [ -x /root/usr/bin/pulse-session ]
 		then
-			touch /root/home/$USERNAME/.pulse_a11y_nostart
-			chroot /root chown $USERNAME.$USERNAME /home/$USERNAME/.pulse_a11y_nostart
+			mkdir -p /root/var/lib/pulseaudio
+			touch /root/var/lib/pulseaudio/.pulse_a11y_nostart
+			chroot /root chown root.root /var/lib/pulseaudio/.pulse_a11y_nostart
 			mkdir -p /root/home/$USERNAME/.pulse
 			echo "autospawn = no" > /root/home/$USERNAME/.pulse/client.conf
 			chroot /root chown -R $USERNAME.$USERNAME /home/$USERNAME/.pulse

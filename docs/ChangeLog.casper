@@ -1,3 +1,12 @@
+casper (1.203) karmic; urgency=low
+
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - Change .pulse_a11y_nostart location to /var/lib/pulseaudio, as per
+      the change in pulseaudio itself, to solve a race condition with volume
+      settings restore.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Mon, 12 Oct 2009 08:31:51 +1100
+
 casper (1.202) karmic; urgency=low
 
   * scripts/casper-bottom/46_disable_services:
