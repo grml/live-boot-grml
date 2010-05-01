@@ -1,3 +1,11 @@
+casper (1.207) lucid; urgency=low
+
+  * Drop 46_disable_services.  It didn't need to be running on "all" systems
+    with casper installed.  Mythbuntu systems will pull this in via a package
+    that is administerable via ~mythbuntu-dev.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 24 Nov 2009 22:28:29 -0600
+
 casper (1.206) karmic; urgency=low
 
   * Fix broken /cdrom writable test in 43disable_initramfs
