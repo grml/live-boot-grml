@@ -1,3 +1,12 @@
+casper (1.204) karmic; urgency=low
+
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - .pulse_a11y_nostart -> pulse_a11y_nostart due to being in a system
+      directory, to completely match the change in pulseaudio, which I missed
+      earlier.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Wed, 14 Oct 2009 08:29:07 +1100
+
 casper (1.203) karmic; urgency=low
 
   * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
