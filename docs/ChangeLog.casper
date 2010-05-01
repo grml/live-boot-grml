@@ -1,3 +1,13 @@
+casper (1.223) lucid; urgency=low
+
+  * Bind-mount /dev, /proc, and /sys into /root while running apt-cdrom.
+  * Copy /lib/udev/rules.d/60-cdrom_id.rules into the initramfs to go with
+    /lib/udev/cdrom_id, so that apt-cdrom will be able to find ID_CDROM=1
+    entries when we run it.  This should stop update-notifier from
+    repeatedly popping up during the live session.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 23 Feb 2010 01:35:30 +0000
+
 casper (1.222) lucid; urgency=low
 
   * scripts/casper-bottom/47une_ubiquity:
