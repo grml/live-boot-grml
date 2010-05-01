@@ -1,3 +1,11 @@
+casper (1.202) karmic; urgency=low
+
+  * scripts/casper-bottom/46_disable_services:
+    - MythTV backend is now an upstart service, so rename it's conf file
+      in /etc/init, rather than using update-rc.d.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 11 Oct 2009 13:47:00 -0500
+
 casper (1.201) karmic; urgency=low
 
   [ Colin Watson ]
