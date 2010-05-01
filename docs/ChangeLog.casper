@@ -1,3 +1,15 @@
+casper (1.229) lucid; urgency=low
+
+  [ Jonathan Riddell ]
+  * Update scripts/casper-bottom/34disable_kde_services for lucid
+
+  [ Evan Dandrea ]
+  * Don't let apt try to auto-detect the CD-ROM device using udev.  We
+    already know what it is, and using udev to find it again wont work
+    for USB disks.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Tue, 23 Mar 2010 11:42:00 +0000
+
 casper (1.228) lucid; urgency=low
 
   * Update for the new libplymouth2.
