@@ -1,3 +1,10 @@
+casper (1.234) lucid; urgency=low
+
+  * Only bring the network up while running preseed/early_command if
+    preseed/allow-network=true.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Wed, 14 Apr 2010 15:56:40 +0100
+
 casper (1.233) lucid; urgency=low
 
   * Bring the network up while running preseed/early_command.
