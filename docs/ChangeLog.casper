@@ -1,3 +1,16 @@
+casper (1.226) lucid; urgency=low
+
+  [ Colin Watson ]
+  * Stop using removed nfsro option for NFS/unionfs (thanks, Bernhard
+    Seibold; LP: #460781).
+
+  [ Jonathan Riddell ]
+  * Remove scripts/casper-bottom/48enable_kubuntu_netbook and ubiquity-
+    hooks/48enable_kubuntu_netbook now enabled in kubuntu-netbook-
+    default-settings
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 10 Mar 2010 22:23:04 +0000
+
 casper (1.225) lucid; urgency=low
 
   * Add ubiquity-hooks/49kubuntu_gnome_icon_cache to recreate the Gnome
