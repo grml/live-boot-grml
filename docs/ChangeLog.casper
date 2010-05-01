@@ -1,3 +1,19 @@
+casper (1.233) lucid; urgency=low
+
+  * Bring the network up while running preseed/early_command.
+  * Fix use of debconf passthrough frontend; DEBCONF_READFD and
+    DEBCONF_WRITEFD were backwards, and DEBIAN_HAS_FRONTEND and
+    DEBCONF_REDIR needed to be unset or else confmodule scripts would end up
+    trying to talk to closed file descriptors.
+  * Run debconf-communicate with a read-only template database and separate
+    config databases, and copy any changed values back to the master
+    databases at the end.  This allows us to use the noninteractive frontend
+    rather than passthrough when running apt-get in preseed/early_command or
+    dpkg to install driver updates, thereby ensuring that the template
+    database is properly initialised (LP: #557011).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 12 Apr 2010 23:41:09 +0100
+
 casper (1.232) lucid; urgency=low
 
   * bump compcache size to 50% on live images for machines with less than

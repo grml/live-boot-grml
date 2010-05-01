@@ -58,15 +58,13 @@ fi
 
 if db_get preseed/early_command && [ "$RET" ]
 then
-	echo 'APT::Keep-Fds { "3"; "4"; };' > /root/etc/apt/apt.conf.d/00-early-debconf
-	DEBIAN_FRONTEND=passthrough \
-	DEBCONF_READFD=3 \
-	DEBCONF_WRITEFD=4 \
-	DEBCONF_DB_REPLACE=configdb \
-	DEBCONF_DB_OVERRIDE='Pipe{infd:none outfd:none}' \
+	start_network
+	DEBIAN_HAS_FRONTEND= DEBCONF_REDIR= \
+	DEBIAN_FRONTEND=noninteractive \
 	sh -c "$RET"
-	rm -f /root/etc/apt/apt.conf.d/00-early-debconf
 fi
+
+stop_network
 
 # Clear out debconf database backup files to save memory.
 rm -f /root/var/cache/debconf/*.dat-old
