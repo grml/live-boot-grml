@@ -705,7 +705,7 @@ copy_live_to ()
 	if [ "${copytodev}" = "ram" ]
 	then
 		# copying to ram:
-		freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( awk '/\<Cached/{print $2}' /proc/meminfo ) )
+		freespace=$(awk '/^MemFree:/{f=$2} /^Cached:/{c=$2} END{print f+c}' /proc/meminfo)
 		mount_options="-o size=${size}k"
 		free_string="memory"
 		fstype="tmpfs"
@@ -1008,7 +1008,7 @@ do_snap_copy ()
 			todev=$(awk -v pat="$(base_path ${todir})" '$2 == pat { print $1 }' /proc/mounts)
 			freespace=$(df -k | awk '/'${todev}'/{print $4}')
 		else
-			freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( awk '/\<Cached/{print $2}' /proc/meminfo))
+			freespace=$(awk '/^MemFree:/{f=$2} /^Cached:/{c=$2} END{print f+c}' /proc/meminfo)
 		fi
 
 		tomount="/mnt/tmpsnap"
