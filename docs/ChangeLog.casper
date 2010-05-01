@@ -1,3 +1,12 @@
+casper (1.222) lucid; urgency=low
+
+  * scripts/casper-bottom/47une_ubiquity:
+    - get back ubiquity favorite icon in UNE live (LP: #524381)
+    - rename the script from 47unr_ubiquity to 47une_ubiquity as well
+      as "UNR" mention
+
+ -- Didier Roche <didrocks@ubuntu.com>  Mon, 22 Feb 2010 14:01:25 +0100
+
 casper (1.221) lucid; urgency=low
 
   * Remove the rest of the mythbuntu delta from 10adduser.  It will be
