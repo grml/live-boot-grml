@@ -36,9 +36,12 @@ then
 	chroot /root debconf-set-selections < /preseed.cfg
 fi
 
-if [ -f "/root/${LOCATION}" ]
+if [ -n "${LOCATIONS}" ]
 then
-	chroot /root debconf-set-selections < "/root/${LOCATION}"
+	for item in ${LOCATIONS}
+	do
+		chroot /root debconf-set-selections < "/root${ITEM}"
+	done
 fi
 
 if [ -n "${PRESEEDS}" ]

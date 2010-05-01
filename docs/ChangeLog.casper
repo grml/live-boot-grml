@@ -1,3 +1,17 @@
+casper (1.215) lucid; urgency=low
+
+  [ Mario Limonciello ]
+  * Support multiple preseed file/urlarguments on the kernel commandline
+    rather than just selecting the last one and going with that.
+  * debian/control: Set Vcs-Bzr.
+
+  [ Jonathan Riddell ]
+  * Add scripts/casper-bottom/48enable_kubuntu_netbook and ubiquity-
+    hooks/48enable_kubuntu_netbook to enable Plasma Netbook workspace
+    for Kubuntu Netbook Remix
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 27 Jan 2010 13:55:42 +0000
+
 casper (1.214) lucid; urgency=low
 
   * 15autologin: simplify the code with escape character evaluation
