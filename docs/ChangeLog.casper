@@ -1,3 +1,10 @@
+casper (1.206) karmic; urgency=low
+
+  * Fix broken /cdrom writable test in 43disable_initramfs
+    (LP: #450259).
+
+ -- Evan Dandrea <evand@ubuntu.com>  Thu, 22 Oct 2009 11:49:15 +0100
+
 casper (1.205) karmic; urgency=low
 
   * scripts/casper-bottom/25configure_init: Disable sreadahead on live CD
