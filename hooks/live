@@ -44,6 +44,7 @@ mkdir -p "${DESTDIR}"/lib/live-initramfs
 # Executables
 copy_exec /usr/share/live-initramfs/live-reconfigure /bin
 copy_exec /usr/share/live-initramfs/live-preseed /bin
+copy_exec /usr/share/live-initramfs/live-set-selections /bin
 
 # Scripts
 cp /usr/share/initramfs-tools/scripts/live-functions "${DESTDIR}"/scripts
