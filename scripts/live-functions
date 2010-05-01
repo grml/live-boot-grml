@@ -5,7 +5,11 @@
 log_wait_msg ()
 {
 	# Print a message and wait for enter
-	if [ -x /sbin/usplash_write ]
+	if [ -x /bin/plymouth ] && plymouth --ping
+	then
+		plymouth message --text="$@"
+		plymouth watch-keystroke | read nunya
+	elif [ -x /sbin/usplash_write ]
 	then
 		/sbin/usplash_write "INPUTENTER ${@}"
 		read nunya < /dev/.initramfs/usplash_outfifo

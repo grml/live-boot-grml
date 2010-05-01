@@ -1,3 +1,10 @@
+casper (1.227) lucid; urgency=low
+
+  * casper-md5check: port from usplash to plymouth.  LP: #500198
+  * fix up our reliance on usplash, /dev/console elsewhere.  LP: #506418.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 12 Mar 2010 01:12:28 -0800
+
 casper (1.226) lucid; urgency=low
 
   [ Colin Watson ]
