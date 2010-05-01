@@ -72,7 +72,7 @@ TimedLoginDelay=10"
 		then
 			sed -i "s/\[daemon\]/\[daemon\]\n$AutologinParameters/" $GDMCustomFile
 		else
-			printf '[daemon]\n%s' "$AutologinParameters" >> $GDMCustomFile
+			printf "[daemon]\n$AutologinParameters" >> $GDMCustomFile
 		fi
 	fi
 fi

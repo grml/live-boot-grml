@@ -1,3 +1,9 @@
+casper (1.213) lucid; urgency=low
+
+  * printf does not evaluate escape characters in the argument string.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Mon, 11 Jan 2010 11:02:12 +0000
+
 casper (1.212) lucid; urgency=low
 
   [ Martin Pitt ]
