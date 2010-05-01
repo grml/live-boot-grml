@@ -1,3 +1,10 @@
+casper (1.225) lucid; urgency=low
+
+  * Add ubiquity-hooks/49kubuntu_gnome_icon_cache to recreate the Gnome
+    icon cache on Kubuntu CDs, removed by livecd-rootfs
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 08 Mar 2010 11:47:01 +0000
+
 casper (1.224) lucid; urgency=low
 
   * Remove ubiquity-hooks/35copy_wallpaper_cache as now implement it in
