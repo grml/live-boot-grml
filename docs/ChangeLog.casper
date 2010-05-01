@@ -1,3 +1,13 @@
+casper (1.211) lucid; urgency=low
+
+  * Readd scripts/casper-bottom/15autologin changes: derivatives have
+    now a custom.conf file and still need autologin in live version.
+    Merge with my previous fix proposed for sponsoring one week ago:
+    use echo -e to enable \n interpretation (/bin/sh is busybox ash
+    which behavior differs from vanilla ash interpretor) (LP: #500786)·
+
+ -- Didier Roche <didrocks@ubuntu.com>  Tue, 05 Jan 2010 20:05:26 +0100
+
 casper (1.210) lucid; urgency=low
 
   [ Scott James Remnant ]
