@@ -1,3 +1,11 @@
+casper (1.232) lucid; urgency=low
+
+  * bump compcache size to 50% on live images for machines with less than
+    512MiB. This makes sure we don't hit OOM errors on systems with only
+    256MiB of RAM.
+
+ -- Oliver Grawert <ogra@ubuntu.com>  Mon, 12 Apr 2010 08:10:06 +0200
+
 casper (1.231) lucid; urgency=low
 
   [ Jonathan Riddell ]
