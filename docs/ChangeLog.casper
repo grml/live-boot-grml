@@ -1,3 +1,10 @@
+casper (1.214) lucid; urgency=low
+
+  * 15autologin: simplify the code with escape character evaluation
+    (LP: #505140)
+
+ -- Didier Roche <didrocks@ubuntu.com>  Tue, 12 Jan 2010 08:57:05 +0100
+
 casper (1.213) lucid; urgency=low
 
   * printf does not evaluate escape characters in the argument string.
