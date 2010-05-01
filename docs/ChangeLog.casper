@@ -1,3 +1,9 @@
+casper (1.235) lucid; urgency=low
+
+  * Unbreak early command from previous commit.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 15 Apr 2010 02:54:15 -0500
+
 casper (1.234) lucid; urgency=low
 
   * Only bring the network up while running preseed/early_command if
