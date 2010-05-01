@@ -1,3 +1,10 @@
+casper (1.224) lucid; urgency=low
+
+  * Remove ubiquity-hooks/35copy_wallpaper_cache as now implement it in
+    ubiquity itself (LP: #530024)
+
+ -- Didier Roche <didrocks@ubuntu.com>  Mon, 01 Mar 2010 19:41:45 +0100
+
 casper (1.223) lucid; urgency=low
 
   * Bind-mount /dev, /proc, and /sys into /root while running apt-cdrom.
