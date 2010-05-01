@@ -1,3 +1,17 @@
+casper (1.230) lucid; urgency=low
+
+  * Don't save the hardware clock on live CD reboot; we used to do this in
+    the sysvinit world, but it regressed when we switched to Upstart
+    (thanks, Norm Pierce; LP: #436535).
+  * When running update-initramfs on writable media, update initrd.lz rather
+    than initrd.gz if it's present, and make the update process a bit safer
+    while we're there (LP: #489736).
+  * Handle toram and todisk=DEVICE options on command line (LP: #526305).
+  * Policy version 3.8.4: no changes required.
+  * Convert to source format 3.0 (native).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 30 Mar 2010 11:41:24 +0100
+
 casper (1.229) lucid; urgency=low
 
   [ Jonathan Riddell ]
