@@ -176,18 +176,24 @@ do_stop ()
 
 		[ "$prompt" ] || return 0
 
-		stty sane < /dev/console
-
-		printf "\n\n${MESSAGE} and press ENTER to continue:" > /dev/console
-
-		if [ -x /sbin/usplash_write ]
+		if [ -x /bin/plymouth ] && plymouth --ping
 		then
-			/sbin/usplash_write "TIMEOUT 86400"
-			/sbin/usplash_write "TEXT-URGENT ${MESSAGE}"
-			/sbin/usplash_write "TEXT-URGENT and press ENTER to continue"
-		fi
+			plymouth message --text="${MESSAGE} and press ENTER to continue:"
+			plymouth watch-keystroke > /dev/null
+		else
+			stty sane < /dev/console
 
-		read x < /dev/console
+			printf "\n\n${MESSAGE} and press ENTER to continue:" > /dev/console
+
+			if [ -x /sbin/usplash_write ]
+			then
+				/sbin/usplash_write "TIMEOUT 86400"
+				/sbin/usplash_write "TEXT-URGENT ${MESSAGE}"
+				/sbin/usplash_write "TEXT-URGENT and press ENTER to continue"
+			fi
+
+			read x < /dev/console
+		fi
 	fi
 }
 
