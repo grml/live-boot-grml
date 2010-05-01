@@ -1,3 +1,9 @@
+casper (1.228) lucid; urgency=low
+
+  * Update for the new libplymouth2.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 12 Mar 2010 18:37:02 -0800
+
 casper (1.227) lucid; urgency=low
 
   * casper-md5check: port from usplash to plymouth.  LP: #500198
