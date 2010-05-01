@@ -1,3 +1,21 @@
+casper (1.217) lucid; urgency=low
+
+  [ Luke Yelavich ]
+  * ubiquity-hooks/30accessibility: Enable accessible login for the blindness
+    and braile accessibility profiles.
+
+  [ Colin Watson ]
+  * Use egrep rather than 'grep -E' (LP: #512386).
+
+  [ Julien Lavergne ]
+  * 15autologin: Add support for LXDM autologin (LP: #511976).
+
+  [ Evan Dandrea ]
+  * Properly shut down debconf-communicate so that its database gets
+    written (LP: #518272).
+
+ -- Evan Dandrea <evand@ubuntu.com>  Thu, 11 Feb 2010 08:25:53 +0000
+
 casper (1.216) lucid; urgency=low
 
   [ Luke Yelavich ]

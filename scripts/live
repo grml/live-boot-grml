@@ -667,7 +667,7 @@ is_nice_device ()
 {
 	sysfs_path="${1#/sys}"
 
-	if /lib/udev/path_id "${sysfs_path}" | grep -E -q "ID_PATH=(usb|pci-|platform-orion-ehci|platform-mmc|platform-mxsdhci|)"
+	if /lib/udev/path_id "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-|platform-orion-ehci|platform-mmc|platform-mxsdhci|)"
 	then
 		return 0
 	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
@@ -1677,7 +1677,7 @@ find_livefs ()
 
 	# or do the scan of block devices
 	# prefer removable devices over non-removable devices, so scan them first
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | egrep -v "/(loop|ram|dm-|fd)")
 	do
 		if [ "$(cat ${sysblock}/removable)" = "1" ]
 		then
@@ -1918,9 +1918,7 @@ mountroot ()
 		umount "${rootmnt}/dev"
 	fi
 
-	# Kill the debconf-communicate instance and close fd's associated with·
-	# debconf-communicate.
-	kill $DEBCONF_COMMUNICATE_PID
+	# Close the fd's associated with debconf-communicate
 	exec 3>&- 4<&-
 	rm -f /tmp/debconf-in.fifo
 	rm -f /tmp/debconf-out.fifo
