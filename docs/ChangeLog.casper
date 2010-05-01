@@ -1,3 +1,22 @@
+casper (1.216) lucid; urgency=low
+
+  [ Luke Yelavich ]
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - Remove code to disable pulseaudio, as it is no longer needed, and
+      the supporting code in the pulseaudio package was removed a long time
+      ago.
+    - Set the default empathy theme to classic for blindness and braille
+      accessibility profiles.
+
+  [ Jamie Bennett ]
+  * Speed up work around debconf-communicate. Replace several calls to
+    debconf-communicate with one persistent invocation followed by
+    confmodule calls.
+  * Disable guest account by rm'ing rather than waiting for dpkg to
+    remove it.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Wed, 03 Feb 2010 16:41:57 -0800
+
 casper (1.215) lucid; urgency=low
 
   [ Mario Limonciello ]

@@ -1885,6 +1885,28 @@ mountroot ()
 		mount -n -o bind /dev "${rootmnt}/dev"
 	fi
 
+	# Open up two fifo's fd's for debconf-communicate to use. Speeds up
+	# the live-initramfs process considerably.
+	log_begin_msg "Creating debconf-communicate fifo mechanism"
+	mkfifo /tmp/debconf-in.fifo
+	mkfifo /tmp/debconf-out.fifo
+
+	chroot /root debconf-communicate -fnoninteractive live-initramfs > /tmp/debconf-out.fifo < /tmp/debconf-in.fifo &
+
+	# Save the PID so it can be killed later.
+	DEBCONF_COMMUNICATE_PID="$!"
+
+	if [ ! -p /tmp/debconf-in.fifo ] || [ ! -p /tmp/debconf-out.fifo ]
+	then
+		log_warning_msg "failed to setup debconf-communicate channel"
+	fi
+	log_end_msg
+
+	# Order matters!
+	# These file descriptors must stay open until we're finished with
+	# debconf-communicate.
+	exec 4</tmp/debconf-out.fifo 3>/tmp/debconf-in.fifo
+
 	maybe_break live-bottom
 	log_begin_msg "Running /scripts/live-bottom\n"
 
@@ -1895,6 +1917,13 @@ mountroot ()
 	then
 		umount "${rootmnt}/dev"
 	fi
+
+	# Kill the debconf-communicate instance and close fd's associated with·
+	# debconf-communicate.
+	kill $DEBCONF_COMMUNICATE_PID
+	exec 3>&- 4<&-
+	rm -f /tmp/debconf-in.fifo
+	rm -f /tmp/debconf-out.fifo
 
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-

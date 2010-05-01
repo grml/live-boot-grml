@@ -26,6 +26,7 @@ then
 fi
 
 . /scripts/live-functions
+load_confmodule
 
 log_begin_msg "Loading preseed file"
 
@@ -33,14 +34,14 @@ log_begin_msg "Loading preseed file"
 
 if [ -e /preseed.cfg ]
 then
-	chroot /root debconf-set-selections < /preseed.cfg
+	live-set-selections /preseed.cfg
 fi
 
 if [ -n "${LOCATIONS}" ]
 then
 	for item in ${LOCATIONS}
 	do
-		chroot /root debconf-set-selections < "/root${ITEM}"
+		live-set-selections "/root$item"
 	done
 fi
 
@@ -55,12 +56,9 @@ then
 	done
 fi
 
-reply="$(echo "GET preseed/early_command" | chroot /root debconf-communicate -fnoninteractive live-initramfs)"
-
-if [ "${reply#0 }" != "${reply}" ]
+if db_get preseed/early_command && [ "$RET" ]
 then
-	reply="${reply#0 }"
-	sh -c "${reply}"
+	sh -c "$RET"
 fi
 
 # Clear out debconf database backup files to save memory.
