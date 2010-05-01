@@ -1,3 +1,10 @@
+casper (1.218) lucid; urgency=low
+
+  * Allow dpkg and apt-get to be installed from within commands that operate
+    in the chroot via early_command or driver updates. (LP: #521218)
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 16 Feb 2010 13:38:48 -0600
+
 casper (1.217) lucid; urgency=low
 
   [ Luke Yelavich ]
