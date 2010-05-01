@@ -1,3 +1,16 @@
+casper (1.219) lucid; urgency=low
+
+  [ Mario Limonciello ]
+  * Disable casper-reconfigure from 22gnome_panel_data.  It doesn't (appear) to
+    serve a functional purpose as the postinst does nothing different for laptops.
+
+  [ Didier Roche ]
+  * add 35copy_wallpaper_cache to copy the wallpaper cache created at boot time
+    to the main user's directory. First boot will take it into account in
+    ureadahead profiling
+
+ -- Didier Roche <didrocks@ubuntu.com>  Wed, 17 Feb 2010 19:14:53 +0100
+
 casper (1.218) lucid; urgency=low
 
   * Allow dpkg and apt-get to be installed from within commands that operate

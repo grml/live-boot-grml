@@ -31,11 +31,6 @@ log_begin_msg "Configuring gnome-panel-data"
 
 # live-initramfs script
 
-if chroot /root laptop-detect > /dev/null 2>&1
-then
-	live-reconfigure /root gnome-panel-data
-fi
-
 if [ -n "${USERNAME}" ]
 then
 	chroot /root sudo -u "${USERNAME}" gconftool-2 -s -t bool /apps/panel/global/disable_lock_screen true
