@@ -1,3 +1,10 @@
+casper (1.220) lucid; urgency=low
+
+  * scripts/casper: calculate memory without "head" utility, thanks to
+    Petar Bogdanovic (LP: #25496).
+
+ -- Kees Cook <kees@ubuntu.com>  Fri, 19 Feb 2010 14:04:18 -0800
+
 casper (1.219) lucid; urgency=low
 
   [ Mario Limonciello ]
