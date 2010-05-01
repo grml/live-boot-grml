@@ -1,3 +1,22 @@
+casper (1.231) lucid; urgency=low
+
+  [ Jonathan Riddell ]
+  * Remove 37kubuntu_netbook_installer_link, now done with a patch in
+    kdebase-workspace
+
+  [ Colin Watson ]
+  * If copying live media to RAM or disk, explicitly copy .disk, since *
+    won't expand to include it (LP: #526305).
+  * Cache /bin/plymouth and /sbin/usplash_write before ejecting the CD, in
+   the hope that that helps with I/O errors on reboot (see LP #539027).
+
+  [ Luke Yelavich ]
+  * ubiquity-hooks/30accessibility: Copy the orca settings directory to the
+    gdm home directory, to allow for preferred orca settings to be used in
+    gdm (LP: #551515).
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Fri, 09 Apr 2010 14:00:51 +1000
+
 casper (1.230) lucid; urgency=low
 
   * Don't save the hardware clock on live CD reboot; we used to do this in
