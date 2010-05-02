@@ -780,6 +780,10 @@ do_netmount ()
 	udevadm trigger
 	udevadm settle
 
+	if [ -z "${NETBOOT}" ] && [ -z "${FETCH}" ] && \
+	   [ -z "${HTTPFS}" ] && [ -z "${FTPFS}" ]
+	then
+
 	# if ethdevice was not specified on the kernel command line
 	# make sure we try to get a working network configuration
 	# for *every* present network device (except for loopback of course)
@@ -822,6 +826,10 @@ do_netmount ()
 			break
 		fi
 	done
+
+	else
+	ipconfig ${DEVICE} | tee /netboot.config
+	fi
 
 	# source relevant ipconfig output
 	OLDHOSTNAME=${HOSTNAME}
