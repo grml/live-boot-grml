@@ -29,13 +29,6 @@ fi
 
 # live-initramfs script
 
-if [ "${TERM_TYPE}" = "serial" ]
-then
-	# Don't bother trying to configure or start X on a serial console
-	rm -f /root/etc/rc?.d/S??[gkx]dm
-	exit 0
-fi
-
 if [ -n "${TEXTONLY}" ]
 then
 	exit 0
@@ -48,37 +41,47 @@ fi
 
 log_begin_msg "Configuring X"
 
-locale=en_US.UTF-8
-
-mount -o bind /sys /root/sys
-mount -o bind /proc /root/proc
-mount -o bind /dev /root/dev
-
-if [ -n "${XDEBCONF}" -a -x /root/usr/sbin/xdebconfigurator ]
+if ! grep -q xforcevesa /proc/cmdline 2>&1 >/dev/null
 then
-	# xdebconfigurator
-	chroot /root /usr/sbin/xdebconfigurator
-fi
+	if [ "${TERM_TYPE}" = "serial" ]
+	then
+		# Don't bother trying to configure or start X on a serial
+		# console
+		rm -f /root/etc/rc?.d/S??[gkx]dm
+		exit 0
+	fi
 
-if [ -n "${KOPTIONS}" ]
-then
-	setoptions="set xserver-xorg/config/inputdevice/keyboard/options ${KOPTIONS}"
-fi
+	locale=en_US.UTF-8
 
-if [ -n "${KVARIANT}" ]
-then
-	setvariant="set xserver-xorg/config/inputdevice/keyboard/variant ${KVARIANT}"
-fi
+	mount -o bind /sys /root/sys
+	mount -o bind /proc /root/proc
+	mount -o bind /dev /root/dev
 
-if [ -n "${KMODEL}" ]
-then
-	setmodel="set xserver-xorg/config/inputdevice/keyboard/model ${KMODEL}"
-fi
+	if [ -n "${XDEBCONF}" -a -x /root/usr/sbin/xdebconfigurator ]
+	then
+		# xdebconfigurator
+		chroot /root /usr/sbin/xdebconfigurator
+	fi
 
-if [ -n "${KLAYOUT}" ]
-then
-	setlayout="set xserver-xorg/config/inputdevice/keyboard/layout ${KLAYOUT}"
-fi
+	if [ -n "${KOPTIONS}" ]
+	then
+		setoptions="set xserver-xorg/config/inputdevice/keyboard/options ${KOPTIONS}"
+	fi
+
+	if [ -n "${KVARIANT}" ]
+	then
+		setvariant="set xserver-xorg/config/inputdevice/keyboard/variant ${KVARIANT}"
+	fi
+
+	if [ -n "${KMODEL}" ]
+	then
+		setmodel="set xserver-xorg/config/inputdevice/keyboard/model ${KMODEL}"
+	fi
+
+	if [ -n "${KLAYOUT}" ]
+	then
+		setlayout="set xserver-xorg/config/inputdevice/keyboard/layout ${KLAYOUT}"
+	fi
 
 chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
 ${setlayout}
@@ -87,11 +90,32 @@ ${setmodel}
 ${setoptions}
 EOF
 
-live-reconfigure /root xserver-xorg 2>&1 \
-	| grep -v "overwriting possibly-customised configuration" \
-	| grep -v "file; backup in /etc/X11/xorg.conf"
-umount /root/sys
-umount /root/proc
-umount /root/dev
+	live-reconfigure /root xserver-xorg 2>&1 \
+		| grep -v "overwriting possibly-customised configuration" \
+		| grep -v "file; backup in /etc/X11/xorg.conf"
+
+	umount /root/sys
+	umount /root/proc
+	umount /root/dev
+else
+
+cat > /root/etc/X11/xorg.conf << EOF
+Section "Device"
+	Identifier	"Configured Video Device"
+	Driver		"vesa"
+EndSection
+
+Section "Monitor"
+	Identifier	"Configured Monitor"
+EndSection
+
+Section "Screen"
+	Identifier	"Default Screen"
+	Monitor		"Configured Monitor"
+	Device		"Configured Video Device"
+EndSection
+EOF
+
+fi
 
 log_end_msg

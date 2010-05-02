@@ -57,16 +57,21 @@ then
 	${GDMCONF}
 elif [ -d /root/etc/gdm3 ]
 then
+	GDMCustomFile=/root/etc/gdm3/custom.conf
+	AutologinParameters="AutomaticLoginEnable=true\n\
+AutomaticLogin=$USERNAME\n\
+TimedLoginEnable=true\n\
+TimedLogin=$USERNAME\n\
+TimedLoginDelay=10"
 
-cat > /root/etc/gdm3/custom.conf << EOF
-[daemon]
-AutomaticLoginEnable=true
-AutomaticLogin=$USERNAME
-TimedLoginEnable=true
-TimedLogin=$USERNAME
-TimedLoginDelay=10
-EOF
+	# Prevent from updating if parameters already present (persistent usb
+	# key)
+	if ! $(grep -qs '\[daemon\]' $GDMCustomFile)
+	then
+		echo '[daemon]' >> $GDMCustomFile
+	fi
 
+	sed -i "s/\[daemon\]/\[daemon\]\n$AutologinParameters/" $GDMCustomFile
 fi
 
 if [ -d /root/etc/default/kdm.d/ ]

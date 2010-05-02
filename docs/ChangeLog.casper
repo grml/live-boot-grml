@@ -1,3 +1,162 @@
+casper (1.215) lucid; urgency=low
+
+  [ Mario Limonciello ]
+  * Support multiple preseed file/urlarguments on the kernel commandline
+    rather than just selecting the last one and going with that.
+  * debian/control: Set Vcs-Bzr.
+
+  [ Jonathan Riddell ]
+  * Add scripts/casper-bottom/48enable_kubuntu_netbook and ubiquity-
+    hooks/48enable_kubuntu_netbook to enable Plasma Netbook workspace
+    for Kubuntu Netbook Remix
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 27 Jan 2010 13:55:42 +0000
+
+casper (1.214) lucid; urgency=low
+
+  * 15autologin: simplify the code with escape character evaluation
+    (LP: #505140)
+
+ -- Didier Roche <didrocks@ubuntu.com>  Tue, 12 Jan 2010 08:57:05 +0100
+
+casper (1.213) lucid; urgency=low
+
+  * printf does not evaluate escape characters in the argument string.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Mon, 11 Jan 2010 11:02:12 +0000
+
+casper (1.212) lucid; urgency=low
+
+  [ Martin Pitt ]
+  * debian/control: Add ${misc:Depends}.
+  * debian/control: Bump Standards-Version to 3.8.3 (no changes necessary).
+
+  [ Colin Watson ]
+  * 15autologin: Use printf rather than echo -e, since its behaviour is
+    portable across shells.
+
+  [ Evan Dandrea ]
+  * Remove scripts/casper-bottom/42disable_apparmor.  Apparmor
+    2.3.1+bzr1312-0ubuntu3 and ifupdown 0.6.8ubuntu26 now no-op when
+    they detect the live CD environment.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Fri, 08 Jan 2010 19:56:27 +0000
+
+casper (1.211) lucid; urgency=low
+
+  * Readd scripts/casper-bottom/15autologin changes: derivatives have
+    now a custom.conf file and still need autologin in live version.
+    Merge with my previous fix proposed for sponsoring one week ago:
+    use echo -e to enable \n interpretation (/bin/sh is busybox ash
+    which behavior differs from vanilla ash interpretor) (LP: #500786)·
+
+ -- Didier Roche <didrocks@ubuntu.com>  Tue, 05 Jan 2010 20:05:26 +0100
+
+casper (1.210) lucid; urgency=low
+
+  [ Scott James Remnant ]
+  * Dropped Vcs-Bzr headers, pushed to lp:ubuntu/casper
+  * conf-hooks.d/casper: Changed to FRAMEBUFFER=y
+
+  [ Colin Watson ]
+  * Source /scripts/casper-functions and /scripts/casper-helpers only after
+    processing 'prereqs' argument, to avoid lots of warnings with new
+    initramfs-tools.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 05 Jan 2010 16:54:54 +0000
+
+casper (1.209) lucid; urgency=low
+
+  * Revert the previous change to 15autologin and instead just make sure
+    custom.conf does not exist.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Mon, 04 Jan 2010 11:18:47 +0000
+
+casper (1.208) lucid; urgency=low
+
+  [ Martin Pitt ]
+  * scripts/casper-bottom/25configure_init: sreadahead is no more, disable
+    ureadahead instead.
+
+  [ Didier Roche ]
+  * scripts/casper-bottom/15autologin: Don't erase /etc/gdm/custom.conf but
+    only append autologin on casper startup if needed. This avoids removing
+    default session set in this file for ubuntu derivatives which use GDM.
+    The script also check if the modification is already there for
+    persistent usb keys. (LP: #498971)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 21 Dec 2009 15:54:36 +0100
+
+casper (1.207) lucid; urgency=low
+
+  * Drop 46_disable_services.  It didn't need to be running on "all" systems
+    with casper installed.  Mythbuntu systems will pull this in via a package
+    that is administerable via ~mythbuntu-dev.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Tue, 24 Nov 2009 22:28:29 -0600
+
+casper (1.206) karmic; urgency=low
+
+  * Fix broken /cdrom writable test in 43disable_initramfs
+    (LP: #450259).
+
+ -- Evan Dandrea <evand@ubuntu.com>  Thu, 22 Oct 2009 11:49:15 +0100
+
+casper (1.205) karmic; urgency=low
+
+  * scripts/casper-bottom/25configure_init: Disable sreadahead on live CD
+    boot. Not only does it profile the live CD boot to no benefit, but it
+    also looks as if it may be responsible for breaking Wubi installs by
+    reading from partman's synchronisation FIFOs (LP: #439279).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 20 Oct 2009 17:32:02 +0100
+
+casper (1.204) karmic; urgency=low
+
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - .pulse_a11y_nostart -> pulse_a11y_nostart due to being in a system
+      directory, to completely match the change in pulseaudio, which I missed
+      earlier.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Wed, 14 Oct 2009 08:29:07 +1100
+
+casper (1.203) karmic; urgency=low
+
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - Change .pulse_a11y_nostart location to /var/lib/pulseaudio, as per
+      the change in pulseaudio itself, to solve a race condition with volume
+      settings restore.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Mon, 12 Oct 2009 08:31:51 +1100
+
+casper (1.202) karmic; urgency=low
+
+  * scripts/casper-bottom/46_disable_services:
+    - MythTV backend is now an upstart service, so rename it's conf file
+      in /etc/init, rather than using update-rc.d.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 11 Oct 2009 13:47:00 -0500
+
+casper (1.201) karmic; urgency=low
+
+  [ Colin Watson ]
+  * Don't prompt to eject the SD card on Babbage boards, since for now it's
+    reused as a quasi-boot-floppy (LP: #364273).
+
+  [ James Westby ]
+  * scripts/casper-bottom/44pk_allow_ubuntu: update to work for polkit-1
+    as well. Allow the live cd user to perform any action when at the
+    active console. (LP: #447141)
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 09 Oct 2009 16:06:53 +0100
+
+casper (1.200) karmic; urgency=low
+
+  * scripts/casper-bottom/20xconfig:
+    - Fix xforcevesa to generate a good failsafe xorg.conf (LP: #423969)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 08 Oct 2009 22:26:42 -0500
+
 casper (1.199) karmic; urgency=low
 
   [ Tormod Volden ]

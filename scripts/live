@@ -46,6 +46,7 @@ fi
 Arguments ()
 {
 	PRESEEDS=""
+	LOCATIONS=""
 
 	for ARGUMENT in $(cat /proc/cmdline)
 	do
@@ -418,8 +419,8 @@ Arguments ()
 				;;
 
 			preseed/file=*|file=*)
-				LOCATION="${ARGUMENT#*=}"
-				export LOCATION
+				LOCATIONS="${ARGUMENT#*=} ${LOCATIONS}"
+				export LOCATIONS
 				;;
 
 			nopreseed)
@@ -428,7 +429,7 @@ Arguments ()
 				;;
 
 			url=*)
-				location="${ARGUMENT#url=}"
+				URL_LOCATION="${ARGUMENT#url=}"
 
 				mount -o bind /sys /root/sys
 				mount -o bind /proc /root/proc
@@ -436,14 +437,14 @@ Arguments ()
 
 				mkdir -p /root/var/run/network
 				[ "${NETBOOT}" ] || chroot /root dhclient eth0
-				chroot /root wget -P /tmp "${location}"
+				chroot /root wget -P /tmp "${URL_LOCATION}"
 				[ "${NETBOOT}" ] || chroot /root ifconfig eth0 down
 
 				umount /root/sys
 				umount /root/proc
 				umount /root/dev
 
-				LOCATION="/tmp/$(basename "${location}")"
+				LOCATIONS="/tmp/$(basename ${URL_LOCATION}) ${LOCATIONS}"
 				;;
 
 			*/*=*)
@@ -779,6 +780,10 @@ do_netmount ()
 	udevadm trigger
 	udevadm settle
 
+	if [ -z "${NETBOOT}" ] && [ -z "${FETCH}" ] && \
+	   [ -z "${HTTPFS}" ] && [ -z "${FTPFS}" ]
+	then
+
 	# if ethdevice was not specified on the kernel command line
 	# make sure we try to get a working network configuration
 	# for *every* present network device (except for loopback of course)
@@ -821,6 +826,10 @@ do_netmount ()
 			break
 		fi
 	done
+
+	else
+	ipconfig ${DEVICE} | tee /netboot.config
+	fi
 
 	# source relevant ipconfig output
 	OLDHOSTNAME=${HOSTNAME}
