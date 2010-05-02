@@ -1,3 +1,28 @@
+live-initramfs (1.215.1-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Merging casper 1.200.
+  * Merging casper 1.201.
+  * Merging casper 1.202.
+  * Merging casper 1.203.
+  * Merging casper 1.204.
+  * Merging casper 1.205.
+  * Merging casper 1.206.
+  * Merging casper 1.207.
+  * Merging casper 1.208.
+  * Merging casper 1.209.
+  * Merging casper 1.210.
+  * Merging casper 1.211.
+  * Merging casper 1.212.
+  * Merging casper 1.213.
+  * Merging casper 1.214.
+  * Merging casper 1.215.
+
+  [ Steven Shiau ]
+  * No timeout as running ipconfig for network booting.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 02 May 2010 15:52:01 +0200
+
 live-initramfs (1.199.1-1) unstable; urgency=low
 
   * Updating maintainer field.
