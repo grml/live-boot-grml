@@ -43,6 +43,35 @@ then
 	touch /live.vars
 fi
 
+network_started=
+
+start_network ()
+{
+	[ -z "$network_started" ] || return
+	[ -z "$NETBOOT" ] || return
+
+	mount -n -o bind /sys /root/sys
+	mount -n -o bind /proc /root/proc
+	mount -n -o bind /dev /root/dev
+	mkdir -p /root/var/run/network
+
+	# Close inherited fd's to prevent debconf-communicate from
+	# continuing to run post-live-initramfs.
+	chroot /root dhclient eth0 3>&- 4<&-
+
+	network_started=1
+}
+
+stop_network ()
+{
+	[ "$network_started" ] || return
+
+	chroot /root ifconfig eth0 down
+	umount /root/sys
+	umount /root/proc
+	umount /root/dev
+}
+
 Arguments ()
 {
 	PRESEEDS=""
@@ -431,19 +460,8 @@ Arguments ()
 			url=*)
 				URL_LOCATION="${ARGUMENT#url=}"
 
-				mount -o bind /sys /root/sys
-				mount -o bind /proc /root/proc
-				mount -o bind /dev /root/dev
-
-				mkdir -p /root/var/run/network
-				[ "${NETBOOT}" ] || chroot /root dhclient eth0
+				start_network
 				chroot /root wget -P /tmp "${URL_LOCATION}"
-				[ "${NETBOOT}" ] || chroot /root ifconfig eth0 down
-
-				umount /root/sys
-				umount /root/proc
-				umount /root/dev
-
 				LOCATIONS="/tmp/$(basename ${URL_LOCATION}) ${LOCATIONS}"
 				;;
 
@@ -667,7 +685,7 @@ is_nice_device ()
 {
 	sysfs_path="${1#/sys}"
 
-	if /lib/udev/path_id "${sysfs_path}" | grep -E -q "ID_PATH=(usb|pci-|platform-orion-ehci|platform-mmc|platform-mxsdhci|)"
+	if /lib/udev/path_id "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-|platform-orion-ehci|platform-mmc|platform-mxsdhci|)"
 	then
 		return 0
 	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
@@ -705,7 +723,7 @@ copy_live_to ()
 	if [ "${copytodev}" = "ram" ]
 	then
 		# copying to ram:
-		freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( awk '/\<Cached/{print $2}' /proc/meminfo ) )
+		freespace=$(awk '/^MemFree:/{f=$2} /^Cached:/{c=$2} END{print f+c}' /proc/meminfo)
 		mount_options="-o size=${size}k"
 		free_string="memory"
 		fstype="tmpfs"
@@ -759,7 +777,11 @@ copy_live_to ()
 				rsync -a --progress ${copyfrom}/* ${copyto} 1>/dev/console  # "cp -a" from busybox also copies hidden files
 			else
 				mkdir -p ${copyto}/${LIVE_MEDIA_PATH}
-				cp -a ${copyfrom}/${LIVE_MEDIA_PATH}/* ${copyto}/${LIVE_MEDIA_PATH}   # "cp -a" from busybox also copies hidden files
+				cp -a ${copyfrom}/${LIVE_MEDIA_PATH}/* ${copyto}/${LIVE_MEDIA_PATH}
+				if [ -e ${copyfrom}/${LIVE_MEDIA_PATH}/.disk ]
+				then
+					cp -a ${copyfrom}/${LIVE_MEDIA_PATH}/.disk ${copyto}
+				fi
 			fi
 		fi
 
@@ -1008,7 +1030,7 @@ do_snap_copy ()
 			todev=$(awk -v pat="$(base_path ${todir})" '$2 == pat { print $1 }' /proc/mounts)
 			freespace=$(df -k | awk '/'${todev}'/{print $4}')
 		else
-			freespace=$( expr $(awk '/MemFree/{print $2}' /proc/meminfo) + $( awk '/\<Cached/{print $2}' /proc/meminfo))
+			freespace=$(awk '/^MemFree:/{f=$2} /^Cached:/{c=$2} END{print f+c}' /proc/meminfo)
 		fi
 
 		tomount="/mnt/tmpsnap"
@@ -1677,7 +1699,7 @@ find_livefs ()
 
 	# or do the scan of block devices
 	# prefer removable devices over non-removable devices, so scan them first
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | egrep -v "/(loop|ram|dm-|fd)")
 	do
 		if [ "$(cat ${sysblock}/removable)" = "1" ]
 		then
@@ -1885,6 +1907,36 @@ mountroot ()
 		mount -n -o bind /dev "${rootmnt}/dev"
 	fi
 
+	# Open up two fifo's fd's for debconf-communicate to use. Speeds up
+	# the live-initramfs process considerably.
+	log_begin_msg "Creating debconf-communicate fifo mechanism"
+	mkfifo /tmp/debconf-in.fifo
+	mkfifo /tmp/debconf-out.fifo
+
+	# Make the template database read-only, so that passthrough debconf
+	# instances can write to it directly; otherwise templates are only
+	# passed through when necessary.  Use temporary config databases as
+	# well; we'll copy their contents back at the end.
+	DEBCONF_TMPDIR="$(chroot /root mktemp -dt debconf.XXXXXX)"
+	cp -a /root/var/cache/debconf/config.dat "/root$DEBCONF_TMPDIR/"
+	cp -a /root/var/cache/debconf/passwords.dat "/root$DEBCONF_TMPDIR/"
+	sed "s,^Filename: /var/cache/debconf/\(config\|passwords\).dat$,Filename: $DEBCONF_TMPDIR/\1.dat,; /^Name: templatedb/a\
++Readonly: true" /root/etc/debconf.conf >"/root$DEBCONF_TMPDIR/debconf.conf"
+
+	# Save the PID so it can be killed later.
+	DEBCONF_SYSTEMRC="$DEBCONF_TMPDIR/debconf.conf" chroot /root debconf-communicate -fnoninteractive live-initramfs > /tmp/debconf-out.fifo < /tmp/debconf-in.fifo &
+
+	if [ ! -p /tmp/debconf-in.fifo ] || [ ! -p /tmp/debconf-out.fifo ]
+	then
+		log_warning_msg "failed to setup debconf-communicate channel"
+	fi
+	log_end_msg
+
+	# Order matters!
+	# These file descriptors must stay open until we're finished with
+	# debconf-communicate.
+	exec 4</tmp/debconf-out.fifo 3>/tmp/debconf-in.fifo
+
 	maybe_break live-bottom
 	log_begin_msg "Running /scripts/live-bottom\n"
 
@@ -1895,6 +1947,20 @@ mountroot ()
 	then
 		umount "${rootmnt}/dev"
 	fi
+
+	# Close the fd's associated with debconf-communicate
+	exec 3>&- 4<&-
+	rm -f /tmp/debconf-in.fifo
+	rm -f /tmp/debconf-out.fifo
+
+	# Copy config database changes back to the master files.
+	chroot /root debconf-copydb tmpdb config \
+		--config=Name:tmpdb --config=Driver:File \
+		--config="Filename:$DEBCONF_TMPDIR/config.dat"
+	chroot /root debconf-copydb tmpdb passwords \
+		--config=Name:tmpdb --config=Driver:File \
+		--config="Filename:$DEBCONF_TMPDIR/passwords.dat"
+	rm -rf "$DEBCONF_TMPDIR"
 
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-

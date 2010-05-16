@@ -21,6 +21,7 @@ esac
 # live-initramfs header
 
 . /scripts/live-functions
+load_confmodule
 
 log_begin_msg "Regenerating SSL certificate..."
 

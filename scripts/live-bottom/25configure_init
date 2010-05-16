@@ -98,7 +98,7 @@ then
 	fi
 
 	# Avoid clobbering the user's clock
-	rm -f /root/etc/rc?.d/K??hwclock.sh
+	rm -f /root/etc/rc?.d/K??hwclock.sh /root/etc/init/hwclock-save.conf
 fi
 
 # Disable readahead since it doesn't play well with squashfs + unionfs

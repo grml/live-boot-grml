@@ -1,3 +1,222 @@
+casper (1.236) lucid; urgency=low
+
+  * Check for LTS in the release name (LP: #558488).
+
+ -- Evan Dandrea <evand@ubuntu.com>  Wed, 21 Apr 2010 11:12:32 +0100
+
+casper (1.235) lucid; urgency=low
+
+  * Unbreak early command from previous commit.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Thu, 15 Apr 2010 02:54:15 -0500
+
+casper (1.234) lucid; urgency=low
+
+  * Only bring the network up while running preseed/early_command if
+    preseed/allow-network=true.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Wed, 14 Apr 2010 15:56:40 +0100
+
+casper (1.233) lucid; urgency=low
+
+  * Bring the network up while running preseed/early_command.
+  * Fix use of debconf passthrough frontend; DEBCONF_READFD and
+    DEBCONF_WRITEFD were backwards, and DEBIAN_HAS_FRONTEND and
+    DEBCONF_REDIR needed to be unset or else confmodule scripts would end up
+    trying to talk to closed file descriptors.
+  * Run debconf-communicate with a read-only template database and separate
+    config databases, and copy any changed values back to the master
+    databases at the end.  This allows us to use the noninteractive frontend
+    rather than passthrough when running apt-get in preseed/early_command or
+    dpkg to install driver updates, thereby ensuring that the template
+    database is properly initialised (LP: #557011).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Mon, 12 Apr 2010 23:41:09 +0100
+
+casper (1.232) lucid; urgency=low
+
+  * bump compcache size to 50% on live images for machines with less than
+    512MiB. This makes sure we don't hit OOM errors on systems with only
+    256MiB of RAM.
+
+ -- Oliver Grawert <ogra@ubuntu.com>  Mon, 12 Apr 2010 08:10:06 +0200
+
+casper (1.231) lucid; urgency=low
+
+  [ Jonathan Riddell ]
+  * Remove 37kubuntu_netbook_installer_link, now done with a patch in
+    kdebase-workspace
+
+  [ Colin Watson ]
+  * If copying live media to RAM or disk, explicitly copy .disk, since *
+    won't expand to include it (LP: #526305).
+  * Cache /bin/plymouth and /sbin/usplash_write before ejecting the CD, in
+   the hope that that helps with I/O errors on reboot (see LP #539027).
+
+  [ Luke Yelavich ]
+  * ubiquity-hooks/30accessibility: Copy the orca settings directory to the
+    gdm home directory, to allow for preferred orca settings to be used in
+    gdm (LP: #551515).
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Fri, 09 Apr 2010 14:00:51 +1000
+
+casper (1.230) lucid; urgency=low
+
+  * Don't save the hardware clock on live CD reboot; we used to do this in
+    the sysvinit world, but it regressed when we switched to Upstart
+    (thanks, Norm Pierce; LP: #436535).
+  * When running update-initramfs on writable media, update initrd.lz rather
+    than initrd.gz if it's present, and make the update process a bit safer
+    while we're there (LP: #489736).
+  * Handle toram and todisk=DEVICE options on command line (LP: #526305).
+  * Policy version 3.8.4: no changes required.
+  * Convert to source format 3.0 (native).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 30 Mar 2010 11:41:24 +0100
+
+casper (1.229) lucid; urgency=low
+
+  [ Jonathan Riddell ]
+  * Update scripts/casper-bottom/34disable_kde_services for lucid
+
+  [ Evan Dandrea ]
+  * Don't let apt try to auto-detect the CD-ROM device using udev.  We
+    already know what it is, and using udev to find it again wont work
+    for USB disks.
+
+ -- Evan Dandrea <evand@ubuntu.com>  Tue, 23 Mar 2010 11:42:00 +0000
+
+casper (1.228) lucid; urgency=low
+
+  * Update for the new libplymouth2.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 12 Mar 2010 18:37:02 -0800
+
+casper (1.227) lucid; urgency=low
+
+  * casper-md5check: port from usplash to plymouth.  LP: #500198
+  * fix up our reliance on usplash, /dev/console elsewhere.  LP: #506418.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 12 Mar 2010 01:12:28 -0800
+
+casper (1.226) lucid; urgency=low
+
+  [ Colin Watson ]
+  * Stop using removed nfsro option for NFS/unionfs (thanks, Bernhard
+    Seibold; LP: #460781).
+
+  [ Jonathan Riddell ]
+  * Remove scripts/casper-bottom/48enable_kubuntu_netbook and ubiquity-
+    hooks/48enable_kubuntu_netbook now enabled in kubuntu-netbook-
+    default-settings
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 10 Mar 2010 22:23:04 +0000
+
+casper (1.225) lucid; urgency=low
+
+  * Add ubiquity-hooks/49kubuntu_gnome_icon_cache to recreate the Gnome
+    icon cache on Kubuntu CDs, removed by livecd-rootfs
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 08 Mar 2010 11:47:01 +0000
+
+casper (1.224) lucid; urgency=low
+
+  * Remove ubiquity-hooks/35copy_wallpaper_cache as now implement it in
+    ubiquity itself (LP: #530024)
+
+ -- Didier Roche <didrocks@ubuntu.com>  Mon, 01 Mar 2010 19:41:45 +0100
+
+casper (1.223) lucid; urgency=low
+
+  * Bind-mount /dev, /proc, and /sys into /root while running apt-cdrom.
+  * Copy /lib/udev/rules.d/60-cdrom_id.rules into the initramfs to go with
+    /lib/udev/cdrom_id, so that apt-cdrom will be able to find ID_CDROM=1
+    entries when we run it.  This should stop update-notifier from
+    repeatedly popping up during the live session.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 23 Feb 2010 01:35:30 +0000
+
+casper (1.222) lucid; urgency=low
+
+  * scripts/casper-bottom/47une_ubiquity:
+    - get back ubiquity favorite icon in UNE live (LP: #524381)
+    - rename the script from 47unr_ubiquity to 47une_ubiquity as well
+      as "UNR" mention
+
+ -- Didier Roche <didrocks@ubuntu.com>  Mon, 22 Feb 2010 14:01:25 +0100
+
+casper (1.221) lucid; urgency=low
+
+  * Remove the rest of the mythbuntu delta from 10adduser.  It will be
+    maintained in the mythbuntu-live-autostart package instead so that
+    users from ~mythbuntu-dev can administer it.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 21 Feb 2010 20:22:00 -0600
+
+casper (1.220) lucid; urgency=low
+
+  * scripts/casper: calculate memory without "head" utility, thanks to
+    Petar Bogdanovic (LP: #25496).
+
+ -- Kees Cook <kees@ubuntu.com>  Fri, 19 Feb 2010 14:04:18 -0800
+
+casper (1.219) lucid; urgency=low
+
+  [ Mario Limonciello ]
+  * Disable casper-reconfigure from 22gnome_panel_data.  It doesn't (appear) to
+    serve a functional purpose as the postinst does nothing different for laptops.
+
+  [ Didier Roche ]
+  * add 35copy_wallpaper_cache to copy the wallpaper cache created at boot time
+    to the main user's directory. First boot will take it into account in
+    ureadahead profiling
+
+ -- Didier Roche <didrocks@ubuntu.com>  Wed, 17 Feb 2010 19:14:53 +0100
+
+casper (1.218) lucid; urgency=low
+
+  * Allow dpkg and apt-get to be installed from within commands that operate
+    in the chroot via early_command or driver updates. (LP: #521218)
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 16 Feb 2010 13:38:48 -0600
+
+casper (1.217) lucid; urgency=low
+
+  [ Luke Yelavich ]
+  * ubiquity-hooks/30accessibility: Enable accessible login for the blindness
+    and braile accessibility profiles.
+
+  [ Colin Watson ]
+  * Use egrep rather than 'grep -E' (LP: #512386).
+
+  [ Julien Lavergne ]
+  * 15autologin: Add support for LXDM autologin (LP: #511976).
+
+  [ Evan Dandrea ]
+  * Properly shut down debconf-communicate so that its database gets
+    written (LP: #518272).
+
+ -- Evan Dandrea <evand@ubuntu.com>  Thu, 11 Feb 2010 08:25:53 +0000
+
+casper (1.216) lucid; urgency=low
+
+  [ Luke Yelavich ]
+  * scripts/casper-bottom/30accessibility && ubiquity-hooks/30accessibility:
+    - Remove code to disable pulseaudio, as it is no longer needed, and
+      the supporting code in the pulseaudio package was removed a long time
+      ago.
+    - Set the default empathy theme to classic for blindness and braille
+      accessibility profiles.
+
+  [ Jamie Bennett ]
+  * Speed up work around debconf-communicate. Replace several calls to
+    debconf-communicate with one persistent invocation followed by
+    confmodule calls.
+  * Disable guest account by rm'ing rather than waiting for dpkg to
+    remove it.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Wed, 03 Feb 2010 16:41:57 -0800
+
 casper (1.215) lucid; urgency=low
 
   [ Mario Limonciello ]

@@ -103,4 +103,12 @@ then
 	/root/etc/kde4/kdm/kdmrc
 fi
 
+if [ -f /root/etc/lxdm/lxdm.conf ]
+then
+	# Configure LXDM autologin
+	sed -i -r -e "s/^# autologin=dgod/autologin=$USERNAME/" \
+		  -e "s/^# session/session/" \
+	/root/etc/lxdm/lxdm.conf
+fi
+
 log_end_msg

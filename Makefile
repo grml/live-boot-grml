@@ -32,7 +32,7 @@ install: test build
 	cp bin/live-getty bin/live-login bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin
 
 	mkdir -p $(DESTDIR)/usr/share/live-initramfs
-	cp bin/live-preseed bin/live-reconfigure contrib/languagelist $(DESTDIR)/usr/share/live-initramfs
+	cp bin/live-preseed bin/live-reconfigure bin/live-set-selections contrib/languagelist $(DESTDIR)/usr/share/live-initramfs
 
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools
 	cp -r hooks scripts $(DESTDIR)/usr/share/initramfs-tools

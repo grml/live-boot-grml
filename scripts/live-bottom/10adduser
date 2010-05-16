@@ -26,6 +26,7 @@ then
 fi
 
 . /scripts/live-functions
+load_confmodule
 
 log_begin_msg "Adding live session user"
 
@@ -34,14 +35,12 @@ log_begin_msg "Adding live session user"
 user_crypted="8Ab05sVQ4LLps" # as in $(echo "live" | mkpasswd -s)
 
 # U6aMy0wojraho is just a blank password
-chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
-set passwd/make-user true
-set passwd/root-password-crypted *
-set passwd/user-password-crypted ${user_crypted}
-set passwd/user-fullname ${USERFULLNAME}
-set passwd/username ${USERNAME}
-set passwd/user-uid 1000
-EOF
+db_set passwd/make-user true
+db_set passwd/root-password-crypted '*'
+db_set passwd/user-password-crypted ${user_crypted}
+db_set passwd/user-fullname "$USERFULLNAME"
+db_set passwd/username "$USERNAME"
+db_set passwd/user-uid 999
 
 chroot /root /usr/bin/env -i HOME="/root" \
 	TERM="${TERM}" PATH="/usr/sbin:/usr/bin:/sbin:/bin" \
@@ -49,14 +48,12 @@ chroot /root /usr/bin/env -i HOME="/root" \
 		| grep -v "Shadow passwords are now on"
 
 # Clear out debconf database again to avoid confusing ubiquity later.
-chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
-set passwd/make-user
-set passwd/root-password-crypted
-set passwd/user-password-crypted
-set passwd/user-fullname
-set passwd/username
-set passwd/user-uid
-EOF
+db_set passwd/make-user
+db_set passwd/root-password-crypted
+db_set passwd/user-password-crypted
+db_set passwd/user-fullname
+db_set passwd/username
+db_set passwd/user-uid
 
 if ! grep -qs "${USERNAME}" /root/etc/passwd
 then
