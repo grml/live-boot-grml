@@ -1,3 +1,29 @@
+live-initramfs (1.236.1-1) unstable; urgency=low
+
+  * Merging casper 1.216.
+  * Merging casper 1.217.
+  * Merging casper 1.218.
+  * Merging casper 1.219.
+  * Merging casper 1.220.
+  * Merging casper 1.221.
+  * Merging casper 1.222.
+  * Merging casper 1.223.
+  * Merging casper 1.224.
+  * Merging casper 1.225.
+  * Merging casper 1.226.
+  * Merging casper 1.227.
+  * Merging casper 1.228.
+  * Merging casper 1.229.
+  * Merging casper 1.230.
+  * Merging casper 1.231.
+  * Merging casper 1.232.
+  * Merging casper 1.233.
+  * Merging casper 1.234.
+  * Merging casper 1.235.
+  * Merging casper 1.236.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 16 May 2010 06:03:01 +0200
+
 live-initramfs (1.215.1-1) unstable; urgency=low
 
   [ Daniel Baumann ]
