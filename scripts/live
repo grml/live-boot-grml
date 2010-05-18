@@ -1921,7 +1921,7 @@ mountroot ()
 	cp -a /root/var/cache/debconf/config.dat "/root$DEBCONF_TMPDIR/"
 	cp -a /root/var/cache/debconf/passwords.dat "/root$DEBCONF_TMPDIR/"
 	sed "s,^Filename: /var/cache/debconf/\(config\|passwords\).dat$,Filename: $DEBCONF_TMPDIR/\1.dat,; /^Name: templatedb/a\
-+Readonly: true" /root/etc/debconf.conf >"/root$DEBCONF_TMPDIR/debconf.conf"
+Readonly: true" /root/etc/debconf.conf >"/root$DEBCONF_TMPDIR/debconf.conf"
 
 	# Save the PID so it can be killed later.
 	DEBCONF_SYSTEMRC="$DEBCONF_TMPDIR/debconf.conf" chroot /root debconf-communicate -fnoninteractive live-initramfs > /tmp/debconf-out.fifo < /tmp/debconf-in.fifo &
