@@ -1,3 +1,10 @@
+live-initramfs (1.236.2-1) unstable; urgency=medium
+
+  * Removing spurious '+' when making debconf db read-only (Closes:
+    #581808).
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 18 May 2010 06:51:31 +0200
+
 live-initramfs (1.236.1-1) unstable; urgency=low
 
   * Merging casper 1.216.
