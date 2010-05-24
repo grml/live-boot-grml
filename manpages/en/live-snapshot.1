@@ -1,0 +1,66 @@
+.TH LIVE\-BOOT 1 2010\-05\-24 2.0~a1 "Debian Live Project"
+
+.SH NAME
+\fBlive\-snapshot\fR \- simple script to ease persistence usage
+
+.SH SYNOPSIS
+\fBlive\-snapshot\fR [\-c|\-\-cow \fIDIRECTORY\fI] [\-d|\-\-device \fIDEVICE\fR] [\-e|\-\-exclude\-list \fIFILE\fR] [\-o|\-\-output \fIFILE\fR] [\-t|\-\-type \fITYPE\fR]
+.br
+\fBlive\-snapshot\fR [\-r|\-\-resync\-string \fRSTRING\fR]
+.br
+\fBlive\-snapshot\fR [\-h|\-\-help]
+.br
+\fBlive\-snapshot\fR [\-u|\-\-usage]
+.br
+\fBlive\-snapshot\fR [\-v|\-\-version]
+
+.SH DESCRIPTION
+live\-snapshot is a script which can be used to build the right types of persistent image files supported by \fIlive\-boot\fR(7). It is also used on exit by the live\-boot init script to resync the boot\-found snapshots devices.
+
+.SH OPTIONS
+.IP "\-c, \-\-cow \fIDIRECTORY\fR" 4
+specifies the input directory to be cloned in the image file. Its default value "/live/cow" should be right for most uses. However it could be handy to specify "/home" and type ext2 for the type to prepare an image file suited to be directly mounted by live\-boot as home.
+.IP "\-d, \-\-device \fIDEVICE\fR" 4
+sets the device where the media which the snapshot/persistence file/partition will be put. If it is not specified, a tmpfs will be used and linked to the user's desktop to move it where it is needed. If the device has no filesystem, an ext2 fs will be automatically created and labelled according to the values specified after the "\-\-output" value or with a sane default.
+.IP "\-e, \-\-exclude\-list \fIFILE\fR" 4
+a file containing a list of filenames/paths that should not be saved. This exclude list will be remebered on the target snapshot media for reuse.
+.IP "\-o, \-\-output \fIFILE\fR" 4
+the filename/label used for the output file/partition. If left blank, live\-snapshot will search for a proper file on the device or use the whole partition.
+.IP "\-r, \-\-resync\-string \fISTRING\fR" 4
+internally used on resyncs.
+.IP "\-f, \-\-refresh" 4
+try to do the same operation that should be done at reboot or halt, resyncing boot\-time auto discovered snapshots. Useful to prevent a crash or surge power\-off.
+.IP "\-t, \-\-type \fITYPE\fR" 4
+Type could be one of "cpio", "squashfs", "ext2", "ext3", "ext4", or "jffs2".
+.IP "\-h, \-\-help" 4
+display help and exit.
+.IP "\-u, \-\-usage" 4
+show usage and exit.
+.IP "\-v, \-\-version" 4
+output version information and exit.
+
+.SH FILES
+.IP "\fB/etc/live.conf\fR" 4
+Some variables can be configured via this config file (inside the live system).
+.IP "\fBlive/filesystem.module\fR" 4
+This optional file (inside the live media) contains a list of white\-space or carriage\-return\-separated file names corresponding to disk images in the "/live" directory. If this file exists, only images listed here will be merged into the root aufs, and they will be loaded in the order listed here. The first entry in this file will be the "lowest" point in the aufs, and the last file in this list will be on the "top" of the aufs, directly below /cow.  Without this file, any images in the "/live" directory are loaded in alphanumeric order.
+.IP "\fB/etc/live\-persistence.binds\fR" 4
+This optional file (which resides in the rootfs system, not in the live media) is used as a list of directories which not need be persistent: ie. their content does not need to survive reboots when using the persistence features.
+.br
+This saves expensive writes and speeds up operations on volatile data such as web caches and temporary files (like e.g. /tmp and .mozilla) which are regenerated each time. This is achieved by bind mounting each listed directory with a tmpfs on the original path.
+
+.SH SEE ALSO
+\fIlive\-boot\fR(1)
+.PP
+\fIlive\-config\fR(7)
+.PP
+\fIlive\-helper\fR(7)
+
+.SH HOMEPAGE
+More information about live\-boot and the Debian Live project can be found on the homepage at <\fIhttp://live.debian.net/\fR> and in the manual at <\fIhttp://live.debian.net/manual/\fR>.
+
+.SH BUGS
+Bugs can be reported by submitting a bugreport for the live\-boot package in the Debian Bug Tracking System at <\fIhttp://bugs.debian.org/\fR> or by writing a mail to the Debian Live mailing list at <\fIdebian-live@lists.debian.org\fR>.
+
+.SH AUTHOR
+live\-boot was written by Daniel Baumann <\fIdaniel@debian.org\fR> for the Debian project.
