@@ -18,7 +18,7 @@ case "${1}" in
 		;;
 esac
 
-# live-initramfs header
+# live-boot header
 
 if [ -n "${NOXAUTOCONFIG}" ] || [ ! -x /root/usr/bin/X ] || [ -z "${XDRIVER}" ]
 then
@@ -29,7 +29,7 @@ fi
 
 log_begin_msg "Configuring X video driver"
 
-# live-initramfs script
+# live-boot script
 
 . /live.vars
 
@@ -40,7 +40,7 @@ mount -o bind /dev /root/dev
 if [ "${XDRIVER}" != "dexconf" ]
 then
 
-chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
+chroot /root debconf-communicate -fnoninteractive live-boot > /dev/null << EOF
 set xserver-xorg/autodetect_video_card false
 set xserver-xorg/config/device/driver ${XDRIVER}
 EOF

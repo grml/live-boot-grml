@@ -18,7 +18,7 @@ case "${1}" in
 		;;
 esac
 
-# live-initramfs header
+# live-boot header
 
 if [ -n "${NOXAUTOCONFIG}" ]
 then
@@ -27,7 +27,7 @@ fi
 
 . /scripts/live-functions
 
-# live-initramfs script
+# live-boot script
 
 if [ -n "${TEXTONLY}" ]
 then
@@ -83,7 +83,7 @@ then
 		setlayout="set xserver-xorg/config/inputdevice/keyboard/layout ${KLAYOUT}"
 	fi
 
-chroot /root debconf-communicate -fnoninteractive live-initramfs > /dev/null << EOF
+chroot /root debconf-communicate -fnoninteractive live-boot > /dev/null << EOF
 ${setlayout}
 ${setvariant}
 ${setmodel}

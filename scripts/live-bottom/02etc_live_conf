@@ -18,13 +18,13 @@ case "${1}" in
 		;;
 esac
 
-# live-initramfs header
+# live-boot header
 
 . /scripts/live-functions
 
 log_begin_msg "Copying config on real root fs"
 
-# live-initramfs script
+# live-boot script
 
 if [ -f /etc/live.conf ]
 then

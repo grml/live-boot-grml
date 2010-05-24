@@ -18,7 +18,7 @@ case "${1}" in
 		;;
 esac
 
-# live-initramfs header
+# live-boot header
 
 . /live.vars
 
@@ -26,7 +26,7 @@ esac
 
 log_begin_msg "Disabling umountfs for live specific filesystems"
 
-# live-initramfs script
+# live-boot script
 
 if [ -e /root/etc/init.d/umountfs ]
 then

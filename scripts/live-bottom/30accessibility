@@ -18,7 +18,7 @@ case "${1}" in
 		;;
 esac
 
-# live-initramfs header
+# live-boot header
 
 if [ -n "${NOACCESSIBILITY}" ]
 then
@@ -35,7 +35,7 @@ fi
 
 log_begin_msg "Configuring accessibility options"
 
-# live-initramfs script
+# live-boot script
 
 gconf_version=$(chroot /root /usr/bin/dpkg-query -W --showformat='${Version}' gconf2 2>/dev/null) || gconf_version=""
 

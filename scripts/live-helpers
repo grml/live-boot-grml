@@ -1,4 +1,4 @@
-# live-initramfs helper functions, used by live-initramfs on boot and by live-snapshot
+# live-boot helper functions, used by live-boot on boot and by live-snapshot
 
 if [ ! -x "/bin/fstype" ]
 then

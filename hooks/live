@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# initramfs hook for live-initramfs (Debian Live)
+# initramfs hook for live-boot (Debian Live)
 
 set -e
 
@@ -22,9 +22,9 @@ esac
 
 . /usr/share/initramfs-tools/hook-functions
 
-# live-initramfs hook
+# live-boot hook
 
-# Handling live-initramfs
+# Handling live-boot
 
 # Configuration
 if [ -r /etc/live.conf ]
@@ -35,16 +35,15 @@ then
 	cp /etc/live.conf "${DESTDIR}"/etc
 fi
 
-mkdir -p "${DESTDIR}"/usr/share/live-initramfs
-cp /usr/share/live-initramfs/languagelist "${DESTDIR}"/usr/share/live-initramfs
+mkdir -p "${DESTDIR}"/usr/share/live-boot
+cp /usr/share/live-boot/languagelist "${DESTDIR}"/usr/share/live-boot
 
 # Directories
-mkdir -p "${DESTDIR}"/lib/live-initramfs
+mkdir -p "${DESTDIR}"/lib/live-boot
 
 # Executables
-copy_exec /usr/share/live-initramfs/live-reconfigure /bin
-copy_exec /usr/share/live-initramfs/live-preseed /bin
-copy_exec /usr/share/live-initramfs/live-set-selections /bin
+copy_exec /usr/share/live-boot/live-reconfigure /bin
+copy_exec /usr/share/live-boot/live-preseed /bin
 
 # Scripts
 cp /usr/share/initramfs-tools/scripts/live-functions "${DESTDIR}"/scripts

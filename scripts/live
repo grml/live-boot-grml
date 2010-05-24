@@ -43,35 +43,6 @@ then
 	touch /live.vars
 fi
 
-network_started=
-
-start_network ()
-{
-	[ -z "$network_started" ] || return
-	[ -z "$NETBOOT" ] || return
-
-	mount -n -o bind /sys /root/sys
-	mount -n -o bind /proc /root/proc
-	mount -n -o bind /dev /root/dev
-	mkdir -p /root/var/run/network
-
-	# Close inherited fd's to prevent debconf-communicate from
-	# continuing to run post-live-initramfs.
-	chroot /root dhclient eth0 3>&- 4<&-
-
-	network_started=1
-}
-
-stop_network ()
-{
-	[ "$network_started" ] || return
-
-	chroot /root ifconfig eth0 down
-	umount /root/sys
-	umount /root/proc
-	umount /root/dev
-}
-
 Arguments ()
 {
 	PRESEEDS=""
@@ -82,31 +53,19 @@ Arguments ()
 		case "${ARGUMENT}" in
 			skipconfig)
 				NOACCESSIBILITY="Yes"
-				NOAPPARMOR="Yes"
 				NOAPTCDROM="Yes"
 				NOAUTOLOGIN="Yes"
 				NOCONSOLEKEYBOARD="Yes"
 				NOFASTBOOT="Yes"
 				NOFSTAB="Yes"
-				NOGNOMEPANEL="Yes"
 				NOHOSTS="Yes"
-				NOJOCKEY="Yes"
-				NOKPERSONALIZER="Yes"
-				NOLANGUAGESELECTOR="Yes"
 				NOLOCALES="Yes"
 				NONETWORKING="Yes"
-				NOPOLKITCONF="Yes"
-				NOPOWERMANAGEMENT="Yes"
-				NOPROGRAMCRASHES="Yes"
-				NOSUDO="Yes"
 				NOTIMEZONE="Yes"
-				NOUPDATENOTIFIER="Yes"
-				NOUSER="Yes"
 				NOXAUTOCONFIG="Yes"
 				NOXAUTOLOGIN="Yes"
-				NOXSCREENSAVER="Yes"
 
-				export NOACCESSIBILITY NOAPPARMOR NOAPTCDROM NOAUTOLOGIN NOCONSOLEKEYBOARD NOFASTBOOT NOFSTAB NOGNOMEPANEL NOHOSTS NOJOCKEY NOKPERSONALIZER NOLANGUAGESELECTOR NOLOCALES NONETWORKING NOPOLKITCONF NOPOWERMANAGEMENT NOPROGRAMCRASHES NOSUDO NOTIMEZONE NOUPDATENOTIFIER NOUSER NOXAUTOCONFIG NOXAUTOLOGIN NOXSCREENSAVER
+				export NOACCESSIBILITY NOAPTCDROM NOAUTOLOGIN NOCONSOLEKEYBOARD NOFASTBOOT NOFSTAB NOHOSTS NOLOCALES NONETWORKING NOTIMEZONE NOXAUTOCONFIG NOXAUTOLOGIN
 				;;
 
 			access=*)
@@ -151,11 +110,6 @@ Arguments ()
 				export FORCEPERSISTENTFSCK
 				;;
 
-			hook=*)
-				HOOK="${ARGUMENT#hook=}"
-				export HOOK
-				;;
-
 			ftpfs=*)
 				FTPFS="${ARGUMENT#ftpfs=}"
 				export FTPFS
@@ -164,12 +118,6 @@ Arguments ()
 			httpfs=*)
 				HTTPFS="${ARGUMENT#httpfs=}"
 				export HTTPFS
-				;;
-
-			hostname=*)
-				HOSTNAME="${ARGUMENT#hostname=}"
-				LIVECONF="changed"
-				export HOSTNAME LIVECONF
 				;;
 
 			isofrom=*|fromiso=*)
@@ -301,11 +249,6 @@ Arguments ()
 				export NOACCESSIBILITY
 				;;
 
-			noapparmor)
-				NOAPPARMOR="Yes"
-				export NOAPPARMOR
-				;;
-
 			noaptcdrom)
 				NOAPTCDROM="Yes"
 				export NOAPTCDROM
@@ -336,24 +279,9 @@ Arguments ()
 				export NOFSTAB
 				;;
 
-			nognomepanel)
-				NOGNOMEPANEL="Yes"
-				export NOGNOMEPANEL
-				;;
-
 			nohosts)
 				NOHOSTS="Yes"
 				export NOHOSTS
-				;;
-
-			nokpersonalizer)
-				NOKPERSONALIZER="Yes"
-				export NOKPERSONALIZER
-				;;
-
-			nolanguageselector)
-				NOLANGUAGESELECTOR="Yes"
-				export NOLANGUAGESELECTOR
 				;;
 
 			nolocales)
@@ -366,39 +294,9 @@ Arguments ()
 				export NONETWORKING
 				;;
 
-			nopowermanagement)
-				NOPOWERMANAGEMENT="Yes"
-				export NOPOWERMANAGEMENT
-				;;
-
-			noprogramcrashes)
-				NOPROGRAMCRASHES="Yes"
-				export NOPROGRAMCRASHES
-				;;
-
-			nojockey)
-				NOJOCKEY="Yes"
-				export NOJOCKEY
-				;;
-
-			nosudo)
-				NOSUDO="Yes"
-				export NOSUDO
-				;;
-
 			swapon)
 				SWAPON="Yes"
 				export SWAPON
-				;;
-
-			noupdatenotifier)
-				NOUPDATENOTIFIER="Yes"
-				export NOUPDATENOTIFIER
-				;;
-
-			nouser)
-				NOUSER="Yes"
-				export NOUSER
 				;;
 
 			noxautoconfig)
@@ -460,8 +358,19 @@ Arguments ()
 			url=*)
 				URL_LOCATION="${ARGUMENT#url=}"
 
-				start_network
+				mount -o bind /sys /root/sys
+				mount -o bind /proc /root/proc
+				mount -o bind /dev /root/dev
+
+				mkdir -p /root/var/run/network
+				[ "${NETBOOT}" ] || chroot /root dhclient eth0
 				chroot /root wget -P /tmp "${URL_LOCATION}"
+				[ "${NETBOOT}" ] || chroot /root ifconfig eth0 down
+
+				umount /root/sys
+				umount /root/proc
+				umount /root/dev
+
 				LOCATIONS="/tmp/$(basename ${URL_LOCATION}) ${LOCATIONS}"
 				;;
 
@@ -536,11 +445,6 @@ Arguments ()
 			union=*)
 				UNIONTYPE="${ARGUMENT#union=}"
 				export UNIONTYPE
-				;;
-
-			utc=*)
-				UTC="${ARGUMENT#utc=}"
-				export UTC
 				;;
 
 			xdebconf)
@@ -1088,7 +992,7 @@ find_snap ()
 try_snap ()
 {
         # copy the contents of previously found snapshot to ${snap_mount}
-	# and remember the device and filename for resync on exit in live-initramfs.init
+	# and remember the device and filename for resync on exit in live-boot.init
 
 	snapdata="${1}"
 	snap_mount="${2}"
@@ -1739,7 +1643,7 @@ find_livefs ()
 		then
 			# This is an ugly hack situation, the block device has
 			# an image directly on it.  It's hopefully
-			# live-initramfs, so take it and run with it.
+			# live-boot, so take it and run with it.
 			ln -s "${devname}" "${devname}.${fstype}"
 			echo "${devname}.${fstype}"
 			return 0
@@ -1907,35 +1811,12 @@ mountroot ()
 		mount -n -o bind /dev "${rootmnt}/dev"
 	fi
 
-	# Open up two fifo's fd's for debconf-communicate to use. Speeds up
-	# the live-initramfs process considerably.
-	log_begin_msg "Creating debconf-communicate fifo mechanism"
-	mkfifo /tmp/debconf-in.fifo
-	mkfifo /tmp/debconf-out.fifo
-
-	# Make the template database read-only, so that passthrough debconf
-	# instances can write to it directly; otherwise templates are only
-	# passed through when necessary.  Use temporary config databases as
-	# well; we'll copy their contents back at the end.
-	DEBCONF_TMPDIR="$(chroot /root mktemp -dt debconf.XXXXXX)"
-	cp -a /root/var/cache/debconf/config.dat "/root$DEBCONF_TMPDIR/"
-	cp -a /root/var/cache/debconf/passwords.dat "/root$DEBCONF_TMPDIR/"
-	sed "s,^Filename: /var/cache/debconf/\(config\|passwords\).dat$,Filename: $DEBCONF_TMPDIR/\1.dat,; /^Name: templatedb/a\
-Readonly: true" /root/etc/debconf.conf >"/root$DEBCONF_TMPDIR/debconf.conf"
-
-	# Save the PID so it can be killed later.
-	DEBCONF_SYSTEMRC="$DEBCONF_TMPDIR/debconf.conf" chroot /root debconf-communicate -fnoninteractive live-initramfs > /tmp/debconf-out.fifo < /tmp/debconf-in.fifo &
-
-	if [ ! -p /tmp/debconf-in.fifo ] || [ ! -p /tmp/debconf-out.fifo ]
+	# Move to the new root filesystem so that programs there can get at it.
+	if [ ! -d /root/live/image ]
 	then
-		log_warning_msg "failed to setup debconf-communicate channel"
+		mkdir -p /root/live/image
+		mount --move /live/image /root/live/image
 	fi
-	log_end_msg
-
-	# Order matters!
-	# These file descriptors must stay open until we're finished with
-	# debconf-communicate.
-	exec 4</tmp/debconf-out.fifo 3>/tmp/debconf-in.fifo
 
 	maybe_break live-bottom
 	log_begin_msg "Running /scripts/live-bottom\n"
@@ -1947,20 +1828,6 @@ Readonly: true" /root/etc/debconf.conf >"/root$DEBCONF_TMPDIR/debconf.conf"
 	then
 		umount "${rootmnt}/dev"
 	fi
-
-	# Close the fd's associated with debconf-communicate
-	exec 3>&- 4<&-
-	rm -f /tmp/debconf-in.fifo
-	rm -f /tmp/debconf-out.fifo
-
-	# Copy config database changes back to the master files.
-	chroot /root debconf-copydb tmpdb config \
-		--config=Name:tmpdb --config=Driver:File \
-		--config="Filename:$DEBCONF_TMPDIR/config.dat"
-	chroot /root debconf-copydb tmpdb passwords \
-		--config=Name:tmpdb --config=Driver:File \
-		--config="Filename:$DEBCONF_TMPDIR/passwords.dat"
-	rm -rf "$DEBCONF_TMPDIR"
 
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-

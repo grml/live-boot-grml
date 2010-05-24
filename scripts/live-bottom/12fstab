@@ -19,7 +19,7 @@ case "${1}" in
 		;;
 esac
 
-# live-initramfs header
+# live-boot header
 
 . /scripts/live-functions
 
@@ -30,7 +30,7 @@ fi
 
 log_begin_msg "Configuring fstab"
 
-# live-initramfs script
+# live-boot script
 
 # Create a fake fstab only if it doesn't exist or if its the debootstrap template
 if [ ! -f "${FSTAB}" ] || grep -qs 'UNCONFIGURED FSTAB FOR BASE SYSTEM' "${FSTAB}"

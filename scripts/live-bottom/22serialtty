@@ -18,7 +18,7 @@ case "${1}" in
 		;;
 esac
 
-# live-initramfs header
+# live-boot header
 
 # this bottom script currently only works with upstart
 if [ ! -d /root/etc/init ]
@@ -28,7 +28,7 @@ fi
 
 . /scripts/live-functions
 
-# live-initramfs script
+# live-boot script
 
 for ARGUMENT in $(cat /proc/cmdline)
 do
