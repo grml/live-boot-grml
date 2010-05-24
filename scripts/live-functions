@@ -39,7 +39,7 @@ lang2locale() {
 	langpart="${1%%_*}"
 	if [ "$1" != "C" ]; then
 		# Match the language code with 3rd field in languagelist
-		line=$(grep -v "^#" /usr/share/live-initramfs/languagelist | cut -f1,3,6 -d\; | grep -v ';C$' | grep "^$langpart;")
+		line=$(grep -v "^#" /usr/share/live-boot/languagelist | cut -f1,3,6 -d\; | grep -v ';C$' | grep "^$langpart;")
 		if [ -n "$line" ]; then
 			if [ "$(echo "$line" | grep -c '')" -gt 1 ]; then
 				# More than one match; try matching the
@@ -96,7 +96,7 @@ panic() {
 	printf "     ${DEB_3}\n"
 	printf "     ${DEB_4}  This Debian Live image failed to boot.\n\n"
 
-	printf "  Please file a bug against the 'live-initramfs' package or email the Debian\n"
+	printf "  Please file a bug against the 'live-boot' package or email the Debian\n"
 	printf "  Live mailing list at <debian-live@lists.debian.org>, making sure to note the\n"
 	printf "  exact version, name and distribution of the image you were attempting to boot.\n\n"
 
@@ -105,26 +105,13 @@ panic() {
 	printf "  extremely useful when diagnosing issues.\n\n"
 
 	if [ -n "${panic}" ]; then
-		printf "  live-initramfs will now restart your system. "
+		printf "  live-boot will now restart your system. "
 	else
-		printf "  live-initramfs will now start a shell. "
+		printf "  live-boot will now start a shell. "
 	fi
 	printf "The error message was:\n\n    "
 
 	# Call original panic
 	. /scripts/functions
 	panic "$@"
-}
-
-load_confmodule ()
-{
-	# Only do this once
-	if [ -z "$DEBCONF_REDIR" ]
-	then
-		exec <&4
-		export DEBIAN_HAS_FRONTEND=1
-		export DEBCONF_REDIR=1
-	fi
-
-	. /root/usr/share/debconf/confmodule
 }

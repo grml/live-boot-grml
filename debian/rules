@@ -3,24 +3,17 @@
 %:
 	dh ${@}
 
-override_dh_auto_clean:
-	$(MAKE) -C manpages
-
 override_dh_auto_build:
-	$(MAKE) -C manpages
+	# disabled
 
 override_dh_auto_install:
-	dh_auto_install
+	$(MAKE) DESTDIR=$(CURDIR)/debian/live-boot install
 
-	$(MAKE) DESTDIR=$(CURDIR)/debian/live-initramfs install
+	mkdir -p debian/live-boot-initramfs-tools/usr/share
+	mv debian/live-boot/usr/share/initramfs-tools debian/live-boot-initramfs-tools/usr/share
 
-	mv debian/live-initramfs/usr/share/doc/live-initramfs/ChangeLog.casper debian/live-initramfs/usr/share/doc/live-initramfs/changelog.casper
-
-	rm -f debian/live-initramfs/usr/share/doc/live-initramfs/COPYING
-	rm -f debian/live-initramfs/usr/share/doc/live-initramfs/ChangeLog
-
-override_dh_installchangelogs:
-	dh_installchangelogs docs/ChangeLog
+	# Removing useless files
+	rm -f debian/live-boot/usr/share/doc/live-boot/COPYING
 
 override_dh_installinit:
-	dh_installinit --no-restart-on-upgrade --no-start -- start 89 0 6 .
+	dh_installinit -p live-boot --no-restart-on-upgrade --no-start --update-rcd-params='start 89 0 6 .'

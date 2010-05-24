@@ -1,28 +1,40 @@
-all: doc
+# Makefile
 
-doc: doc_man doc_html
+SHELL := sh -e
 
-doc_html: html-stamp
+LANGUAGES = $(shell cd po && ls)
 
-html-stamp: live-initramfs.en.7.txt live-snapshot.en.1.txt
-	asciidoc -b xhtml11 live-initramfs.en.7.txt
-	asciidoc -b xhtml11 live-snapshot.en.1.txt
-	touch html-stamp
+all: build
 
-doc_man: man-stamp
+po4a.cfg:
+	echo "[po4a_langs] $(LANGUAGES)" > po4a.cfg
+	echo "[po4a_paths] pot/\$$master.pot \$$lang:po/\$$lang/\$$master.po" >> po4a.cfg
 
-man-stamp: live-initramfs.en.7.txt live-snapshot.en.1.txt
-	# live-initramfs:
-	asciidoc -d manpage -b docbook live-initramfs.en.7.txt
-	xsltproc /usr/share/xml/docbook/stylesheet/nwalsh/manpages/docbook.xsl live-initramfs.en.7.xml
-	mv live-initramfs.7 live-initramfs.en.7
-	# live-snapshot:
-	asciidoc -d manpage -b docbook live-snapshot.en.1.txt
-	xsltproc /usr/share/xml/docbook/stylesheet/nwalsh/manpages/docbook.xsl live-snapshot.en.1.xml
-	mv live-snapshot.1 live-snapshot.en.1
-	touch man-stamp
+	for MANPAGE in en/*; \
+	do \
+		SECTION="$$(basename $${MANPAGE} | awk -F. '{ print $$2 }')"; \
+		echo "[type: man] $${MANPAGE} \$$lang:\$$lang/$$(basename $${MANPAGE} .$${SECTION}).\$$lang.$${SECTION}" >> po4a.cfg; \
+	done
+
+update:
+	./bin/update-version.sh
+
+build: po4a.cfg
+	@if [ ! -x "$$(which po4a 2>/dev/null)" ]; \
+	then \
+		echo "E: po4a - command not found"; \
+		echo "I: po4a can be optained from http://po4a.alioth.debian.org/"; \
+		echo "I: On Debian systems, po4a can be installed with 'apt-get install po4a'."; \
+		exit 1; \
+	fi
+
+	po4a --keep 0 --no-backups --package-name live-boot po4a.cfg
 
 clean:
-	rm -f live-initramfs.en.7.html live-initramfs.en.7.xml live-initramfs.en.7
-	rm -f live-snapshot.en.1.html live-snapshot.en.1.xml live-snapshot.en.1
-	rm -f html-stamp man-stamp
+	rm -f po/*/*.po~
+
+distclean: clean
+	rm -f po4a.cfg
+	rm -rf $(LANGUAGES)
+
+rebuild: distclean update build

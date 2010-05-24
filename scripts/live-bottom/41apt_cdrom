@@ -18,7 +18,7 @@ case "${1}" in
 		;;
 esac
 
-# live-initramfs header
+# live-boot header
 
 if [ -n "${NOAPTCDROM}" ]
 then
@@ -29,7 +29,7 @@ fi
 
 log_begin_msg "Adding APT-CDROM source"
 
-# live-initramfs script
+# live-boot script
 
 if [ -d /root/cdrom ]
 then

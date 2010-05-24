@@ -18,13 +18,13 @@ case "${1}" in
 		;;
 esac
 
-# live-initramfs header
+# live-boot header
 
 . /scripts/live-functions
 
 log_begin_msg "Setting up init"
 
-# live-initramfs script
+# live-boot script
 
 # Arrange for shells on virtual consoles, rather than login prompts
 

@@ -18,7 +18,7 @@ case "${1}" in
 		;;
 esac
 
-# live-initramfs header
+# live-boot header
 
 if [ -n "${NOLOCALES}" ]
 then
@@ -32,7 +32,7 @@ log_begin_msg "Setting up locales"
 # Cosmetic line wrapping for output of local-gen
 echo
 
-# live-initramfs script
+# live-boot script
 
 if [ -e /root/etc/default/locale ]
 then

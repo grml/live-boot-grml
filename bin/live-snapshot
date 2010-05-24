@@ -4,7 +4,7 @@
 #
 #   This program mounts a device (fallback to /tmpfs under $MOUNTP
 #   and saves the /live/cow (or a different directory) filesystem in it
-#   for reuse in another live-initramfs session.
+#   for reuse in another live-boot session.
 #   Look at the manpage for more informations.
 #
 # Copyright (C) 2006-2008 Marco Amadori <marco.amadori@gmail.com>

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:		live-initramfs
+# Provides:		live-boot
 # Required-Start:	$syslog
 # Required-Stop:
 # Should-Start:		$local_fs
@@ -9,7 +9,7 @@
 # X-Stop-After:		umountroot
 # Default-Start:
 # Default-Stop:		0 6
-# Short-Description:	live-initramfs init script
+# Short-Description:	live-boot init script
 # Description:		Resyncs snapshots, evantually caches files in order to
 #			let remove the media.
 ### END INIT INFO
@@ -18,11 +18,11 @@
 #	   Marco Amadori <marco.amadori@gmail.com>
 
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
-NAME=live-initramfs
+NAME=live-boot
 SCRIPTNAME=/etc/init.d/${NAME}
 DO_SNAPSHOT=/sbin/live-snapshot
 
-# Exit if system was not booted by live-initramfs
+# Exit if system was not booted by live-boot
 grep -qs boot=live /proc/cmdline || exit 0
 
 # Exit if the system was booted from an ISO image rather than a physical CD

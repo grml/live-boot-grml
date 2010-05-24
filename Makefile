@@ -1,28 +1,43 @@
 # Makefile
 
-TRANSLATIONS="it"
+SHELL := sh -e
 
-all: build
+LANGUAGES = de
+
+all: test build
 
 test:
-	# Checking for syntax errors
-	set -e; for SCRIPT in bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*; \
+	@echo -n "Checking for syntax errors"
+
+	@for SCRIPT in bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*; \
 	do \
-		sh -n $$SCRIPT; \
+		sh -n $${SCRIPT}; \
+		echo -n "."; \
 	done
 
-	# Checking for bashisms (temporary not failing, but only listing)
-	if [ -x /usr/bin/checkbashisms ]; \
+	@echo " done."
+
+	@echo -n "Checking for bashisms"
+
+	@# We can't just fail yet on bashisms (FIXME)
+	@if [ -x /usr/bin/checkbashisms ]; \
 	then \
-		checkbashisms bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/* || true; \
+		for SCRIPT in bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*; \
+		do \
+			checkbashisms $${SCRIPT} || true; \
+			echo -n "."; \
+		done; \
 	else \
-		echo "bashism test skipped - you need to install devscripts."; \
+		echo "WARNING: skipping bashism test - you need to install devscripts."; \
 	fi
 
-build:
-	$(MAKE) -C manpages
+	@echo " done."
 
-install: test build
+build:
+	@echo "Nothing to build."
+
+install:
+	# (FIXME)
 	# Installing configuration
 	install -D -m 0644 conf/live.conf $(DESTDIR)/etc/live.conf
 	install -D -m 0644 conf/compcache $(DESTDIR)/usr/share/initramfs-tools/conf.d/compcache
@@ -31,94 +46,69 @@ install: test build
 	mkdir -p $(DESTDIR)/sbin
 	cp bin/live-getty bin/live-login bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin
 
-	mkdir -p $(DESTDIR)/usr/share/live-initramfs
-	cp bin/live-preseed bin/live-reconfigure bin/live-set-selections contrib/languagelist $(DESTDIR)/usr/share/live-initramfs
+	mkdir -p $(DESTDIR)/usr/share/live-boot
+	cp bin/live-preseed bin/live-reconfigure contrib/languagelist $(DESTDIR)/usr/share/live-boot
 
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools
 	cp -r hooks scripts $(DESTDIR)/usr/share/initramfs-tools
 
-	# Installing documentation
-	mkdir -p $(DESTDIR)/usr/share/doc/live-initramfs
-	cp -r COPYING docs/* $(DESTDIR)/usr/share/doc/live-initramfs
+	# Installing docs
+	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
+	cp -r COPYING docs/* $(DESTDIR)/usr/share/doc/live-boot
 
-	mkdir -p $(DESTDIR)/usr/share/doc/live-initramfs/examples
-	cp -r conf/* $(DESTDIR)/usr/share/doc/live-initramfs/examples
+	mkdir -p $(DESTDIR)/usr/share/doc/live-boot/examples
+	cp -r conf/* $(DESTDIR)/usr/share/doc/live-boot/examples
+	# (FIXME)
 
 	# Installing manpages
-	set -e; for MANPAGE in manpages/*.en.1; \
+	for MANPAGE in manpages/en/*; \
 	do \
-		install -D -m 0644 $$MANPAGE $(DESTDIR)/usr/share/man/man1/`basename $$MANPAGE .en.1`.1; \
+		SECTION="$$(basename $${MANPAGE} | awk -F. '{ print $$2 }')"; \
+		install -D -m 0644 $${MANPAGE} $(DESTDIR)/usr/share/man/man$${SECTION}/$$(basename $${MANPAGE}); \
 	done
 
-	set -e; for MANPAGE in manpages/*.en.7; \
+	for LANGUAGE in $(LANGUAGES); \
 	do \
-		install -D -m 0644 $$MANPAGE $(DESTDIR)/usr/share/man/man7/`basename $$MANPAGE .en.7`.7; \
-	done
-
-	set -e; for TRANSLATIONS in $$TRANSLATIONS; \
-	do \
-		for MANPAGE in manpages/*.$$TRANSLATION.1; \
+		for MANPAGE in manpages/$${LANGUAGE}/*; \
 		do \
-			install -D -m 0644 $$MANPAGE $(DESTDIR)/usr/share/man/$$TRANSLATION/man1/`basename $$MANPAGE .$$TRANSLATION.1`.1; \
-		done; \
-		for MANPAGE in manpages/*.$$TRANSLATION.7; \
-		do \
-			install -D -m 0644 $$MANPAGE $(DESTDIR)/usr/share/man/$$TRANSLATION/man7/`basename $$MANPAGE .$$TRANSLATION.7`.7; \
+			SECTION="$$(basename $${MANPAGE} | awk -F. '{ print $$3 }')"; \
+			install -D -m 0644 $${MANPAGE} $(DESTDIR)/usr/share/man/$${LANGUAGE}/man$${SECTION}/$$(basename $${MANPAGE} .$${LANGUAGE}.$${SECTION}).$${SECTION}; \
 		done; \
 	done
-
-	# Temporary symlinks
-	ln -sf live-initramfs.7.gz $(DESTDIR)/usr/share/man/man7/live-getty.7.gz
-	ln -sf live-initramfs.7.gz $(DESTDIR)/usr/share/man/man7/live-login.7.gz
 
 uninstall:
+	# (FIXME)
 	# Uninstalling configuration
 	rm -f $(DESTDIR)/etc/live.conf
 
 	# Uninstalling executables
 	rm -f $(DESTDIR)/sbin/live-getty $(DESTDIR)/sbin/live-login $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
-	rm -rf $(DESTDIR)/usr/share/live-initramfs
+	rm -rf $(DESTDIR)/usr/share/live-boot
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	rm -rf $(DESTDIR)/usr/share/initramfs-tools/scripts/live*
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top/live
 
-	# Uninstalling documentation
-	rm -rf $(DESTDIR)/usr/share/doc/live-initramfs
+	# Uninstalling docs
+	rm -rf $(DESTDIR)/usr/share/doc/live-boot
+	# (FIXME)
 
 	# Uninstalling manpages
-	set -e; for MANPAGE in manpages/*.en.1; \
+	for MANPAGE in manpages/en/*; \
 	do \
-		rm -f $(DESTDIR)/usr/share/man/man1/`basename $$MANPAGE .en.1`.1; \
+		SECTION="$$(basename $${MANPAGE} | awk -F. '{ print $$2 }')"; \
+		rm -f $(DESTDIR)/usr/share/man/man$${SECTION}/$$(basename $${MANPAGE} .en.$${SECTION}).$${SECTION}; \
 	done
 
-	set -e; for MANPAGE in manpages/*.en.7; \
+	for LANGUAGE in $(LANGUAGES); \
 	do \
-		rm -f $(DESTDIR)/usr/share/man/man7/`basename $$MANPAGE .en.7`.7; \
-	done
-
-	set -e; for TRANSLATIONS in $$TRANSLATIONS; \
-	do \
-		for MANPAGE in manpages/*.$$TRANSLATION.1; \
+		for MANPAGE in manpages/$${LANGUAGE}/*; \
 		do \
-			install -D -m 0644 $$MANPAGE $(DESTDIR)/usr/share/man/$$TRANSLATION/man1/`basename $$MANPAGE .$$TRANSLATION.1`.1; \
-		done; \
-		for MANPAGE in manpages/*.$$TRANSLATION.7; \
-		do \
-			install -D -m 0644 $$MANPAGE $(DESTDIR)/usr/share/man/$$TRANSLATION/man7/`basename $$MANPAGE .$$TRANSLATION.7`.7; \
+			SECTION="$$(basename $${MANPAGE} | awk -F. '{ print $$3 }')"; \
+			rm -f $(DESTDIR)/usr/share/man/$${LANGUAGE}/man$${SECTION}/$$(basename $${MANPAGE} .$${LANGUAGE}.$${SECTION}).$${SECTION}; \
 		done; \
 	done
-
-	# Temporary symlinks
-	rm -f $(DESTDIR)/usr/share/man/man7/live-getty.7.gz
-	rm -f $(DESTDIR)/usr/share/man/man7/live-login.7.gz
-
-update:
-	# Update language list
-	wget -O "contrib/languagelist" \
-		"http://svn.debian.org/viewsvn/*checkout*/d-i/trunk/packages/localechooser/languagelist"
 
 clean:
-	$(MAKE) -C manpages clean
 
 distclean:
 

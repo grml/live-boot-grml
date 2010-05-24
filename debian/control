@@ -1,33 +1,46 @@
-Source: live-initramfs
+Source: live-boot
 Section: misc
 Priority: optional
 Maintainer: Debian Live Project <debian-live@lists.debian.org>
 Uploaders: Daniel Baumann <daniel@debian.org>
 Build-Depends: debhelper (>= 7.0.50~)
-Build-Depends-Indep: asciidoc, docbook-xsl, xsltproc
 Standards-Version: 3.8.4
-Homepage: http://live.debian.net/devel/live-initramfs/
-Vcs-Browser: http://live.debian.net/gitweb/?p=live-initramfs.git
-Vcs-Git: git://live.debian.net/git/live-initramfs.git
+Homepage: http://live.debian.net/devel/live-boot/
+Vcs-Browser: http://live.debian.net/gitweb/?p=live-boot.git
+Vcs-Git: git://live.debian.net/git/live-boot.git
+
+Package: live-boot
+Architecture: all
+Depends: ${misc:Depends}, live-config-sysvinit | live-config-backend
+Recommends: eject, file, rsync, uuid-runtime
+Suggests: curlftpfs, cryptsetup, httpfs2, unionfs-fuse, wget
+Description: Debian Live - System Boot Scripts
+ live-boot contains the scripts that configure a Debian Live system during the
+ boot process (early userspace).
+ .
+ In addition to live-boot, a backend for the initrd generation is required, such
+ as live-boot-initramfs-tools.
+
+Package: live-boot-initramfs-tools
+Architecture: all
+Depends:
+ ${misc:Depends}, live-boot (>= ${source:Version}), busybox, initramfs-tools,
+ udev
+Conflicts: live-boot-backend, live-initramfs (<< 2.0~a1)
+Replaces: live-boot-backend, live-initramfs
+Provides: live-boot-backend
+Description: Debian Live - System Boot Scripts (initramfs-tools backend)
+ live-boot contains the scripts that configure a Debian Live system during the
+ boot process (early userspace).
+ .
+ This package contains the initramfs-tools backend.
 
 Package: live-initramfs
 Architecture: all
-Depends: ${misc:Depends}, busybox, file, initramfs-tools, sudo, udev, user-setup
-Recommends: cryptsetup, eject, rsync, uuid-runtime, wget
-Suggests:
- loop-aes-utils, curlftpfs, genext2fs (>= 1.4.1), httpfs2, squashfs-tools,
- mtd-tools, unionfs-fuse
-Description: Debian Live initramfs hook
- live-initramfs is a hook for the initramfs-tools, used to generate a initramfs
- capable to boot live systems, such as those created by live-helper. This
- includes the Debian Live isos, netboot tarballs, and usb stick images.
+Depends: ${misc:Depends}, live-boot-initramfs-tools
+Description: Debian Live - System Boot Scripts (transitional package)
+ Package to ease upgrading from older live-initramfs packages to the new
+ live-boot-initramfs-tools package.
  .
- At boot time it will look for a (read-only) media containing a "/live"
- directory where a root filesystems (often a compressed filesystem image like
- squashfs) is stored. If found, it will create a writable environment, using
- aufs or unionfs, for Debian like systems to boot from.
- .
- You probably do not want to install this package onto a non-live system,
- although it will do no harm.
- .
- live-initramfs is a fork of casper <http://packages.ubuntu.com/casper/>.
+ This package can be purged at anytime once the live-boot-initramfs-tools
+ package has been installed.

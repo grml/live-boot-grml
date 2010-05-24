@@ -18,7 +18,7 @@ case "${1}" in
 		;;
 esac
 
-# live-initramfs header
+# live-boot header
 
 if [ -n "${NOXAUTOCONFIG}" ]
 then
@@ -36,7 +36,7 @@ fi
 
 log_begin_msg "Configuring X video modes"
 
-# live-initramfs script
+# live-boot script
 
 . /live.vars
 
