@@ -4,12 +4,14 @@ SHELL := sh -e
 
 LANGUAGES = de
 
+SCRIPTS = bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*
+
 all: test build
 
 test:
 	@echo -n "Checking for syntax errors"
 
-	@for SCRIPT in bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*; \
+	@for SCRIPT in $(SCRIPTS); \
 	do \
 		sh -n $${SCRIPT}; \
 		echo -n "."; \
@@ -22,7 +24,7 @@ test:
 	@# We can't just fail yet on bashisms (FIXME)
 	@if [ -x /usr/bin/checkbashisms ]; \
 	then \
-		for SCRIPT in bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*; \
+		for SCRIPT in $(SCRIPTS); \
 		do \
 			checkbashisms $${SCRIPT} || true; \
 			echo -n "."; \
