@@ -59,13 +59,12 @@ Arguments ()
 				NOFASTBOOT="Yes"
 				NOFSTAB="Yes"
 				NOHOSTS="Yes"
-				NOLOCALES="Yes"
 				NONETWORKING="Yes"
 				NOTIMEZONE="Yes"
 				NOXAUTOCONFIG="Yes"
 				NOXAUTOLOGIN="Yes"
 
-				export NOACCESSIBILITY NOAPTCDROM NOAUTOLOGIN NOCONSOLEKEYBOARD NOFASTBOOT NOFSTAB NOHOSTS NOLOCALES NONETWORKING NOTIMEZONE NOXAUTOCONFIG NOXAUTOLOGIN
+				export NOACCESSIBILITY NOAPTCDROM NOAUTOLOGIN NOCONSOLEKEYBOARD NOFASTBOOT NOFSTAB NOHOSTS NONETWORKING NOTIMEZONE NOXAUTOCONFIG NOXAUTOLOGIN
 				;;
 
 			access=*)
@@ -213,17 +212,6 @@ Arguments ()
 				export LIVE_MEDIA_TIMEOUT
 				;;
 
-			language=*|debian-installer/language=*)
-				language=${x#debian-installer/language=}
-				locale="$(lang2locale "$language")"
-				set_locale="true"
-				;;
-
-			locale=*|debian-installer/locale=*)
-				LOCALE="${ARGUMENT#*=}"
-				export LOCALE
-				;;
-
 			module=*)
 				MODULE="${ARGUMENT#module=}"
 				export MODULE
@@ -282,11 +270,6 @@ Arguments ()
 			nohosts)
 				NOHOSTS="Yes"
 				export NOHOSTS
-				;;
-
-			nolocales)
-				NOLOCALES="Yes"
-				export NOLOCALES
 				;;
 
 			nonetworking)
