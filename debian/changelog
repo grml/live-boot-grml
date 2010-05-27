@@ -1,3 +1,10 @@
+live-boot (2.0~a2-1) unstable; urgency=low
+
+  * Removing locales  bottom script, now handled by live-config.
+  * Simplyfing makefile a bit.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 27 May 2010 22:42:36 +0200
+
 live-boot (2.0~a1-1) experimental; urgency=low
 
   * Initial release.
