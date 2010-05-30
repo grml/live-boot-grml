@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2010-05-30 09:26+0300\n"
+"POT-Creation-Date: 2010-05-30 09:55+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -215,22 +215,11 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:43
 #, no-wrap
-msgid "B<hostname>=I<HOSTNAME>, B<username>=I<USER>, B<userfullname>=I<USERFULLNAME>"
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:45
-msgid "Those parameters lets you override values read from the config file."
-msgstr ""
-
-#. type: IP
-#: en/live-boot.7:45
-#, no-wrap
 msgid "B<ignore_uuid>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:47
+#: en/live-boot.7:45
 msgid ""
 "Do not check that any UUID embedded in the initramfs matches the discovered "
 "medium. live-boot may be told to generate a UUID by setting "
@@ -238,13 +227,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:47
+#: en/live-boot.7:45
 #, no-wrap
 msgid "B<integrity-check>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:49
+#: en/live-boot.7:47
 msgid ""
 "If specified, an MD5 sum is calculated on the live media during boot and "
 "compared to the value found in md5sum.txt found in the root directory of the "
@@ -252,13 +241,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:49
+#: en/live-boot.7:47
 #, no-wrap
 msgid "B<ip>=[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<DEVICE>]:[I<AUTOCONF>] [,[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<DEVICE>]:[I<AUTOCONF>]]"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:51
+#: en/live-boot.7:49
 msgid ""
 "Let you specify the name(s) and the options of the interface(s) that should "
 "be configured at boot time. Do not specify this if you want to use dhcp "
@@ -268,13 +257,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:51
+#: en/live-boot.7:49
 #, no-wrap
 msgid "B<ip>=[I<frommedia>]"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:53
+#: en/live-boot.7:51
 msgid ""
 "If this variable is set, dhcp and static configuration are just skipped and "
 "the system will use the (must be) media-preconfigured /etc/network/"
@@ -282,13 +271,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:53
+#: en/live-boot.7:51
 #, no-wrap
 msgid "{B<keyb>|B<kbd-chooser/method>}=I<KEYBOARD>, {B<klayout>|B<console-setup/layoutcode>}=I<LAYOUT>, {B<kvariant>|B<console-setup/variantcode>}=I<VARIANT>, {B<kmodel>I<|>B<console-setup/modelcode>}=I<CODE>, B<koptions>=I<OPTIONS>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:55
+#: en/live-boot.7:53
 msgid ""
 "Configure the running keyboard as specified, if this one misses live-boot "
 "behaves as if \"keyb=us\" was specified. It will be interfered from \"locale="
@@ -297,13 +286,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:55
+#: en/live-boot.7:53
 #, no-wrap
 msgid "B<live-getty>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:57
+#: en/live-boot.7:55
 msgid ""
 "This changes the auto-login on virtual terminals to use the (experimental) "
 "live-getty code. With this option set the standard kernel argument \"console="
@@ -312,13 +301,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:57
+#: en/live-boot.7:55
 #, no-wrap
 msgid "{B<live-media>|B<bootfrom>}=I<DEVICE>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:59
+#: en/live-boot.7:57
 msgid ""
 "If you specify one of this two equivalent forms, live-boot will first try to "
 "find this device for the \"/live\" directory where the read-only root "
@@ -327,7 +316,7 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:61
+#: en/live-boot.7:59
 msgid ""
 "Instead of specifing an actual device name, the keyword 'removable' can be "
 "used to limit the search of acceptable live media to removable type only. "
@@ -336,13 +325,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:61
+#: en/live-boot.7:59
 #, no-wrap
 msgid "{B<live-media-encryption>|B<encryption>}=I<TYPE>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:63
+#: en/live-boot.7:61
 msgid ""
 "live-boot will mount the encrypted rootfs TYPE, asking the passphrase, "
 "useful to build paranoid live systems :-). TYPE supported so far are \"aes\" "
@@ -350,13 +339,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:63
+#: en/live-boot.7:61
 #, no-wrap
 msgid "B<live-media-offset>=I<BYTES>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:65
+#: en/live-boot.7:63
 msgid ""
 "This way you could tell live-boot that your image starts at offset BYTES in "
 "the above specified or autodiscovered device, this could be useful to hide "
@@ -365,13 +354,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:65
+#: en/live-boot.7:63
 #, no-wrap
 msgid "B<live-media-path>=I<PATH>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:67
+#: en/live-boot.7:65
 msgid ""
 "Sets the path to the live filesystem on the medium. By default, it is set to "
 "'/live' and you should not change that unless you have customized your media "
@@ -379,44 +368,26 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:67
+#: en/live-boot.7:65
 #, no-wrap
 msgid "B<live-media-timeout>=I<SECONDS>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:69
+#: en/live-boot.7:67
 msgid ""
 "Set the timeout in seconds for the device specified by \"live-media=\" to "
 "become ready before giving up."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:69
-#, no-wrap
-msgid "{B<locale>|B<debian-installer/locale>}=I<LOCALE>"
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:71
-msgid ""
-"Configure the running locale as specified, if not present the live-media "
-"rootfs configured locale will be used and if also this one misses live-boot "
-"behave as \"locale=en_US.UTF-8\" was specified. If only 2 lowercase letter "
-"are specified (like \"it\"), the \"maybe wanted\" locale is generated (like "
-"en:EN.UTF-8), in this case if also \"keyb=\" is unspecified is set with "
-"those 2 lowercase letters (keyb=us). Beside that facility, only UTF8 locales "
-"are supported by live-boot."
-msgstr ""
-
-#. type: IP
-#: en/live-boot.7:71
+#: en/live-boot.7:67
 #, no-wrap
 msgid "B<module>=I<NAME>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:73
+#: en/live-boot.7:69
 msgid ""
 "Instead of using the default optional file \"filesystem.module\" (see below) "
 "another file could be specified without the extension \".module\"; it should "
@@ -424,13 +395,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:73
+#: en/live-boot.7:69
 #, no-wrap
 msgid "B<netboot>[=nfs|cifs]"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:75
+#: en/live-boot.7:71
 msgid ""
 "This tells live-boot to perform a network mount. The parameter \"nfsroot="
 "\" (with optional \"nfsopts=\"), should specify where is the location of the "
@@ -438,50 +409,24 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:75
+#: en/live-boot.7:71
 #, no-wrap
 msgid "B<nfsopts>="
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:77
+#: en/live-boot.7:73
 msgid "This lets you specify custom nfs options."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:77
-#, no-wrap
-msgid "B<noautologin>"
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:79
-msgid ""
-"This parameter disables the automatic terminal login only, not touching gdk/"
-"kdm."
-msgstr ""
-
-#. type: IP
-#: en/live-boot.7:79
-#, no-wrap
-msgid "B<noxautologin>"
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:81
-msgid ""
-"This parameter disables the automatic login of gdm/kdm only, not touching "
-"terminals."
-msgstr ""
-
-#. type: IP
-#: en/live-boot.7:81
+#: en/live-boot.7:73
 #, no-wrap
 msgid "B<nofastboot>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:83
+#: en/live-boot.7:75
 msgid ""
 "This parameter disables the default disabling of filesystem checks in /etc/"
 "fstab. If you have static filesystems on your harddisk and you want them to "
@@ -489,70 +434,48 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:83
+#: en/live-boot.7:75
 #, no-wrap
 msgid "B<nopersistent>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:85
+#: en/live-boot.7:77
 msgid ""
 "disables the \"persistent\" feature, useful if the bootloader (like "
 "syslinux) has been installed with persistent enabled."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:85
+#: en/live-boot.7:77
 #, no-wrap
 msgid "B<noprompt>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:87
+#: en/live-boot.7:79
 msgid "Do not prompt to eject the CD or remove the USB flash drive on reboot."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:87
-#, no-wrap
-msgid "B<nosudo>"
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:89
-msgid "This parameter disables the automatic configuration of sudo."
-msgstr ""
-
-#. type: IP
-#: en/live-boot.7:89
+#: en/live-boot.7:79
 #, no-wrap
 msgid "B<swapon>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:91
+#: en/live-boot.7:81
 msgid "This parameter enables usage of local swap partitions."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:91
-#, no-wrap
-msgid "B<nouser>"
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:93
-msgid "This parameter disables the creation of the default user completely."
-msgstr ""
-
-#. type: IP
-#: en/live-boot.7:93
+#: en/live-boot.7:81
 #, no-wrap
 msgid "B<noxautoconfig>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:95
+#: en/live-boot.7:83
 msgid ""
 "This parameter disables Xorg auto-reconfiguration at boot time. This is "
 "valuable if you either do the detection on your own, or, if you want to ship "
@@ -560,13 +483,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:95
+#: en/live-boot.7:83
 #, no-wrap
 msgid "B<persistent>[=nofiles]"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:97
+#: en/live-boot.7:85
 msgid ""
 "live-boot will look for persistent and snapshot partitions or files labeled "
 "\"live-rw\", \"home-rw\", and files called \"live-sn*\", \"home-sn*\" and "
@@ -580,13 +503,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:97
+#: en/live-boot.7:85
 #, no-wrap
 msgid "B<persistent-path>=I<PATH>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:99
+#: en/live-boot.7:87
 msgid ""
 "live-boot will look for persistency files in the root directory of a "
 "partition, with this parameter, the path can be configured so that you can "
@@ -594,26 +517,26 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:99
+#: en/live-boot.7:87
 #, no-wrap
 msgid "{B<preseed/file>|B<file>}=I<FILE>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:101
+#: en/live-boot.7:89
 msgid ""
 "A path to a file present on the rootfs could be used to preseed debconf "
 "database."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:101
+#: en/live-boot.7:89
 #, no-wrap
 msgid "B<package/question>=I<VALUE>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:103
+#: en/live-boot.7:91
 msgid ""
 "All debian installed packages could be preseeded from command-line that way, "
 "beware of blanks spaces, they will interfere with parsing, use a preseed "
@@ -621,26 +544,26 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:103
+#: en/live-boot.7:91
 #, no-wrap
 msgid "B<quickreboot>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:105
+#: en/live-boot.7:93
 msgid ""
 "This option causes live-boot to reboot without attempting to eject the media "
 "and without asking the user to remove the boot media."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:105
+#: en/live-boot.7:93
 #, no-wrap
 msgid "B<showmounts>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:107
+#: en/live-boot.7:95
 msgid ""
 "This parameter will make live-boot to show on \"/\" the ro filesystems "
 "(mostly compressed) on \"/live\". This is not enabled by default because "
@@ -649,51 +572,38 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:107
+#: en/live-boot.7:95
 #, no-wrap
 msgid "B<silent>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:109
+#: en/live-boot.7:97
 msgid ""
 "If you boot with the normal quiet parameter, live-boot hides most messages "
 "of its own. When adding silent, it hides all."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:109
+#: en/live-boot.7:97
 #, no-wrap
 msgid "B<textonly>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:111
+#: en/live-boot.7:99
 msgid ""
 "Start up to text-mode shell prompts, disabling the graphical user interface."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:111
-#, no-wrap
-msgid "B<timezone>=I<TIMEZONE>"
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:113
-msgid ""
-"By default, timezone is set to UTC. Using the timezone parameter, you can "
-"set it to your local zone, e.g. Europe/Zurich."
-msgstr ""
-
-#. type: IP
-#: en/live-boot.7:113
+#: en/live-boot.7:99
 #, no-wrap
 msgid "B<todisk>=I<DEVICE>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:115
+#: en/live-boot.7:101
 msgid ""
 "Adding this parameter, live-boot will try to copy the entire read-only media "
 "to the specified device before mounting the root filesystem. It probably "
@@ -703,13 +613,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:115
+#: en/live-boot.7:101
 #, no-wrap
 msgid "B<toram>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:117
+#: en/live-boot.7:103
 msgid ""
 "Adding this parameter, live-boot will try to copy the whole read-only media "
 "to the computer's RAM before mounting the root filesystem. This could need a "
@@ -717,84 +627,71 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:117
+#: en/live-boot.7:103
 #, no-wrap
 msgid "B<union>=aufs|unionfs"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:119
+#: en/live-boot.7:105
 msgid ""
 "By default, live-boot uses aufs. With this parameter, you can switch to "
 "unionfs."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:119
-#, no-wrap
-msgid "B<utc>=yes|no"
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:121
-msgid ""
-"By default, Debian systems do assume that the hardware clock is set to UTC. "
-"You can change or explicitly set it with this parameter."
-msgstr ""
-
-#. type: IP
-#: en/live-boot.7:121
+#: en/live-boot.7:105
 #, no-wrap
 msgid "B<xdebconf>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:123
+#: en/live-boot.7:107
 msgid ""
 "Uses xdebconfigurator, if present on the rootfs, to configure X instead of "
 "the standard procedure (experimental)."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:123
+#: en/live-boot.7:107
 #, no-wrap
 msgid "B<xvideomode>=I<RESOLUTION>"
 msgstr ""
 
 #.  FIXME
 #. type: Plain text
-#: en/live-boot.7:126
+#: en/live-boot.7:110
 msgid "Doesn't do xorg autodetection, but enforces a given resolution."
 msgstr ""
 
 #.  FIXME
 #. type: SH
-#: en/live-boot.7:128
+#: en/live-boot.7:112
 #, no-wrap
 msgid "FILES (old)"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:129 en/live-snapshot.1:43
+#: en/live-boot.7:113 en/live-snapshot.1:43
 #, no-wrap
 msgid "B</etc/live.conf>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:131 en/live-snapshot.1:45
+#: en/live-boot.7:115 en/live-snapshot.1:45
 msgid ""
 "Some variables can be configured via this config file (inside the live "
 "system)."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:131 en/live-snapshot.1:45
+#: en/live-boot.7:115 en/live-snapshot.1:45
 #, no-wrap
 msgid "B<live/filesystem.module>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:133 en/live-snapshot.1:47
+#: en/live-boot.7:117 en/live-snapshot.1:47
 msgid ""
 "This optional file (inside the live media) contains a list of white-space or "
 "carriage-return-separated file names corresponding to disk images in the \"/"
@@ -807,13 +704,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:133 en/live-snapshot.1:47
+#: en/live-boot.7:117 en/live-snapshot.1:47
 #, no-wrap
 msgid "B</etc/live-persistence.binds>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:135 en/live-snapshot.1:49
+#: en/live-boot.7:119 en/live-snapshot.1:49
 msgid ""
 "This optional file (which resides in the rootfs system, not in the live "
 "media) is used as a list of directories which not need be persistent: ie. "
@@ -822,7 +719,7 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:138 en/live-snapshot.1:51
+#: en/live-boot.7:122 en/live-snapshot.1:51
 msgid ""
 "This saves expensive writes and speeds up operations on volatile data such "
 "as web caches and temporary files (like e.g. /tmp and .mozilla) which are "
@@ -831,64 +728,64 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:139 en/live-snapshot.1:42
+#: en/live-boot.7:123 en/live-snapshot.1:42
 #, no-wrap
 msgid "FILES"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:140
+#: en/live-boot.7:124
 #, no-wrap
 msgid "B</etc/live/boot.conf>"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:141
+#: en/live-boot.7:125
 #, no-wrap
 msgid "B</etc/live/boot.conf.d/>"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:142
+#: en/live-boot.7:126
 #, no-wrap
 msgid "B<live/boot.conf>"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:143
+#: en/live-boot.7:127
 #, no-wrap
 msgid "B<live/boot.conf.d/>"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:145 en/live-snapshot.1:52
+#: en/live-boot.7:129 en/live-snapshot.1:52
 #, no-wrap
 msgid "SEE ALSO"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:147
+#: en/live-boot.7:131
 msgid "I<live-snapshot>(1)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:149 en/live-snapshot.1:56
+#: en/live-boot.7:133 en/live-snapshot.1:56
 msgid "I<live-config>(7)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:151 en/live-snapshot.1:58
+#: en/live-boot.7:135 en/live-snapshot.1:58
 msgid "I<live-helper>(7)"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:152 en/live-snapshot.1:59
+#: en/live-boot.7:136 en/live-snapshot.1:59
 #, no-wrap
 msgid "HOMEPAGE"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:154 en/live-snapshot.1:61
+#: en/live-boot.7:138 en/live-snapshot.1:61
 msgid ""
 "More information about live-boot and the Debian Live project can be found on "
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
@@ -896,13 +793,13 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:155 en/live-snapshot.1:62
+#: en/live-boot.7:139 en/live-snapshot.1:62
 #, no-wrap
 msgid "BUGS"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:157 en/live-snapshot.1:64
+#: en/live-boot.7:141 en/live-snapshot.1:64
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
 "the Debian Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
@@ -911,13 +808,13 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:158 en/live-snapshot.1:65
+#: en/live-boot.7:142 en/live-snapshot.1:65
 #, no-wrap
 msgid "AUTHOR"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:159 en/live-snapshot.1:66
+#: en/live-boot.7:143 en/live-snapshot.1:66
 msgid ""
 "live-boot was written by Daniel Baumann E<lt>I<daniel@debian.org>E<gt> for "
 "the Debian project."
