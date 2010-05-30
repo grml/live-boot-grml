@@ -1,3 +1,9 @@
+live-boot (2.0~a3-1) unstable; urgency=low
+
+  * Removing umountfs bottom script, not needed anymore.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 30 May 2010 09:28:32 +0200
+
 live-boot (2.0~a2-1) unstable; urgency=low
 
   * Removing locales  bottom script, now handled by live-config.
