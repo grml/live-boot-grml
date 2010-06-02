@@ -1,3 +1,10 @@
+live-boot (2.0~a4-1) unstable; urgency=low
+
+  * Removing obsolete boot parameter from manpages.
+  * Running checkbashisms with -f and -x in Makefile.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 02 Jun 2010 22:47:20 +0200
+
 live-boot (2.0~a3-1) unstable; urgency=low
 
   * Removing umountfs bottom script, not needed anymore.
