@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 30.05.2010 2.0~a3 "Debian Live Projekt"
+.TH LIVE\-BOOT 7 02.06.2010 2.0~a4 "Debian Live Projekt"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Skripte
@@ -66,8 +66,6 @@ Working: http://1.2.3.4/path/to/your_filesystem.squashfs
 Also note that therefore it's currently not possible to fetch an image from
 a namebased virtualhost of an httpd if it is sharing the ip with the main
 httpd instance.
-.IP "\fBhostname\fP=\fIHOSTNAME\fP, \fBusername\fP=\fIUSER\fP, \fBuserfullname\fP=\fIUSERFULLNAME\fP" 4
-Those parameters lets you override values read from the config file.
 .IP \fBignore_uuid\fP 4
 Do not check that any UUID embedded in the initramfs matches the discovered
 medium. live\-boot may be told to generate a UUID by setting
@@ -122,14 +120,6 @@ accordingly.
 .IP \fBlive\-media\-timeout\fP=\fISECONDS\fP 4
 Set the timeout in seconds for the device specified by "live\-media=" to
 become ready before giving up.
-.IP {\fBlocale\fP|\fBdebian\-installer/locale\fP}=\fILOCALE\fP 4
-Configure the running locale as specified, if not present the live\-media
-rootfs configured locale will be used and if also this one misses live\-boot
-behave as "locale=en_US.UTF\-8" was specified. If only 2 lowercase letter are
-specified (like "it"), the "maybe wanted" locale is generated (like
-en:EN.UTF\-8), in this case if also "keyb=" is unspecified is set with those
-2 lowercase letters (keyb=us). Beside that facility, only UTF8 locales are
-supported by live\-boot.
 .IP \fBmodule\fP=\fINAME\fP 4
 Instead of using the default optional file "filesystem.module" (see below)
 another file could be specified without the extension ".module"; it should
@@ -140,12 +130,6 @@ This tells live\-boot to perform a network mount. The parameter "nfsroot="
 filesystem.  With no args, will try cifs first, and if it fails nfs.
 .IP \fBnfsopts\fP= 4
 This lets you specify custom nfs options.
-.IP \fBnoautologin\fP 4
-This parameter disables the automatic terminal login only, not touching
-gdk/kdm.
-.IP \fBnoxautologin\fP 4
-This parameter disables the automatic login of gdm/kdm only, not touching
-terminals.
 .IP \fBnofastboot\fP 4
 This parameter disables the default disabling of filesystem checks in
 /etc/fstab. If you have static filesystems on your harddisk and you want
@@ -156,12 +140,8 @@ disables the "persistent" feature, useful if the bootloader (like syslinux)
 has been installed with persistent enabled.
 .IP \fBnoprompt\fP 4
 Do not prompt to eject the CD or remove the USB flash drive on reboot.
-.IP \fBnosudo\fP 4
-This parameter disables the automatic configuration of sudo.
 .IP \fBswapon\fP 4
 This parameter enables usage of local swap partitions.
-.IP \fBnouser\fP 4
-This parameter disables the creation of the default user completely.
 .IP \fBnoxautoconfig\fP 4
 This parameter disables Xorg auto\-reconfiguration at boot time. This is
 valuable if you either do the detection on your own, or, if you want to ship
@@ -200,9 +180,6 @@ If you boot with the normal quiet parameter, live\-boot hides most messages
 of its own. When adding silent, it hides all.
 .IP \fBtextonly\fP 4
 Start up to text\-mode shell prompts, disabling the graphical user interface.
-.IP \fBtimezone\fP=\fITIMEZONE\fP 4
-By default, timezone is set to UTC. Using the timezone parameter, you can
-set it to your local zone, e.g. Europe/Zurich.
 .IP \fBtodisk\fP=\fIDEVICE\fP 4
 Adding this parameter, live\-boot will try to copy the entire read\-only media
 to the specified device before mounting the root filesystem. It probably
@@ -216,9 +193,6 @@ lot of ram, according to the space used by the read\-only media.
 .IP \fBunion\fP=aufs|unionfs 4
 By default, live\-boot uses aufs. With this parameter, you can switch to
 unionfs.
-.IP \fButc\fP=yes|no 4
-By default, Debian systems do assume that the hardware clock is set to
-UTC. You can change or explicitly set it with this parameter.
 .IP \fBxdebconf\fP 4
 Uses xdebconfigurator, if present on the rootfs, to configure X instead of
 the standard procedure (experimental).
