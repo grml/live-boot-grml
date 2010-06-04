@@ -8,7 +8,7 @@ echo "/root/lib" >> /etc/ld.so.conf
 echo "/root/usr/lib" >> /etc/ld.so.conf
 
 mountpoint="/live/image"
-ext_mountpoint="/ext_volume"
+alt_mountpoint="/media"
 LIVE_MEDIA_PATH="live"
 
 root_persistence="live-rw"
@@ -804,8 +804,8 @@ do_httpmount ()
 				iso|squashfs|tgz|tar)
 					if [ "${extension}" = "iso" ]
 					then
-						mkdir -p "${ext_mountpoint}"
-						dest="${ext_mountpoint}"
+						mkdir -p "${alt_mountpoint}"
+						dest="${alt_mountpoint}"
 					else
 						local dest="${mountpoint}/${LIVE_MEDIA_PATH}"
 						mount -t ramfs ram "${mountpoint}"
@@ -859,10 +859,10 @@ do_httpmount ()
 
 	if [ ${rc} != 0 ]
 	then
-		if [ -d "${ext_mountpoint}" ]
+		if [ -d "${alt_mountpoint}" ]
 		then
-		        umount "${ext_mountpoint}"
-			rmdir "${ext_mountpoint}"
+		        umount "${alt_mountpoint}"
+			rmdir "${alt_mountpoint}"
 		fi
 		umount "${mountpoint}"
 	elif [ "${webfile}"  != "FETCH" ] ; then
