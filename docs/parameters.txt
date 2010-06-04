@@ -16,6 +16,7 @@ live userfullname=USERFULLNAME
 live integrity-check
 live ip=[CLIENT_IP]:[SERVER_IP]:[GATEWAY_IP]:[NETMASK]:[HOSTNAME]:[DEVICE]:[AUTOCONF]  [,[CLIENT_IP]:[SERVER_IP]:[GATEWAY_IP]:[NETMASK]:[HOSTNAME]:[DEVICE]:[AUTOCONF]]*
 live ip[=frommedia]
+live iscsi=target-ip[,target-port];target-name
 live {keyb|kbd-chooser/method}=KEYBOARD
 live {klayout|console-setup/layoutcode}=LAYOUT
 live {kvariant|console-setup/variantcode}=VARIANT
