@@ -339,25 +339,6 @@ Arguments ()
 				export NOPRESEED
 				;;
 
-			url=*)
-				URL_LOCATION="${ARGUMENT#url=}"
-
-				mount -o bind /sys /root/sys
-				mount -o bind /proc /root/proc
-				mount -o bind /dev /root/dev
-
-				mkdir -p /root/var/run/network
-				[ "${NETBOOT}" ] || chroot /root dhclient eth0
-				chroot /root wget -P /tmp "${URL_LOCATION}"
-				[ "${NETBOOT}" ] || chroot /root ifconfig eth0 down
-
-				umount /root/sys
-				umount /root/proc
-				umount /root/dev
-
-				LOCATIONS="/tmp/$(basename ${URL_LOCATION}) ${LOCATIONS}"
-				;;
-
 			*/*=*)
 				question="${ARGUMENT%%=*}"
 				value="${ARGUMENT#*=}"
