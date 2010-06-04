@@ -682,8 +682,6 @@ copy_live_to ()
 
 do_netmount ()
 {
-	rc=1
-
 	modprobe -q af_packet # For DHCP
 
 	udevadm trigger
@@ -761,10 +759,12 @@ do_netmount ()
 		NFSROOT=${ROOTSERVER}:${ROOTPATH}
 	fi
 
-	if ( [ -n "${FETCH}" ] || [ -n "${HTTPFS}" ] || [ -n "${FTPFS}" ] ) && do_httpmount
+	rc=1
+
+	if ( [ -n "${FETCH}" ] || [ -n "${HTTPFS}" ] || [ -n "${FTPFS}" ] )
 	then
-		rc=0
-		return ${rc}
+		do_httpmount
+		return $?
 	fi
 
 	if [ "${NFSROOT#*:}" = "${NFSROOT}" ] && [ "$NETBOOT" != "cifs" ]
@@ -846,7 +846,10 @@ do_httpmount ()
 
 	if [ ${rc} != 0 ]
 	then
-	    umount "${mountpoint}"
+		umount "${mountpoint}"
+	elif [ "${webfile}"  != "FETCH" ] ; then
+		NETBOOT="${webfile}"
+		export NETBOOT
 	fi
 
 	return ${rc}
