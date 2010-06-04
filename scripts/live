@@ -8,6 +8,7 @@ echo "/root/lib" >> /etc/ld.so.conf
 echo "/root/usr/lib" >> /etc/ld.so.conf
 
 mountpoint="/live/image"
+ext_mountpoint="/ext_volume"
 LIVE_MEDIA_PATH="live"
 
 root_persistence="live-rw"
@@ -791,19 +792,25 @@ do_netmount ()
 do_httpmount ()
 {
 	rc=1
-	dest="${mountpoint}/${LIVE_MEDIA_PATH}"
-	mount -t ramfs ram "${mountpoint}"
-	mkdir -p "${dest}"
 
 	for webfile in HTTPFS FTPFS FETCH
 	do
-		url="$(eval echo \"\$\{${webfile}\}\")"
-		extension="$(echo "${url}" | sed 's/\(.*\)\.\(.*\)/\2/')"
+		local url="$(eval echo \"\$\{${webfile}\}\")"
+		local extension="$(echo "${url}" | sed 's/\(.*\)\.\(.*\)/\2/')"
 
 		if [ -n "$url" ]
 		then
 			case "${extension}" in
-				squashfs|tgz|tar)
+				iso|squashfs|tgz|tar)
+					if [ "${extension}" = "iso" ]
+					then
+						mkdir -p "${ext_mountpoint}"
+						dest="${ext_mountpoint}"
+					else
+						local dest="${mountpoint}/${LIVE_MEDIA_PATH}"
+						mount -t ramfs ram "${mountpoint}"
+						mkdir -p "${dest}"
+					fi
 					if [ "${webfile}" = "FETCH" ]
 					then
 						case "$url" in
@@ -834,6 +841,12 @@ do_httpmount ()
 					fi
 					[ ${?} -eq 0 ] && rc=0
 					[ "${extension}" = "tgz" ] && live_dest="ram"
+					if [ "${extension}" = "iso" ]
+					then
+						isoloop=$(setup_loop "${dest}/$(basename "${url}")" "loop" "/sys/block/loop*" "" '')
+						mount -t iso9660 "${isoloop}" "${mountpoint}"
+						rc=${?}
+					fi
 					break
 					;;
 
@@ -846,6 +859,11 @@ do_httpmount ()
 
 	if [ ${rc} != 0 ]
 	then
+		if [ -d "${ext_mountpoint}" ]
+		then
+		        umount "${ext_mountpoint}"
+			rmdir "${ext_mountpoint}"
+		fi
 		umount "${mountpoint}"
 	elif [ "${webfile}"  != "FETCH" ] ; then
 		NETBOOT="${webfile}"
