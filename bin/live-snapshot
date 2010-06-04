@@ -40,7 +40,11 @@ fi
 . /usr/share/initramfs-tools/scripts/live-helpers
 
 LIVE_CONF="/etc/live.conf"
-. "${LIVE_CONF}"
+
+if [ -r "${LIVE_CONF}" ]
+then
+	. "${LIVE_CONF}"
+fi
 
 export USERNAME USERFULLNAME HOSTNAME
 

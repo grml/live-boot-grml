@@ -41,7 +41,6 @@ build:
 install:
 	# (FIXME)
 	# Installing configuration
-	install -D -m 0644 conf/live.conf $(DESTDIR)/etc/live.conf
 	install -D -m 0644 conf/compcache $(DESTDIR)/usr/share/initramfs-tools/conf.d/compcache
 
 	# Installing executables
@@ -79,10 +78,6 @@ install:
 	done
 
 uninstall:
-	# (FIXME)
-	# Uninstalling configuration
-	rm -f $(DESTDIR)/etc/live.conf
-
 	# Uninstalling executables
 	rm -f $(DESTDIR)/sbin/live-getty $(DESTDIR)/sbin/live-login $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
 	rm -rf $(DESTDIR)/usr/share/live-boot
