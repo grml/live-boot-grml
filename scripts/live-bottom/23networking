@@ -71,7 +71,7 @@ EOF
 
 	done
 else
-	if [ -z "${NETBOOT}" ]
+	if [ -z "${NETBOOT}" ] || [ -n "${DHCP}" ]
 	then
 		# default, dhcp assigned
 		method="dhcp"

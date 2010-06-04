@@ -85,6 +85,17 @@ Arguments ()
 				set -x
 				;;
 
+			dhcp)
+				# Force dhcp even while netbooting
+				# Use for debugging in case somebody works on fixing dhclient
+				DHCP="Force";
+				export DHCP
+				;;
+
+			nodhcp)
+				unset DHCP
+				;;
+
 			ethdevice=*)
 				DEVICE="${ARGUMENT#ethdevice=}"
 				export DEVICE
