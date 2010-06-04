@@ -7,7 +7,7 @@ live-boot (2.0~a4-1) unstable; urgency=low
 
 live-boot (2.0~a3-1) unstable; urgency=low
 
-  * Removing umountfs bottom script, not needed anymore.
+  * Removing umountfs bottom script, not needed anymore (see #518463).
 
  -- Daniel Baumann <daniel@debian.org>  Sun, 30 May 2010 09:28:32 +0200
 
