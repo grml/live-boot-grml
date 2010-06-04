@@ -9,6 +9,7 @@ live access=ACCESS
 live console=TTY,SPEED
 live debug
 live fetch=URL
+live httpfs=URL
 live hostname=HOSTNAME
 live username=USER
 live userfullname=USERFULLNAME
