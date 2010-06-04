@@ -34,9 +34,6 @@ then
 	touch /etc/mtab
 fi
 
-[ -f /etc/live.conf ] && . /etc/live.conf
-export USERNAME USERFULLNAME HOSTNAME
-
 . /scripts/live-helpers
 
 if [ ! -f /live.vars ]
@@ -1829,8 +1826,4 @@ mountroot ()
 	exec 2>&7 7>&-
 	kill ${tailpid}
 	[ -w "${rootmnt}/var/log/" ] && cp live.log "${rootmnt}/var/log/" 2>/dev/null
-	if [ -f /etc/live.conf ]
-	then
-		cp /etc/live.conf "${rootmnt}/etc/"
-	fi
 }
