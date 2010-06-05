@@ -1,3 +1,32 @@
+live-boot (2.0~a5-1) unstable; urgency=low
+
+  [ Michal Suchanek ]
+  * Fixing http boot:
+
+  [ Daniel Baumann ]
+  * Ammending 2.0~a3-1 changelog entry with bug number.
+
+  [ Michal Suchanek ]
+  * Adding support for booting iso images over http or wget.
+
+  [ Daniel Baumann ]
+  * Renaming internal ext_mountpoint variable to alt_mountpoint for
+    clarity.
+
+  [ Michal Suchanek ]
+  * Removing leftover url= option, this ain't gonna work this way, see
+    fetch=.
+  * Adding DHCP debugging option.
+  * Updating docs wrt/ httpfs.
+
+  [ Daniel Baumann ]
+  * Dropping /etc/live.conf, replaced mostly by /etc/live/config.conf of
+    live-config.
+  * Removing apt_cdrom bottom script, not used anyway.
+  * Removing some boot parameters obsoleted by live-config.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 05 Jun 2010 14:13:10 +0200
+
 live-boot (2.0~a4-1) unstable; urgency=low
 
   * Removing obsolete boot parameter from manpages.
