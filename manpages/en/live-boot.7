@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2010\-06\-02 2.0~a4 "Debian Live Project"
+.TH LIVE\-BOOT 7 2010\-06\-05 2.0~a5 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -32,14 +32,29 @@ Set the accessibility level for physically or visually impared users. ACCESS mus
 Set the default console to be used with the "live\-getty" option. Example: "console=ttyS0,115200"
 .IP "\fBdebug\fR" 4
 Makes initramfs boot process more verbose.
+.br
+Use: debug=1
+.br
+Without setting debug to a value the messages may not be shown.
 .IP "\fBfetch\fR=\fIURL\fR" 4
-Another form of netboot by downloading a squashfs image from a given url, copying to ram and booting it. Due to current limitations in busyboxs wget and DNS resolution, an URL can not contain a hostname but an IP only.
+.IP "\fBhttpfs\fR=\fIURL\fR" 4
+Another form of netboot by downloading a squashfs image from a given url.
+The fetch method copies the image to ram and the httpfs method uses fuse and
+httpfs2 to mount the image in place. Copying to ram requires more memory and
+might take a long time for large images. However, it is more likely to work
+correctly because it does not require networking afterwards and the system
+operates faster once booted because it does not require to contact the server
+anymore.
+.br
+Due to current limitations in busyboxs wget and DNS resolution, an URL can not contain a hostname but an IP only.
 .br
 Not working: http://example.com/path/to/your_filesystem.squashfs
 .br
 Working: http://1.2.3.4/path/to/your_filesystem.squashfs
 .br
 Also note that therefore it's currently not possible to fetch an image from a namebased virtualhost of an httpd if it is sharing the ip with the main httpd instance.
+.br
+You may also use the live iso image in place of the squashfs image.
 .IP "\fBignore_uuid\fR" 4
 Do not check that any UUID embedded in the initramfs matches the discovered medium. live\-boot may be told to generate a UUID by setting LIVE_GENERATE_UUID=1 when building the initramfs.
 .IP "\fBintegrity\-check\fR" 4

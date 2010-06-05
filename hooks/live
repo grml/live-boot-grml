@@ -27,14 +27,6 @@ esac
 # Handling live-boot
 
 # Configuration
-if [ -r /etc/live.conf ]
-then
-	. /etc/live.conf
-
-	mkdir -p "${DESTDIR}"/etc
-	cp /etc/live.conf "${DESTDIR}"/etc
-fi
-
 mkdir -p "${DESTDIR}"/usr/share/live-boot
 cp /usr/share/live-boot/languagelist "${DESTDIR}"/usr/share/live-boot
 

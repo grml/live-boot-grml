@@ -28,6 +28,8 @@ log_begin_msg "Setting up init"
 
 # Arrange for shells on virtual consoles, rather than login prompts
 
+USERNAME="user"
+
 if [ -z "${NOAUTOLOGIN}" ] && [ -n "${USERNAME}" ]
 then
 	if [ ! -z "${LIVE_GETTY}" ]

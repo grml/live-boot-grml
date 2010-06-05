@@ -8,6 +8,7 @@ echo "/root/lib" >> /etc/ld.so.conf
 echo "/root/usr/lib" >> /etc/ld.so.conf
 
 mountpoint="/live/image"
+alt_mountpoint="/media"
 LIVE_MEDIA_PATH="live"
 
 root_persistence="live-rw"
@@ -33,9 +34,6 @@ then
 	touch /etc/mtab
 fi
 
-[ -f /etc/live.conf ] && . /etc/live.conf
-export USERNAME USERFULLNAME HOSTNAME
-
 . /scripts/live-helpers
 
 if [ ! -f /live.vars ]
@@ -53,18 +51,14 @@ Arguments ()
 		case "${ARGUMENT}" in
 			skipconfig)
 				NOACCESSIBILITY="Yes"
-				NOAPTCDROM="Yes"
 				NOAUTOLOGIN="Yes"
 				NOCONSOLEKEYBOARD="Yes"
 				NOFASTBOOT="Yes"
 				NOFSTAB="Yes"
-				NOHOSTS="Yes"
 				NONETWORKING="Yes"
-				NOTIMEZONE="Yes"
 				NOXAUTOCONFIG="Yes"
-				NOXAUTOLOGIN="Yes"
 
-				export NOACCESSIBILITY NOAPTCDROM NOAUTOLOGIN NOCONSOLEKEYBOARD NOFASTBOOT NOFSTAB NOHOSTS NONETWORKING NOTIMEZONE NOXAUTOCONFIG NOXAUTOLOGIN
+				export NOACCESSIBILITY NOAUTOLOGIN NOCONSOLEKEYBOARD NOFASTBOOT NOFSTAB NONETWORKING NOXAUTOCONFIG
 				;;
 
 			access=*)
@@ -82,6 +76,17 @@ Arguments ()
 				export DEBUG
 
 				set -x
+				;;
+
+			dhcp)
+				# Force dhcp even while netbooting
+				# Use for debugging in case somebody works on fixing dhclient
+				DHCP="Force";
+				export DHCP
+				;;
+
+			nodhcp)
+				unset DHCP
 				;;
 
 			ethdevice=*)
@@ -122,18 +127,6 @@ Arguments ()
 			isofrom=*|fromiso=*)
 				FROMISO="${ARGUMENT#*=}"
 				export FROMISO
-				;;
-
-			username=*)
-				USERNAME="${ARGUMENT#username=}"
-				LIVECONF="changed"
-				export USERNAME LIVECONF
-				;;
-
-			userfullname=*)
-				USERFULLNAME="${ARGUMENT#userfullname=}"
-				LIVECONF="changed"
-				export USERFULLNAME LIVECONF
 				;;
 
 			ignore_uuid)
@@ -237,19 +230,9 @@ Arguments ()
 				export NOACCESSIBILITY
 				;;
 
-			noaptcdrom)
-				NOAPTCDROM="Yes"
-				export NOAPTCDROM
-				;;
-
 			noautologin)
 				NOAUTOLOGIN="Yes"
 				export NOAUTOLOGIN
-				;;
-
-			noxautologin)
-				NOXAUTOLOGIN="Yes"
-				export NOXAUTOLOGIN
 				;;
 
 			noconsolekeyboard)
@@ -267,11 +250,6 @@ Arguments ()
 				export NOFSTAB
 				;;
 
-			nohosts)
-				NOHOSTS="Yes"
-				export NOHOSTS
-				;;
-
 			nonetworking)
 				NONETWORKING="Yes"
 				export NONETWORKING
@@ -285,11 +263,6 @@ Arguments ()
 			noxautoconfig)
 				NOXAUTOCONFIG="Yes"
 				export NOXAUTOCONFIG
-				;;
-
-			noxscreensaver)
-				NOXSCREENSAVER="Yes"
-				export NOXSCREENSAVER
 				;;
 
 			persistent)
@@ -338,25 +311,6 @@ Arguments ()
 				export NOPRESEED
 				;;
 
-			url=*)
-				URL_LOCATION="${ARGUMENT#url=}"
-
-				mount -o bind /sys /root/sys
-				mount -o bind /proc /root/proc
-				mount -o bind /dev /root/dev
-
-				mkdir -p /root/var/run/network
-				[ "${NETBOOT}" ] || chroot /root dhclient eth0
-				chroot /root wget -P /tmp "${URL_LOCATION}"
-				[ "${NETBOOT}" ] || chroot /root ifconfig eth0 down
-
-				umount /root/sys
-				umount /root/proc
-				umount /root/dev
-
-				LOCATIONS="/tmp/$(basename ${URL_LOCATION}) ${LOCATIONS}"
-				;;
-
 			*/*=*)
 				question="${ARGUMENT%%=*}"
 				value="${ARGUMENT#*=}"
@@ -372,21 +326,6 @@ Arguments ()
 			silent)
 				SILENT="Yes"
 				export SILENT
-				;;
-
-			textonly)
-				TEXTONLY="Yes"
-				export TEXTONLY
-				;;
-
-			timezone=*)
-				TIMEZONE="${ARGUMENT#timezone=}"
-				export TIMEZONE
-				;;
-
-			notimezone)
-				NOTIMEZONE="Yes"
-				export NOTIMEZONE
 				;;
 
 			todisk=*)
@@ -682,8 +621,6 @@ copy_live_to ()
 
 do_netmount ()
 {
-	rc=1
-
 	modprobe -q af_packet # For DHCP
 
 	udevadm trigger
@@ -761,10 +698,12 @@ do_netmount ()
 		NFSROOT=${ROOTSERVER}:${ROOTPATH}
 	fi
 
-	if ( [ -n "${FETCH}" ] || [ -n "${HTTPFS}" ] || [ -n "${FTPFS}" ] ) && do_httpmount
+	rc=1
+
+	if ( [ -n "${FETCH}" ] || [ -n "${HTTPFS}" ] || [ -n "${FTPFS}" ] )
 	then
-		rc=0
-		return ${rc}
+		do_httpmount
+		return $?
 	fi
 
 	if [ "${NFSROOT#*:}" = "${NFSROOT}" ] && [ "$NETBOOT" != "cifs" ]
@@ -791,19 +730,25 @@ do_netmount ()
 do_httpmount ()
 {
 	rc=1
-	dest="${mountpoint}/${LIVE_MEDIA_PATH}"
-	mount -t ramfs ram "${mountpoint}"
-	mkdir -p "${dest}"
 
 	for webfile in HTTPFS FTPFS FETCH
 	do
-		url="$(eval echo \"\$\{${webfile}\}\")"
-		extension="$(echo "${url}" | sed 's/\(.*\)\.\(.*\)/\2/')"
+		local url="$(eval echo \"\$\{${webfile}\}\")"
+		local extension="$(echo "${url}" | sed 's/\(.*\)\.\(.*\)/\2/')"
 
 		if [ -n "$url" ]
 		then
 			case "${extension}" in
-				squashfs|tgz|tar)
+				iso|squashfs|tgz|tar)
+					if [ "${extension}" = "iso" ]
+					then
+						mkdir -p "${alt_mountpoint}"
+						dest="${alt_mountpoint}"
+					else
+						local dest="${mountpoint}/${LIVE_MEDIA_PATH}"
+						mount -t ramfs ram "${mountpoint}"
+						mkdir -p "${dest}"
+					fi
 					if [ "${webfile}" = "FETCH" ]
 					then
 						case "$url" in
@@ -834,6 +779,12 @@ do_httpmount ()
 					fi
 					[ ${?} -eq 0 ] && rc=0
 					[ "${extension}" = "tgz" ] && live_dest="ram"
+					if [ "${extension}" = "iso" ]
+					then
+						isoloop=$(setup_loop "${dest}/$(basename "${url}")" "loop" "/sys/block/loop*" "" '')
+						mount -t iso9660 "${isoloop}" "${mountpoint}"
+						rc=${?}
+					fi
 					break
 					;;
 
@@ -846,7 +797,15 @@ do_httpmount ()
 
 	if [ ${rc} != 0 ]
 	then
-	    umount "${mountpoint}"
+		if [ -d "${alt_mountpoint}" ]
+		then
+		        umount "${alt_mountpoint}"
+			rmdir "${alt_mountpoint}"
+		fi
+		umount "${mountpoint}"
+	elif [ "${webfile}"  != "FETCH" ] ; then
+		NETBOOT="${webfile}"
+		export NETBOOT
 	fi
 
 	return ${rc}
@@ -1816,8 +1775,4 @@ mountroot ()
 	exec 2>&7 7>&-
 	kill ${tailpid}
 	[ -w "${rootmnt}/var/log/" ] && cp live.log "${rootmnt}/var/log/" 2>/dev/null
-	if [ -f /etc/live.conf ]
-	then
-		cp /etc/live.conf "${rootmnt}/etc/"
-	fi
 }
