@@ -51,18 +51,14 @@ Arguments ()
 		case "${ARGUMENT}" in
 			skipconfig)
 				NOACCESSIBILITY="Yes"
-				NOAPTCDROM="Yes"
 				NOAUTOLOGIN="Yes"
 				NOCONSOLEKEYBOARD="Yes"
 				NOFASTBOOT="Yes"
 				NOFSTAB="Yes"
-				NOHOSTS="Yes"
 				NONETWORKING="Yes"
-				NOTIMEZONE="Yes"
 				NOXAUTOCONFIG="Yes"
-				NOXAUTOLOGIN="Yes"
 
-				export NOACCESSIBILITY NOAPTCDROM NOAUTOLOGIN NOCONSOLEKEYBOARD NOFASTBOOT NOFSTAB NOHOSTS NONETWORKING NOTIMEZONE NOXAUTOCONFIG NOXAUTOLOGIN
+				export NOACCESSIBILITY NOAUTOLOGIN NOCONSOLEKEYBOARD NOFASTBOOT NOFSTAB NONETWORKING NOXAUTOCONFIG
 				;;
 
 			access=*)
@@ -131,18 +127,6 @@ Arguments ()
 			isofrom=*|fromiso=*)
 				FROMISO="${ARGUMENT#*=}"
 				export FROMISO
-				;;
-
-			username=*)
-				USERNAME="${ARGUMENT#username=}"
-				LIVECONF="changed"
-				export USERNAME LIVECONF
-				;;
-
-			userfullname=*)
-				USERFULLNAME="${ARGUMENT#userfullname=}"
-				LIVECONF="changed"
-				export USERFULLNAME LIVECONF
 				;;
 
 			ignore_uuid)
@@ -246,19 +230,9 @@ Arguments ()
 				export NOACCESSIBILITY
 				;;
 
-			noaptcdrom)
-				NOAPTCDROM="Yes"
-				export NOAPTCDROM
-				;;
-
 			noautologin)
 				NOAUTOLOGIN="Yes"
 				export NOAUTOLOGIN
-				;;
-
-			noxautologin)
-				NOXAUTOLOGIN="Yes"
-				export NOXAUTOLOGIN
 				;;
 
 			noconsolekeyboard)
@@ -276,11 +250,6 @@ Arguments ()
 				export NOFSTAB
 				;;
 
-			nohosts)
-				NOHOSTS="Yes"
-				export NOHOSTS
-				;;
-
 			nonetworking)
 				NONETWORKING="Yes"
 				export NONETWORKING
@@ -294,11 +263,6 @@ Arguments ()
 			noxautoconfig)
 				NOXAUTOCONFIG="Yes"
 				export NOXAUTOCONFIG
-				;;
-
-			noxscreensaver)
-				NOXSCREENSAVER="Yes"
-				export NOXSCREENSAVER
 				;;
 
 			persistent)
@@ -362,21 +326,6 @@ Arguments ()
 			silent)
 				SILENT="Yes"
 				export SILENT
-				;;
-
-			textonly)
-				TEXTONLY="Yes"
-				export TEXTONLY
-				;;
-
-			timezone=*)
-				TIMEZONE="${ARGUMENT#timezone=}"
-				export TIMEZONE
-				;;
-
-			notimezone)
-				NOTIMEZONE="Yes"
-				export NOTIMEZONE
 				;;
 
 			todisk=*)
