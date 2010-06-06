@@ -2,7 +2,7 @@
 
 set -e
 
-DATE="$(date +%Y\\\\-%m\\\\-%d)"
+DATE="$(LC_ALL=C date +%Y\\\\-%m\\\\-%d)"
 PROGRAM="LIVE\\\-BOOT"
 VERSION="$(cat ../VERSION)"
 
