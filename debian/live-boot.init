@@ -2,12 +2,12 @@
 
 ### BEGIN INIT INFO
 # Provides:		live-boot
-# Required-Start:	$syslog
+# Required-Start:	$syslog bootmisc
 # Required-Stop:
 # Should-Start:		$local_fs
 # Should-Stop:		halt reboot
 # X-Stop-After:		umountroot
-# Default-Start:
+# Default-Start:	S
 # Default-Stop:		0 6
 # Short-Description:	live-boot init script
 # Description:		Resyncs snapshots, evantually caches files in order to
@@ -201,8 +201,14 @@ case "${1}" in
 	restart|reload|force-reload|status)
 		[ "${VERBOSE}" != no ] && log_end_msg 0
 		;;
+	start)
+		log_begin_msg "${NAME} is configuring sendsigs..."
+		if [ -f /live/image/root.pid ] ; then
+			cat /live/image/root.pid >> /var/run/sendsigs.omit
+		fi
+		;;
 
-	start|stop)
+	stop)
 		log_begin_msg "${NAME} is resyncing snapshots and caching reboot files..."
 		do_stop
 
