@@ -23,6 +23,7 @@ msgstr "LIVE-BOOT"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1
+#, no-wrap
 msgid "2010-06-07"
 msgstr "07.06.2010"
 

@@ -63,8 +63,6 @@ If specified, an MD5 sum is calculated on the live media during boot and compare
 Let you specify the name(s) and the options of the interface(s) that should be configured at boot time. Do not specify this if you want to use dhcp (default). It will be changed in a future release to mimick official kernel boot param specification (e.g. ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp).
 .IP "\fBip\fR=[\fIfrommedia\fR]" 4
 If this variable is set, dhcp and static configuration are just skipped and the system will use the (must be) media\-preconfigured /etc/network/interfaces instead.
-.IP "\fBlive\-getty\fR" 4
-This changes the auto\-login on virtual terminals to use the (experimental) live\-getty code. With this option set the standard kernel argument "console=" is parsed and if a serial console is specified then live\-getty is used to autologin on the serial console.
 .IP "{\fBlive\-media\fR|\fBbootfrom\fR}=\fIDEVICE\fR" 4
 If you specify one of this two equivalent forms, live\-boot will first try to find this device for the "/live" directory where the read\-only root filesystem should reside. If it did not find something usable, the normal scan for block devices is performed.
 .br

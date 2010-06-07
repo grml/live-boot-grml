@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 2010\-06\-07 2.0~a5 "Debian Live Projekt"
+.TH LIVE\-BOOT 7 07.06.2010 2.0~a5 "Debian Live Projekt"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Skripte
@@ -98,11 +98,6 @@ boot param specification
 If this variable is set, dhcp and static configuration are just skipped and
 the system will use the (must be) media\-preconfigured
 /etc/network/interfaces instead.
-.IP \fBlive\-getty\fP 4
-This changes the auto\-login on virtual terminals to use the (experimental)
-live\-getty code. With this option set the standard kernel argument
-"console=" is parsed and if a serial console is specified then live\-getty is
-used to autologin on the serial console.
 .IP {\fBlive\-media\fP|\fBbootfrom\fP}=\fIDEVICE\fP 4
 If you specify one of this two equivalent forms, live\-boot will first try to
 find this device for the "/live" directory where the read\-only root
