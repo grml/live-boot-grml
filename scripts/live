@@ -746,6 +746,7 @@ do_httpmount ()
 						fi
 						modprobe fuse
 						$FUSE_MOUNT "${url}" "${dest}"
+						FUSE_PID="$(minips h -C "$FUSE_MOUNT" | { read x y ; echo "$x" ; } )"
 					fi
 					[ ${?} -eq 0 ] && rc=0
 					[ "${extension}" = "tgz" ] && live_dest="ram"
@@ -776,6 +777,9 @@ do_httpmount ()
 	elif [ "${webfile}"  != "FETCH" ] ; then
 		NETBOOT="${webfile}"
 		export NETBOOT
+		if [ -n "${FUSE_PID}" ] ; then
+			echo "${FUSE_PID}" > ${mountpoint}/root.pid
+		fi
 	fi
 
 	return ${rc}
