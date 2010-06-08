@@ -1,3 +1,16 @@
+live-boot (2.0~a7-1) unstable; urgency=low
+
+  [ Michal Suchanek ]
+  * Adding initial iSCSI boot support.
+  * Really set NETBOOT with iSCSI.
+  * Document iscsi in the man page.
+
+  [ Daniel Baumann ]
+  * Removing xconfig, xdriver, and xvideomode scripts, live-config takes
+    care about that now.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 08 Jun 2010 20:22:33 +0200
+
 live-boot (2.0~a6-1) unstable; urgency=low
 
   [ Daniel Baumann ]
