@@ -757,6 +757,8 @@ do_iscsi()
 		do
 			if check_dev "null" "/dev/$dev"
 			then
+				NETBOOT="iscsi"
+				export NETBOOT
 				return 0;
 			fi
 		done
@@ -764,8 +766,6 @@ do_iscsi()
 	else
 		panic "Failed to locate iSCSI host in /sys"
 	fi
-	NETBOOT="iscsi"
-	export NETBOOT
 }
 
 do_httpmount ()
