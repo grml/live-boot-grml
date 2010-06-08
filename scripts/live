@@ -51,14 +51,11 @@ Arguments ()
 		case "${ARGUMENT}" in
 			skipconfig)
 				NOACCESSIBILITY="Yes"
-				NOAUTOLOGIN="Yes"
-				NOCONSOLEKEYBOARD="Yes"
 				NOFASTBOOT="Yes"
 				NOFSTAB="Yes"
 				NONETWORKING="Yes"
-				NOXAUTOCONFIG="Yes"
 
-				export NOACCESSIBILITY NOAUTOLOGIN NOCONSOLEKEYBOARD NOFASTBOOT NOFSTAB NONETWORKING NOXAUTOCONFIG
+				export NOACCESSIBILITY NOFASTBOOT NOFSTAB NONETWORKING
 				;;
 
 			access=*)
@@ -243,11 +240,6 @@ Arguments ()
 				export SWAPON
 				;;
 
-			noxautoconfig)
-				NOXAUTOCONFIG="Yes"
-				export NOXAUTOCONFIG
-				;;
-
 			persistent)
 				PERSISTENT="Yes"
 				export PERSISTENT
@@ -350,21 +342,6 @@ Arguments ()
 			union=*)
 				UNIONTYPE="${ARGUMENT#union=}"
 				export UNIONTYPE
-				;;
-
-			xdebconf)
-				XDEBCONF="Yes"
-				export XDEBCONF
-				;;
-
-			xdriver=*)
-			        XDRIVER="${ARGUMENT#xdriver=}"
-				export XDRIVER
-				;;
-
-			xvideomode=*)
-				XVIDEOMODE="${ARGUMENT#xvideomode=}"
-				export XVIDEOMODE
 				;;
 		esac
 	done
