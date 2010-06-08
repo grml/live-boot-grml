@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2010\-06\-05 2.0~a5 "Debian Live Project"
+.TH LIVE\-BOOT 7 2010\-06\-08 2.0~a6 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -63,10 +63,6 @@ If specified, an MD5 sum is calculated on the live media during boot and compare
 Let you specify the name(s) and the options of the interface(s) that should be configured at boot time. Do not specify this if you want to use dhcp (default). It will be changed in a future release to mimick official kernel boot param specification (e.g. ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp).
 .IP "\fBip\fR=[\fIfrommedia\fR]" 4
 If this variable is set, dhcp and static configuration are just skipped and the system will use the (must be) media\-preconfigured /etc/network/interfaces instead.
-.IP "{\fBkeyb\fR|\fBkbd\-chooser/method\fR}=\fIKEYBOARD\fR, {\fBklayout\fR|\fBconsole\-setup/layoutcode\fR}=\fILAYOUT\fR, {\fBkvariant\fR|\fBconsole\-setup/variantcode\fR}=\fIVARIANT\fR, {\fBkmodel\fI|\fBconsole\-setup/modelcode\fR}=\fICODE\fR, \fBkoptions\fR=\fIOPTIONS\fR" 4
-Configure the running keyboard as specified, if this one misses live\-boot behaves as if "keyb=us" was specified. It will be interfered from "locale=" if locale is only 2 lowecase letters as a special case. You could also specify console layout, variant, code, and options (no defaults).
-.IP "\fBlive\-getty\fR" 4
-This changes the auto\-login on virtual terminals to use the (experimental) live\-getty code. With this option set the standard kernel argument "console=" is parsed and if a serial console is specified then live\-getty is used to autologin on the serial console.
 .IP "{\fBlive\-media\fR|\fBbootfrom\fR}=\fIDEVICE\fR" 4
 If you specify one of this two equivalent forms, live\-boot will first try to find this device for the "/live" directory where the read\-only root filesystem should reside. If it did not find something usable, the normal scan for block devices is performed.
 .br

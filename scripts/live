@@ -150,31 +150,6 @@ Arguments ()
 				export STATICIP
 				;;
 
-			keyb=*|kbd-chooser/method=*)
-				KBD="${ARGUMENT#*=}"
-				export KBD
-				;;
-
-			klayout=*|console-setup/layoutcode=*)
-				KLAYOUT="${ARGUMENT#*=}"
-				export KLAYOUT
-				;;
-
-			kvariant=*|console-setup/variantcode=*)
-				KVARIANT="${ARGUMENT#*=}"
-				export KVARIANT
-				;;
-
-			kmodel=*|console-setup/modelcode=*)
-				KMODEL="${ARGUMENT#*=}"
-				export KMODEL
-				;;
-
-			koptions=*)
-				KOPTIONS="${ARGUMENT#koptions=}"
-				export KOPTIONS
-				;;
-
 			live-getty)
 				LIVE_GETTY="1"
 				export LIVE_GETTY
@@ -233,11 +208,6 @@ Arguments ()
 			noautologin)
 				NOAUTOLOGIN="Yes"
 				export NOAUTOLOGIN
-				;;
-
-			noconsolekeyboard)
-				NOCONSOLEKEYBOARD="Yes"
-				export NOCONSOLEKEYBOARD
 				;;
 
 			nofastboot)
@@ -776,6 +746,7 @@ do_httpmount ()
 						fi
 						modprobe fuse
 						$FUSE_MOUNT "${url}" "${dest}"
+						FUSE_PID="$(minips h -C "$FUSE_MOUNT" | { read x y ; echo "$x" ; } )"
 					fi
 					[ ${?} -eq 0 ] && rc=0
 					[ "${extension}" = "tgz" ] && live_dest="ram"
@@ -806,6 +777,9 @@ do_httpmount ()
 	elif [ "${webfile}"  != "FETCH" ] ; then
 		NETBOOT="${webfile}"
 		export NETBOOT
+		if [ -n "${FUSE_PID}" ] ; then
+			echo "${FUSE_PID}" > ${mountpoint}/root.pid
+		fi
 	fi
 
 	return ${rc}
