@@ -158,10 +158,6 @@ has been installed with persistent enabled.
 Do not prompt to eject the CD or remove the USB flash drive on reboot.
 .IP \fBswapon\fP 4
 This parameter enables usage of local swap partitions.
-.IP \fBnoxautoconfig\fP 4
-This parameter disables Xorg auto\-reconfiguration at boot time. This is
-valuable if you either do the detection on your own, or, if you want to ship
-a custom, premade xorg.conf in your live system.
 .IP \fBpersistent\fP[=nofiles] 4
 live\-boot will look for persistent and snapshot partitions or files labeled
 "live\-rw", "home\-rw", and files called "live\-sn*", "home\-sn*" and will try
@@ -194,8 +190,6 @@ installation.
 .IP \fBsilent\fP 4
 If you boot with the normal quiet parameter, live\-boot hides most messages
 of its own. When adding silent, it hides all.
-.IP \fBtextonly\fP 4
-Start up to text\-mode shell prompts, disabling the graphical user interface.
 .IP \fBtodisk\fP=\fIDEVICE\fP 4
 Adding this parameter, live\-boot will try to copy the entire read\-only media
 to the specified device before mounting the root filesystem. It probably
@@ -207,14 +201,9 @@ Adding this parameter, live\-boot will try to copy the whole read\-only media
 to the computer's RAM before mounting the root filesystem. This could need a
 lot of ram, according to the space used by the read\-only media.
 .IP \fBunion\fP=aufs|unionfs 4
+.\" FIXME
 By default, live\-boot uses aufs. With this parameter, you can switch to
 unionfs.
-.IP \fBxdebconf\fP 4
-Uses xdebconfigurator, if present on the rootfs, to configure X instead of
-the standard procedure (experimental).
-.IP \fBxvideomode\fP=\fIRESOLUTION\fP 4
-.\" FIXME
-Doesn't do xorg autodetection, but enforces a given resolution.
 
 .\" FIXME
 .SH "FILES (old)"
