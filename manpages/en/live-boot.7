@@ -55,6 +55,15 @@ Working: http://1.2.3.4/path/to/your_filesystem.squashfs
 Also note that therefore it's currently not possible to fetch an image from a namebased virtualhost of an httpd if it is sharing the ip with the main httpd instance.
 .br
 You may also use the live iso image in place of the squashfs image.
+.IP "\fBiscsi\fR=\fIserver-ip[,server-port];target-name\fR" 4
+Boot from an iSCSI target that has an iso or disk live image as one of its LUNs. The specified target is searched for a LUN which looks like a live media. If you use the \fBiscsitarget\fR software iSCSI target solution which is packaged in Debian your ietd.conf might look like this:
+.br
+# The target-name you specify in the iscsi= parameter
+.br
+Target <target-name>
+  Lun 0 Path=<path-to-your-live-image.iso>,Type=fileio,IOMode=ro
+  # If you want to boot multiple machines you might want to look at tuning some parameters like
+  # Wthreads or MaxConnections
 .IP "\fBignore_uuid\fR" 4
 Do not check that any UUID embedded in the initramfs matches the discovered medium. live\-boot may be told to generate a UUID by setting LIVE_GENERATE_UUID=1 when building the initramfs.
 .IP "\fBintegrity\-check\fR" 4
