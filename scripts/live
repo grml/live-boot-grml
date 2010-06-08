@@ -51,14 +51,11 @@ Arguments ()
 		case "${ARGUMENT}" in
 			skipconfig)
 				NOACCESSIBILITY="Yes"
-				NOAUTOLOGIN="Yes"
-				NOCONSOLEKEYBOARD="Yes"
 				NOFASTBOOT="Yes"
 				NOFSTAB="Yes"
 				NONETWORKING="Yes"
-				NOXAUTOCONFIG="Yes"
 
-				export NOACCESSIBILITY NOAUTOLOGIN NOCONSOLEKEYBOARD NOFASTBOOT NOFSTAB NONETWORKING NOXAUTOCONFIG
+				export NOACCESSIBILITY NOFASTBOOT NOFSTAB NONETWORKING
 				;;
 
 			access=*)
@@ -122,6 +119,19 @@ Arguments ()
 			httpfs=*)
 				HTTPFS="${ARGUMENT#httpfs=}"
 				export HTTPFS
+                                ;;
+
+			iscsi=*)
+				ISCSI="${ARGUMENT#iscsi=}"
+				#ip:port - separated by ;
+				ISCSI_PORTAL="${ISCSI%;*}"
+				if echo "${ISCSI_PORTAL}" | grep -q , ; then
+					ISCSI_SERVER="${ISCSI_PORTAL%,*}"
+					ISCSI_PORT="${ISCSI_PORTAL#*,}"
+				fi
+				#target name
+				ISCSI_TARGET="${ISCSI#*;}"
+				export ISCSI ISCSI_PORTAL ISCSI_TARGET ISCSI_SERVER ISCSI_PORT
 				;;
 
 			isofrom=*|fromiso=*)
@@ -230,11 +240,6 @@ Arguments ()
 				export SWAPON
 				;;
 
-			noxautoconfig)
-				NOXAUTOCONFIG="Yes"
-				export NOXAUTOCONFIG
-				;;
-
 			persistent)
 				PERSISTENT="Yes"
 				export PERSISTENT
@@ -337,21 +342,6 @@ Arguments ()
 			union=*)
 				UNIONTYPE="${ARGUMENT#union=}"
 				export UNIONTYPE
-				;;
-
-			xdebconf)
-				XDEBCONF="Yes"
-				export XDEBCONF
-				;;
-
-			xdriver=*)
-			        XDRIVER="${ARGUMENT#xdriver=}"
-				export XDRIVER
-				;;
-
-			xvideomode=*)
-				XVIDEOMODE="${ARGUMENT#xvideomode=}"
-				export XVIDEOMODE
 				;;
 		esac
 	done
@@ -589,7 +579,7 @@ copy_live_to ()
 	return 0
 }
 
-do_netmount ()
+do_netsetup ()
 {
 	modprobe -q af_packet # For DHCP
 
@@ -653,6 +643,11 @@ do_netmount ()
 	[ -z ${HOSTNAME} ] && HOSTNAME=${OLDHOSTNAME}
 	export HOSTNAME
 
+	if [ -n "${DEVICE}" ]
+	then
+		HWADDR="$(cat /sys/class/net/${DEVICE}/address)"
+	fi
+
 	# Check if we have a network device at all
 	if ! ls /sys/class/net/"$DEVICE" > /dev/null 2>&1 && \
 	   ! ls /sys/class/net/eth0 > /dev/null 2>&1 && \
@@ -662,6 +657,11 @@ do_netmount ()
 	then
 		panic "No supported network device found, maybe a non-mainline driver is required."
 	fi
+}
+
+do_netmount()
+{
+	do_netsetup
 
 	if [ "${NFSROOT}" = "auto" ]
 	then
@@ -695,6 +695,54 @@ do_netmount ()
 
 	log_end_msg
 	return ${rc}
+}
+
+do_iscsi()
+{
+	do_netsetup
+	#modprobe ib_iser
+	modprobe iscsi_tcp
+	local debugopt=""
+	[ "${DEBUG}" == "Yes" ] && debugopt="-d 8"
+	#FIXME this name is supposed to be unique - some date + ifconfig hash?
+	ISCSI_INITIATORNAME="iqn.1993-08.org.debian.live:01:$(echo "${HWADDR}" | sed -e s/://g)"
+        export ISCSI_INITIATORNAME
+	if [ -n "${ISCSI_SERVER}" ] ; then
+		iscsistart $debugopt -i "${ISCSI_INITIATORNAME}" -t "${ISCSI_TARGET}" -g 1 -a "${ISCSI_SERVER}" -p "${ISCSI_PORT}"
+	else
+		iscsistart $debugopt -i "${ISCSI_INITIATORNAME}" -t "${ISCSI_TARGET}" -g 1 -a "${ISCSI_PORTAL}" -p 3260
+	fi
+	if [ $? != 0 ]
+	then
+		panic "Failed to log into iscsi target"
+	fi
+	local host="$(ls -d /sys/class/scsi_host/host*/device/iscsi_host:host* \
+			    /sys/class/scsi_host/host*/device/iscsi_host/host* | sed -e 's:/device.*::' -e 's:.*host::')"
+	if [ -n "${host}" ]
+	then
+		local devices=""
+		local i=0
+		while [ -z "${devices}" -a $i -lt 60 ]
+		do
+			sleep 1
+			devices="$(ls -d /sys/class/scsi_device/${host}*/device/block:* \
+					 /sys/class/scsi_device/${host}*/device/block/* | sed -e 's!.*[:/]!!')"
+			i=$(expr $i + 1)
+			echo -ne $i\\r
+		done
+		for dev in $devices
+		do
+			if check_dev "null" "/dev/$dev"
+			then
+				NETBOOT="iscsi"
+				export NETBOOT
+				return 0;
+			fi
+		done
+		panic "Failed to locate a live device on iSCSI devices (tried: $devices)."
+	else
+		panic "Failed to locate iSCSI host in /sys"
+	fi
 }
 
 do_httpmount ()
@@ -1653,7 +1701,10 @@ mountroot ()
 			panic "Unable to find a live file system on the network"
 		fi
 	else
-		if [ -n "${PLAIN_ROOT}" ] && [ -n "${ROOT}" ]
+		if [ -n "${ISCSI_PORTAL}" ]
+		then
+			do_iscsi && livefs_root="${mountpoint}"
+		elif [ -n "${PLAIN_ROOT}" ] && [ -n "${ROOT}" ]
 		then
 			# Do a local boot from hd
 			livefs_root=${ROOT}

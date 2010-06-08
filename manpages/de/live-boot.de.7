@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 2010\-06\-08 2.0~a6 "Debian Live Projekt"
+.TH LIVE\-BOOT 7 08.06.2010 2.0~a7 "Debian Live Projekt"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Skripte
@@ -80,6 +80,18 @@ a namebased virtualhost of an httpd if it is sharing the ip with the main
 httpd instance.
 .br
 You may also use the live iso image in place of the squashfs image.
+.IP \fBiscsi\fP=\fIserver\-ip[,server\-port];target\-name\fP 4
+Boot from an iSCSI target that has an iso or disk live image as one of its
+LUNs. The specified target is searched for a LUN which looks like a live
+media. If you use the \fBiscsitarget\fP software iSCSI target solution which is
+packaged in Debian your ietd.conf might look like this:
+.br
+# The target\-name you specify in the iscsi= parameter
+.br
+Target <target\-name>
+  Lun 0 Path=<path\-to\-your\-live\-image.iso>,Type=fileio,IOMode=ro
+  # If you want to boot multiple machines you might want to look at tuning some parameters like
+  # Wthreads or MaxConnections
 .IP \fBignore_uuid\fP 4
 Do not check that any UUID embedded in the initramfs matches the discovered
 medium. live\-boot may be told to generate a UUID by setting
@@ -146,10 +158,6 @@ has been installed with persistent enabled.
 Do not prompt to eject the CD or remove the USB flash drive on reboot.
 .IP \fBswapon\fP 4
 This parameter enables usage of local swap partitions.
-.IP \fBnoxautoconfig\fP 4
-This parameter disables Xorg auto\-reconfiguration at boot time. This is
-valuable if you either do the detection on your own, or, if you want to ship
-a custom, premade xorg.conf in your live system.
 .IP \fBpersistent\fP[=nofiles] 4
 live\-boot will look for persistent and snapshot partitions or files labeled
 "live\-rw", "home\-rw", and files called "live\-sn*", "home\-sn*" and will try
@@ -182,8 +190,6 @@ installation.
 .IP \fBsilent\fP 4
 If you boot with the normal quiet parameter, live\-boot hides most messages
 of its own. When adding silent, it hides all.
-.IP \fBtextonly\fP 4
-Start up to text\-mode shell prompts, disabling the graphical user interface.
 .IP \fBtodisk\fP=\fIDEVICE\fP 4
 Adding this parameter, live\-boot will try to copy the entire read\-only media
 to the specified device before mounting the root filesystem. It probably
@@ -195,14 +201,9 @@ Adding this parameter, live\-boot will try to copy the whole read\-only media
 to the computer's RAM before mounting the root filesystem. This could need a
 lot of ram, according to the space used by the read\-only media.
 .IP \fBunion\fP=aufs|unionfs 4
+.\" FIXME
 By default, live\-boot uses aufs. With this parameter, you can switch to
 unionfs.
-.IP \fBxdebconf\fP 4
-Uses xdebconfigurator, if present on the rootfs, to configure X instead of
-the standard procedure (experimental).
-.IP \fBxvideomode\fP=\fIRESOLUTION\fP 4
-.\" FIXME
-Doesn't do xorg autodetection, but enforces a given resolution.
 
 .\" FIXME
 .SH "FILES (old)"
