@@ -6,53 +6,33 @@ Updated for live-initramfs 1.156.1-1 on 2009-02-08.
 These options (can be combined) work from the bootloader prompt:
 
 live access=ACCESS
-live console=TTY,SPEED
 live debug
 live fetch=URL
 live httpfs=URL
-live hostname=HOSTNAME
-live username=USER
-live userfullname=USERFULLNAME
 live integrity-check
 live ip=[CLIENT_IP]:[SERVER_IP]:[GATEWAY_IP]:[NETMASK]:[HOSTNAME]:[DEVICE]:[AUTOCONF]  [,[CLIENT_IP]:[SERVER_IP]:[GATEWAY_IP]:[NETMASK]:[HOSTNAME]:[DEVICE]:[AUTOCONF]]*
 live ip[=frommedia]
 live iscsi=target-ip[,target-port];target-name
-live {keyb|kbd-chooser/method}=KEYBOARD
-live {klayout|console-setup/layoutcode}=LAYOUT
-live {kvariant|console-setup/variantcode}=VARIANT
-live {kmodel|console-setup/modelcode}=CODE
-live koptions=OPTIONS
-live live-getty
 live {live-media|bootfrom}=DEVICE
 live {live-media-encryption|encryption}=TYPE
 live live-media-offset=BYTES
 live live-media-path=PATH
 live live-media-timeout=SECONDS
-live {locale|debian-installer/locale}=LOCALE
 live module=NAME
 live netboot[=nfs|cifs]
 live nfsopts=
-live noautologin
-live noxautologin
 live nofastboot
 live nopersistent
-live nosudo
 live swapon
-live nouser
-live noxautoconfig
 live persistent[=nofiles]
 live persistent-path=PATH
 live {preseed/file|file}=FILE
 live package/question=VALUE
 live quickreboot
 live showmounts
-live timezone=TIMEZONE
 live todisk=DEVICE
 live toram
 live union=aufs|unionfs
-live utc=yes|no
-live xdebconf
-live xvideomode=RESOLUTION
 
 Values for the vga kernel parameter:
 
