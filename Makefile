@@ -39,10 +39,6 @@ build:
 	@echo "Nothing to build."
 
 install:
-	# (FIXME)
-	# Installing configuration
-	install -D -m 0644 conf/compcache $(DESTDIR)/usr/share/initramfs-tools/conf.d/compcache
-
 	# Installing executables
 	mkdir -p $(DESTDIR)/sbin
 	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin
