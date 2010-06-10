@@ -1,3 +1,11 @@
+live-boot (2.0~a8-1) unstable; urgency=low
+
+  * Removing serialtty bottom script.
+  * Removing compcache configuration file.
+  * Removing options that are now in live-config from parameters.txt.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 10 Jun 2010 12:38:52 +0200
+
 live-boot (2.0~a7-1) unstable; urgency=low
 
   [ Michal Suchanek ]
