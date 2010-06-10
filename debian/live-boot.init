@@ -206,6 +206,7 @@ case "${1}" in
 		if [ -f /live/image/root.pid ] ; then
 			cat /live/image/root.pid >> /var/run/sendsigs.omit
 		fi
+		log_end_msg 0
 		;;
 
 	stop)
