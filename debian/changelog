@@ -1,3 +1,10 @@
+live-boot (2.0~a9-1) unstable; urgency=low
+
+  [ Michal Suchanek ]
+  * Fix missing log_end_msg in live-boot.init.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 11 Jun 2010 18:42:23 +0200
+
 live-boot (2.0~a8-1) unstable; urgency=low
 
   * Removing serialtty bottom script.
