@@ -11,7 +11,7 @@ Vcs-Git: git://live.debian.net/git/live-boot.git
 
 Package: live-boot
 Architecture: all
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, live-boot-initramfs-tools | live-boot-backend
 Recommends: eject, file, rsync, uuid-runtime
 Suggests: curlftpfs, cryptsetup, httpfs2, unionfs-fuse, wget
 Description: Debian Live - System Boot Scripts
