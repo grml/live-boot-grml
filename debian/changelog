@@ -1,3 +1,12 @@
+live-boot (2.0~a11-1) unstable; urgency=low
+
+  * Updating lintian overrides.
+  * Adding missing depends in live-boot on its backend package.
+  * Removing noautologin parameter from live script, this functionallity
+    was moved to live-config.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 20 Jun 2010 19:14:05 +0200
+
 live-boot (2.0~a10-1) unstable; urgency=low
 
   * Removing depends on live-config in live-boot.
