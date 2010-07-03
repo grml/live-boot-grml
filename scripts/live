@@ -1704,6 +1704,20 @@ mountroot ()
 			# Do a local boot from hd
 			livefs_root=${ROOT}
 		else
+			if [ -x /usr/bin/memdiskfind ]
+			then
+				MEMDISK=$(/usr/bin/memdiskfind)
+
+				if [ $? -eq 0 ]
+				then
+					# We found a memdisk, set up phram
+					modprobe phram phram=memdisk,${MEMDISK}
+
+					# Load mtdblock, the memdisk will be /dev/mtdblock0
+					modprobe mtdblock
+				fi
+			fi
+
 			# Scan local devices for the image
 			i=0
 			while [ "$i" -lt 60 ]
