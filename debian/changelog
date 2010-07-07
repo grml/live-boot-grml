@@ -1,3 +1,22 @@
+live-boot (2.0~a12-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Adding preparations for booting through syslinux memdisk.
+
+  [ Marco Amadori ]
+  * Avoiding using busybox cpio applet, this should fix snapshot
+    restore.
+  * Do not print misleading debug message if the snapshot was found
+    correctly.
+  * Removing unreachable code in ethdevice argument handling (Closes:
+    #588307).
+
+  [ Daniel Baumann ]
+  * Adding btrfs support.
+  * Updating package to standards version 3.9.0.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 07 Jul 2010 20:13:54 +0200
+
 live-boot (2.0~a11-1) unstable; urgency=low
 
   * Updating lintian overrides.
