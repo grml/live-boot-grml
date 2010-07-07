@@ -1595,6 +1595,7 @@ find_livefs ()
 				fi
 			done
 		elif [ "${fstype}" = "squashfs" -o \
+			"${fstype}" = "btrfs" -o \
 			"${fstype}" = "ext2" -o \
 			"${fstype}" = "ext3" -o \
 			"${fstype}" = "ext4" -o \
