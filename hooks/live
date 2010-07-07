@@ -84,6 +84,9 @@ then
 	uuidgen -r > "${DESTDIR}"/conf/uuid.conf
 fi
 
+# Filesystem: btrfs
+manual_add_modules btrfs
+
 # Filesystem: cifs
 if [ -x /sbin/mount.cifs ]
 then
@@ -150,6 +153,13 @@ fi
 
 # Program: md5sum
 copy_exec /usr/bin/md5sum /bin
+
+# Program: memdisk
+if [ -x /usr/bin/memdiskfind ]
+then
+	copy_exec /usr/bin/memdiskfind
+	manual_add_modules phram mtdblock
+fi
 
 # Program: cpio
 # busybox and klibc lacks --no-absolute-filenames and --sparse, needed for snapshots

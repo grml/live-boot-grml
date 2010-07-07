@@ -88,12 +88,8 @@ Arguments ()
 
 			ethdevice=*)
 				DEVICE="${ARGUMENT#ethdevice=}"
-				export DEVICE
-				;;
-
-			ethdevice=*)
-				ETHDEVICE="${ARGUMENT#ethdevice=}"
-				export ETHDEVICE
+				ETHDEVICE="${DEVICE}"
+				export DEVICE ETHDEVICE
 				;;
 
 			ethdevice-timeout=*)
@@ -964,11 +960,12 @@ try_snap ()
 		snapback="$(echo ${snapdata} | cut -f2 -d ' ')"
 		snapfile="$(echo ${snapdata} | cut -f3 -d ' ')"
 
-		RES=""
 		if ! try_mount "${snapdev}" "${snapback}" "ro"
 		then
 			break
 		fi
+
+		RES="0"
 
 		if echo "${snapfile}" | grep -qs '\(squashfs\|ext2\|ext3\|ext4\|jffs2\)'
 		then
@@ -976,7 +973,7 @@ try_snap ()
 			dev=$(get_backing_device "${snapback}/${snapfile}")
 
 			do_snap_copy "${dev}" "${snap_mount}" "${snap_type}"
-			RES=$?
+			RES="$?"
 		else
 			# cpio.gz snapshot
 
@@ -992,9 +989,12 @@ try_snap ()
 				cpioargs='--unconditional --make-directories'
 			fi
 
-			if ! (cd "${snap_mount}" && zcat "${snapback}/${snapfile}" | cpio $cpioargs --extract --preserve-modification-time --no-absolute-filenames --sparse 2>/dev/null)
+			cd "${snap_mount}" && zcat "${snapback}/${snapfile}" | $cpiopath $cpioargs --extract --preserve-modification-time --no-absolute-filenames --sparse 2>/dev/null
+			RES="$?"
+
+			if [ "${RES}" != "0" ]
 			then
-				log_warning_msg "failure to \"zcat ${snapback}/${snapfile} | cpio $cpioargs --extract --preserve-modification-time --no-absolute-filenames --sparse\""
+				log_warning_msg "failure to \"zcat ${snapback}/${snapfile} | $cpiopath $cpioargs --extract --preserve-modification-time --no-absolute-filenames --sparse\""
 			fi
 		fi
 
@@ -1595,6 +1595,7 @@ find_livefs ()
 				fi
 			done
 		elif [ "${fstype}" = "squashfs" -o \
+			"${fstype}" = "btrfs" -o \
 			"${fstype}" = "ext2" -o \
 			"${fstype}" = "ext3" -o \
 			"${fstype}" = "ext4" -o \
@@ -1704,6 +1705,20 @@ mountroot ()
 			# Do a local boot from hd
 			livefs_root=${ROOT}
 		else
+			if [ -x /usr/bin/memdiskfind ]
+			then
+				MEMDISK=$(/usr/bin/memdiskfind)
+
+				if [ $? -eq 0 ]
+				then
+					# We found a memdisk, set up phram
+					modprobe phram phram=memdisk,${MEMDISK}
+
+					# Load mtdblock, the memdisk will be /dev/mtdblock0
+					modprobe mtdblock
+				fi
+			fi
+
 			# Scan local devices for the image
 			i=0
 			while [ "$i" -lt 60 ]
