@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 07.07.2010 2.0~a12 "Debian Live Projekt"
+.TH LIVE\-BOOT 7 11.07.2010 2.0~a12 "Debian Live Projekt"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Skripte
@@ -92,6 +92,9 @@ Target <target\-name>
   Lun 0 Path=<path\-to\-your\-live\-image.iso>,Type=fileio,IOMode=ro
   # If you want to boot multiple machines you might want to look at tuning some parameters like
   # Wthreads or MaxConnections
+.IP \fBfromiso\fP=\fI/PATH/TO/IMAGE\fP 4
+Allows to use a filesystem from within an iso image that's available on
+live\-media.
 .IP \fBignore_uuid\fP 4
 Do not check that any UUID embedded in the initramfs matches the discovered
 medium. live\-boot may be told to generate a UUID by setting
