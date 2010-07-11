@@ -19,19 +19,24 @@ test:
 
 	@echo " done."
 
+	@if [ ! -x "$$(which checkbashisms 2>/dev/null)" ]; \
+	then \
+		echo "W: checkbashisms - command not found"; \
+		echo "I: checkbashisms can be optained from: "; \
+		echo "I:   http://git.debian.org/?p=devscripts/devscripts.git"; \
+		echo "I: On Debian systems, checkbashisms can be installed with:"; \
+		echo "I:   apt-get install devscripts"; \
+		exit 0; \
+	fi
+
 	@echo -n "Checking for bashisms"
 
 	@# We can't just fail yet on bashisms (FIXME)
-	@if [ -x /usr/bin/checkbashisms ]; \
-	then \
-		for SCRIPT in $(SCRIPTS); \
-		do \
-			checkbashisms -f -x $${SCRIPT} || true; \
-			echo -n "."; \
-		done; \
-	else \
-		echo "WARNING: skipping bashism test - you need to install devscripts."; \
-	fi
+	@for SCRIPT in $(SCRIPTS); \
+	do \
+		checkbashisms -f -x $${SCRIPT} || true; \
+		echo -n "."; \
+	done
 
 	@echo " done."
 
