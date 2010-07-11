@@ -33,10 +33,9 @@ build: po4a.cfg
 	po4a --keep 0 --no-backups --package-name live-boot po4a.cfg
 
 clean:
-	rm -f po/*/*.po~
+	rm -rf $(LANGUAGES)
 
 distclean: clean
 	rm -f po4a.cfg
-	rm -rf $(LANGUAGES)
 
 rebuild: distclean update build
