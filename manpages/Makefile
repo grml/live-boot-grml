@@ -23,18 +23,19 @@ build: po4a.cfg
 	@if [ ! -x "$$(which po4a 2>/dev/null)" ]; \
 	then \
 		echo "E: po4a - command not found"; \
-		echo "I: po4a can be optained from http://po4a.alioth.debian.org/"; \
-		echo "I: On Debian systems, po4a can be installed with 'apt-get install po4a'."; \
+		echo "I: po4a can be optained from:"; \
+		echo "I:   http://po4a.alioth.debian.org/"; \
+		echo "I: On Debian systems, po4a can be installed with:"; \
+		echo "I:   apt-get install po4a"; \
 		exit 1; \
 	fi
 
 	po4a --keep 0 --no-backups --package-name live-boot po4a.cfg
 
 clean:
-	rm -f po/*/*.po~
+	rm -rf $(LANGUAGES)
 
 distclean: clean
 	rm -f po4a.cfg
-	rm -rf $(LANGUAGES)
 
 rebuild: distclean update build
