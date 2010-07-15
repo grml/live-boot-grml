@@ -1,3 +1,12 @@
+live-boot (2.0~a13-1) unstable; urgency=low
+
+  * Listing fromiso parameter in manpage (Closes: #588667).
+  * Improving test targets in Makefile a bit.
+  * Improving clean target in manpages Makefile a bit.
+  * Adding Chris in copyright file (for live-snapshot that is).
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 15 Jul 2010 19:31:03 +0200
+
 live-boot (2.0~a12-1) unstable; urgency=low
 
   [ Daniel Baumann ]
