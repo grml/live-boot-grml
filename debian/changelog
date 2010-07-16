@@ -1,3 +1,9 @@
+live-boot (2.0~a14-1) unstable; urgency=low
+
+  * Improving backend dependencies (Closes: #589326).
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 17 Jul 2010 00:37:33 +0200
+
 live-boot (2.0~a13-1) unstable; urgency=low
 
   * Listing fromiso parameter in manpage (Closes: #588667).
