@@ -24,8 +24,7 @@ Description: Debian Live - System Boot Scripts
 Package: live-boot-initramfs-tools
 Architecture: all
 Depends:
- ${misc:Depends}, live-boot (>= ${source:Version}), busybox | busybox-initramfs,
- initramfs-tools, udev
+ ${misc:Depends}, busybox | busybox-initramfs, initramfs-tools, udev
 Conflicts: live-boot-backend, live-initramfs (<< 2.0~a1)
 Replaces: live-boot-backend, live-initramfs
 Provides: live-boot-backend
