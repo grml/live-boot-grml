@@ -36,7 +36,9 @@ Description: Debian Live - System Boot Scripts (initramfs-tools backend)
 
 Package: live-initramfs
 Architecture: all
-Depends: ${misc:Depends}, live-boot-initramfs-tools, live-config-sysvinit
+Depends:
+ ${misc:Depends}, live-boot, live-boot-initramfs-tools, live-config,
+ live-config-sysvinit
 Description: Debian Live - System Boot Scripts (transitional package)
  Package to ease upgrading from older live-initramfs packages to the new
  live-boot-initramfs-tools package.
