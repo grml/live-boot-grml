@@ -1,3 +1,11 @@
+live-boot (2.0~a15-1) unstable; urgency=low
+
+  * Making inclusion of languagelist conditional in live hook.
+  * Updating depends of live-initramfs transitional package to reflect
+    relaxed backend depends.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 17 Jul 2010 17:19:16 +0200
+
 live-boot (2.0~a14-1) unstable; urgency=low
 
   * Improving backend dependencies (Closes: #589326).
