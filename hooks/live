@@ -27,8 +27,11 @@ esac
 # Handling live-boot
 
 # Configuration
-mkdir -p "${DESTDIR}"/usr/share/live-boot
-cp /usr/share/live-boot/languagelist "${DESTDIR}"/usr/share/live-boot
+if [ -e /usr/share/live-boot/languagelist ]
+then
+	mkdir -p "${DESTDIR}"/usr/share/live-boot
+	cp /usr/share/live-boot/languagelist "${DESTDIR}"/usr/share/live-boot
+fi
 
 # Directories
 mkdir -p "${DESTDIR}"/lib/live-boot
