@@ -639,6 +639,22 @@ do_netsetup ()
 		HWADDR="$(cat /sys/class/net/${DEVICE}/address)"
 	fi
 
+	if [ ! -e "/etc/resolv.conf" ]
+	then
+		echo "Creating /etc/resolv.conf"
+
+		if [ -n "${DNSDOMAIN}" ]
+		then
+			echo "domain ${DNSDOMAIN}" > /etc/resolv.conf
+			echo "search ${DNSDOMAIN}" > /etc/resolv.conf
+		fi
+
+		for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1}
+		do
+			echo "nameserver $i" >> /etc/resolv.conf
+		done
+	fi
+
 	# Check if we have a network device at all
 	if ! ls /sys/class/net/"$DEVICE" > /dev/null 2>&1 && \
 	   ! ls /sys/class/net/eth0 > /dev/null 2>&1 && \
