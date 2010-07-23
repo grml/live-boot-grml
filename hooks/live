@@ -24,6 +24,20 @@ esac
 
 # live-boot hook
 
+# Reading configuration file from filesystem
+if [ -e /etc/live/boot.conf ]
+then
+	. /etc/live/boot.conf
+fi
+
+if ls /etc/live/boot.conf.d/* > /dev/null 2>&1
+then
+	for _FILE in /etc/live/boot.conf.d/*
+	do
+		. ${_FILE}
+	done
+fi
+
 # Handling live-boot
 
 # Configuration
@@ -225,4 +239,15 @@ then
     #manual_add_modules ib_iser
     manual_add_modules iscsi_tcp
     manual_add_modules crc32c
+fi
+
+if [ "${LIVE_DNS}" = "true" ]
+then
+	#copy_exec /lib/libnss_files.so.*      /lib  # /etc/hosts and /etc/passwd
+	copy_exec /lib/libnss_dns.so.*      /lib  # DNS server
+	#copy_exec /lib/libnss_compat.so.*      /lib  # /etc/passwd
+
+	# Configuration file - may be needed if /etc/hosts is used.
+	#mkdir -p $DESTDIR/etc
+	#cp -p /etc/nsswitch.conf $DESTDIR/etc
 fi
