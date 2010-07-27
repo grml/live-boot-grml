@@ -203,8 +203,8 @@ case "${1}" in
 		;;
 	start)
 		log_begin_msg "${NAME} is configuring sendsigs..."
-		if [ -f /live/image/root.pid ] ; then
-			cat /live/image/root.pid >> /var/run/sendsigs.omit
+		if [ -f /live/root.pid ] ; then
+			cat /live/root.pid >> /var/run/sendsigs.omit
 		fi
 		log_end_msg 0
 		;;
