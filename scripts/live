@@ -801,7 +801,7 @@ do_httpmount ()
 						fi
 						modprobe fuse
 						$FUSE_MOUNT "${url}" "${dest}"
-						FUSE_PID="$(minips h -C "$FUSE_MOUNT" | { read x y ; echo "$x" ; } )"
+						ROOT_PID="$(minips h -C "$FUSE_MOUNT" | { read x y ; echo "$x" ; } )"
 					fi
 					[ ${?} -eq 0 ] && rc=0
 					[ "${extension}" = "tgz" ] && live_dest="ram"
@@ -832,9 +832,6 @@ do_httpmount ()
 	elif [ "${webfile}"  != "FETCH" ] ; then
 		NETBOOT="${webfile}"
 		export NETBOOT
-		if [ -n "${FUSE_PID}" ] ; then
-			echo "${FUSE_PID}" > ${mountpoint}/root.pid
-		fi
 	fi
 
 	return ${rc}
@@ -1793,6 +1790,11 @@ mountroot ()
 		mac="$(get_mac)"
 		mac="$(echo ${mac} | sed 's/-//g')"
 		mount_images_in_directory "${livefs_root}" "${rootmnt}" "${mac}"
+	fi
+
+
+	if [ -n "${ROOT_PID}" ] ; then
+		echo "${ROOT_PID}" > "${rootmnt}"/live/root.pid
 	fi
 
 	log_end_msg
