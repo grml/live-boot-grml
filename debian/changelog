@@ -1,3 +1,17 @@
+live-boot (2.0~a16-1) unstable; urgency=high
+
+  [ Daniel Baumann ]
+  * Adding support for resolving DNS names from initramfs, thanks to
+    Michal Suchanek <hramrach@centrum.cz> for initial patch which this
+    is based on (Closes: #589659).
+  * Don't fail in Makefile when there's no checkbashism.
+  * Updating package to standards version 3.9.1.
+
+  [ Michal Suchanek ]
+  * Fix omitpids to work with readonly images.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 28 Jul 2010 20:17:11 +0200
+
 live-boot (2.0~a15-1) unstable; urgency=low
 
   * Making inclusion of languagelist conditional in live hook.
