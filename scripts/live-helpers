@@ -76,15 +76,7 @@ is_supported_fs ()
 
 get_fstype ()
 {
-	# udev (>= 146) no longer provides vol_id
-	if [ -x /lib/udev/vol_id ]
-	then
-		# lenny
-		/lib/udev/vol_id -t ${1} 2>/dev/null
-	else
-		# squeeze
-		/sbin/blkid -s TYPE -o value $1 2>/dev/null
-	fi
+	/sbin/blkid -s TYPE -o value $1 2>/dev/null
 }
 
 where_is_mounted ()
@@ -309,7 +301,7 @@ find_cow_device ()
 		do
 			devname=$(sys2dev "${dev}")
 
-			if echo "${black_listed_devices}" | grep -q -w "${devname}"
+			if echo "${black_listed_devices}" | grep -q "${devname}"
 			then
 				# skip this device enterely
 				break
@@ -345,22 +337,10 @@ find_cow_device ()
 				done
 			fi
 
-			# udev (>= 146) no longer provides vol_id
-			if [ -x /lib/udev/vol_id ]
+			if [ "$(/sbin/blkid -s LABEL -o value $devname 2>/dev/null)" = "${pers_label}" ]
 			then
-				# lenny
-				if [ "$(/lib/udev/vol_id -l ${devname} 2>/dev/null)" = "${pers_label}" ]
-				then
-					echo "${devname}"
-					return 0
-				fi
-			else
-				# squeeze
-				if [ "$(/sbin/blkid -s LABEL -o value $devname 2>/dev/null)" = "${pers_label}" ]
-				then
-					echo "${devname}"
-					return 0
-				fi
+				echo "${devname}"
+				return 0
 			fi
 
 			if [ "${PERSISTENT}" = "nofiles" ]
@@ -408,7 +388,7 @@ find_files ()
 			devname=$(sys2dev "${dev}")
 			devfstype="$(get_fstype ${devname})"
 
-			if echo "${black_listed_devices}" | grep -q -w "${devname}"
+			if echo "${black_listed_devices}" | grep -q "${devname}"
 			then
 				# skip this device enterely
 				break

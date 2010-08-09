@@ -7,7 +7,7 @@
 #   for reuse in another live-boot session.
 #   Look at the manpage for more informations.
 #
-# Copyright (C) 2006-2011 Marco Amadori <marco.amadori@gmail.com>
+# Copyright (C) 2006-2008 Marco Amadori <marco.amadori@gmail.com>
 # Copyright (C) 2008 Chris Lamb <chris@chris-lamb.co.uk>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@ fi
 
 . /usr/share/initramfs-tools/scripts/live-helpers
 
-LIVE_CONF="/etc/live/boot.d/snapshot.conf"
+LIVE_CONF="/etc/live.conf"
 
 if [ -r "${LIVE_CONF}" ]
 then
@@ -125,12 +125,12 @@ Version ()
 {
 	echo "${PROGRAM}"
 	echo
-	echo "Copyright (C) 2006-2011 Marco Amadori <marco.amadori@gmail.com>"
+	echo "Copyright (C) 2006 Marco Amadori <marco.amadori@gmail.com>"
 	echo "Copyright (C) 2008 Chris Lamb <chris@chris-lamb.co.uk>"
 	echo
 	echo "This program is free software; you can redistribute it and/or modify"
 	echo "it under the terms of the GNU General Public License as published by"
-	echo "the Free Software Foundation; either version 3 of the License, or"
+	echo "the Free Software Foundation; either version 2 of the License, or"
 	echo "(at your option) any later version."
 	echo
 	echo "This program is distributed in the hope that it will be useful,"
@@ -143,7 +143,7 @@ Version ()
 	echo "Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA"
 	echo
 	echo "On Debian systems, the complete text of the GNU General Public License"
-	echo "can be found in /usr/share/common-licenses/GPL-3 file."
+	echo "can be found in /usr/share/common-licenses/GPL-2 file."
 	echo
 	echo "Homepage: <http://debian-live.alioth.debian.org/>"
 
@@ -242,7 +242,7 @@ Defaults ()
 	# Parse resync string
 	if [ -n "${SNAP_RESYNC_STRING}" ]
 	then
-		SNAP_COW=$(echo "${SNAP_RESYNC_STRING}" | sed -r -e 's#^([^:]*).*$#'"${DEF_SNAP_COW}"'\1#')
+		SNAP_COW=$(echo "${SNAP_RESYNC_STRING}" | sed -e 's|^/root\([^:.]*\).*$|'"${DEF_SNAP_COW}"'\1|')
 		SNAP_DEV=$(echo "${SNAP_RESYNC_STRING}" | cut -f2 -d ':')
 		SNAP_MNT=$(echo "${SNAP_RESYNC_STRING}" | cut -f3 -d ':')
 		DEST="${MOUNTP}/${SNAP_MNT}"

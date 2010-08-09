@@ -30,9 +30,9 @@ then
 	. /etc/live/boot.conf
 fi
 
-if ls /etc/live/boot.d/* > /dev/null 2>&1
+if ls /etc/live/boot.conf.d/* > /dev/null 2>&1
 then
-	for _FILE in /etc/live/boot.d/*
+	for _FILE in /etc/live/boot.conf.d/*
 	do
 		. ${_FILE}
 	done
@@ -61,7 +61,7 @@ cp /usr/share/initramfs-tools/scripts/live-helpers "${DESTDIR}"/scripts
 # klibc dependencies
 for FILE in /lib/libacl* /lib/libblkid* /lib/libuuid* /lib/libdevmapper* /lib/libattr*
 do
-	if [ ! -e "${DESTDIR}"/"${FILE}" ] && ls ${FILE} > /dev/null 2>&1
+	if [ ! -e "${DESTDIR}"/"${FILE}" ]
 	then
 		cp -a "${FILE}" "${DESTDIR}"/"${FILE}"
 	fi
@@ -175,8 +175,7 @@ copy_exec /usr/bin/md5sum /bin
 if [ -x /usr/bin/memdiskfind ]
 then
 	copy_exec /usr/bin/memdiskfind
-	manual_add_modules phram
-	manual_add_modules mtdblock
+	manual_add_modules phram mtdblock
 fi
 
 # Program: cpio
@@ -191,12 +190,7 @@ copy_exec /bin/cpio /bin
 # Program: udev
 if [ -x /sbin/udevadm ]
 then
-	# lenny
 	copy_exec /sbin/udevadm /sbin
-else
-	# etch
-	copy_exec /sbin/udevtrigger /sbin
-	copy_exec /sbin/udevsettle /sbin
 fi
 if [ -x /usr/bin/udevinfo ]
 then
@@ -251,11 +245,4 @@ then
 	# Configuration file - may be needed if /etc/hosts is used.
 	#mkdir -p $DESTDIR/etc
 	#cp -p /etc/nsswitch.conf $DESTDIR/etc
-fi
-
-if [ "${LIVE_UNIONMOUNT}" = "true" ]
-then
-	# UnionMount
-	# only mount from patched util-linux can do this currently
-	copy_exec /bin/mount /bin/mount_full
 fi
