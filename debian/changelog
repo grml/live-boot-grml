@@ -1,3 +1,11 @@
+live-boot (2.0.0-1) unstable; urgency=low
+
+  * Updating debian-installer languagelist.
+  * Moving configs to etc directory within the source tree.
+  * Removing old docs.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 10 Aug 2010 01:48:01 +0200
+
 live-boot (2.0~a16-1) unstable; urgency=high
 
   [ Daniel Baumann ]
