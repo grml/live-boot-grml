@@ -266,6 +266,16 @@ Arguments ()
 				export NOPERSISTENT
 				;;
 
+			noprompt)
+				NOPROMPT="Yes"
+				export NOPROMPT
+				;;
+
+			noprompt=*)
+				NOPROMPT="${ARGUMENT#noprompt=}"
+				export NOPROMPT
+				;;
+
 			quickusbmodules)
 				QUICKUSBMODULES="Yes"
 				export QUICKUSBMODULES

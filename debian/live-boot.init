@@ -136,7 +136,7 @@ do_stop ()
 	fi
 
 	prompt=1
-	if grep -qs noprompt /proc/cmdline
+	if [ ${NOPROMPT} = "Yes" ]
 	then
 		prompt=
 	fi
@@ -170,6 +170,12 @@ do_stop ()
 			# failes because they actually remember the
 			# "ejected" state even after reboot
 			MESSAGE="Please remove the USB flash drive"
+
+			if [ ${NOPROMPT} = "usb" ]
+			then
+				prompt=
+			fi
+
 		else
 			# ejecting is a very good idea here
 			MESSAGE="Please remove the disc, close the the tray (if any)"
@@ -177,6 +183,11 @@ do_stop ()
 			if [ -x /usr/bin/eject ]
 			then
 				eject -p -m /live/image >/dev/null 2>&1
+			fi
+
+			if [ ${NOPROMPT} = "cd" ]
+			then
+				prompt=
 			fi
 
 		fi

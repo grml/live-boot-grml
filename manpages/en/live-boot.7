@@ -98,6 +98,8 @@ This parameter disables the default disabling of filesystem checks in /etc/fstab
 disables the "persistent" feature, useful if the bootloader (like syslinux) has been installed with persistent enabled.
 .IP "\fBnoprompt\fR" 4
 Do not prompt to eject the CD or remove the USB flash drive on reboot.
+.IP "\fBnoprompt\fR=\fITYPE\fR" 4
+This tells live-boot not to prompt to eject the CD (when noprompt=cd) or remove the USB flash drive (when noprompt=usb) on reboot.
 .IP "\fBswapon\fR" 4
 This parameter enables usage of local swap partitions.
 .IP "\fBpersistent\fR[={nofiles|cryptsetup}]" 4
