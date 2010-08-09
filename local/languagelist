@@ -50,6 +50,7 @@ ja;Japanese;日本語;3;JP;ja_JP.UTF-8;;
 #X ks;Kashmiri;कोशुर;4;IN;ks_IN;;
 kk;Kazakh;Қазақ;2;KZ;kk_KZ.UTF-8;;console-setup
 km;Khmer;﻿ខ្មែរ;4;KH;km_KH;;
+kn;Kannada;ಕನ್ನಡ;4;IN;kn_IN;;
 ko;Korean;한국어;3;KR;ko_KR.UTF-8;;
 ku;Kurdish;Kurdî;2;TR;ku_TR.UTF-8;;console-setup
 #X ky;Kirghiz;Кыргызча;2;KG;ky_KG;;console-setup
@@ -58,7 +59,7 @@ lv;Latvian;Latviski;2;LV;lv_LV.UTF-8;;console-setup
 lt;Lithuanian;Lietuviškai;2;LT;lt_LT.UTF-8;;console-setup
 #X mg;Malagasy;Malagasy;1;MG;mg_MG.UTF-8;mg_MG:fr_FR:fr:en;console-setup
 #X ms;Malay;Bahasa Malaysia;1;MY;ms_MY.UTF-8;;console-setup
-ml;Malayalam;മലയാളഠ;4;IN;ml_IN;;
+ml;Malayalam;മലയാളം;4;IN;ml_IN;;
 mr;Marathi;मराठी;4;IN;mr_IN;;
 mk;Macedonian;Македонски;2;MK;mk_MK.UTF-8;;console-setup
 ne;Nepali;नेपाली ;4;NP;ne_NP;;
@@ -68,7 +69,7 @@ ne;Nepali;नेपाली ;4;NP;ne_NP;;
 se_NO;Northern Sami;Sámegillii;1;NO;se_NO.UTF-8;se_NO:nb_NO:nb:no_NO:no:nn_NO:nn:da:sv:en;console-setup
 nb_NO;Norwegian Bokmaal;Norsk bokmål;1;NO;nb_NO.UTF-8;nb_NO:nb:no_NO:no:nn_NO:nn:da:sv:en;console-setup
 nn_NO;Norwegian Nynorsk;Norsk nynorsk;1;NO;nn_NO.UTF-8;nn_NO:nn:no_NO:no:nb_NO:nb:da:sv:en;console-setup
-#X fa;Persian;فارسی;3;IR;fa_IR;;console-setup
+fa;Persian;فارسی;3;IR;fa_IR;;console-setup
 pl;Polish;Polski;2;PL;pl_PL.UTF-8;;console-setup
 pt;Portuguese;Português;1;PT;pt_PT.UTF-8;pt:pt_BR:en;console-setup
 pt_BR;Portuguese (Brazil);Português do Brasil;1;BR;pt_BR.UTF-8;pt_BR:pt:en;console-setup
@@ -77,20 +78,21 @@ ro;Romanian;Română;2;RO;ro_RO.UTF-8;;console-setup
 ru;Russian;Русский;2;RU;ru_RU.UTF-8;;console-setup
 #X sa;Sanskrit;संस्कृत;4;IN;sa_IN;;
 #X si;Sinhala;සිංහල;4;IN;si_IN;;
-sr;Serbian;Српски;2;RS;sr_RS;;console-setup
+sr;Serbian (Cyrillic);Српски;2;RS;sr_RS;;console-setup
+sr@latin;Serbian (Latin);Srpski;2;RS;sr_RS@latin;;console-setup
 sk;Slovak;Slovenčina;2;SK;sk_SK.UTF-8;;console-setup
 sl;Slovenian;Slovenščina;2;SI;sl_SI.UTF-8;;console-setup
 es;Spanish;Español;1;ES;es_ES.UTF-8;;console-setup
 sv;Swedish;Svenska;1;SE;sv_SE.UTF-8;;console-setup
 tl;Tagalog;Tagalog;1;PH;tl_PH.UTF-8;;console-setup
 ta;Tamil;தமிழ்;4;IN;ta_IN;;
-#X te;Telugu;తెలుగు;4;IN;te_IN;;
-th;Thai;ภาษาไทย;4;TH;th_TH.UTF-8;;console-setup
+te;Telugu;తెలుగు;4;IN;te_IN;;
+th;Thai;ภาษาไทย;3;TH;th_TH.UTF-8;;console-setup
 tr;Turkish;Türkçe;2;TR;tr_TR.UTF-8;;console-setup
 uk;Ukrainian;Українська;2;UA;uk_UA.UTF-8;;console-setup
 #X ur;Urdu;اردو;3;PK;ur_PK.UTF-8;;console-setup
 #X ca@valencia;Valencian-Catalan;Valencià-Català;1;ES;ca_ES.UTF-8@valencia;;console-setup
 vi;Vietnamese;Tiếng Việt;3;VN;vi_VN;;console-setup
-cy;Welsh;Cymraeg;2;GB;cy_GB.UTF-8;;console-setup
-wo;Wolof;Wolof;2;SN;wo_SN;wo:fr:en;
+#X cy;Welsh;Cymraeg;2;GB;cy_GB.UTF-8;;console-setup
+#X wo;Wolof;Wolof;2;SN;wo_SN;wo:fr:en;
 #X xh;Xhosa;Xhosa;2;ZA;xh_ZA.UTF-8;;console-setup
