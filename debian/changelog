@@ -1,0 +1,191 @@
+live-boot (3.0~a1-1) experimental; urgency=low
+
+  * Switching to source format 3.0 (quilt).
+  * Removing live-initramfs transitional package.
+  * Removing lenny support.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 10 Aug 2010 02:02:39 +0200
+
+live-boot (2.0.0-1) unstable; urgency=low
+
+  * Updating debian-installer languagelist.
+  * Moving configs to etc directory within the source tree.
+  * Removing old docs.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 10 Aug 2010 01:48:01 +0200
+
+live-boot (2.0~a16-1) unstable; urgency=high
+
+  [ Daniel Baumann ]
+  * Adding support for resolving DNS names from initramfs, thanks to
+    Michal Suchanek <hramrach@centrum.cz> for initial patch which this
+    is based on (Closes: #589659).
+  * Don't fail in Makefile when there's no checkbashism.
+  * Updating package to standards version 3.9.1.
+
+  [ Michal Suchanek ]
+  * Fix omitpids to work with readonly images.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 28 Jul 2010 20:17:11 +0200
+
+live-boot (2.0~a15-1) unstable; urgency=low
+
+  * Making inclusion of languagelist conditional in live hook.
+  * Updating depends of live-initramfs transitional package to reflect
+    relaxed backend depends.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 17 Jul 2010 17:19:16 +0200
+
+live-boot (2.0~a14-1) unstable; urgency=low
+
+  * Improving backend dependencies (Closes: #589326).
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 17 Jul 2010 00:37:33 +0200
+
+live-boot (2.0~a13-1) unstable; urgency=low
+
+  * Listing fromiso parameter in manpage (Closes: #588667).
+  * Improving test targets in Makefile a bit.
+  * Improving clean target in manpages Makefile a bit.
+  * Adding Chris in copyright file (for live-snapshot that is).
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 15 Jul 2010 19:31:03 +0200
+
+live-boot (2.0~a12-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Adding preparations for booting through syslinux memdisk.
+
+  [ Marco Amadori ]
+  * Avoiding using busybox cpio applet, this should fix snapshot
+    restore.
+  * Do not print misleading debug message if the snapshot was found
+    correctly.
+  * Removing unreachable code in ethdevice argument handling (Closes:
+    #588307).
+
+  [ Daniel Baumann ]
+  * Adding btrfs support.
+  * Updating package to standards version 3.9.0.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 07 Jul 2010 20:13:54 +0200
+
+live-boot (2.0~a11-1) unstable; urgency=low
+
+  * Updating lintian overrides.
+  * Adding missing depends in live-boot on its backend package.
+  * Removing noautologin parameter from live script, this functionallity
+    was moved to live-config.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 20 Jun 2010 19:14:05 +0200
+
+live-boot (2.0~a10-1) unstable; urgency=low
+
+  * Removing depends on live-config in live-boot.
+  * Adding live-config-sysvinit to depends of live-initramfs.
+  * Alternatively depend on busybox or busybox-initramfs on live-boot-
+    initramfs-tools.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 17 Jun 2010 21:52:57 +0200
+
+live-boot (2.0~a9-1) unstable; urgency=low
+
+  [ Michal Suchanek ]
+  * Fix missing log_end_msg in live-boot.init.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 11 Jun 2010 18:42:23 +0200
+
+live-boot (2.0~a8-1) unstable; urgency=low
+
+  * Removing serialtty bottom script.
+  * Removing compcache configuration file.
+  * Removing options that are now in live-config from parameters.txt.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 10 Jun 2010 12:38:52 +0200
+
+live-boot (2.0~a7-1) unstable; urgency=low
+
+  [ Michal Suchanek ]
+  * Adding initial iSCSI boot support.
+  * Really set NETBOOT with iSCSI.
+  * Document iscsi in the man page.
+
+  [ Daniel Baumann ]
+  * Removing xconfig, xdriver, and xvideomode scripts, live-config takes
+    care about that now.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 08 Jun 2010 20:22:33 +0200
+
+live-boot (2.0~a6-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating update-version script.
+  * Updating update-version script.
+  * Removing keyboard bottom script, live-config takes care about that
+    now.
+  * Removing getty and login wrappers, live-config takes care about that
+    now.
+  * Removing configure_init bottom script, live-config takes care about
+    that now.
+
+  [ Michal Suchanek ]
+  * Moving check for iso image in initscript from the start to the end
+    before ejecting media.
+  * Using sendsigs.omit to avoid killing / (Closes: #584690).
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 08 Jun 2010 06:03:21 +0200
+
+live-boot (2.0~a5-1) unstable; urgency=low
+
+  [ Michal Suchanek ]
+  * Fixing http boot:
+
+  [ Daniel Baumann ]
+  * Ammending 2.0~a3-1 changelog entry with bug number.
+
+  [ Michal Suchanek ]
+  * Adding support for booting iso images over http or wget.
+
+  [ Daniel Baumann ]
+  * Renaming internal ext_mountpoint variable to alt_mountpoint for
+    clarity.
+
+  [ Michal Suchanek ]
+  * Removing leftover url= option, this ain't gonna work this way, see
+    fetch=.
+  * Adding DHCP debugging option.
+  * Updating docs wrt/ httpfs.
+
+  [ Daniel Baumann ]
+  * Dropping /etc/live.conf, replaced mostly by /etc/live/config.conf of
+    live-config.
+  * Removing apt_cdrom bottom script, not used anyway.
+  * Removing some boot parameters obsoleted by live-config.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 05 Jun 2010 14:13:10 +0200
+
+live-boot (2.0~a4-1) unstable; urgency=low
+
+  * Removing obsolete boot parameter from manpages.
+  * Running checkbashisms with -f and -x in Makefile.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 02 Jun 2010 22:47:20 +0200
+
+live-boot (2.0~a3-1) unstable; urgency=low
+
+  * Removing umountfs bottom script, not needed anymore (see #518463).
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 30 May 2010 09:28:32 +0200
+
+live-boot (2.0~a2-1) unstable; urgency=low
+
+  * Removing locales  bottom script, now handled by live-config.
+  * Simplyfing makefile a bit.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 27 May 2010 22:42:36 +0200
+
+live-boot (2.0~a1-1) experimental; urgency=low
+
+  * Initial release.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 24 May 2010 10:46:39 +0200

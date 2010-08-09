@@ -1,0 +1,108 @@
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH LIVE\-BOOT 1 10.08.2010 3.0~a1 "Debian Live Projekt"
+
+.SH NAME
+\fBlive\-snapshot\fP \- simple script to ease persistence usage
+
+.SH SYNTAX
+\fBlive\-snapshot\fP [\-c|\-\-cow \fIDIRECTORY] [\-d|\-\-device DEVICE\fP]
+[\-e|\-\-exclude\-list \fIFILE\fP] [\-o|\-\-output \fIFILE\fP] [\-t|\-\-type \fITYPE\fP]
+.br
+\fBlive\-snapshot\fP [\-r|\-\-resync\-string STRING]
+.br
+\fBlive\-snapshot\fP [\-h|\-\-help]
+.br
+\fBlive\-snapshot\fP [\-u|\-\-usage]
+.br
+\fBlive\-snapshot\fP [\-v|\-\-version]
+
+.SH BESCHREIBUNG
+live\-snapshot is a script which can be used to build the right types of
+persistent image files supported by \fIlive\-boot\fP(7). It is also used on exit
+by the live\-boot init script to resync the boot\-found snapshots devices.
+
+.SH OPTIONEN
+.IP "\-c, \-\-cow \fIDIRECTORY\fP" 4
+specifies the input directory to be cloned in the image file. Its default
+value "/live/cow" should be right for most uses. However it could be handy
+to specify "/home" and type ext2 for the type to prepare an image file
+suited to be directly mounted by live\-boot as home.
+.IP "\-d, \-\-device \fIDEVICE\fP" 4
+sets the device where the media which the snapshot/persistence
+file/partition will be put. If it is not specified, a tmpfs will be used and
+linked to the user's desktop to move it where it is needed. If the device
+has no filesystem, an ext2 fs will be automatically created and labelled
+according to the values specified after the "\-\-output" value or with a sane
+default.
+.IP "\-e, \-\-exclude\-list \fIFILE\fP" 4
+a file containing a list of filenames/paths that should not be saved. This
+exclude list will be remebered on the target snapshot media for reuse.
+.IP "\-o, \-\-output \fIFILE\fP" 4
+the filename/label used for the output file/partition. If left blank,
+live\-snapshot will search for a proper file on the device or use the whole
+partition.
+.IP "\-r, \-\-resync\-string \fISTRING\fP" 4
+internally used on resyncs.
+.IP "\-f, \-\-refresh" 4
+try to do the same operation that should be done at reboot or halt,
+resyncing boot\-time auto discovered snapshots. Useful to prevent a crash or
+surge power\-off.
+.IP "\-t, \-\-type \fITYPE\fP" 4
+Type could be one of "cpio", "squashfs", "ext2", "ext3", "ext4", or "jffs2".
+.IP "\-h, \-\-help" 4
+display help and exit.
+.IP "\-u, \-\-usage" 4
+show usage and exit.
+.IP "\-v, \-\-version" 4
+output version information and exit.
+
+.SH DATEIEN
+.IP \fB/etc/live.conf\fP 4
+Some variables can be configured via this config file (inside the live
+system).
+.IP \fBlive/filesystem.module\fP 4
+This optional file (inside the live media) contains a list of white\-space or
+carriage\-return\-separated file names corresponding to disk images in the
+"/live" directory. If this file exists, only images listed here will be
+merged into the root aufs, and they will be loaded in the order listed
+here. The first entry in this file will be the "lowest" point in the aufs,
+and the last file in this list will be on the "top" of the aufs, directly
+below /cow.  Without this file, any images in the "/live" directory are
+loaded in alphanumeric order.
+.IP \fB/etc/live\-persistence.binds\fP 4
+This optional file (which resides in the rootfs system, not in the live
+media) is used as a list of directories which not need be persistent:
+ie. their content does not need to survive reboots when using the
+persistence features.
+.br
+This saves expensive writes and speeds up operations on volatile data such
+as web caches and temporary files (like e.g. /tmp and .mozilla) which are
+regenerated each time. This is achieved by bind mounting each listed
+directory with a tmpfs on the original path.
+
+.SH "SIEHE AUCH"
+\fIlive\-boot\fP(1)
+.PP
+\fIlive\-config\fP(7)
+.PP
+\fIlive\-helper\fP(7)
+
+.SH HOMEPAGE
+Weitere Informationen ueber live\-boot und das Debian Live Projekt koennen
+auf der Homepage unter <\fIhttp://live.debian.net/\fP> und im Handbuch
+unter <\fIhttp://live.debian.net/manual/\fP> gefunden werden.
+
+.SH FEHLER
+Fehler koennen durch Einreichen eines Fehlerberichtes fuer das live\-boot
+Paket im Debian Bug Tracking System unter
+<\fIhttp://bugs.debian.org/\fP> oder durch Senden einer E\-Mail an die
+Debian Live Mailing Liste unter <\fIdebian\-live@lists.debian.org\fP>
+(englischsprachig) mitgeteilt werden.
+
+.SH AUTOR
+live\-boot wurde von Daniel Baumann <\fIdaniel@debian.org\fP> fuer das
+Debian Projekt geschrieben.
