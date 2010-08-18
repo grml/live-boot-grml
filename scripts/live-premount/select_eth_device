@@ -68,6 +68,7 @@ for ARGUMENT in $(cat /proc/cmdline); do
     esac
 done
 
+found_eth_dev=""
 while true; do
 	echo -n "Looking for a connected Ethernet interface ..."
 
@@ -85,13 +86,17 @@ while true; do
 				2>/dev/null)
 			# link detected
 			if [ "$carrier" = 1 ]; then
-				echo " found $interface."
+				echo "Connected $interface found"
 				# inform initrd's init script :
-				echo "DEVICE=$interface" >> /conf/param.conf
-				exit 0
+				found_eth_dev="$found_eth_dev $interface"
 			fi
 		done
-		# wait a bit
-		sleep 1
+		if [ -n "$found_eth_dev" ]; then
+			echo "DEVICE='$found_eth_dev'" >> /conf/param.conf
+			exit 0
+		else
+			# wait a bit
+			sleep 1
+		fi
 	done
 done
