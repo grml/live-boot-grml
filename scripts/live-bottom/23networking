@@ -61,7 +61,7 @@ then
 		ifgateway="$(echo ${ifline} | cut -f4 -d ',')"
 
 cat >> "${IFFILE}" << EOF
-auto ${ifname}
+allow-hotplug ${ifname}
 iface ${ifname} inet static
     address ${ifaddress}
     netmask ${ifnetmask}
@@ -90,7 +90,7 @@ else
 			i="$(basename ${interface})"
 
 cat >> "${IFFILE}" << EOF
-auto ${i}
+allow-hotplug ${i}
 iface ${i} inet ${method}
 
 EOF
@@ -138,7 +138,7 @@ fi
 #		grep -q "iface ${i}" ${IFFILE} && continue
 #
 #cat >> "${IFFILE}" << EOF
-#auto ${i}
+#allow-hotplug ${i}
 #iface ${i} inet dhcp
 #
 #EOF
