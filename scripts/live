@@ -1874,6 +1874,12 @@ mountroot ()
 		mount --move /live/image /root/live/image
 	fi
 
+	# aufs2 in kernel versions around 2.6.33 has a regression:
+	# directories can't be accessed when read for the first the time,
+	# causing a failure for example when accessing /var/lib/fai
+	# when booting FAI, this simple workaround solves it
+	ls /root/* >/dev/null 2>&1
+
 	maybe_break live-bottom
 	log_begin_msg "Running /scripts/live-bottom\n"
 
