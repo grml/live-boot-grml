@@ -1,3 +1,24 @@
+live-boot (3.0~a2-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Removing old and unmaintained po files.
+  * Adding reformated patch from Stephan Hermann <sh@sourcecode.de>
+    based on the work of Holger Fischer <hoo.mb@web.de> to add support
+    for BOOTIF in cases where pxelinux is being used with IPAPPEND
+    (Closes: #593284).
+
+  [ Steven Shiau ]
+  * Making multiple connected NICs work.
+
+  [ Michael Prokop ]
+  * Adding workaround for aufs issue in kernel versions around 2.6.33.
+
+  [ Daniel Baumann ]
+  * Using allow-hotplug instead of auto in automatically created
+    /etc/network/interfaces file.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 01 Sep 2010 18:27:33 +0200
+
 live-boot (3.0~a1-1) experimental; urgency=low
 
   * Switching to source format 3.0 (quilt).
