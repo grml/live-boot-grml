@@ -1,3 +1,14 @@
+live-boot (2.0.1-1) unstable; urgency=low
+
+  [ Michael Prokop ]
+  * Adding workaround for aufs issue in kernel versions around 2.6.33.
+
+  [ Daniel Baumann ]
+  * Using allow-hotplug instead of auto in automatically created
+    /etc/network/interfaces file.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 01 Sep 2010 18:25:08 +0200
+
 live-boot (2.0.0-1) unstable; urgency=low
 
   * Updating debian-installer languagelist.
