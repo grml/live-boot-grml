@@ -11,3 +11,5 @@ dpkg -l loop-aes-utils curlftpfs genext2fs httpfs2 squashfs-tools mtd-tools
 
 # Checking other packages
 dpkg -l cryptsetup splashy usplash
+
+exit 0
