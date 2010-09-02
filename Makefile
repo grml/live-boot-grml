@@ -43,7 +43,7 @@ build:
 install:
 	# Installing executables
 	mkdir -p $(DESTDIR)/sbin
-	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin
+	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile bin/live-toram $(DESTDIR)/sbin
 
 	mkdir -p $(DESTDIR)/usr/share/live-boot
 	cp bin/live-preseed bin/live-reconfigure local/languagelist $(DESTDIR)/usr/share/live-boot
