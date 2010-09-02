@@ -66,6 +66,17 @@ remove_applet ()
 	chroot /root update-gconf-defaults
 }
 
+add_sudoers_file ()
+{
+
+cat <<EOF > /root/etc/sudoers.d/a11y-sudo
+# TO allow accessibility in GTK to work with sudo.
+Defaults        env_keep = "ORBIT_SOCKETDIR XDG_SESSION_COOKIE GTK_MODULES"
+EOF
+
+	chmod 0440 /root/etc/sudoers.d/a11y-sudo
+}
+
 case ${ACCESS} in
 	access=v1)
 		# Lesser Visual Impairment
@@ -90,7 +101,7 @@ case ${ACCESS} in
 		gct -s -t string /desktop/gnome/applications/at/visual/exec orca
 		gct -s -t bool /apps/gksu/disable-grab true
 		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
-		sed -i -e 's/# Host alias specification/Defaults\tenv_keep = "ORBIT_SOCKETDIR XDG_SESSION_COOKIE GTK_MODULES"\n\n# Host alias specification/g' /root/etc/sudoers
+		add_sudoers_file
 
 		if [ -x /root/usr/bin/orca ]
 		then
@@ -112,7 +123,7 @@ case ${ACCESS} in
 		gct -s -t string /apps/empathy/conversation/theme classic
 		gct -s -t bool /apps/gksu/disable-grab true
 		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
-		sed -i -e 's/# Host alias specification/Defaults\tenv_keep = "ORBIT_SOCKETDIR XDG_SESSION_COOKIE GTK_MODULES"\n\n# Host alias specification/g' /root/etc/sudoers
+		add_sudoers_file
 
 		remove_applet fast_user_switch
 		if [ -x /root/usr/bin/orca ]
@@ -130,7 +141,7 @@ case ${ACCESS} in
 		gct -s -t bool /apps/gksu/disable-grab true
 		gct -s -t string /desktop/gnome/applications/window_manager/default /usr/bin/metacity
 		gct -s -t string /apps/empathy/conversation/theme classic
-		sed -i -e 's/# Host alias specification/Defaults\tenv_keep = "ORBIT_SOCKETDIR XDG_SESSION_COOKIE GTK_MODULES"\n\n# Host alias specification/g' /root/etc/sudoers
+		add_sudoers_file
 
 		if [ -x /root/usr/bin/orca ]
 		then
