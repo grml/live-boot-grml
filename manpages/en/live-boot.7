@@ -21,7 +21,7 @@ At boot time it will look for a (read\-only) media containing a "/live" director
 In addition, there are some more boot parameters to influence the behaviour, see below.
 
 .SS Configuration Files
-\fBlive\-boot\fR can be configured (but not activated) through configuration files. Those files can be placed either in the root filesystem itself (/etc/live/boot.conf, /etc/live/boot.conf.d/), or on the live media (live/boot.conf, live/boot.conf.d/).
+\fBlive\-boot\fR can be configured (but not activated) through configuration files. Those files can be placed either in the root filesystem itself (/etc/live/boot.conf, /etc/live/boot.d/), or on the live media (live/boot.conf, live/boot.d/).
 
 .SH OPTIONS
 \fBlive\-boot\fR currently features the following parameters.
@@ -136,9 +136,9 @@ This saves expensive writes and speeds up operations on volatile data such as we
 
 .SH FILES
 .IP "\fB/etc/live/boot.conf\fR" 4
-.IP "\fB/etc/live/boot.conf.d/\fR" 4
+.IP "\fB/etc/live/boot.d/\fR" 4
 .IP "\fBlive/boot.conf\fR" 4
-.IP "\fBlive/boot.conf.d/\fR" 4
+.IP "\fBlive/boot.d/\fR" 4
 
 .SH SEE ALSO
 \fIlive\-snapshot\fR(1)
