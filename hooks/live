@@ -30,9 +30,9 @@ then
 	. /etc/live/boot.conf
 fi
 
-if ls /etc/live/boot.conf.d/* > /dev/null 2>&1
+if ls /etc/live/boot.d/* > /dev/null 2>&1
 then
-	for _FILE in /etc/live/boot.conf.d/*
+	for _FILE in /etc/live/boot.d/*
 	do
 		. ${_FILE}
 	done
