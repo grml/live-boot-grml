@@ -1,3 +1,14 @@
+live-boot (2.0.2-1) unstable; urgency=low
+
+  * Updating seperators in networking bottom script to fix ip parameter
+    parsing (Closes: #590494).
+  * Updating live-build reference in manpages.
+  * Checking for file existence in initramfs hook (Closes: #595264).
+  * Adding live-toram script to copy the running live system to ram and
+    eject the live media.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 02 Sep 2010 18:25:12 +0200
+
 live-boot (2.0.1-1) unstable; urgency=low
 
   [ Michael Prokop ]
