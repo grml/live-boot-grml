@@ -77,15 +77,27 @@ install:
 
 uninstall:
 	# Uninstalling executables
-	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
+	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile $(DESTDIR)/sbin/live-toram
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin
+
 	rm -rf $(DESTDIR)/usr/share/live-boot
+
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	rm -rf $(DESTDIR)/usr/share/initramfs-tools/scripts/live*
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top/live
 
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/hooks
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr
+
 	# Uninstalling docs
 	rm -rf $(DESTDIR)/usr/share/doc/live-boot
-	# (FIXME)
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/doc
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr
 
 	# Uninstalling manpages
 	for MANPAGE in manpages/en/*; \
@@ -103,8 +115,22 @@ uninstall:
 		done; \
 	done
 
-clean:
+	for SECTION in $(ls manpages/en/* | awk -F. '{ print $2 }'); \
+	do \
+		rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man/man$${SECTION} || true; \
+		rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man/*/man$${SECTION} || true; \
+	done
 
-distclean:
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr || true
+
+	rmdir --ignore-fail-on-non-empty $(DESTDIR) || true
+
+clean:
+	@echo "Nothing to clean."
+
+distclean: clean
+	@echo "Nothing to distclean."
 
 reinstall: uninstall install
