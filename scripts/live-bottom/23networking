@@ -65,9 +65,17 @@ allow-hotplug ${ifname}
 iface ${ifname} inet static
     address ${ifaddress}
     netmask ${ifnetmask}
+EOF
+
+if [ -n "${ifgateway}" ]
+then
+
+cat >> "${IFFILE}" << EOF
     gateway ${ifgateway}
 
 EOF
+
+fi
 
 	done
 else
