@@ -1626,16 +1626,6 @@ find_livefs ()
 	return 1
 }
 
-set_usplash_timeout ()
-{
-	if [ -x /sbin/usplash_write ]
-	then
-		/sbin/usplash_write "TIMEOUT 120"
-	else if [ -x /sbin/splashy_update ] ; then
-		/sbin/splashy_update "TIMEOUT 120"
-	fi ; fi
-}
-
 integrity_check ()
 {
 	media_mountpoint="${1}"
@@ -1662,14 +1652,6 @@ integrity_check ()
 	fi
 }
 
-start_usplash_pulse ()
-{
-	if [ -x /sbin/usplash_write ]
-	then
-		/sbin/usplash_write "PULSELOGO"
-	fi
-}
-
 mountroot ()
 {
         if [ -x /scripts/local-top/cryptroot ]; then
@@ -1688,9 +1670,6 @@ mountroot ()
 
 	Arguments
 
-	set_usplash_timeout
-	start_usplash_pulse
-
 	maybe_break live-premount
 	log_begin_msg "Running /scripts/live-premount"
 	run_scripts /scripts/live-premount
@@ -1698,8 +1677,6 @@ mountroot ()
 
 	# Needed here too because some things (*cough* udev *cough*)
 	# changes the timeout
-
-	set_usplash_timeout
 
 	if [ ! -z "${NETBOOT}" ] || [ ! -z "${FETCH}" ] || [ ! -z "${HTTPFS}" ] || [ ! -z "${FTPFS}" ]
 	then
