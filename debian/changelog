@@ -1,3 +1,26 @@
+live-boot (3.0~a5-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Applying patch from Luke Yelavich <themuso@ubuntu.com> to instead of
+    mangling the main sudoers file in accessibility bottom script,
+    create a new file in /etc/sudoers.d and set permissions
+    appropriately.
+  * Applying patch from Michael Casadevall <mcasadevall@ubuntu.com> to
+    add platform-sata_mv to is_nice_device() to allow Marvell Dove A0
+    and AVD1 to properly boot live media.
+  * Updating uinstall targets in makefile.
+
+  [ Steven Shiau ]
+  * Allowing to assign no gateway in networking bottom script.
+
+  [ Daniel Baumann ]
+  * Removing usplash support from initscript, usplash is dead.
+  * Removing lenny legacy stuff from initscript.
+  * Removing usplash support in initramfs, usplash is dead.
+  * Adding plymouth in bug script.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 06 Sep 2010 15:17:15 +0200
+
 live-boot (3.0~a4-1) experimental; urgency=low
 
   * Exiting with 0 in live-boot bug script (Closes: #595262).
