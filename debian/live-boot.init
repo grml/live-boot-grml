@@ -21,12 +21,13 @@ PATH=/usr/sbin:/usr/bin:/sbin:/bin
 NAME=live-boot
 SCRIPTNAME=/etc/init.d/${NAME}
 DO_SNAPSHOT=/sbin/live-snapshot
+SNAPSHOT_CONF="/etc/live/boot.d/snapshot.conf"
 
 # Exit if system was not booted by live-boot
 grep -qs boot=live /proc/cmdline || exit 0
 
-# Read configuration variable file if it is present
-[ -r /etc/live.conf ] && . /etc/live.conf
+# Read snapshot configuration variables
+[ -r ${SNAPSHOT_CONF} ] && . ${SNAPSHOT_CONF}
 
 # Load the VERBOSE setting and other rcS variables
 [ -f /etc/default/rcS ] && . /etc/default/rcS
