@@ -1026,6 +1026,16 @@ try_snap ()
 	snapdata="${1}"
 	snap_mount="${2}"
 	snap_type="${3}"
+	snap_relpath="${4}"
+
+	if [ -z "${snap_relpath}" ]
+	then
+		# root snapshot, default usage
+		snap_relpath="/"
+	else
+		# relative snapshot (actually used just for "/home" snapshots)
+		snap_mount="${2}${snap_relpath}"
+	fi
 
 	if [ -n "${snapdata}" ] && [ ! -b "${snapdata}" ]
 	then
@@ -1106,11 +1116,11 @@ try_snap ()
 			fi
 		fi
 	else
-		log_warning_msg "Impossible to include the ${snap_type} Snapshot"
+		log_warning_msg "Impossible to include the ${snap_type} Snapshot (o)"
 		return 1
 	fi
 
-	echo "export ${snap_type}SNAP="/cow${snap_mount#$rootmnt}":${snapdev}:${snapfile}" >> /etc/live.conf # for resync on reboot/halt
+	echo "export ${snap_type}SNAP=${snap_relpath}:${snapdev}:${snapfile}" >> snapshot.conf # for resync on reboot/halt
 	return 0
 }
 
@@ -1448,7 +1458,7 @@ setup_unionfs ()
 		# Look for other snapshots to copy in
 		try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
 		# This second type should be removed when snapshot grow smarter
-		try_snap "${home_snapdata}" "${rootmnt}/home" "HOME"
+		try_snap "${home_snapdata}" "${rootmnt}" "HOME" "/home"
 	fi
 
 	if [ -n "${SHOWMOUNTS}" ]
@@ -1856,6 +1866,18 @@ mountroot ()
 	# causing a failure for example when accessing /var/lib/fai
 	# when booting FAI, this simple workaround solves it
 	ls /root/* >/dev/null 2>&1
+
+	# copy snapshot configuration if exists
+	if [ -f snapshot.conf ]
+	then
+		log_begin_msg "Copying snapshot.conf to ${rootmnt}/etc/live/boot.d"
+		if [ ! -d "${rootmnt}/etc/live/boot.d" ]
+		then
+			mkdir -p "${rootmnt}/etc/live/boot.d"
+		fi
+		cp snapshot.conf "${rootmnt}/etc/live/boot.d/"
+		log_end_msg
+	fi
 
 	maybe_break live-bottom
 	log_begin_msg "Running /scripts/live-bottom\n"
