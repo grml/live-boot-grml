@@ -1074,8 +1074,16 @@ try_snap ()
 				cpioargs='--unconditional --make-directories'
 			fi
 
-			cd "${snap_mount}" && zcat "${snapback}/${snapfile}" | $cpiopath $cpioargs --extract --preserve-modification-time --no-absolute-filenames --sparse 2>/dev/null
-			RES="$?"
+			if [ -s "${snapback}/${snapfile}" ]
+			then
+				BEFOREDIR="$(pwd)"
+				cd "${snap_mount}" && zcat "${snapback}/${snapfile}" | $cpiopath $cpioargs --extract --preserve-modification-time --no-absolute-filenames --sparse 2>/dev/null
+				RES="$?"
+				cd "${BEFOREDIR}"
+			else
+				log_warning_msg "${snapback}/${snapfile} is empty, adding it for sync on reboot."
+				RES="0"
+			fi
 
 			if [ "${RES}" != "0" ]
 			then
