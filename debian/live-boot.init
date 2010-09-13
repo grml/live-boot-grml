@@ -97,6 +97,7 @@ do_stop ()
 {
 	if ! grep -qs nopersistent /proc/cmdline && grep -qs persistent /proc/cmdline
 	then
+		# ROOTSNAP and HOMESNAP are defined in ${SNAPSHOT_CONF} file
 		if [ ! -z "${ROOTSNAP}" ]
 		then
 			${DO_SNAPSHOT} --resync-string="${ROOTSNAP}"
