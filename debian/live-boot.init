@@ -49,7 +49,7 @@ cache_path()
 	then
 		if [ -x "${path}" ]
 		then
-			if file "${path}" | grep -q 'dynamically linked'
+			if file -L "${path}" | grep -q 'dynamically linked'
 			then
 				for lib in $(ldd "${path}" | awk '{ print $3 }')
 				do
