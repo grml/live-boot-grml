@@ -1,3 +1,17 @@
+live-boot (2.0.5-1) unstable; urgency=low
+
+  [ Marco Amadori ]
+  * Fix snapshots' sync-strings usage (Closes: #591330).
+  * Fixed some snapshot related debug messages.
+  * Added support for empty (initial) snapshots.
+
+  [ Daniel Baumann ]
+  * Adding patch from Colin Watson <cjwatson@ubuntu.com> to follow
+    symlinks when checking for dynamically linked files at reboot in
+    initscript.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 14 Sep 2010 08:55:02 +0200
+
 live-boot (2.0.4-1) unstable; urgency=low
 
   [ Daniel Baumann ]
