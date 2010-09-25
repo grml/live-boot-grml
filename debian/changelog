@@ -1,3 +1,10 @@
+live-boot (3.0~a7-1) experimental; urgency=low
+
+  [ intrigeri ]
+  * Fixing find_snap to take its second argument into account.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 25 Sep 2010 22:46:54 +0200
+
 live-boot (3.0~a6-1) experimental; urgency=low
 
   [ Marco Amadori ]
