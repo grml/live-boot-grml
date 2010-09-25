@@ -1,3 +1,10 @@
+live-boot (2.0.6-1) unstable; urgency=medium
+
+  [ intrigeri ]
+  * Fixing find_snap to take its second argument into account.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 25 Sep 2010 22:48:35 +0200
+
 live-boot (2.0.5-1) unstable; urgency=low
 
   [ Marco Amadori ]
