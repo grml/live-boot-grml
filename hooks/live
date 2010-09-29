@@ -251,3 +251,10 @@ then
 	#mkdir -p $DESTDIR/etc
 	#cp -p /etc/nsswitch.conf $DESTDIR/etc
 fi
+
+if [ "${LIVE_UNIONMOUNT}" = "true" ]
+then
+	# UnionMount
+	# only mount from patched util-linux can do this currently
+	copy_exec /bin/mount /bin/mount_full
+fi
