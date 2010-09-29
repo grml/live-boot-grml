@@ -1206,9 +1206,16 @@ setup_unionfs ()
 					log_warning_msg "Unknown file system type on ${backdev} (${image}), assuming ${fstype}."
 				fi
 
-				mkdir -p "${croot}/${imagename}"
-				log_begin_msg "Mounting \"${image}\" on \"${croot}${imagename}\" via \"${backdev}\""
-				mount -t "${fstype}" -o ro,noatime "${backdev}" "${croot}/${imagename}" || panic "Can not mount ${backdev} (${image}) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
+				if [ "${UNIONTYPE}" != "unionmount" ]
+				then
+					mpoint="${croot}/${imagename}"
+					rofsstring="${mpoint}=${roopt}:${rofsstring}" && rofslist="${mpoint} ${rofslist}"
+				else
+					mpoint="${rootmnt}"
+				fi
+				mkdir -p "${mpoint}"
+				log_begin_msg "Mounting \"${image}\" on \"${mpoint}\" via \"${backdev}\""
+				mount -t "${fstype}" -o ro,noatime "${backdev}" "${mpoint}" || panic "Can not mount ${backdev} (${image}) on ${mpoint}"
 				log_end_msg
 			fi
 		done
@@ -1322,6 +1329,9 @@ setup_unionfs ()
 		cow_mountopt="rw,noatime,mode=755"
 	fi
 
+	if [ "${UNIONTYPE}" != "unionmount" ]
+	then
+
 	if [ "${cow_fstype}" = "nfs" ]
 	then
 		log_begin_msg \
@@ -1331,6 +1341,7 @@ setup_unionfs ()
 	else
 		mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} /cow || \
 			panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on /cow"
+	fi
 	fi
 
 	rofscount=$(echo ${rofslist} |wc -w)
@@ -1374,6 +1385,10 @@ setup_unionfs ()
 				(ulimit -n 16384; unionfs-fuse -o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid /cow=RW:${rofsstring} "${rootmnt}" || panic "mount ${UNIONTYPE} on ${rootmnt} failed with option cow,noinitgroups,default_permissions,allow_other,use_ino,suid=/cow:RW:${rofsstring}")
 				mkdir -p /dev/.initramfs/varrun
 				pidof unionfs-fuse >> /dev/.initramfs/varrun/sendsigs.omit || true
+				;;
+
+			unionmount)
+				mount_full -t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice} "${rootmnt}" || panic "${UNIONTYPE} ${cowdevice} on ${rootmnt} failed with option noatime,union,${cow_mountopt}"
 				;;
 
 			*)
