@@ -1,3 +1,16 @@
+live-boot (2.0.7-1) unstable; urgency=medium
+
+  [ Michal Suchanek ]
+  * Adding initial support for unionmount.
+
+  [ Marco Amadori ]
+  * Included a note about persistent-subtext (Helps: #536728).
+
+  [ Daniel Baumann ]
+  * Running manpage rebuild after manpage updates.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 02 Oct 2010 10:06:41 +0200
+
 live-boot (2.0.6-1) unstable; urgency=medium
 
   [ intrigeri ]
