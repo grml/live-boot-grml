@@ -1,3 +1,17 @@
+live-boot (3.0~a8-1) experimental; urgency=low
+
+  [ Michal Suchanek ]
+  * Adding initial support for unionmount.
+
+  [ Marco Amadori ]
+  * Included a note about persistent-subtext (Helps: #536728).
+
+  [ Daniel Baumann ]
+  * Running manpage rebuild after manpage updates.
+  * Updating to debhelper version 8.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 02 Oct 2010 10:15:03 +0200
+
 live-boot (3.0~a7-1) experimental; urgency=low
 
   [ intrigeri ]
