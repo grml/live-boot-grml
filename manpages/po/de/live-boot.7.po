@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 2.0.5\n"
-"POT-Creation-Date: 2010-09-29 10:42+0300\n"
+"POT-Creation-Date: 2010-10-02 10:07+0300\n"
 "PO-Revision-Date: 2010-05-24 12:34+0300\n"
 "Last-Translator: Daniel Baumann <daniel@debian.org>\n"
 "Language-Team: none\n"
@@ -24,14 +24,14 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "2010-09-29"
-msgstr "29.09.2010"
+msgid "2010-10-02"
+msgstr "02.10.2010"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "2.0.6"
-msgstr "2.0.6"
+msgid "2.0.7"
+msgstr "2.0.7"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1
