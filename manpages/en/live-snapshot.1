@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 1 2010\-10\-02 2.0.7 "Debian Live Project"
+.TH LIVE\-BOOT 1 2010\-10\-11 2.0.7 "Debian Live Project"
 
 .SH NAME
 \fBlive\-snapshot\fR \- simple script to ease persistence usage
@@ -48,6 +48,8 @@ This optional file (inside the live media) contains a list of white\-space or ca
 This optional file (which resides in the rootfs system, not in the live media) is used as a list of directories which not need be persistent: ie. their content does not need to survive reboots when using the persistence features.
 .br
 This saves expensive writes and speeds up operations on volatile data such as web caches and temporary files (like e.g. /tmp and .mozilla) which are regenerated each time. This is achieved by bind mounting each listed directory with a tmpfs on the original path.
+.IP "\fB/etc/live\-snapshot.list\fR" 4
+This optional file, if present changes the behaviour of live\-snapshot: only files and directories listed there are included (integrally) in the snapshot. Beware, it is an experimental feature that only works for cpio targets now.
 
 .SH SEE ALSO
 \fIlive\-boot\fR(1)
