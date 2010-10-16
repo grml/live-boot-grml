@@ -325,9 +325,9 @@ Arguments ()
 				;;
 
 			skipunion)
-                                SKIP_UNION_MOUNTS="Yes"
-                                export SKIP_UNION_MOUNTS
-                                ;;
+				SKIP_UNION_MOUNTS="Yes"
+				export SKIP_UNION_MOUNTS
+				;;
 
 			root=*)
 				ROOT="${ARGUMENT#root=}"
