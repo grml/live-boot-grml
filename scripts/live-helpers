@@ -26,7 +26,7 @@ subdevices ()
 	sysblock=${1}
 	r=""
 
-	for dev in "${sysblock}" "${sysblock}"/*
+	for dev in "${sysblock}"/* "${sysblock}"
 	do
 		if [ -e "${dev}/dev" ]
 		then
@@ -297,13 +297,21 @@ find_cow_device ()
 
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
 	do
+		fulldevname=$(sys2dev "${sysblock}")
+
+		if echo "${black_listed_devices}" | grep -q -w "${fulldevname}"
+		then
+			# skip this device entirely
+			break
+		fi
+
 		for dev in $(subdevices "${sysblock}")
 		do
 			devname=$(sys2dev "${dev}")
 
 			if echo "${black_listed_devices}" | grep -q -w "${devname}"
 			then
-				# skip this device enterely
+				# skip this subdevice
 				break
 			fi
 
@@ -383,6 +391,14 @@ find_files ()
 
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
 	do
+		fulldevname=$(sys2dev "${sysblock}")
+
+		if echo "${black_listed_devices}" | grep -q -w "${fulldevname}"
+		then
+			# skip this device entirely
+			break
+		fi
+
 		for dev in $(subdevices "${sysblock}")
 		do
 			devname=$(sys2dev "${dev}")
@@ -390,7 +406,7 @@ find_files ()
 
 			if echo "${black_listed_devices}" | grep -q -w "${devname}"
 			then
-				# skip this device enterely
+				# skip this subdevice
 				break
 			fi
 
