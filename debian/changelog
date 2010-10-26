@@ -1,3 +1,17 @@
+live-boot (3.0~a9-1) experimental; urgency=low
+
+  [ amnesia ]
+  * Adding live-snapshot.list documentation to manpage.
+
+  [ Richard Nelson ]
+  * Removed whitespace for tabs on the skipunion option.
+
+  [ T(A)ILS developers ]
+  * Fixing overzealous blacklist usage.
+  * Adding documentation for persistent=cryptsetup in the manpage.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 26 Oct 2010 09:24:51 +0200
+
 live-boot (3.0~a8-1) experimental; urgency=low
 
   [ Michal Suchanek ]
