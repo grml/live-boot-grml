@@ -1,3 +1,11 @@
+live-boot (2.0.9-1) unstable; urgency=low
+
+  [ T(A)ILS developers ]
+  * Fixing overzealous blacklist usage.
+  * Adding documentation for persistent=cryptsetup in the manpage.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 26 Oct 2010 09:15:54 +0200
+
 live-boot (2.0.8-1) unstable; urgency=medium
 
   [ amnesia ]
