@@ -115,6 +115,12 @@ do_stop ()
 		return 0
 	fi
 
+	# check for toram
+	if grep -qs toram /proc/cmdline
+	then
+		return 0
+	fi
+
 	# Don't prompt to eject the SD card on Babbage board, where we reuse it
 	# as a quasi-boot-floppy. Technically this uses a bit of ubiquity
 	# (archdetect), but since this is mostly only relevant for
