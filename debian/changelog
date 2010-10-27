@@ -1,3 +1,9 @@
+live-boot (2.0.10-1) unstable; urgency=medium
+
+  * Don't do anything in initscript when using toram (Closes: #601575).
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 27 Oct 2010 14:54:58 +0200
+
 live-boot (2.0.9-1) unstable; urgency=low
 
   [ T(A)ILS developers ]
