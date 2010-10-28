@@ -1,3 +1,10 @@
+live-boot (2.0.11-1) unstable; urgency=medium
+
+  * Removing deep link to bug page in the manual, since we don't have
+    stable references yet.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 28 Oct 2010 09:22:02 +0200
+
 live-boot (2.0.10-1) unstable; urgency=medium
 
   * Don't do anything in initscript when using toram (Closes: #601575).
