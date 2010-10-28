@@ -1,3 +1,15 @@
+live-boot (3.0~a11-1) experimental; urgency=low
+
+  [ T(A)ILS developers ]
+  * Adding noprompt={usb,cd} feature.
+  * Enhancing devices search ordering.
+
+  [ Daniel Baumann ]
+  * Removing deep link to bug page in the manual, since we don't have
+    stable references yet.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 28 Oct 2010 09:28:43 +0200
+
 live-boot (3.0~a10-1) experimental; urgency=low
 
   * Don't do anything in initscript when using toram (Closes: #601575).
