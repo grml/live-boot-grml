@@ -488,3 +488,73 @@ is_luks()
     fi
 
 }
+
+removable_dev ()
+{
+	output_format="${1}"
+	want_usb="${2}"
+	ret=
+
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+	do
+		dev_ok=
+		if [ "$(cat ${sysblock}/removable)" = "1" ]
+		then
+			if [ -z "${want_usb}" ]
+			then
+				dev_ok="yes"
+			else
+				if readlink ${sysblock} | grep -q usb
+				then
+					dev_ok="yes"
+				fi
+			fi
+		fi
+
+		if [ "${dev_ok}" = "yes" ]
+		then
+			case "${output_format}" in
+				sys)
+					ret="${ret} ${sysblock}"
+					;;
+				*)
+					devname=$(sys2dev "${sysblock}")
+					ret="${ret} ${devname}"
+					;;
+			esac
+		fi
+	done
+
+	echo "${ret}"
+}
+
+removable_usb_dev ()
+{
+	output_format="${1}"
+
+	removable_dev "${output_format}" "want_usb"
+}
+
+non_removable_dev ()
+{
+	output_format="${1}"
+	ret=
+
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+	do
+		if [ "$(cat ${sysblock}/removable)" = "0" ]
+		then
+			case "${output_format}" in
+				sys)
+					ret="${ret} ${sysblock}"
+					;;
+				*)
+					devname=$(sys2dev "${sysblock}")
+					ret="${ret} ${devname}"
+					;;
+			esac
+		fi
+	done
+
+	echo "${ret}"
+}
