@@ -1485,7 +1485,7 @@ check_dev ()
 			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live.log
 		else
 			mkdir /isofrom
-			mount "$ISO_DEVICE" /isofrom
+			mount -t auto "$ISO_DEVICE" /isofrom
 			ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
 			loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
 			devname="${loopdevname}"
