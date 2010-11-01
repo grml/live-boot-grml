@@ -253,6 +253,11 @@ Arguments ()
 				export PERSISTENT
 				;;
 
+			persistent-media=*)
+				PERSISTENT_MEDIA="${ARGUMENT#*=}"
+				export PERSISTENT_MEDIA
+				;;
+
 			persistent-path=*)
 				PERSISTENT_PATH="${ARGUMENT#persistent-path=}"
 				export PERSISTENT_PATH
@@ -1324,6 +1329,7 @@ setup_unionfs ()
 	# Looking for "${root_persistence}" device or file
 	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
 	then
+
 		if [ -z "${QUICKUSBMODULES}" ]
 		then
 			# Load USB modules
@@ -1350,6 +1356,18 @@ setup_unionfs ()
 				fi
 			done
 		fi
+
+		case "${PERSISTENT_MEDIA}" in
+			removable)
+				whitelistdev="$(removable_dev)"
+				;;
+			removable-usb)
+				whitelistdev="$(removable_usb_dev)"
+				;;
+			*)
+				whitelistdev=""
+				;;
+		esac
 
 		# search for label and files (this could be hugely optimized)
 		cowprobe=$(find_cow_device "${root_persistence}" "${blacklistdev}" "${whitelistdev}")
