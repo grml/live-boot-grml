@@ -1,3 +1,13 @@
+live-boot (3.0~a12-1) experimental; urgency=low
+
+  [ T(A)ILS developers ]
+  * Fixing fromiso= on Squeeze.
+
+  [ Daniel Baumann ]
+  * Adding dpkg source options file.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 22 Nov 2010 23:29:48 +0100
+
 live-boot (3.0~a11-1) experimental; urgency=low
 
   [ T(A)ILS developers ]
