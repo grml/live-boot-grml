@@ -1,3 +1,10 @@
+live-boot (2.0.12-1) unstable; urgency=medium
+
+  [ T(A)ILS developers ]
+  * Fixing fromiso= on Squeeze.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 22 Nov 2010 23:27:01 +0100
+
 live-boot (2.0.11-1) unstable; urgency=medium
 
   * Removing deep link to bug page in the manual, since we don't have
