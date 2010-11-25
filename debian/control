@@ -1,13 +1,12 @@
 Source: live-boot
 Section: misc
 Priority: optional
-Maintainer: Debian Live Project <debian-live@lists.debian.org>
-Uploaders: Daniel Baumann <daniel@debian.org>
+Maintainer: Grml Team <team@grml.org>
 Build-Depends: debhelper (>= 7.0.50~), dpatch
 Standards-Version: 3.9.1
 Homepage: http://live.debian.net/devel/live-boot/
-Vcs-Browser: http://live.debian.net/gitweb/?p=live-boot.git
-Vcs-Git: git://live.debian.net/git/live-boot.git
+Vcs-Browser: http://git.grml.org/?p=live-boot-grml.git
+Vcs-Git: git://git.grml.org/live-boot-grml.git
 
 Package: live-boot
 Architecture: all
@@ -20,6 +19,10 @@ Description: Debian Live - System Boot Scripts
  .
  In addition to live-boot, a backend for the initrd generation is required, such
  as live-boot-initramfs-tools.
+ .
+ Please notice that this package is maintained by the grml.org team.
+ This is NOT a fork of Debian's live-boot, it's just a customized
+ version to better fit Grml's needs.
 
 Package: live-boot-initramfs-tools
 Architecture: all
@@ -33,6 +36,10 @@ Description: Debian Live - System Boot Scripts (initramfs-tools backend)
  boot process (early userspace).
  .
  This package contains the initramfs-tools backend.
+ .
+ Please notice that this package is maintained by the grml.org team.
+ This is NOT a fork of Debian's live-boot, it's just a customized
+ version to better fit Grml's needs.
 
 Package: live-initramfs
 Architecture: all
