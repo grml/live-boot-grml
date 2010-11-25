@@ -1,0 +1,26 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 14_no_blkid_on_lenny.dpatch by Michael Prokop <mika@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: util-linux of lenny doesn't ship the initramfs-tools file
+## DP: /usr/share/initramfs-tools/hooks/utillinux yet which ensures
+## DP: that blkid is available, so therefore fall back to
+## DP: /lib/udev/vol_id in /scripts/live as well
+
+@DPATCH@
+--- a/scripts/live
++++ b/scripts/live
+@@ -1577,7 +1577,12 @@ check_dev ()
+ 
+ 	if is_supported_fs ${fstype}
+ 	then
+-		devuid=$(blkid -o value -s UUID "$devname")
++		# lenny
++		if command -v blkid >/dev/null 2>&1 ; then
++			devuid=$(blkid -o value -s UUID "${devname}")
++	        elif [ -x /lib/udev/vol_id ]; then
++	                devuid=$(/lib/udev/vol_id --uuid "${devname}" 2>/dev/null)
++	        fi
+ 		[ -n "$devuid" ] && grep -qs "\<$devuid\>" $tried && continue
+ 		mount -t ${fstype} -o ro,noatime "${devname}" ${mountpoint} || continue
+ 		[ -n "$devuid" ] && echo "$devuid" >> $tried

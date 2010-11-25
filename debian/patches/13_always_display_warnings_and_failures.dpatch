@@ -1,0 +1,27 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 13_always_display_warnings_and_failures.dpatch by Michael Prokop <mika@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Always display failure and warning messages.
+
+@DPATCH@
+--- live-initramfs-grml~/scripts/live-functions	2010-02-20 16:03:43.155342432 +0100
++++ live-initramfs-grml/scripts/live-functions	2010-02-20 16:04:08.675380352 +0100
+@@ -2,6 +2,17 @@
+ . /scripts/functions
+ . /live.vars
+ 
++# we definitely want this stuff visible
++log_failure_msg()
++{
++        printf "Failure: $@\n"
++}
++
++log_warning_msg()
++{
++        printf "Warning: $@\n"
++}
++
+ log_wait_msg ()
+ {
+ 	# Print a message and wait for enter

@@ -1,0 +1,25 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 03_grml_version_file_hook.dpatch by <mika@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Copy /etc/grml_version to initrd
+
+@DPATCH@
+
+diff --git a/hooks/live b/hooks/live
+index b5d43f2..ef95275 100755
+--- a/hooks/live
++++ b/hooks/live
+@@ -38,6 +38,12 @@ then
+        done
+ fi
+ 
++# Grml version information:
++if [ -r /etc/grml_version ]
++then
++       cp /etc/grml_version "${DESTDIR}"/etc
++fi
++
+ # Handling live-boot
+ 
+ # Configuration
