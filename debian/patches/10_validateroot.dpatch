@@ -1,0 +1,40 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 10_validateroot.dpatch by Christian Hofstaedtler <ch@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: add live-bottom/10validateroot
+
+@DPATCH@
+diff --git a/scripts/live-bottom/10validateroot b/scripts/live-bottom/10validateroot
+new file mode 100755
+index 0000000..8d42afc
+--- /dev/null
++++ b/scripts/live-bottom/10validateroot
+@@ -0,0 +1,27 @@
++#!/bin/sh
++
++#set -e
++
++# initramfs-tools header
++
++PREREQ=""
++
++prereqs()
++{
++        echo "${PREREQ}"
++}
++
++case "${1}" in
++        prereqs)
++                prereqs
++                exit 0
++                ;;
++esac
++
++. /scripts/live-functions
++. /scripts/live-helpers
++
++if ! [ -x "/root/sbin/init" ] ; then
++  panic "rootfs can not be mounted as supposed because of fatal error during bootup."
++fi
++

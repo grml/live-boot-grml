@@ -1,0 +1,25 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 08_grml_defaults.dpatch by Christian Hofstaedtler <ch@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Pseudo-brand as grml
+
+@DPATCH@
+diff --git a/scripts/live b/scripts/live
+index d79beed..04ad61e 100755
+--- a/scripts/live
++++ b/scripts/live
+@@ -16,9 +16,9 @@ home_persistence="home-rw"
+ root_snapshot_label="live-sn"
+ home_snapshot_label="home-sn"
+ 
+-USERNAME="user"
+-USERFULLNAME="Live user"
+-HOSTNAME="host"
++USERNAME="grml"
++USERFULLNAME="grml user"
++HOSTNAME="grml"
+ 
+ mkdir -p "${mountpoint}"
+ tried="/tmp/tried"
+

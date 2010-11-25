@@ -1,0 +1,27 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 09_bootoption_noudev.dpatch by Christian Hofstaedtler <ch@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: honor bootoption "noudev"
+
+@DPATCH@
+diff --git a/scripts/live-bottom/23networking b/scripts/live-bottom/23networking
+index 9554b77..f85b29e 100755
+--- a/scripts/live-bottom/23networking
++++ b/scripts/live-bottom/23networking
+@@ -46,8 +46,13 @@ iface lo inet loopback
+ 
+ EOF
+ 
+-udevadm trigger
+-udevadm settle
++if grep -q noudev /proc/cmdline
++then
++	log_begin_msg "Skipping udev as requested via bootoption noudev."
++else
++	udevadm trigger
++	udevadm settle
++fi
+ 
+ if [ -z "${NETBOOT}" -a -n "${STATICIP}" -a "${STATICIP}" != "frommedia" ]
+ then

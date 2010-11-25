@@ -1,0 +1,38 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 05_boot_failure_message_grml.dpatch by  <mika@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Copy /etc/grml_version to initrd
+
+@DPATCH@
+
+diff --git a/scripts/live-functions b/scripts/live-functions
+index 5efe432..faaf23e 100644
+--- a/scripts/live-functions
++++ b/scripts/live-functions
+@@ -88,14 +88,20 @@ panic() {
+ 	printf "     ${DEB_1}\n"
+ 	printf "     ${DEB_2}  \033[1;37mBOOT FAILED!\033[0m\n"
+ 	printf "     ${DEB_3}\n"
+-	printf "     ${DEB_4}  This Debian Live image failed to boot.\n\n"
++	printf "     ${DEB_4}  This image failed to boot.\n\n"
+ 
+-	printf "  Please file a bug against the 'live-boot' package or email the Debian\n"
+-	printf "  Live mailing list at <debian-live@lists.debian.org>, making sure to note the\n"
+-	printf "  exact version, name and distribution of the image you were attempting to boot.\n\n"
++	printf "  Please file a bug at your distributors bug tracking system, making\n"
++	printf "  sure to note the exact version, name and distribution of the image\n"
++	printf "  you were attempting to boot.\n\n"
++
++	if [ -r /etc/grml_version ]
++	then
++		GRML_VERSION="$(cat /etc/grml_version)"
++		printf "  $GRML_VERSION\n\n"
++	fi
+ 
+ 	printf "  The file ${LIVELOG} contains some debugging information but booting with the\n"
+-	printf "  ${DEBUG} command-line parameter will greatly increase its verbosity which is\n"
++	printf "  ${DEBUG}=1 command-line parameter will greatly increase its verbosity which is\n"
+ 	printf "  extremely useful when diagnosing issues.\n\n"
+ 
+ 	if [ -n "${panic}" ]; then
