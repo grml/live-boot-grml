@@ -20,6 +20,10 @@ override_dh_auto_install:
 	# live-boot-initramfs-tools
 	mkdir -p debian/live-boot-initramfs-tools/usr/share
 	mv debian/live-boot/usr/share/initramfs-tools debian/live-boot-initramfs-tools/usr/share
+	# Some more useless files
+	rm -f debian/live-boot-initramfs-tools/usr/share/initramfs-tools/scripts/live-bottom/12fstab
+	rm -f debian/live-boot-initramfs-tools/usr/share/initramfs-tools/scripts/live-bottom/24preseed
+	rm -f debian/live-boot-initramfs-tools/usr/share/initramfs-tools/scripts/live-bottom/30accessibility
 
 override_dh_installinit:
 	dh_installinit -p live-boot --no-restart-on-upgrade --no-start --update-rcd-params='start 89 0 6 .'
