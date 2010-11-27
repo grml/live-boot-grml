@@ -1553,7 +1553,7 @@ check_dev ()
 
 		if [ "$ISO_DEVICE" = "/" ]
 		then
-			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live.log
+			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live-boot.log
 		else
 			mkdir /isofrom
 			mount -t auto "$ISO_DEVICE" /isofrom
@@ -1765,9 +1765,9 @@ mountroot ()
 
 	exec 6>&1
 	exec 7>&2
-	exec > live.log
+	exec > live-boot.log
 	exec 2>&1
-	tail -f live.log >&7 &
+	tail -f live-boot.log >&7 &
 	tailpid="${!}"
 
 	# Ensure 'panic' function is overridden
@@ -1927,5 +1927,5 @@ mountroot ()
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-
 	kill ${tailpid}
-	[ -w "${rootmnt}/var/log/" ] && cp live.log "${rootmnt}/var/log/" 2>/dev/null
+	[ -w "${rootmnt}/var/log/" ] && cp live-boot.log "${rootmnt}/var/log/" 2>/dev/null
 }
