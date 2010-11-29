@@ -230,6 +230,10 @@ Arguments ()
 				export NONETWORKING
 				;;
 
+			ramdisk-size=*)
+				ramdisk_size="${ARGUMENT#ramdisk-size=}"
+				;;
+
 			swapon)
 				SWAPON="Yes"
 				export SWAPON
@@ -537,6 +541,13 @@ copy_live_to ()
 	then
 		log_warning_msg "Not enough free ${free_string} (${freespace}k free, ${size}k needed) to copy live media in ${copytodev}."
 		return 1
+	fi
+
+	# Custom ramdisk size
+	if [ -z "${mount_options}" ] && [ -n "${ramdisk_size}" ]
+	then
+		# FIXME: should check for wrong values
+		mount_options="-o size=${ramdisk_size}"
 	fi
 
 	# begin copying (or uncompressing)
