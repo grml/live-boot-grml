@@ -1,5 +1,5 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
-## 09_fix_resolvconf_pxeboot.dpatch by Michael Prokop <mika@grml.org>
+## 15_remove_resolv_conf_symlink.dpatch by Michael Prokop <mika@grml.org>
 ##
 ## All lines beginning with `## DP:' are a description of the patch.
 ## DP: fix resolvconf handling when booting via PXE
@@ -18,16 +18,16 @@
 
 @DPATCH@
 diff --git a/scripts/live-bottom/23networking b/scripts/live-bottom/23networking
-index 72aaf12..244eeca 100755
---- a/grml/23networking
-+++ b/grml/23networking
+index 9554b77..70ea6e7 100755
+--- a/scripts/live-bottom/23networking
++++ b/scripts/live-bottom/23networking
 @@ -110,6 +110,11 @@ EOF
  	then
  		if [ -f /netboot.config ]
  		then
 +			if [ -h /root/etc/resolv.conf ]
 +			then
-+			        rm /root/etc/resolv.conf
++				rm /root/etc/resolv.conf
 +			fi
 +
  			# create a resolv.conf if it is not present or empty
