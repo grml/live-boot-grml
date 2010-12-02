@@ -46,3 +46,30 @@ index d79beed..04ad61e 100755
  		if is_live_path ${mountpoint} && \
  			([ "${skip_uuid_check}" ] || matches_uuid ${mountpoint})
  		then
+diff --git a/scripts/live b/scripts/live
+index d79beed..d19a5c5 100755
+--- a/scripts/live
++++ b/scripts/live
+@@ -1831,6 +1831,22 @@ mountroot ()
+ 	# when booting FAI, this simple workaround solves it
+ 	ls /root/* >/dev/null 2>&1
+ 
++	# Move findiso directory to the new root filesystem so that programs there can get at it.
++	if [ -d /live/findiso -a ! -d /root/live/findiso ]
++	then
++		mkdir -p /root/live/findiso
++		mount -n --move /live/findiso /root/live/findiso
++	fi
++
++	# if we do not unmount the ISO we can't run "fsck /dev/ice" later on
++	# because the mountpoint is left behind in /proc/mounts, so let's get
++	# rid of it when running from RAM
++	if [ -n "$FINDISO" ] && [ "${TORAM}" ]
++	then
++		losetup -d /dev/loop0
++		grep -q /live/findiso /proc/mounts && umount /root/live/findiso
++	fi
++
+ 	# copy snapshot configuration if exists
+ 	if [ -f snapshot.conf ]
+ 	then
