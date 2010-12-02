@@ -3,6 +3,9 @@
 include /usr/share/dpatch/dpatch.make
 
 build: patch-stamp
+	# this is needed because dpatch doesn't do file modes on diffs.
+	chmod a+rx scripts/live-bottom/*
+	# regular build.
 	dh build
 
 clean: unpatch
