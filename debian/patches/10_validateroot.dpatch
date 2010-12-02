@@ -6,7 +6,6 @@
 
 @DPATCH@
 diff --git a/scripts/live-bottom/10validateroot b/scripts/live-bottom/10validateroot
-new file mode 100755
 index 0000000..8d42afc
 --- /dev/null
 +++ b/scripts/live-bottom/10validateroot
