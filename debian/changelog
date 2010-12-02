@@ -1,3 +1,19 @@
+live-boot (2.0.12-1+grml.00) unstable; urgency=low
+
+  Initial release for grml.
+
+  [ Christian Hofstaedtler ]
+  * add dpatch support to build process
+  * readd grml patches
+  * remove unused boot scripts
+  * update debian/control for grml
+
+  [ Michael Prokop ]
+  * Provide debian/patches/disabled/09_fix_resolvconf_pxeboot.dpatch as
+    15_remove_resolv_conf_symlink.dpatch
+
+ -- Christian Hofstaedtler <ch@grml.org>  Fri, 03 Dec 2010 00:18:47 +0100
+
 live-boot (2.0.12-1) unstable; urgency=medium
 
   [ T(A)ILS developers ]

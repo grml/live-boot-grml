@@ -2,6 +2,7 @@ Source: live-boot
 Section: misc
 Priority: optional
 Maintainer: Grml Team <team@grml.org>
+Uploaders: Christian Hofstaedtler <ch@grml.org>, Michael Prokop <mika@grml.org>
 Build-Depends: debhelper (>= 7.0.50~), dpatch
 Standards-Version: 3.9.1
 Homepage: http://live.debian.net/devel/live-boot/
