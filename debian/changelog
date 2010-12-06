@@ -1,3 +1,21 @@
+live-boot (3.0~a13-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Removing legacy code for detecting removable usb sticks on kernels
+    prior 2.6.29.
+  * Logging to /var/log/live-boot.log instead of /var/log/live.log for
+    future consistency with live-config.
+  * Adding support for custom ramdisk size (Closes: #544583).
+
+  [ Ronny Standtke ]
+  * Remounting cow read-only before prompting user to remove usb flash
+    drive.
+
+  [ Richard Nelson ]
+  * Clean some leading whitespaces.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 06 Dec 2010 11:27:07 +0100
+
 live-boot (3.0~a12-1) experimental; urgency=low
 
   [ T(A)ILS developers ]
