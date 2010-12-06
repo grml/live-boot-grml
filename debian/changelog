@@ -1,3 +1,11 @@
+live-boot (2.0.13-1) unstable; urgency=medium
+
+  [ Ronny Standtke ]
+  * Remounting cow read-only before prompting user to remove usb flash
+    drive.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 06 Dec 2010 11:18:32 +0100
+
 live-boot (2.0.12-1) unstable; urgency=medium
 
   [ T(A)ILS developers ]
