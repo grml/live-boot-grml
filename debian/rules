@@ -4,7 +4,7 @@
 	dh ${@}
 
 override_dh_auto_install:
-	$(MAKE) DESTDIR=$(CURDIR)/debian/live-boot install
+	dh_auto_install
 
 	mkdir -p debian/live-boot-initramfs-tools/usr/share
 	mv debian/live-boot/usr/share/initramfs-tools debian/live-boot-initramfs-tools/usr/share
