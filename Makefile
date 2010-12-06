@@ -6,7 +6,7 @@ LANGUAGES = de
 
 SCRIPTS = bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*
 
-all: test build
+all: build
 
 test:
 	@echo -n "Checking for syntax errors"

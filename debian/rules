@@ -3,9 +3,6 @@
 %:
 	dh ${@}
 
-override_dh_auto_build:
-	# disabled
-
 override_dh_auto_install:
 	$(MAKE) DESTDIR=$(CURDIR)/debian/live-boot install
 
