@@ -1,3 +1,10 @@
+live-boot (2.0.12-1+grml.01) unstable; urgency=low
+
+  * [ed8e483] Always honor the "nodhcp" boot option.
+    Thanks to Ulrich Dangel <mrud@grml.org> for fixing this regression.
+
+ -- Christian Hofstaedtler <ch@grml.org>  Tue, 07 Dec 2010 14:43:02 +0100
+
 live-boot (2.0.12-1+grml.00) unstable; urgency=low
 
   Initial release for grml.
