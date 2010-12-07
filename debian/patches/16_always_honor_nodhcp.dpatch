@@ -1,0 +1,35 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 16_always_honor_nodhcp.dpatch by Ulrich Dangel<mru@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Always honor the nodhcp boot option
+
+@DPATCH@
+
+diff --git a/scripts/live b/scripts/live
+index d79beed..0b698de 100755
+--- a/scripts/live
++++ b/scripts/live
+@@ -83,7 +83,8 @@ Arguments ()
+ 				;;
+ 
+ 			nodhcp)
+-				unset DHCP
++				NODHCP="Yes"
++				export NODHCP
+ 				;;
+ 
+ 			ethdevice=*)
+diff --git a/scripts/live-bottom/23networking b/scripts/live-bottom/23networking
+index 9554b77..a29df57 100755
+--- a/scripts/live-bottom/23networking
++++ b/scripts/live-bottom/23networking
+@@ -79,7 +79,7 @@ fi
+ 
+ 	done
+ else
+-	if [ -z "${NETBOOT}" ] || [ -n "${DHCP}" ]
++	if ( [ -z "${NETBOOT}" ] && [ -z "${NODHCP}" ] ) || [ -n "${DHCP}" ]
+ 	then
+ 		# default, dhcp assigned
+ 		method="dhcp"
