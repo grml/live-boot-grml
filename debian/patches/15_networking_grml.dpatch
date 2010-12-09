@@ -11,7 +11,7 @@
 diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_grml
 --- /dev/null
 +++ b/scripts/live-bottom/23networking_grml
-@@ -0,0 +1,97 @@
+@@ -0,0 +1,102 @@
 +#!/bin/sh
 +
 +#set -e
@@ -56,8 +56,9 @@ diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_
 +   configure_networking
 +fi
 +
-+# prepare a new /etc/network/interfaces file
++# prepare a new /etc/network/interfaces file (and, possibly, a new /etc/resolv.conf)
 +IFFILE="/root/etc/network/interfaces"
++RESOLVCONF="/root/etc/resolv.conf"
 +
 +# config for loopback networking
 +cat > $IFFILE << EOF
@@ -86,12 +87,13 @@ diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_
 +iface ${interface} inet ${method}
 +EOF
 +
-+    # DNS for resolvconf
++    # DNS for resolvconf and /etc/resolv.conf
 +    if [ -e "${netconfig}" ]; then
 +        . "${netconfig}"
 +        if [ -n "${DNSDOMAIN}" ]; then
 +            echo "    dns-search ${DNSDOMAIN}" >> $IFFILE
 +        fi
++        # make sure we don't have any 0.0.0.0 nameservers
 +        IPV4DNSLIST=""
 +        for IPV4DNS in ${IPV4DNS0} ${IPV4DNS1}; do
 +            [ -n "${IPV4DNS}" ] || continue
@@ -100,6 +102,9 @@ diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_
 +        done
 +        if [ -n "${IPV4DNSLIST}" ]; then
 +            echo "    dns-nameservers ${IPV4DNSLIST}" >> $IFFILE
++            for IPV4DNS in ${IPV4DNSLIST}; do
++                echo "nameserver ${IPV4DNS}" >> $RESOLVCONF
++            done
 +        fi
 +    fi
 +    unset DEVICE IPV4ADDR IPV4BROADCAST IPV4NETMASK IPV4GATEWAY IPV4DNS0 IPV4DNS1 HOSTNAME DNSDOMAIN NISDOMAIN ROOTSERVER ROOTPATH filename
