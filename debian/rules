@@ -28,6 +28,7 @@ override_dh_auto_install:
 
 	# Some more useless files
 	rm -f debian/live-boot-initramfs-tools/usr/share/initramfs-tools/scripts/live-bottom/12fstab
+	rm -f debian/live-boot-initramfs-tools/usr/share/initramfs-tools/scripts/live-bottom/23networking
 	rm -f debian/live-boot-initramfs-tools/usr/share/initramfs-tools/scripts/live-bottom/24preseed
 	rm -f debian/live-boot-initramfs-tools/usr/share/initramfs-tools/scripts/live-bottom/30accessibility
 
