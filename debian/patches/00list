@@ -2,10 +2,10 @@
 05_boot_failure_message_grml.dpatch
 07_support_findiso.dpatch
 08_grml_defaults.dpatch
-09_bootoption_noudev.dpatch
 10_validateroot.dpatch
 11_dhcphostname.dpatch
 12_uuid_support.dpatch
 13_always_display_warnings_and_failures.dpatch
 14_no_blkid_on_lenny.dpatch
-16_always_honor_nodhcp.dpatch
+15_networking_grml.dpatch
+16_nodhcp.dpatch

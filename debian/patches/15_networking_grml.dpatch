@@ -1,0 +1,111 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 15_networking_grml.dpatch by Christian Hofstaedtler <ch@grml.org>
+## Licensed under GPLv2+.
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Ship our own networking script, which is compatible with the kernel's
+## DP: notion of ip= as well as resolvconf.
+
+@DPATCH@
+
+diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_grml
+--- /dev/null
++++ b/scripts/live-bottom/23networking_grml
+@@ -0,0 +1,97 @@
++#!/bin/sh
++
++#set -e
++
++# initramfs-tools header
++
++PREREQ=""
++
++prereqs()
++{
++   echo "${PREREQ}"
++}
++
++case "${1}" in
++   prereqs)
++      prereqs
++      exit 0
++   ;;
++esac
++
++. /scripts/live-functions
++
++if [ -n "${NONETWORKING}" ]; then
++   exit 0
++fi
++
++modprobe af_packet # req'd for DHCP
++
++# initialize udev
++# (this /might/ be required for firmware loading to complete)
++if grep -q noudev /proc/cmdline; then
++   log_begin_msg "Networking: Skipping udev as requested via bootoption noudev."
++else
++   udevadm trigger
++   udevadm settle
++fi
++
++if [ -n "${IP}" ]; then
++   # call into initramfs-tools provided network setup functions, so basic
++   # networking is fine.
++   log_begin_msg "Networking: Waiting for basic network to come up..."
++   configure_networking
++fi
++
++# prepare a new /etc/network/interfaces file
++IFFILE="/root/etc/network/interfaces"
++
++# config for loopback networking
++cat > $IFFILE << EOF
++# Initially generated on boot by initramfs' 23networking.
++
++auto lo
++iface lo inet loopback
++
++EOF
++
++# generate config for each present network device
++for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*; do
++    [ -e ${interface} ] || continue
++    interface=$(basename ${interface})
++    method="dhcp"
++
++    # NODHCP or a previously run ipconfig mean that ifupdown should never
++    # touch this interface (IP-stack wise).
++    netconfig=/tmp/net-${interface}.conf
++    if [ -n "$NODHCP" ] || [ -e "${netconfig}" ]; then
++        method="manual"
++    fi
++
++    cat >> $IFFILE << EOF
++allow-hotplug ${interface}
++iface ${interface} inet ${method}
++EOF
++
++    # DNS for resolvconf
++    if [ -e "${netconfig}" ]; then
++        . "${netconfig}"
++        if [ -n "${DNSDOMAIN}" ]; then
++            echo "    dns-search ${DNSDOMAIN}" >> $IFFILE
++        fi
++        IPV4DNSLIST=""
++        for IPV4DNS in ${IPV4DNS0} ${IPV4DNS1}; do
++            [ -n "${IPV4DNS}" ] || continue
++            [ "${IPV4DNS}" != "0.0.0.0" ] || continue
++            IPV4DNSLIST="${IPV4DNSLIST}${IPV4DNS} "
++        done
++        if [ -n "${IPV4DNSLIST}" ]; then
++            echo "    dns-nameservers ${IPV4DNSLIST}" >> $IFFILE
++        fi
++    fi
++    unset DEVICE IPV4ADDR IPV4BROADCAST IPV4NETMASK IPV4GATEWAY IPV4DNS0 IPV4DNS1 HOSTNAME DNSDOMAIN NISDOMAIN ROOTSERVER ROOTPATH filename
++    unset IPV4DNS IPV4DNSLIST
++
++    echo>> $IFFILE
++done
++
++

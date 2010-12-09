@@ -1,0 +1,22 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 16_nodhcp.dpatch by Ulrich Dangel <mru@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Handle explicit "nodhcp"
+
+@DPATCH@
+
+diff --git a/scripts/live b/scripts/live
+index d79beed..0b698de 100755
+--- a/scripts/live
++++ b/scripts/live
+@@ -83,7 +83,8 @@ Arguments ()
+ 				;;
+ 
+ 			nodhcp)
+-				unset DHCP
++				NODHCP="Yes"
++				export NODHCP
+ 				;;
+ 
+ 			ethdevice=*)
