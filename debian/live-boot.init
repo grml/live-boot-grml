@@ -180,7 +180,7 @@ do_stop ()
 
 		else
 			# ejecting is a very good idea here
-			MESSAGE="Please remove the disc, close the the tray (if any)"
+			MESSAGE="Please remove the disc, close the tray (if any)"
 
 			if [ -x /usr/bin/eject ]
 			then
