@@ -4,13 +4,14 @@
 	dh ${@}
 
 override_dh_auto_install:
-	dh_auto_install
-
-	mkdir -p debian/live-boot-initramfs-tools/usr/share
-	mv debian/live-boot/usr/share/initramfs-tools debian/live-boot-initramfs-tools/usr/share
+	dh_auto_install -- DESTDIR=debian/live-boot
 
 	# Removing useless files
 	rm -f debian/live-boot/usr/share/doc/live-boot/COPYING
+
+	# live-boot-initramfs-tools
+	mkdir -p debian/live-boot-initramfs-tools/usr/share
+	mv debian/live-boot/usr/share/initramfs-tools debian/live-boot-initramfs-tools/usr/share
 
 override_dh_installinit:
 	dh_installinit -p live-boot --no-restart-on-upgrade --no-start --update-rcd-params='start 89 0 6 .'
