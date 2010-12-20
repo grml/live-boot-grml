@@ -1,0 +1,53 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 19_revert_toram_bootoption_to_expected_behaviour.dpatch by Michael Prokop <mika@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Revert toram bootoption to expected behaviour.
+## DP:
+## DP: In commit 36bb11382c81d5bce4b69f6d3d618dfd1c38dffb
+## DP: of live-initramfs-grml (when merging Debian's version 1.157.4-1)
+## DP: the behaviour of toram bootoption was modified, see
+## DP: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=534878
+## DP:
+## DP: On Grml we want to have the option to load the whole medium
+## DP: into RAM to e.g. have additional directories like /deb,
+## DP: /scripts or whatever. This is possible using the toram bootoption
+## DP: without any additional arguments.
+## DP:
+## DP: If you do NOT want to load the whole medium to RAM just
+## DP: boot using toram=grml.squashfs (or whatever it's named,
+## DP: there's a ready-to-use bootoption in Grml's bootsplash
+## DP: menu available) instead.
+## DP:
+## DP: Ammusingly the requested behaviour is available in Debian's
+## DP: live-boot if rsync is not available, so this patch
+## DP: actually just unifies the code paths and reverts the
+## DP: behaviour change back to what the log message says.
+
+@DPATCH@
+
+index d79beed..1b6926e 100755
+--- a/scripts/live
++++ b/scripts/live
+@@ -484,7 +484,7 @@ copy_live_to ()
+ 
+ 	if [ -z "${MODULETORAM}" ]
+ 	then
+-		size=$(fs_size "" ${copyfrom}/${LIVE_MEDIA_PATH} "used")
++		size=$(fs_size "" ${copyfrom}/ "used")
+ 	else
+ 		MODULETORAMFILE="${copyfrom}/${LIVE_MEDIA_PATH}/${MODULETORAM}"
+ 
+index d79beed..57d1b41 100755
+--- a/scripts/live
++++ b/scripts/live
+@@ -553,8 +553,7 @@ copy_live_to ()
+ 				echo " * Copying whole medium to RAM" 1>/dev/console
+ 				rsync -a --progress ${copyfrom}/* ${copyto} 1>/dev/console  # "cp -a" from busybox also copies hidden files
+ 			else
+-				mkdir -p ${copyto}/${LIVE_MEDIA_PATH}
+-				cp -a ${copyfrom}/${LIVE_MEDIA_PATH}/* ${copyto}/${LIVE_MEDIA_PATH}
++				cp -a ${copyfrom}/* ${copyto}/
+ 				if [ -e ${copyfrom}/${LIVE_MEDIA_PATH}/.disk ]
+ 				then
+ 					cp -a ${copyfrom}/${LIVE_MEDIA_PATH}/.disk ${copyto}
