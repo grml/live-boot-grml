@@ -9,3 +9,4 @@
 14_no_blkid_on_lenny.dpatch
 15_networking_grml.dpatch
 16_nodhcp.dpatch
+17_fix_usage_of_manual_add_modules.dpatch

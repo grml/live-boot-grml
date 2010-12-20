@@ -1,0 +1,20 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 17_fix_usage_of_manual_add_modules.dpatch by Michael Prokop <mika@grml.org>
+##
+## DP: manual_add_modules does not support multiple options, therefore
+## DP: mtdblock isn't part of initramfs.
+
+@DPATCH@
+
+--- a/hooks/live
++++ b/hooks/live
+@@ -181,7 +181,8 @@ copy_exec /usr/bin/md5sum /bin
+ if [ -x /usr/bin/memdiskfind ]
+ then
+ 	copy_exec /usr/bin/memdiskfind
+-	manual_add_modules phram mtdblock
++	manual_add_modules phram
++	manual_add_modules mtdblock
+ fi
+ 
+ # Program: cpio
