@@ -11,3 +11,4 @@
 16_nodhcp.dpatch
 17_fix_usage_of_manual_add_modules.dpatch
 18_support_mtdblock_as_device_name.dpatch
+19_revert_toram_bootoption_to_expected_behaviour.dpatch
