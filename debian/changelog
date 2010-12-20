@@ -1,3 +1,15 @@
+live-boot (2.0.12-1+grml.03) unstable; urgency=low
+
+  * [ebe30c3] Fix usage of manual_add_modules for memdisk boot.
+    manual_add_modules does not support multiple options, therefore
+    mtdblock wasn't part of the initramfs.
+  * [2f4cf82] Support /dev/mtdblock0 as valid device name to
+    proberly support memdisk boot.
+  * [4582073] Fix behaviour of toram bootoption (without any
+    additional arguments) to correctly copy whole medium to RAM.
+
+ -- Michael Prokop <mika@grml.org>  Mon, 20 Dec 2010 17:57:38 +0100
+
 live-boot (2.0.12-1+grml.02) unstable; urgency=low
 
   * Rely on the kernel and initramfs-tools for bootoption ip=. We therefore
