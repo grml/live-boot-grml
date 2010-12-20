@@ -1,0 +1,18 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 18_support_mtdblock_as_device_name.dpatch by Michael Prokop <mika@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Support /dev/mtdblock0 as valid device name (for memdisk boot).
+
+--- a/scripts/live
++++ b/scripts/live
+@@ -471,6 +471,9 @@ is_nice_device ()
+ 	elif echo ${sysfs_path} | grep -q "^/block/dm-"
+ 	then
+ 		return 0
++	elif echo ${sysfs_path} | grep -q "^/block/mtdblock"
++	then
++		return 0
+ 	fi
+ 
+ 	return 1
