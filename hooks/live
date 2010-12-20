@@ -175,7 +175,8 @@ copy_exec /usr/bin/md5sum /bin
 if [ -x /usr/bin/memdiskfind ]
 then
 	copy_exec /usr/bin/memdiskfind
-	manual_add_modules phram mtdblock
+	manual_add_modules phram
+	manual_add_modules mtdblock
 fi
 
 # Program: cpio
