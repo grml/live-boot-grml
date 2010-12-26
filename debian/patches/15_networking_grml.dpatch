@@ -11,7 +11,7 @@
 diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_grml
 --- /dev/null
 +++ b/scripts/live-bottom/23networking_grml
-@@ -0,0 +1,102 @@
+@@ -0,0 +1,107 @@
 +#!/bin/sh
 +
 +#set -e
@@ -69,6 +69,8 @@ diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_
 +
 +EOF
 +
++unset HOSTNAME
++
 +# generate config for each present network device
 +for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*; do
 +    [ -e ${interface} ] || continue
@@ -107,10 +109,14 @@ diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_
 +            done
 +        fi
 +    fi
++
++    if [ -z "$NODHCPHOSTNAME" -a -n "$HOSTNAME" ]; then
++        echo $HOSTNAME > /root/etc/hostname
++    fi
++
 +    unset DEVICE IPV4ADDR IPV4BROADCAST IPV4NETMASK IPV4GATEWAY IPV4DNS0 IPV4DNS1 HOSTNAME DNSDOMAIN NISDOMAIN ROOTSERVER ROOTPATH filename
 +    unset IPV4DNS IPV4DNSLIST
 +
 +    echo>> $IFFILE
 +done
-+
 +
