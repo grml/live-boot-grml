@@ -1,3 +1,9 @@
+live-boot (2.0.12-1+grml.04) unstable; urgency=low
+
+  * [ac134a9] Merge dhcphostname support into 23networking-grml
+
+ -- Christian Hofstaedtler <ch@grml.org>  Mon, 27 Dec 2010 08:44:00 +0100
+
 live-boot (2.0.12-1+grml.03) unstable; urgency=low
 
   * [ebe30c3] Fix usage of manual_add_modules for memdisk boot.
