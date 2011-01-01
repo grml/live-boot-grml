@@ -42,6 +42,9 @@ build:
 
 install:
 	# Installing executables
+	mkdir -p $(DESTDIR)/bin
+	cp bin/live-system $(DESTDIR)/bin
+
 	mkdir -p $(DESTDIR)/sbin
 	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile bin/live-toram $(DESTDIR)/sbin
 
@@ -77,7 +80,7 @@ install:
 
 uninstall:
 	# Uninstalling executables
-	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile $(DESTDIR)/sbin/live-toram
+	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile $(DESTDIR)/bin/live-system $(DESTDIR)/sbin/live-toram
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin
 
 	rm -rf $(DESTDIR)/usr/share/live-boot
