@@ -47,15 +47,12 @@ cache_path()
 		find "${path}" -type f | xargs cat > /dev/null 2>&1
 	elif [ -f "${path}" ]
 	then
-		if [ -x "${path}" ]
+		if file -L "${path}" | grep -q 'dynamically linked'
 		then
-			if file -L "${path}" | grep -q 'dynamically linked'
-			then
-				for lib in $(ldd "${path}" | awk '{ print $3 }')
-				do
-					cache_path "${lib}"
-				done
-			fi
+			for lib in $(ldd "${path}" | awk '{ print $3 }')
+			do
+				cache_path "${lib}"
+			done
 		fi
 
 		cat "${path}" >/dev/null 2>&1
