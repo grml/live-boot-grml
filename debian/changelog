@@ -1,3 +1,26 @@
+live-boot (3.0~a14-1) experimental; urgency=low
+
+  [ Richard Nelson ]
+  * Populate adapters in /etc/network/interfaces when ethdevice= on
+    cmdline.
+
+  [ Daniel Baumann ]
+  * Removing header in copyright file.
+  * Don't hard-depend on test target in Makefile.
+  * Using dh auto magic in override, rather than manual make call.
+
+  [ Steven Shiau ]
+  * Removing the duplicated "the" in the live-boot.init script.
+
+  [ Daniel Baumann ]
+  * Updating auto_install overrides in rules.
+  * Correcting live hook to include mtdblock for syslinux memdisk usage,
+    thanks to Michael Prokop <mika@grml.org>.
+  * Supporting /dev/mtdblock0 as valid device name (for memdisk boot),
+    thanks to Michael Prokop <mika@grml.org>.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 11 Jan 2011 13:38:56 +0100
+
 live-boot (3.0~a13-1) experimental; urgency=low
 
   [ Daniel Baumann ]
