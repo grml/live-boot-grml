@@ -7,7 +7,7 @@
 #   for reuse in another live-boot session.
 #   Look at the manpage for more informations.
 #
-# Copyright (C) 2006-2010 Marco Amadori <marco.amadori@gmail.com>
+# Copyright (C) 2006-2011 Marco Amadori <marco.amadori@gmail.com>
 # Copyright (C) 2008 Chris Lamb <chris@chris-lamb.co.uk>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -125,12 +125,12 @@ Version ()
 {
 	echo "${PROGRAM}"
 	echo
-	echo "Copyright (C) 2006 Marco Amadori <marco.amadori@gmail.com>"
+	echo "Copyright (C) 2006-2011 Marco Amadori <marco.amadori@gmail.com>"
 	echo "Copyright (C) 2008 Chris Lamb <chris@chris-lamb.co.uk>"
 	echo
 	echo "This program is free software; you can redistribute it and/or modify"
 	echo "it under the terms of the GNU General Public License as published by"
-	echo "the Free Software Foundation; either version 2 of the License, or"
+	echo "the Free Software Foundation; either version 3 of the License, or"
 	echo "(at your option) any later version."
 	echo
 	echo "This program is distributed in the hope that it will be useful,"
@@ -143,7 +143,7 @@ Version ()
 	echo "Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA"
 	echo
 	echo "On Debian systems, the complete text of the GNU General Public License"
-	echo "can be found in /usr/share/common-licenses/GPL-2 file."
+	echo "can be found in /usr/share/common-licenses/GPL-3 file."
 	echo
 	echo "Homepage: <http://debian-live.alioth.debian.org/>"
 
