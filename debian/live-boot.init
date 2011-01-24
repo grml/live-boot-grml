@@ -136,7 +136,7 @@ do_stop ()
 	fi
 
 	prompt=1
-	if [ ${NOPROMPT} = "Yes" ]
+	if [ "${NOPROMPT}" = "Yes" ]
 	then
 		prompt=
 	fi
@@ -173,7 +173,7 @@ do_stop ()
 			# "ejected" state even after reboot
 			MESSAGE="Please remove the USB flash drive"
 
-			if [ ${NOPROMPT} = "usb" ]
+			if [ "${NOPROMPT}" = "usb" ]
 			then
 				prompt=
 			fi
