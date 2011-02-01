@@ -1,3 +1,14 @@
+live-boot (2.0.15-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Adding live-system script from live-tools.
+  * Updating year in copyright.
+
+  [ Marco Amadori ]
+  * Adjust copyright entry in live-snapshot.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 01 Feb 2011 22:49:03 +0100
+
 live-boot (2.0.14-1) unstable; urgency=low
 
   [ Steven Shiau ]
