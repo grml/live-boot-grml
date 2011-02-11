@@ -1471,7 +1471,8 @@ setup_unionfs ()
 			unionfs-fuse)
 				unionmountopts="-o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid"
 				unionmountopts="${unionmountopts} ${unionrw}=RW:${unionro}=RO"
-				( ulimit -n 16384 ; unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
+				( sysctl -w fs.file-max=391524 ; ulimit -HSn 16384
+				unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
 					( mkdir -p /dev/.initramfs/varrun
 				pidof unionfs-fuse >> /dev/.initramfs/varrun/sendsigs.omit || true )
 				;;
