@@ -1578,11 +1578,16 @@ check_dev ()
 		then
 			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live-boot.log
 		else
-			mkdir /isofrom
-			mount -t auto "$ISO_DEVICE" /isofrom
-			ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
-			loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
-			devname="${loopdevname}"
+			fs_type=$(get_fstype "${ISO_DEVICE}")
+			if is_supported_fs ${fs_type}
+			then
+				mkdir /isofrom
+				mount -t $fs_type "$ISO_DEVICE" /isofrom
+				ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
+				loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
+				devname="${loopdevname}"
+			else
+				echo "Warning: unable to mount $ISO_DEVICE." >>/live.log
 		fi
 	fi
 
