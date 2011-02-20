@@ -1588,6 +1588,7 @@ check_dev ()
 				devname="${loopdevname}"
 			else
 				echo "Warning: unable to mount $ISO_DEVICE." >>/live.log
+			fi
 		fi
 	fi
 
