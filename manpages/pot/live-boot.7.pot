@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2010-09-02 18:30+0300\n"
+"POT-Creation-Date: 2010-09-02 22:46+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "3.0~a3"
+msgid "3.0~a4"
 msgstr ""
 
 #. type: TH
@@ -126,8 +126,8 @@ msgstr ""
 msgid ""
 "B<live-boot> can be configured (but not activated) through configuration "
 "files. Those files can be placed either in the root filesystem itself (/etc/"
-"live/boot.conf, /etc/live/boot.conf.d/), or on the live media (live/boot."
-"conf, live/boot.conf.d/)."
+"live/boot.conf, /etc/live/boot.d/), or on the live media (live/boot.conf, "
+"live/boot.d/)."
 msgstr ""
 
 #. type: SH
@@ -738,7 +738,7 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:139
 #, no-wrap
-msgid "B</etc/live/boot.conf.d/>"
+msgid "B</etc/live/boot.d/>"
 msgstr ""
 
 #. type: IP
@@ -750,7 +750,7 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:141
 #, no-wrap
-msgid "B<live/boot.conf.d/>"
+msgid "B<live/boot.d/>"
 msgstr ""
 
 #. type: SH
