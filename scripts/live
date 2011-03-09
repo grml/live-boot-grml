@@ -68,6 +68,10 @@ Arguments ()
 				export DEFCONSOLE
 				;;
 
+			BOOTIF=*)
+				BOOTIF="${x#BOOTIF=}"
+				;;
+
 			debug)
 				DEBUG="Yes"
 				export DEBUG
@@ -577,9 +581,60 @@ do_netsetup ()
 	udevadm trigger
 	udevadm settle
 
+	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
+	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
+
 	if [ -z "${NETBOOT}" ] && [ -z "${FETCH}" ] && \
 	   [ -z "${HTTPFS}" ] && [ -z "${FTPFS}" ]
 	then
+
+
+	# support for Syslinux IPAPPEND parameter
+	# it sets the BOOTIF variable on the kernel parameter
+
+	if [ -n "${BOOTIF}" ]
+	then
+		# pxelinux sets BOOTIF to a value based on the mac address of the
+		# network card used to PXE boot, so use this value for DEVICE rather
+		# than a hard-coded device name from initramfs.conf. this facilitates
+		# network booting when machines may have multiple network cards.
+		# pxelinux sets BOOTIF to 01-$mac_address
+
+		# strip off the leading "01-", which isn't part of the mac
+		# address
+		temp_mac=${BOOTIF#*-}
+
+		# convert to typical mac address format by replacing "-" with ":"
+		bootif_mac=""
+		IFS='-'
+		for x in $temp_mac
+		do
+			if [ -z "$bootif_mac" ]
+			then
+				bootif_mac="$x"
+			else
+				bootif_mac="$bootif_mac:$x"
+			fi
+		done
+		unset IFS
+
+		# look for devices with matching mac address, and set DEVICE to
+		# appropriate value if match is found.
+
+		for device in /sys/class/net/*
+		do
+			if [ -f "$device/address" ]
+			then
+				current_mac=$(cat "$device/address")
+
+				if [ "$bootif_mac" = "$current_mac" ]
+				then
+					DEVICE=${device##*/}
+					break
+				fi
+			fi
+		done
+	fi
 
 	# if ethdevice was not specified on the kernel command line
 	# make sure we try to get a working network configuration
@@ -598,9 +653,6 @@ do_netsetup ()
 	for device in $(echo $ETHDEVICE | sed 's/,/ /g') ; do
 		devlist="$devlist $device"
 	done
-
-	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
-	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
 
 	# this is tricky (and ugly) because ipconfig sometimes just hangs/runs into
 	# an endless loop; iff execution fails give it two further tries, that's
@@ -625,45 +677,54 @@ do_netsetup ()
 	done
 
 	else
-	ipconfig ${DEVICE} | tee /netboot.config
-	fi
-
-	# source relevant ipconfig output
-	OLDHOSTNAME=${HOSTNAME}
-	. /tmp/net-${DEVICE}.conf
-	[ -z ${HOSTNAME} ] && HOSTNAME=${OLDHOSTNAME}
-	export HOSTNAME
-
-	if [ -n "${DEVICE}" ]
-	then
-		HWADDR="$(cat /sys/class/net/${DEVICE}/address)"
-	fi
-
-	if [ ! -e "/etc/resolv.conf" ]
-	then
-		echo "Creating /etc/resolv.conf"
-
-		if [ -n "${DNSDOMAIN}" ]
-		then
-			echo "domain ${DNSDOMAIN}" > /etc/resolv.conf
-			echo "search ${DNSDOMAIN}" > /etc/resolv.conf
-		fi
-
-		for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1}
-		do
-			echo "nameserver $i" >> /etc/resolv.conf
+		for interface in ${DEVICE}; do
+			ipconfig -t "$ETHDEV_TIMEOUT" ${interface} | tee /netboot-${interface}.config
+			[ -e /tmp/net-${interface}.conf ] && . /tmp/net-${interface}.conf
+			if [ "$IPV4ADDR" != "0.0.0.0" ]
+			then
+				break
+			fi
 		done
 	fi
 
-	# Check if we have a network device at all
-	if ! ls /sys/class/net/"$DEVICE" > /dev/null 2>&1 && \
-	   ! ls /sys/class/net/eth0 > /dev/null 2>&1 && \
-	   ! ls /sys/class/net/wlan0 > /dev/null 2>&1 && \
-	   ! ls /sys/class/net/ath0 > /dev/null 2>&1 && \
-	   ! ls /sys/class/net/ra0 > /dev/null 2>&1
-	then
-		panic "No supported network device found, maybe a non-mainline driver is required."
-	fi
+	for interface in ${DEVICE}; do
+		# source relevant ipconfig output
+		OLDHOSTNAME=${HOSTNAME}
+		[ -e /tmp/net-${interface}.conf ] && . /tmp/net-${interface}.conf
+		[ -z ${HOSTNAME} ] && HOSTNAME=${OLDHOSTNAME}
+		export HOSTNAME
+
+		if [ -n "${interface}" ]
+		then
+			HWADDR="$(cat /sys/class/net/${interface}/address)"
+		fi
+
+		if [ ! -e "/etc/resolv.conf" ]
+		then
+			echo "Creating /etc/resolv.conf"
+
+			if [ -n "${DNSDOMAIN}" ]
+			then
+				echo "domain ${DNSDOMAIN}" > /etc/resolv.conf
+				echo "search ${DNSDOMAIN}" > /etc/resolv.conf
+			fi
+
+			for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1}
+			do
+				echo "nameserver $i" >> /etc/resolv.conf
+			done
+		fi
+
+		# Check if we have a network device at all
+		if ! ls /sys/class/net/"$interface" > /dev/null 2>&1 && \
+		   ! ls /sys/class/net/eth0 > /dev/null 2>&1 && \
+		   ! ls /sys/class/net/wlan0 > /dev/null 2>&1 && \
+		   ! ls /sys/class/net/ath0 > /dev/null 2>&1 && \
+		   ! ls /sys/class/net/ra0 > /dev/null 2>&1
+		then
+			panic "No supported network device found, maybe a non-mainline driver is required."
+		fi
+	done
 }
 
 do_netmount()
@@ -1812,6 +1873,12 @@ mountroot ()
 		mkdir -p /root/live/image
 		mount --move /live/image /root/live/image
 	fi
+
+	# aufs2 in kernel versions around 2.6.33 has a regression:
+	# directories can't be accessed when read for the first the time,
+	# causing a failure for example when accessing /var/lib/fai
+	# when booting FAI, this simple workaround solves it
+	ls /root/* >/dev/null 2>&1
 
 	maybe_break live-bottom
 	log_begin_msg "Running /scripts/live-bottom\n"
