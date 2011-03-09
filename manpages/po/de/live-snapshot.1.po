@@ -4,8 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 3.0~a6\n"
-"POT-Creation-Date: 2010-09-25 22:45+0300\n"
+"Project-Id-Version: live-boot 3.0~a8\n"
+"POT-Creation-Date: 2010-10-02 10:16+0300\n"
 "PO-Revision-Date: 2010-05-24 12:34+0300\n"
 "Last-Translator: Daniel Baumann <daniel@debian.org>\n"
 "Language-Team: none\n"
@@ -24,14 +24,14 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "2010-09-25"
-msgstr "25.09.2010"
+msgid "2010-10-02"
+msgstr "02.10.2010"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "3.0~a7"
-msgstr "3.0~a7"
+msgid "3.0~a8"
+msgstr "3.0~a8"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1
@@ -58,26 +58,26 @@ msgid "OPTIONS"
 msgstr "OPTIONEN"
 
 #. type: IP
-#: en/live-boot.7:127 en/live-snapshot.1:43
+#: en/live-boot.7:129 en/live-snapshot.1:43
 #, no-wrap
 msgid "B</etc/live.conf>"
 msgstr "B</etc/live.conf>"
 
 #. type: Plain text
-#: en/live-boot.7:129 en/live-snapshot.1:45
+#: en/live-boot.7:131 en/live-snapshot.1:45
 msgid ""
 "Some variables can be configured via this config file (inside the live "
 "system)."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:129 en/live-snapshot.1:45
+#: en/live-boot.7:131 en/live-snapshot.1:45
 #, no-wrap
 msgid "B<live/filesystem.module>"
 msgstr "B<live/filesystem.module>"
 
 #. type: Plain text
-#: en/live-boot.7:131 en/live-snapshot.1:47
+#: en/live-boot.7:133 en/live-snapshot.1:47
 msgid ""
 "This optional file (inside the live media) contains a list of white-space or "
 "carriage-return-separated file names corresponding to disk images in the \"/"
@@ -90,13 +90,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:131 en/live-snapshot.1:47
+#: en/live-boot.7:133 en/live-snapshot.1:47
 #, no-wrap
 msgid "B</etc/live-persistence.binds>"
 msgstr "B</etc/live-persistence.binds>"
 
 #. type: Plain text
-#: en/live-boot.7:133 en/live-snapshot.1:49
+#: en/live-boot.7:135 en/live-snapshot.1:49
 msgid ""
 "This optional file (which resides in the rootfs system, not in the live "
 "media) is used as a list of directories which not need be persistent: ie. "
@@ -105,7 +105,7 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:136 en/live-snapshot.1:51
+#: en/live-boot.7:138 en/live-snapshot.1:51
 msgid ""
 "This saves expensive writes and speeds up operations on volatile data such "
 "as web caches and temporary files (like e.g. /tmp and .mozilla) which are "
@@ -114,40 +114,40 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:137 en/live-snapshot.1:42
+#: en/live-boot.7:139 en/live-snapshot.1:42
 #, no-wrap
 msgid "FILES"
 msgstr "DATEIEN"
 
 #. type: SH
-#: en/live-boot.7:143 en/live-snapshot.1:52
+#: en/live-boot.7:145 en/live-snapshot.1:52
 #, no-wrap
 msgid "SEE ALSO"
 msgstr "SIEHE AUCH"
 
 #. type: Plain text
-#: en/live-boot.7:147 en/live-snapshot.1:56
+#: en/live-boot.7:149 en/live-snapshot.1:56
 msgid "I<live-build>(7)"
 msgstr "I<live-build>(7)"
 
 #. type: Plain text
-#: en/live-boot.7:149 en/live-snapshot.1:58
+#: en/live-boot.7:151 en/live-snapshot.1:58
 msgid "I<live-config>(7)"
 msgstr "I<live-config>(7)"
 
 #. type: Plain text
-#: en/live-boot.7:151 en/live-snapshot.1:60
+#: en/live-boot.7:153 en/live-snapshot.1:60
 msgid "I<live-tools>(7)"
 msgstr "I<live-tools>(7)"
 
 #. type: SH
-#: en/live-boot.7:152 en/live-snapshot.1:61
+#: en/live-boot.7:154 en/live-snapshot.1:61
 #, no-wrap
 msgid "HOMEPAGE"
 msgstr "HOMEPAGE"
 
 #. type: Plain text
-#: en/live-boot.7:154 en/live-snapshot.1:63
+#: en/live-boot.7:156 en/live-snapshot.1:63
 msgid ""
 "More information about live-boot and the Debian Live project can be found on "
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
@@ -158,13 +158,13 @@ msgstr ""
 "unter E<lt>I<http://live.debian.net/manual/>E<gt> gefunden werden."
 
 #. type: SH
-#: en/live-boot.7:155 en/live-snapshot.1:64
+#: en/live-boot.7:157 en/live-snapshot.1:64
 #, no-wrap
 msgid "BUGS"
 msgstr "FEHLER"
 
 #. type: Plain text
-#: en/live-boot.7:157 en/live-snapshot.1:66
+#: en/live-boot.7:159 en/live-snapshot.1:66
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
 "the Debian Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
@@ -178,13 +178,13 @@ msgstr ""
 "werden."
 
 #. type: SH
-#: en/live-boot.7:158 en/live-snapshot.1:67
+#: en/live-boot.7:160 en/live-snapshot.1:67
 #, no-wrap
 msgid "AUTHOR"
 msgstr "AUTOR"
 
 #. type: Plain text
-#: en/live-boot.7:159 en/live-snapshot.1:68
+#: en/live-boot.7:161 en/live-snapshot.1:68
 msgid ""
 "live-boot was written by Daniel Baumann E<lt>I<daniel@debian.org>E<gt> for "
 "the Debian project."

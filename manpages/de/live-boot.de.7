@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 25.09.2010 3.0~a7 "Debian Live Projekt"
+.TH LIVE\-BOOT 7 02.10.2010 3.0~a8 "Debian Live Projekt"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Skripte
@@ -175,6 +175,12 @@ times.
 live\-boot will look for persistency files in the root directory of a
 partition, with this parameter, the path can be configured so that you can
 have multiple directories on the same partition to store persistency files.
+.IP \fBpersistent\-subtext\fP=\fISUFFIX\fP 4
+Add a suffix when searching for the image filenames or partition labels to
+use for the above mentioned persistent feature, the SUFFIX will be added
+after a dash (e.g.: "live\-sn" would transform to "live\-sn\-SUFFIX"). This is
+handy to test multiple live\-boot based live\-systems with different
+persistent storage choices.
 .IP {\fBpreseed/file\fP|\fBfile\fP}=\fIFILE\fP 4
 A path to a file present on the rootfs could be used to preseed debconf
 database.
