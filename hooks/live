@@ -61,7 +61,7 @@ cp /usr/share/initramfs-tools/scripts/live-helpers "${DESTDIR}"/scripts
 # klibc dependencies
 for FILE in /lib/libacl* /lib/libblkid* /lib/libuuid* /lib/libdevmapper* /lib/libattr*
 do
-	if [ ! -e "${DESTDIR}"/"${FILE}" ]
+	if [ ! -e "${DESTDIR}"/"${FILE}" ] && ls ${FILE} > /dev/null 2>&1
 	then
 		cp -a "${FILE}" "${DESTDIR}"/"${FILE}"
 	fi
