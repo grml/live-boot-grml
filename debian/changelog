@@ -1,3 +1,23 @@
+live-boot (3.0~a15-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating year in copyright.
+
+  [ Marco Amadori ]
+  * Adjust copyright entry in live-snapshot.
+  * Protect NOPROMPT (Closes: #610941).
+
+  [ Michal Suchanek ]
+  * Simplify union mounting.
+  * Really set limit on open files for unionfs-fuse
+  * Add verbose messages to initramfs hook.
+
+  [ T(A)ILS developers ]
+  * Fixing remaining fromiso= bug.
+  * Fixing syntax error.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 09 Mar 2011 18:01:07 +0100
+
 live-boot (3.0~a14-1) experimental; urgency=low
 
   [ Richard Nelson ]
