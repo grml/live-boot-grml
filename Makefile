@@ -43,7 +43,7 @@ build:
 install:
 	# Installing executables
 	mkdir -p $(DESTDIR)/sbin
-	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile bin/live-toram $(DESTDIR)/sbin
+	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin
 
 	mkdir -p $(DESTDIR)/usr/share/live-boot
 	cp bin/live-preseed bin/live-reconfigure local/languagelist $(DESTDIR)/usr/share/live-boot
@@ -77,27 +77,15 @@ install:
 
 uninstall:
 	# Uninstalling executables
-	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile $(DESTDIR)/sbin/live-toram
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin
-
+	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
 	rm -rf $(DESTDIR)/usr/share/live-boot
-
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	rm -rf $(DESTDIR)/usr/share/initramfs-tools/scripts/live*
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top/live
 
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/hooks
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr
-
 	# Uninstalling docs
 	rm -rf $(DESTDIR)/usr/share/doc/live-boot
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/doc
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr
+	# (FIXME)
 
 	# Uninstalling manpages
 	for MANPAGE in manpages/en/*; \
@@ -115,22 +103,8 @@ uninstall:
 		done; \
 	done
 
-	for SECTION in $(ls manpages/en/* | awk -F. '{ print $2 }'); \
-	do \
-		rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man/man$${SECTION} || true; \
-		rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man/*/man$${SECTION} || true; \
-	done
-
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr || true
-
-	rmdir --ignore-fail-on-non-empty $(DESTDIR) || true
-
 clean:
-	@echo "Nothing to clean."
 
-distclean: clean
-	@echo "Nothing to distclean."
+distclean:
 
 reinstall: uninstall install

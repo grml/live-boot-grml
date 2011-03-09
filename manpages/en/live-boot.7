@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2011\-02\-01 2.0.15 "Debian Live Project"
+.TH LIVE\-BOOT 7 2010\-08\-10 3.0~a1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -21,7 +21,7 @@ At boot time it will look for a (read\-only) media containing a "/live" director
 In addition, there are some more boot parameters to influence the behaviour, see below.
 
 .SS Configuration Files
-\fBlive\-boot\fR can be configured (but not activated) through configuration files. Those files can be placed either in the root filesystem itself (/etc/live/boot.conf, /etc/live/boot.d/), or on the live media (live/boot.conf, live/boot.d/).
+\fBlive\-boot\fR can be configured (but not activated) through configuration files. Those files can be placed either in the root filesystem itself (/etc/live/boot.conf, /etc/live/boot.conf.d/), or on the live media (live/boot.conf, live/boot.conf.d/).
 
 .SH OPTIONS
 \fBlive\-boot\fR currently features the following parameters.
@@ -100,16 +100,10 @@ disables the "persistent" feature, useful if the bootloader (like syslinux) has 
 Do not prompt to eject the CD or remove the USB flash drive on reboot.
 .IP "\fBswapon\fR" 4
 This parameter enables usage of local swap partitions.
-.IP "\fBpersistent\fR[={nofiles|cryptsetup}]" 4
-live\-boot will look for persistent and snapshot partitions or files labeled "live\-rw", "home\-rw", and files called "live\-sn*", "home\-sn*" and will try to, in order: mount as /cow the first, mount the second in /home, and just copy the contents of the latter in appropriate locations (snapshots). Snapshots will be tried to be updated on reboot/shutdown. Look at live\-snapshot(1) for more informations.
-.br
-If "nofiles" is specified, only filesystems with matching labels will be searched; no filesystems will be traversed looking for archives or image files. This results in shorter boot times.
-.br
-If "cryptsetup" is specified, filesystems stored on Luks\-encrypted devices will be considered as well as others when searching for a persistence filesystem; the user will be prompted for any needed decryption passphrase.
+.IP "\fBpersistent\fR[=nofiles]" 4
+live\-boot will look for persistent and snapshot partitions or files labeled "live\-rw", "home\-rw", and files called "live\-sn*", "home\-sn*" and will try to, in order: mount as /cow the first, mount the second in /home, and just copy the contents of the latter in appropriate locations (snapshots). Snapshots will be tried to be updated on reboot/shutdown. Look at live\-snapshot(1) for more informations. If "nofiles" is specified, only filesystems with matching labels will be searched; no filesystems will be traversed looking for archives or image files. This results in shorter boot times.
 .IP "\fBpersistent\-path\fR=\fIPATH\fR" 4
 live\-boot will look for persistency files in the root directory of a partition, with this parameter, the path can be configured so that you can have multiple directories on the same partition to store persistency files.
-.IP "\fBpersistent\-subtext\fR=\fISUFFIX\fR" 4
-Add a suffix when searching for the image filenames or partition labels to use for the above mentioned persistent feature, the SUFFIX will be added after a dash (e.g.: "live-sn" would transform to "live-sn-SUFFIX"). This is handy to test multiple live-boot based live-systems with different persistent storage choices.
 .IP "{\fBpreseed/file\fR|\fBfile\fR}=\fIFILE\fR" 4
 A path to a file present on the rootfs could be used to preseed debconf database.
 .IP "\fBpackage/question\fR=\fIVALUE\fR" 4
@@ -142,16 +136,16 @@ This saves expensive writes and speeds up operations on volatile data such as we
 
 .SH FILES
 .IP "\fB/etc/live/boot.conf\fR" 4
-.IP "\fB/etc/live/boot.d/\fR" 4
+.IP "\fB/etc/live/boot.conf.d/\fR" 4
 .IP "\fBlive/boot.conf\fR" 4
-.IP "\fBlive/boot.d/\fR" 4
+.IP "\fBlive/boot.conf.d/\fR" 4
 
 .SH SEE ALSO
 \fIlive\-snapshot\fR(1)
 .PP
-\fIlive\-build\fR(7)
-.PP
 \fIlive\-config\fR(7)
+.PP
+\fIlive\-helper\fR(7)
 
 .SH HOMEPAGE
 More information about live\-boot and the Debian Live project can be found on the homepage at <\fIhttp://live.debian.net/\fR> and in the manual at <\fIhttp://live.debian.net/manual/\fR>.

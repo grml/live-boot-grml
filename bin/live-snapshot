@@ -7,7 +7,7 @@
 #   for reuse in another live-boot session.
 #   Look at the manpage for more informations.
 #
-# Copyright (C) 2006-2010 Marco Amadori <marco.amadori@gmail.com>
+# Copyright (C) 2006-2008 Marco Amadori <marco.amadori@gmail.com>
 # Copyright (C) 2008 Chris Lamb <chris@chris-lamb.co.uk>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@ fi
 
 . /usr/share/initramfs-tools/scripts/live-helpers
 
-LIVE_CONF="/etc/live/boot.d/snapshot.conf"
+LIVE_CONF="/etc/live.conf"
 
 if [ -r "${LIVE_CONF}" ]
 then
@@ -242,7 +242,7 @@ Defaults ()
 	# Parse resync string
 	if [ -n "${SNAP_RESYNC_STRING}" ]
 	then
-		SNAP_COW=$(echo "${SNAP_RESYNC_STRING}" | sed -r -e 's#^([^:]*).*$#'"${DEF_SNAP_COW}"'\1#')
+		SNAP_COW=$(echo "${SNAP_RESYNC_STRING}" | sed -e 's|^/root\([^:.]*\).*$|'"${DEF_SNAP_COW}"'\1|')
 		SNAP_DEV=$(echo "${SNAP_RESYNC_STRING}" | cut -f2 -d ':')
 		SNAP_MNT=$(echo "${SNAP_RESYNC_STRING}" | cut -f3 -d ':')
 		DEST="${MOUNTP}/${SNAP_MNT}"

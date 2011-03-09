@@ -462,16 +462,13 @@ is_nice_device ()
 {
 	sysfs_path="${1#/sys}"
 
-	if /lib/udev/path_id "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-|platform-sata_mv|platform-orion-ehci|platform-mmc|platform-mxsdhci|)"
+	if /lib/udev/path_id "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-|platform-orion-ehci|platform-mmc|platform-mxsdhci|)"
 	then
 		return 0
 	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
 	then
 		return 0
 	elif echo ${sysfs_path} | grep -q "^/block/dm-"
-	then
-		return 0
-	elif echo ${sysfs_path} | grep -q "^/block/mtdblock"
 	then
 		return 0
 	fi
@@ -899,8 +896,6 @@ do_snap_copy ()
 
 	if [ -b "${fromdev}" ]
 	then
-		log_success_msg "Copying snapshot ${fromdev} to ${todir}..."
-
 		# look for free mem
 		if [ -n "${HOMEMOUNTED}" -a "${snap_type}" = "HOME" ]
 		then
@@ -938,8 +933,9 @@ do_snap_copy ()
 
 		return 0
 	else
-		log_warning_msg "Unable to find the snapshot ${snap_type} medium"
 		return 1
+
+		log_warning_msg "Unable to find the snapshot ${snap_type} medium"
 	fi
 }
 
@@ -947,17 +943,16 @@ find_snap ()
 {
 	# Look for ${snap_label}.* in block devices
 	snap_label="${1}"
-	black_listed_devices="${2}"
 
 	if [ "${PERSISTENT}" != "nofiles" ]
 	then
 		# search for image files
-		snapdata=$(find_files "${PERSISTENT_PATH}${snap_label}.squashfs ${PERSISTENT_PATH}${snap_label}.cpio.gz ${PERSISTENT_PATH}${snap_label}.ext2 ${PERSISTENT_PATH}${snap_label}.ext3 ${PERSISTENT_PATH}${snap_label}.ext4 ${PERSISTENT_PATH}${snap_label}.jffs2" "${black_listed_devices}")
+		snapdata=$(find_files "${PERSISTENT_PATH}${snap_label}.squashfs ${PERSISTENT_PATH}${snap_label}.cpio.gz ${PERSISTENT_PATH}${snap_label}.ext2 ${PERSISTENT_PATH}${snap_label}.ext3 ${PERSISTENT_PATH}${snap_label}.ext4 ${PERSISTENT_PATH}${snap_label}.jffs2")
 	fi
 
 	if [ -z "${snapdata}" ]
 	then
-		snapdata=$(find_cow_device "${snap_label}" "${black_listed_devices}")
+		snapdata=$(find_cow_device "${snap_label}")
 	fi
 	echo "${snapdata}"
 }
@@ -970,16 +965,6 @@ try_snap ()
 	snapdata="${1}"
 	snap_mount="${2}"
 	snap_type="${3}"
-	snap_relpath="${4}"
-
-	if [ -z "${snap_relpath}" ]
-	then
-		# root snapshot, default usage
-		snap_relpath="/"
-	else
-		# relative snapshot (actually used just for "/home" snapshots)
-		snap_mount="${2}${snap_relpath}"
-	fi
 
 	if [ -n "${snapdata}" ] && [ ! -b "${snapdata}" ]
 	then
@@ -1017,16 +1002,8 @@ try_snap ()
 				cpioargs='--unconditional --make-directories'
 			fi
 
-			if [ -s "${snapback}/${snapfile}" ]
-			then
-				BEFOREDIR="$(pwd)"
-				cd "${snap_mount}" && zcat "${snapback}/${snapfile}" | $cpiopath $cpioargs --extract --preserve-modification-time --no-absolute-filenames --sparse 2>/dev/null
-				RES="$?"
-				cd "${BEFOREDIR}"
-			else
-				log_warning_msg "${snapback}/${snapfile} is empty, adding it for sync on reboot."
-				RES="0"
-			fi
+			cd "${snap_mount}" && zcat "${snapback}/${snapfile}" | $cpiopath $cpioargs --extract --preserve-modification-time --no-absolute-filenames --sparse 2>/dev/null
+			RES="$?"
 
 			if [ "${RES}" != "0" ]
 			then
@@ -1058,7 +1035,7 @@ try_snap ()
 
 		if ! do_snap_copy "${dev}" "${snap_mount}" "${snap_type}"
 		then
-			log_warning_msg "Impossible to include the ${snap_type} Snapshot (i)"
+			log_warning_msg "Impossible to include the ${snap_type} Snapshot"
 			return 1
 		else
 			if [ -n "${snapfile}" ]
@@ -1068,11 +1045,11 @@ try_snap ()
 			fi
 		fi
 	else
-		log_warning_msg "Impossible to include the ${snap_type} Snapshot (o)"
+		log_warning_msg "Impossible to include the ${snap_type} Snapshot"
 		return 1
 	fi
 
-	echo "export ${snap_type}SNAP=${snap_relpath}:${snapdev}:${snapfile}" >> snapshot.conf # for resync on reboot/halt
+	echo "export ${snap_type}SNAP="/cow${snap_mount#$rootmnt}":${snapdev}:${snapfile}" >> /etc/live.conf # for resync on reboot/halt
 	return 0
 }
 
@@ -1209,16 +1186,9 @@ setup_unionfs ()
 					log_warning_msg "Unknown file system type on ${backdev} (${image}), assuming ${fstype}."
 				fi
 
-				if [ "${UNIONTYPE}" != "unionmount" ]
-				then
-					mpoint="${croot}/${imagename}"
-					rofsstring="${mpoint}=${roopt}:${rofsstring}" && rofslist="${mpoint} ${rofslist}"
-				else
-					mpoint="${rootmnt}"
-				fi
-				mkdir -p "${mpoint}"
-				log_begin_msg "Mounting \"${image}\" on \"${mpoint}\" via \"${backdev}\""
-				mount -t "${fstype}" -o ro,noatime "${backdev}" "${mpoint}" || panic "Can not mount ${backdev} (${image}) on ${mpoint}"
+				mkdir -p "${croot}/${imagename}"
+				log_begin_msg "Mounting \"${image}\" on \"${croot}${imagename}\" via \"${backdev}\""
+				mount -t "${fstype}" -o ro,noatime "${backdev}" "${croot}/${imagename}" || panic "Can not mount ${backdev} (${image}) on ${croot}/${imagename}" && rofsstring="${croot}/${imagename}=${roopt}:${rofsstring}" && rofslist="${croot}/${imagename} ${rofslist}"
 				log_end_msg
 			fi
 		done
@@ -1332,9 +1302,6 @@ setup_unionfs ()
 		cow_mountopt="rw,noatime,mode=755"
 	fi
 
-	if [ "${UNIONTYPE}" != "unionmount" ]
-	then
-
 	if [ "${cow_fstype}" = "nfs" ]
 	then
 		log_begin_msg \
@@ -1344,7 +1311,6 @@ setup_unionfs ()
 	else
 		mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} /cow || \
 			panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on /cow"
-	fi
 	fi
 
 	rofscount=$(echo ${rofslist} |wc -w)
@@ -1390,10 +1356,6 @@ setup_unionfs ()
 				pidof unionfs-fuse >> /dev/.initramfs/varrun/sendsigs.omit || true
 				;;
 
-			unionmount)
-				mount_full -t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice} "${rootmnt}" || panic "${UNIONTYPE} ${cowdevice} on ${rootmnt} failed with option noatime,union,${cow_mountopt}"
-				;;
-
 			*)
 				mount -t ${UNIONTYPE} -o noatime,${noxino_opt}dirs=/cow=rw:${rofsstring} ${UNIONTYPE} "${rootmnt}" || panic "mount ${UNIONTYPE} on ${rootmnt} failed with option noatime,${noxino_opt}dirs=/cow=rw:${rofsstring}"
 				;;
@@ -1425,7 +1387,7 @@ setup_unionfs ()
 		# Look for other snapshots to copy in
 		try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
 		# This second type should be removed when snapshot grow smarter
-		try_snap "${home_snapdata}" "${rootmnt}" "HOME" "/home"
+		try_snap "${home_snapdata}" "${rootmnt}/home" "HOME"
 	fi
 
 	if [ -n "${SHOWMOUNTS}" ]
@@ -1488,7 +1450,7 @@ check_dev ()
 			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live.log
 		else
 			mkdir /isofrom
-			mount -t auto "$ISO_DEVICE" /isofrom
+			mount "$ISO_DEVICE" /isofrom
 			ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
 			loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
 			devname="${loopdevname}"
@@ -1664,6 +1626,16 @@ find_livefs ()
 	return 1
 }
 
+set_usplash_timeout ()
+{
+	if [ -x /sbin/usplash_write ]
+	then
+		/sbin/usplash_write "TIMEOUT 120"
+	else if [ -x /sbin/splashy_update ] ; then
+		/sbin/splashy_update "TIMEOUT 120"
+	fi ; fi
+}
+
 integrity_check ()
 {
 	media_mountpoint="${1}"
@@ -1690,6 +1662,14 @@ integrity_check ()
 	fi
 }
 
+start_usplash_pulse ()
+{
+	if [ -x /sbin/usplash_write ]
+	then
+		/sbin/usplash_write "PULSELOGO"
+	fi
+}
+
 mountroot ()
 {
         if [ -x /scripts/local-top/cryptroot ]; then
@@ -1708,6 +1688,9 @@ mountroot ()
 
 	Arguments
 
+	set_usplash_timeout
+	start_usplash_pulse
+
 	maybe_break live-premount
 	log_begin_msg "Running /scripts/live-premount"
 	run_scripts /scripts/live-premount
@@ -1715,6 +1698,8 @@ mountroot ()
 
 	# Needed here too because some things (*cough* udev *cough*)
 	# changes the timeout
+
+	set_usplash_timeout
 
 	if [ ! -z "${NETBOOT}" ] || [ ! -z "${FETCH}" ] || [ ! -z "${HTTPFS}" ] || [ ! -z "${FTPFS}" ]
 	then
@@ -1826,24 +1811,6 @@ mountroot ()
 	then
 		mkdir -p /root/live/image
 		mount --move /live/image /root/live/image
-	fi
-
-	# aufs2 in kernel versions around 2.6.33 has a regression:
-	# directories can't be accessed when read for the first the time,
-	# causing a failure for example when accessing /var/lib/fai
-	# when booting FAI, this simple workaround solves it
-	ls /root/* >/dev/null 2>&1
-
-	# copy snapshot configuration if exists
-	if [ -f snapshot.conf ]
-	then
-		log_begin_msg "Copying snapshot.conf to ${rootmnt}/etc/live/boot.d"
-		if [ ! -d "${rootmnt}/etc/live/boot.d" ]
-		then
-			mkdir -p "${rootmnt}/etc/live/boot.d"
-		fi
-		cp snapshot.conf "${rootmnt}/etc/live/boot.d/"
-		log_end_msg
 	fi
 
 	maybe_break live-bottom

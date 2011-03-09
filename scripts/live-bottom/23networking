@@ -51,31 +51,23 @@ udevadm settle
 
 if [ -z "${NETBOOT}" -a -n "${STATICIP}" -a "${STATICIP}" != "frommedia" ]
 then
-	parsed=$(echo "${STATICIP}" | sed -e 's/,/ /g')
+	parsed=$(echo "${STATICIP}" | sed -e 's/:/ /g')
 
 	for ifline in ${parsed}
 	do
-		ifname="$(echo ${ifline} | cut -f1 -d ':')"
-		ifaddress="$(echo ${ifline} | cut -f2 -d ':')"
-		ifnetmask="$(echo ${ifline} | cut -f3 -d ':')"
-		ifgateway="$(echo ${ifline} | cut -f4 -d ':')"
+		ifname="$(echo ${ifline} | cut -f1 -d ',')"
+		ifaddress="$(echo ${ifline} | cut -f2 -d ',')"
+		ifnetmask="$(echo ${ifline} | cut -f3 -d ',')"
+		ifgateway="$(echo ${ifline} | cut -f4 -d ',')"
 
 cat >> "${IFFILE}" << EOF
-allow-hotplug ${ifname}
+auto ${ifname}
 iface ${ifname} inet static
     address ${ifaddress}
     netmask ${ifnetmask}
-EOF
-
-if [ -n "${ifgateway}" ]
-then
-
-cat >> "${IFFILE}" << EOF
     gateway ${ifgateway}
 
 EOF
-
-fi
 
 	done
 else
@@ -98,7 +90,7 @@ else
 			i="$(basename ${interface})"
 
 cat >> "${IFFILE}" << EOF
-allow-hotplug ${i}
+auto ${i}
 iface ${i} inet ${method}
 
 EOF
@@ -146,7 +138,7 @@ fi
 #		grep -q "iface ${i}" ${IFFILE} && continue
 #
 #cat >> "${IFFILE}" << EOF
-#allow-hotplug ${i}
+#auto ${i}
 #iface ${i} inet dhcp
 #
 #EOF
