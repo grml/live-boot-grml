@@ -9,13 +9,7 @@ log_wait_msg ()
 	then
 		plymouth message --text="$@"
 		plymouth watch-keystroke | read nunya
-	elif [ -x /sbin/usplash_write ]
-	then
-		/sbin/usplash_write "INPUTENTER ${@}"
-		read nunya < /dev/.initramfs/usplash_outfifo
-	else if [ -x /sbin/splashy_update ] ; then
-		/sbin/splashy_update "getstring ${@}" | read nunya
-	fi ; fi
+	fi
 
 	_log_msg "Waiting: ${@} ... \n"
 }
