@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2010\-10\-02 3.0~a8 "Debian Live Project"
+.TH LIVE\-BOOT 7 2010\-10\-26 3.0~a9 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -100,8 +100,12 @@ disables the "persistent" feature, useful if the bootloader (like syslinux) has 
 Do not prompt to eject the CD or remove the USB flash drive on reboot.
 .IP "\fBswapon\fR" 4
 This parameter enables usage of local swap partitions.
-.IP "\fBpersistent\fR[=nofiles]" 4
-live\-boot will look for persistent and snapshot partitions or files labeled "live\-rw", "home\-rw", and files called "live\-sn*", "home\-sn*" and will try to, in order: mount as /cow the first, mount the second in /home, and just copy the contents of the latter in appropriate locations (snapshots). Snapshots will be tried to be updated on reboot/shutdown. Look at live\-snapshot(1) for more informations. If "nofiles" is specified, only filesystems with matching labels will be searched; no filesystems will be traversed looking for archives or image files. This results in shorter boot times.
+.IP "\fBpersistent\fR[={nofiles|cryptsetup}]" 4
+live\-boot will look for persistent and snapshot partitions or files labeled "live\-rw", "home\-rw", and files called "live\-sn*", "home\-sn*" and will try to, in order: mount as /cow the first, mount the second in /home, and just copy the contents of the latter in appropriate locations (snapshots). Snapshots will be tried to be updated on reboot/shutdown. Look at live\-snapshot(1) for more informations.
+.br
+If "nofiles" is specified, only filesystems with matching labels will be searched; no filesystems will be traversed looking for archives or image files. This results in shorter boot times.
+.br
+If "cryptsetup" is specified, filesystems stored on Luks\-encrypted devices will be considered as well as others when searching for a persistence filesystem; the user will be prompted for any needed decryption passphrase.
 .IP "\fBpersistent\-path\fR=\fIPATH\fR" 4
 live\-boot will look for persistency files in the root directory of a partition, with this parameter, the path can be configured so that you can have multiple directories on the same partition to store persistency files.
 .IP "\fBpersistent\-subtext\fR=\fISUFFIX\fR" 4

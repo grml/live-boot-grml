@@ -301,7 +301,7 @@ find_cow_device ()
 		do
 			devname=$(sys2dev "${dev}")
 
-			if echo "${black_listed_devices}" | grep -q "${devname}"
+			if echo "${black_listed_devices}" | grep -q -w "${devname}"
 			then
 				# skip this device enterely
 				break
@@ -388,7 +388,7 @@ find_files ()
 			devname=$(sys2dev "${dev}")
 			devfstype="$(get_fstype ${devname})"
 
-			if echo "${black_listed_devices}" | grep -q "${devname}"
+			if echo "${black_listed_devices}" | grep -q -w "${devname}"
 			then
 				# skip this device enterely
 				break
