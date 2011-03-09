@@ -102,9 +102,9 @@ Arguments ()
 				;;
 
 			fetch=*)
-                                FETCH="${ARGUMENT#fetch=}"
-                                export FETCH
-                                ;;
+				FETCH="${ARGUMENT#fetch=}"
+				export FETCH
+				;;
 
 			forcepersistentfsck)
 				FORCEPERSISTENTFSCK="Yes"
@@ -119,7 +119,7 @@ Arguments ()
 			httpfs=*)
 				HTTPFS="${ARGUMENT#httpfs=}"
 				export HTTPFS
-                                ;;
+				;;
 
 			iscsi=*)
 				ISCSI="${ARGUMENT#iscsi=}"
@@ -228,6 +228,10 @@ Arguments ()
 			nonetworking)
 				NONETWORKING="Yes"
 				export NONETWORKING
+				;;
+
+			ramdisk-size=*)
+				ramdisk_size="${ARGUMENT#ramdisk-size=}"
 				;;
 
 			swapon)
@@ -539,6 +543,13 @@ copy_live_to ()
 		return 1
 	fi
 
+	# Custom ramdisk size
+	if [ -z "${mount_options}" ] && [ -n "${ramdisk_size}" ]
+	then
+		# FIXME: should check for wrong values
+		mount_options="-o size=${ramdisk_size}"
+	fi
+
 	# begin copying (or uncompressing)
 	mkdir "${copyto}"
 	log_begin_msg "mount -t ${fstype} ${mount_options} ${dev} ${copyto}"
@@ -784,7 +795,7 @@ do_iscsi()
 	[ "${DEBUG}" == "Yes" ] && debugopt="-d 8"
 	#FIXME this name is supposed to be unique - some date + ifconfig hash?
 	ISCSI_INITIATORNAME="iqn.1993-08.org.debian.live:01:$(echo "${HWADDR}" | sed -e s/://g)"
-        export ISCSI_INITIATORNAME
+	export ISCSI_INITIATORNAME
 	if [ -n "${ISCSI_SERVER}" ] ; then
 		iscsistart $debugopt -i "${ISCSI_INITIATORNAME}" -t "${ISCSI_TARGET}" -g 1 -a "${ISCSI_SERVER}" -p "${ISCSI_PORT}"
 	else
@@ -1032,7 +1043,7 @@ find_snap ()
 
 try_snap ()
 {
-        # copy the contents of previously found snapshot to ${snap_mount}
+	# copy the contents of previously found snapshot to ${snap_mount}
 	# and remember the device and filename for resync on exit in live-boot.init
 
 	snapdata="${1}"
@@ -1148,7 +1159,7 @@ setup_unionfs ()
 {
 	image_directory="${1}"
 	rootmnt="${2}"
-        addimage_directory="${3}"
+	addimage_directory="${3}"
 
 	case ${UNIONTYPE} in
 		aufs|unionfs)
@@ -1553,7 +1564,7 @@ check_dev ()
 
 		if [ "$ISO_DEVICE" = "/" ]
 		then
-			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live.log
+			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live-boot.log
 		else
 			mkdir /isofrom
 			mount -t auto "$ISO_DEVICE" /isofrom
@@ -1635,8 +1646,7 @@ find_livefs ()
 			do
 				if [ "$(cat ${sysblock}/removable)" = "1" ]
 				then
-					if readlink ${sysblock} | grep -q usb ||
-					   readlink ${sysblock}/device | grep -q usb # linux < 2.6.29
+					if readlink ${sysblock} | grep -q usb
 					then
 						for dev in $(subdevices "${sysblock}")
 						do
@@ -1760,15 +1770,15 @@ integrity_check ()
 
 mountroot ()
 {
-        if [ -x /scripts/local-top/cryptroot ]; then
+	if [ -x /scripts/local-top/cryptroot ]; then
 	    /scripts/local-top/cryptroot
 	fi
 
 	exec 6>&1
 	exec 7>&2
-	exec > live.log
+	exec > live-boot.log
 	exec 2>&1
-	tail -f live.log >&7 &
+	tail -f live-boot.log >&7 &
 	tailpid="${!}"
 
 	# Ensure 'panic' function is overridden
@@ -1928,5 +1938,5 @@ mountroot ()
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-
 	kill ${tailpid}
-	[ -w "${rootmnt}/var/log/" ] && cp live.log "${rootmnt}/var/log/" 2>/dev/null
+	[ -w "${rootmnt}/var/log/" ] && cp live-boot.log "${rootmnt}/var/log/" 2>/dev/null
 }

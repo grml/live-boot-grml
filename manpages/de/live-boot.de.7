@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 22.11.2010 3.0~a12 "Debian Live Projekt"
+.TH LIVE\-BOOT 7 06.12.2010 3.0~a13 "Debian Live Projekt"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Skripte
@@ -162,6 +162,11 @@ Do not prompt to eject the CD or remove the USB flash drive on reboot.
 .IP \fBnoprompt\fP=\fITYPE\fP 4
 This tells live\-boot not to prompt to eject the CD (when noprompt=cd) or
 remove the USB flash drive (when noprompt=usb) on reboot.
+.IP \fBramdisk\-size\fP 4
+This parameters allows to set a custom ramdisk size (it's the '\-o size'
+option of tmpfs mount). By default, there is no ramdisk size set, so the
+default of mount applies (currently 50% of available RAM). Note that this
+option has no currently no effect when booting with toram.
 .IP \fBswapon\fP 4
 This parameter enables usage of local swap partitions.
 .IP \fBpersistent\fP[={nofiles|cryptsetup}] 4
