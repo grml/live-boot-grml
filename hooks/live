@@ -241,16 +241,14 @@ then
     manual_add_modules crc32c
 fi
 
-if [ "${LIVE_DNS}" = "true" ]
-then
-	#copy_exec /lib/libnss_files.so.*      /lib  # /etc/hosts and /etc/passwd
-	copy_exec /lib/libnss_dns.so.*      /lib  # DNS server
-	#copy_exec /lib/libnss_compat.so.*      /lib  # /etc/passwd
+# DNS for initramfs
+#copy_exec /lib/libnss_files.so.*      /lib  # /etc/hosts and /etc/passwd
+copy_exec /lib/libnss_dns.so.*      /lib  # DNS server
+#copy_exec /lib/libnss_compat.so.*      /lib  # /etc/passwd
 
-	# Configuration file - may be needed if /etc/hosts is used.
-	#mkdir -p $DESTDIR/etc
-	#cp -p /etc/nsswitch.conf $DESTDIR/etc
-fi
+# Configuration file - may be needed if /etc/hosts is used.
+#mkdir -p $DESTDIR/etc
+#cp -p /etc/nsswitch.conf $DESTDIR/etc
 
 if [ "${LIVE_UNIONMOUNT}" = "true" ]
 then
