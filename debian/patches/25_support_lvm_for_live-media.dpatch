@@ -2,13 +2,13 @@
 ## 25_support_lvm_for_live-media.dpatch by  <mru@grml.org>
 ##
 ## All lines beginning with `## DP:' are a description of the patch.
-## DP: Support lvm devices for live-media
+## DP: Support lvm and raid devices for live-media
 
 @DPATCH@
 
 --- a/scripts/live
 +++ b/scripts/live
-@@ -1509,6 +1509,15 @@ check_dev ()
+@@ -1509,6 +1509,21 @@ check_dev ()
  			umount $mountpoint
  		fi
  	fi
@@ -17,6 +17,12 @@
 +		*mapper*)  # add lvm support
 +		if [ -x /scripts/local-top/lvm2 ] ; then
 +			ROOT="$devname" resume="" /scripts/local-top/lvm2
++		fi
++		;;
++		/dev/md*)
++		if [ -x /scripts/local-top/mdadm ] ; then
++			echo "MD_DEVS=$devname" >> /conf/conf.d/md
++			/scripts/local-top/mdadm
 +		fi
 +		;;
 +	esac
