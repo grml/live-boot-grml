@@ -1,3 +1,14 @@
+live-boot (2.0.12-1+grml.05) unstable; urgency=low
+
+  [ Ulrich Dangel ]
+  * [11365c9] Support lvm devices for live-media.
+  * [5eaa3c6] Support raid devices as well
+
+  [ Christian Hofstaedtler ]
+  * [811e097] support DNS in boot environment
+
+ -- Christian Hofstaedtler <ch@grml.org>  Sat, 26 Mar 2011 00:36:20 +0100
+
 live-boot (2.0.12-1+grml.04) unstable; urgency=low
 
   * [ac134a9] Merge dhcphostname support into 23networking-grml
