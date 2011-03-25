@@ -1,0 +1,26 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 25_support_lvm_for_live-media.dpatch by  <mru@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Support lvm devices for live-media
+
+@DPATCH@
+
+--- a/scripts/live
++++ b/scripts/live
+@@ -1509,6 +1509,15 @@ check_dev ()
+ 			umount $mountpoint
+ 		fi
+ 	fi
++
++	case "$devname" in
++		*mapper*)  # add lvm support
++		if [ -x /scripts/local-top/lvm2 ] ; then
++			ROOT="$devname" resume="" /scripts/local-top/lvm2
++		fi
++		;;
++	esac
++
+ 	[ -e "$devname" ] || continue
+ 
+ 	if [ -n "${LIVE_MEDIA_OFFSET}" ]
