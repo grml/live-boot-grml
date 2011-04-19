@@ -6,7 +6,7 @@ LANGUAGES = de
 
 SCRIPTS = bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*
 
-all: test build
+all: build
 
 test:
 	@echo -n "Checking for syntax errors"
@@ -43,7 +43,7 @@ build:
 install:
 	# Installing executables
 	mkdir -p $(DESTDIR)/sbin
-	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile bin/live-toram $(DESTDIR)/sbin
+	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin
 
 	mkdir -p $(DESTDIR)/usr/share/live-boot
 	cp bin/live-preseed bin/live-reconfigure local/languagelist $(DESTDIR)/usr/share/live-boot
@@ -77,7 +77,7 @@ install:
 
 uninstall:
 	# Uninstalling executables
-	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile $(DESTDIR)/sbin/live-toram
+	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin
 
 	rm -rf $(DESTDIR)/usr/share/live-boot

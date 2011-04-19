@@ -1,3 +1,249 @@
+live-boot (3.0~a16-1) unstable; urgency=low
+
+  * Adding old 2.x changelog entries in debian changelog.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 14 Mar 2011 06:27:17 +0100
+
+live-boot (3.0~a15-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating year in copyright.
+
+  [ Marco Amadori ]
+  * Adjust copyright entry in live-snapshot.
+  * Protect NOPROMPT (Closes: #610941).
+
+  [ Michal Suchanek ]
+  * Simplify union mounting.
+  * Really set limit on open files for unionfs-fuse
+  * Add verbose messages to initramfs hook.
+
+  [ T(A)ILS developers ]
+  * Fixing remaining fromiso= bug.
+  * Fixing syntax error.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 09 Mar 2011 18:01:07 +0100
+
+live-boot (3.0~a14-1) experimental; urgency=low
+
+  [ Richard Nelson ]
+  * Populate adapters in /etc/network/interfaces when ethdevice= on
+    cmdline.
+
+  [ Daniel Baumann ]
+  * Removing header in copyright file.
+  * Don't hard-depend on test target in Makefile.
+  * Using dh auto magic in override, rather than manual make call.
+
+  [ Steven Shiau ]
+  * Removing the duplicated "the" in the live-boot.init script.
+
+  [ Daniel Baumann ]
+  * Updating auto_install overrides in rules.
+  * Correcting live hook to include mtdblock for syslinux memdisk usage,
+    thanks to Michael Prokop <mika@grml.org>.
+  * Supporting /dev/mtdblock0 as valid device name (for memdisk boot),
+    thanks to Michael Prokop <mika@grml.org>.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 11 Jan 2011 13:38:56 +0100
+
+live-boot (3.0~a13-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Removing legacy code for detecting removable usb sticks on kernels
+    prior 2.6.29.
+  * Logging to /var/log/live-boot.log instead of /var/log/live.log for
+    future consistency with live-config.
+  * Adding support for custom ramdisk size (Closes: #544583).
+
+  [ Ronny Standtke ]
+  * Remounting cow read-only before prompting user to remove usb flash
+    drive.
+
+  [ Richard Nelson ]
+  * Clean some leading whitespaces.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 06 Dec 2010 11:27:07 +0100
+
+live-boot (3.0~a12-1) experimental; urgency=low
+
+  [ T(A)ILS developers ]
+  * Fixing fromiso= on Squeeze.
+
+  [ Daniel Baumann ]
+  * Adding dpkg source options file.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 22 Nov 2010 23:29:48 +0100
+
+live-boot (3.0~a11-1) experimental; urgency=low
+
+  [ T(A)ILS developers ]
+  * Adding noprompt={usb,cd} feature.
+  * Enhancing devices search ordering.
+
+  [ Daniel Baumann ]
+  * Removing deep link to bug page in the manual, since we don't have
+    stable references yet.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 28 Oct 2010 09:28:43 +0200
+
+live-boot (3.0~a10-1) experimental; urgency=low
+
+  * Don't do anything in initscript when using toram (Closes: #601575).
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 27 Oct 2010 14:58:03 +0200
+
+live-boot (3.0~a9-1) experimental; urgency=low
+
+  [ amnesia ]
+  * Adding live-snapshot.list documentation to manpage.
+
+  [ Richard Nelson ]
+  * Removed whitespace for tabs on the skipunion option.
+
+  [ T(A)ILS developers ]
+  * Fixing overzealous blacklist usage.
+  * Adding documentation for persistent=cryptsetup in the manpage.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 26 Oct 2010 09:24:51 +0200
+
+live-boot (3.0~a8-1) experimental; urgency=low
+
+  [ Michal Suchanek ]
+  * Adding initial support for unionmount.
+
+  [ Marco Amadori ]
+  * Included a note about persistent-subtext (Helps: #536728).
+
+  [ Daniel Baumann ]
+  * Running manpage rebuild after manpage updates.
+  * Updating to debhelper version 8.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 02 Oct 2010 10:15:03 +0200
+
+live-boot (3.0~a7-1) experimental; urgency=low
+
+  [ intrigeri ]
+  * Fixing find_snap to take its second argument into account.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 25 Sep 2010 22:46:54 +0200
+
+live-boot (3.0~a6-1) experimental; urgency=low
+
+  [ Marco Amadori ]
+  * Fix snapshots' sync-strings usage (Closes: #591330).
+  * Fixed some snapshot related debug messages.
+  * Added support for empty (initial) snapshots.
+
+  [ Daniel Baumann ]
+  * Adding patch from Colin Watson <cjwatson@ubuntu.com> to follow
+    symlinks when checking for dynamically linked files at reboot in
+    initscript.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 14 Sep 2010 08:51:59 +0200
+
+live-boot (3.0~a5-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Applying patch from Luke Yelavich <themuso@ubuntu.com> to instead of
+    mangling the main sudoers file in accessibility bottom script,
+    create a new file in /etc/sudoers.d and set permissions
+    appropriately.
+  * Applying patch from Michael Casadevall <mcasadevall@ubuntu.com> to
+    add platform-sata_mv to is_nice_device() to allow Marvell Dove A0
+    and AVD1 to properly boot live media.
+  * Updating uinstall targets in makefile.
+
+  [ Steven Shiau ]
+  * Allowing to assign no gateway in networking bottom script.
+
+  [ Daniel Baumann ]
+  * Removing usplash support from initscript, usplash is dead.
+  * Removing lenny legacy stuff from initscript.
+  * Removing usplash support in initramfs, usplash is dead.
+  * Adding plymouth in bug script.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 06 Sep 2010 15:17:15 +0200
+
+live-boot (3.0~a4-1) experimental; urgency=low
+
+  * Exiting with 0 in live-boot bug script (Closes: #595262).
+  * Using boot.d instead of boot.conf.d as directory name for custom
+    configuration files.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 02 Sep 2010 22:46:45 +0200
+
+live-boot (3.0~a3-1) experimental; urgency=low
+
+  * Updating seperators in networking bottom script to fix ip parameter
+    parsing (Closes: #590494).
+  * Updating live-build reference in manpages.
+  * Adding reference to live-tools in manpages.
+  * Checking for file existence in initramfs hook (Closes: #595264).
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 02 Sep 2010 18:28:40 +0200
+
+live-boot (3.0~a2-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Removing old and unmaintained po files.
+  * Adding reformated patch from Stephan Hermann <sh@sourcecode.de>
+    based on the work of Holger Fischer <hoo.mb@web.de> to add support
+    for BOOTIF in cases where pxelinux is being used with IPAPPEND
+    (Closes: #593284).
+
+  [ Steven Shiau ]
+  * Making multiple connected NICs work.
+
+  [ Michael Prokop ]
+  * Adding workaround for aufs issue in kernel versions around 2.6.33.
+
+  [ Daniel Baumann ]
+  * Using allow-hotplug instead of auto in automatically created
+    /etc/network/interfaces file.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 01 Sep 2010 18:27:33 +0200
+
+live-boot (3.0~a1-1) experimental; urgency=low
+
+  * Switching to source format 3.0 (quilt).
+  * Removing live-initramfs transitional package.
+  * Removing lenny support.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 10 Aug 2010 02:02:39 +0200
+
+live-boot (2.0.15-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Adding live-system script from live-tools.
+  * Updating year in copyright.
+
+  [ Marco Amadori ]
+  * Adjust copyright entry in live-snapshot.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 01 Feb 2011 22:49:03 +0100
+
+live-boot (2.0.14-1) unstable; urgency=low
+
+  [ Steven Shiau ]
+  * Removing the duplicated "the" in the live-boot.init script.
+
+  [ Daniel Baumann ]
+  * Correcting live hook to include mtdblock for syslinux memdisk usage,
+    thanks to Michael Prokop <mika@grml.org>.
+  * Supporting /dev/mtdblock0 as valid device name (for memdisk boot),
+    thanks to Michael Prokop <mika@grml.org>.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 24 Dec 2010 18:51:57 +0100
+
+live-boot (2.0.13-1) unstable; urgency=medium
+
+  [ Ronny Standtke ]
+  * Remounting cow read-only before prompting user to remove usb flash
+    drive.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 06 Dec 2010 11:18:32 +0100
+
 live-boot (2.0.12-1) unstable; urgency=medium
 
   [ T(A)ILS developers ]

@@ -26,7 +26,7 @@ subdevices ()
 	sysblock=${1}
 	r=""
 
-	for dev in "${sysblock}" "${sysblock}"/*
+	for dev in "${sysblock}"/* "${sysblock}"
 	do
 		if [ -e "${dev}/dev" ]
 		then
@@ -76,15 +76,7 @@ is_supported_fs ()
 
 get_fstype ()
 {
-	# udev (>= 146) no longer provides vol_id
-	if [ -x /lib/udev/vol_id ]
-	then
-		# lenny
-		/lib/udev/vol_id -t ${1} 2>/dev/null
-	else
-		# squeeze
-		/sbin/blkid -s TYPE -o value $1 2>/dev/null
-	fi
+	/sbin/blkid -s TYPE -o value $1 2>/dev/null
 }
 
 where_is_mounted ()
@@ -283,7 +275,7 @@ try_mount ()
 			fstype=$(get_fstype "${dev}")
 		fi
 		mount -t "${fstype}" -o "${opts}" "${dev}" "${mountp}" || \
-		( echo "SKIPPING: Cannot mount ${dev} on ${mountp}, fstype=${fstype}, options=${opts}" > live.log && return 0 )
+		( echo "SKIPPING: Cannot mount ${dev} on ${mountp}, fstype=${fstype}, options=${opts}" > live-boot.log && return 0 )
 	fi
 }
 
@@ -305,13 +297,21 @@ find_cow_device ()
 
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
 	do
+		fulldevname=$(sys2dev "${sysblock}")
+
+		if echo "${black_listed_devices}" | grep -q -w "${fulldevname}"
+		then
+			# skip this device entirely
+			break
+		fi
+
 		for dev in $(subdevices "${sysblock}")
 		do
 			devname=$(sys2dev "${dev}")
 
 			if echo "${black_listed_devices}" | grep -q -w "${devname}"
 			then
-				# skip this device enterely
+				# skip this subdevice
 				break
 			fi
 
@@ -345,22 +345,10 @@ find_cow_device ()
 				done
 			fi
 
-			# udev (>= 146) no longer provides vol_id
-			if [ -x /lib/udev/vol_id ]
+			if [ "$(/sbin/blkid -s LABEL -o value $devname 2>/dev/null)" = "${pers_label}" ]
 			then
-				# lenny
-				if [ "$(/lib/udev/vol_id -l ${devname} 2>/dev/null)" = "${pers_label}" ]
-				then
-					echo "${devname}"
-					return 0
-				fi
-			else
-				# squeeze
-				if [ "$(/sbin/blkid -s LABEL -o value $devname 2>/dev/null)" = "${pers_label}" ]
-				then
-					echo "${devname}"
-					return 0
-				fi
+				echo "${devname}"
+				return 0
 			fi
 
 			if [ "${PERSISTENT}" = "nofiles" ]
@@ -403,6 +391,14 @@ find_files ()
 
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
 	do
+		fulldevname=$(sys2dev "${sysblock}")
+
+		if echo "${black_listed_devices}" | grep -q -w "${fulldevname}"
+		then
+			# skip this device entirely
+			break
+		fi
+
 		for dev in $(subdevices "${sysblock}")
 		do
 			devname=$(sys2dev "${dev}")
@@ -410,7 +406,7 @@ find_files ()
 
 			if echo "${black_listed_devices}" | grep -q -w "${devname}"
 			then
-				# skip this device enterely
+				# skip this subdevice
 				break
 			fi
 

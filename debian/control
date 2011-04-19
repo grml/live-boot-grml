@@ -3,7 +3,7 @@ Section: misc
 Priority: optional
 Maintainer: Debian Live Project <debian-live@lists.debian.org>
 Uploaders: Daniel Baumann <daniel@debian.org>
-Build-Depends: debhelper (>= 7.0.50~)
+Build-Depends: debhelper (>= 8)
 Standards-Version: 3.9.1
 Homepage: http://live.debian.net/devel/live-boot/
 Vcs-Browser: http://live.debian.net/gitweb/?p=live-boot.git
@@ -25,23 +25,11 @@ Package: live-boot-initramfs-tools
 Architecture: all
 Depends:
  ${misc:Depends}, busybox | busybox-initramfs, initramfs-tools, udev
-Conflicts: live-boot-backend, live-initramfs (<< 2.0~a1)
-Replaces: live-boot-backend, live-initramfs
+Conflicts: live-boot-backend
+Replaces: live-boot-backend
 Provides: live-boot-backend
 Description: Debian Live - System Boot Scripts (initramfs-tools backend)
  live-boot contains the scripts that configure a Debian Live system during the
  boot process (early userspace).
  .
  This package contains the initramfs-tools backend.
-
-Package: live-initramfs
-Architecture: all
-Depends:
- ${misc:Depends}, live-boot, live-boot-initramfs-tools, live-config,
- live-config-sysvinit
-Description: Debian Live - System Boot Scripts (transitional package)
- Package to ease upgrading from older live-initramfs packages to the new
- live-boot-initramfs-tools package.
- .
- This package can be purged at anytime once the live-boot-initramfs-tools
- package has been installed.

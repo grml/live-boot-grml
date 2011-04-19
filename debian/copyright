@@ -1,9 +1,6 @@
-Upstream-Contact: Debian Live Project <debian-live@lists.debian.org>
-Upstream-Homepage: http://live.debian.net/
-
 Files: *
 Copyright:
- (C) 2007-2010 Daniel Baumann <daniel@debian.org>
+ (C) 2007-2011 Daniel Baumann <daniel@debian.org>
  (C) 2005-2008 Canonical Ltd. <http://www.cannonical.com/>
  (C) 2008 Chris Lamb <chris@debian.org>
  (C) 2006-2007 Marco Amadori <marco.amadori@gmail.com>

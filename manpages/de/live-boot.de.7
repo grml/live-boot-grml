@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 22.11.2010 2.0.12 "Debian Live Projekt"
+.TH LIVE\-BOOT 7 2011\-03\-14 3.0~a16 "Debian Live Projekt"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Skripte
@@ -159,6 +159,14 @@ disables the "persistent" feature, useful if the bootloader (like syslinux)
 has been installed with persistent enabled.
 .IP \fBnoprompt\fP 4
 Do not prompt to eject the CD or remove the USB flash drive on reboot.
+.IP \fBnoprompt\fP=\fITYPE\fP 4
+This tells live\-boot not to prompt to eject the CD (when noprompt=cd) or
+remove the USB flash drive (when noprompt=usb) on reboot.
+.IP \fBramdisk\-size\fP 4
+This parameters allows to set a custom ramdisk size (it's the '\-o size'
+option of tmpfs mount). By default, there is no ramdisk size set, so the
+default of mount applies (currently 50% of available RAM). Note that this
+option has no currently no effect when booting with toram.
 .IP \fBswapon\fP 4
 This parameter enables usage of local swap partitions.
 .IP \fBpersistent\fP[={nofiles|cryptsetup}] 4
@@ -257,6 +265,8 @@ directory with a tmpfs on the original path.
 \fIlive\-build\fP(7)
 .PP
 \fIlive\-config\fP(7)
+.PP
+\fIlive\-tools\fP(7)
 
 .SH HOMEPAGE
 Weitere Informationen ueber live\-boot und das Debian Live Projekt koennen

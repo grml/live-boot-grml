@@ -84,8 +84,7 @@ device_is_USB_flash_drive()
 	[ "$(expr substr ${DEVICE} 1 2)" != "sd" ] && return 1
 
 	# check that the device is an USB device
-	if readlink /sys/block/${DEVICE} | grep -q usb ||
-	   readlink /sys/block/${DEVICE}/device | grep -q usb # linux < 2.6.29
+	if readlink /sys/block/${DEVICE} | grep -q usb
 	then
 		return 0
 	fi
@@ -137,7 +136,7 @@ do_stop ()
 	fi
 
 	prompt=1
-	if grep -qs noprompt /proc/cmdline
+	if [ "${NOPROMPT}" = "Yes" ]
 	then
 		prompt=
 	fi
@@ -156,6 +155,8 @@ do_stop ()
 		esac
 	done
 
+	mount -o remount,ro /live/cow
+
 	if [ -z ${QUICKREBOOT} ]
 	then
 
@@ -171,13 +172,24 @@ do_stop ()
 			# failes because they actually remember the
 			# "ejected" state even after reboot
 			MESSAGE="Please remove the USB flash drive"
+
+			if [ "${NOPROMPT}" = "usb" ]
+			then
+				prompt=
+			fi
+
 		else
 			# ejecting is a very good idea here
-			MESSAGE="Please remove the disc, close the the tray (if any)"
+			MESSAGE="Please remove the disc, close the tray (if any)"
 
 			if [ -x /usr/bin/eject ]
 			then
 				eject -p -m /live/image >/dev/null 2>&1
+			fi
+
+			if [ ${NOPROMPT} = "cd" ]
+			then
+				prompt=
 			fi
 
 		fi
@@ -223,8 +235,6 @@ case "${1}" in
 				[ "${VERBOSE}" != no ] && log_end_msg 1
 				;;
 		esac
-
-		mount -o remount,ro /live/cow
 		;;
 
 	*)

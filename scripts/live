@@ -68,6 +68,10 @@ Arguments ()
 				export DEFCONSOLE
 				;;
 
+			BOOTIF=*)
+				BOOTIF="${x#BOOTIF=}"
+				;;
+
 			debug)
 				DEBUG="Yes"
 				export DEBUG
@@ -98,9 +102,9 @@ Arguments ()
 				;;
 
 			fetch=*)
-                                FETCH="${ARGUMENT#fetch=}"
-                                export FETCH
-                                ;;
+				FETCH="${ARGUMENT#fetch=}"
+				export FETCH
+				;;
 
 			forcepersistentfsck)
 				FORCEPERSISTENTFSCK="Yes"
@@ -115,7 +119,7 @@ Arguments ()
 			httpfs=*)
 				HTTPFS="${ARGUMENT#httpfs=}"
 				export HTTPFS
-                                ;;
+				;;
 
 			iscsi=*)
 				ISCSI="${ARGUMENT#iscsi=}"
@@ -226,6 +230,10 @@ Arguments ()
 				export NONETWORKING
 				;;
 
+			ramdisk-size=*)
+				ramdisk_size="${ARGUMENT#ramdisk-size=}"
+				;;
+
 			swapon)
 				SWAPON="Yes"
 				export SWAPON
@@ -260,6 +268,16 @@ Arguments ()
 			nopersistent)
 				NOPERSISTENT="Yes"
 				export NOPERSISTENT
+				;;
+
+			noprompt)
+				NOPROMPT="Yes"
+				export NOPROMPT
+				;;
+
+			noprompt=*)
+				NOPROMPT="${ARGUMENT#noprompt=}"
+				export NOPROMPT
 				;;
 
 			quickusbmodules)
@@ -321,9 +339,9 @@ Arguments ()
 				;;
 
 			skipunion)
-                                SKIP_UNION_MOUNTS="Yes"
-                                export SKIP_UNION_MOUNTS
-                                ;;
+				SKIP_UNION_MOUNTS="Yes"
+				export SKIP_UNION_MOUNTS
+				;;
 
 			root=*)
 				ROOT="${ARGUMENT#root=}"
@@ -471,6 +489,9 @@ is_nice_device ()
 	elif echo ${sysfs_path} | grep -q "^/block/dm-"
 	then
 		return 0
+	elif echo ${sysfs_path} | grep -q "^/block/mtdblock"
+	then
+		return 0
 	fi
 
 	return 1
@@ -525,6 +546,13 @@ copy_live_to ()
 		return 1
 	fi
 
+	# Custom ramdisk size
+	if [ -z "${mount_options}" ] && [ -n "${ramdisk_size}" ]
+	then
+		# FIXME: should check for wrong values
+		mount_options="-o size=${ramdisk_size}"
+	fi
+
 	# begin copying (or uncompressing)
 	mkdir "${copyto}"
 	log_begin_msg "mount -t ${fstype} ${mount_options} ${dev} ${copyto}"
@@ -577,9 +605,60 @@ do_netsetup ()
 	udevadm trigger
 	udevadm settle
 
+	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
+	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
+
 	if [ -z "${NETBOOT}" ] && [ -z "${FETCH}" ] && \
 	   [ -z "${HTTPFS}" ] && [ -z "${FTPFS}" ]
 	then
+
+
+	# support for Syslinux IPAPPEND parameter
+	# it sets the BOOTIF variable on the kernel parameter
+
+	if [ -n "${BOOTIF}" ]
+	then
+		# pxelinux sets BOOTIF to a value based on the mac address of the
+		# network card used to PXE boot, so use this value for DEVICE rather
+		# than a hard-coded device name from initramfs.conf. this facilitates
+		# network booting when machines may have multiple network cards.
+		# pxelinux sets BOOTIF to 01-$mac_address
+
+		# strip off the leading "01-", which isn't part of the mac
+		# address
+		temp_mac=${BOOTIF#*-}
+
+		# convert to typical mac address format by replacing "-" with ":"
+		bootif_mac=""
+		IFS='-'
+		for x in $temp_mac
+		do
+			if [ -z "$bootif_mac" ]
+			then
+				bootif_mac="$x"
+			else
+				bootif_mac="$bootif_mac:$x"
+			fi
+		done
+		unset IFS
+
+		# look for devices with matching mac address, and set DEVICE to
+		# appropriate value if match is found.
+
+		for device in /sys/class/net/*
+		do
+			if [ -f "$device/address" ]
+			then
+				current_mac=$(cat "$device/address")
+
+				if [ "$bootif_mac" = "$current_mac" ]
+				then
+					DEVICE=${device##*/}
+					break
+				fi
+			fi
+		done
+	fi
 
 	# if ethdevice was not specified on the kernel command line
 	# make sure we try to get a working network configuration
@@ -598,9 +677,6 @@ do_netsetup ()
 	for device in $(echo $ETHDEVICE | sed 's/,/ /g') ; do
 		devlist="$devlist $device"
 	done
-
-	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
-	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
 
 	# this is tricky (and ugly) because ipconfig sometimes just hangs/runs into
 	# an endless loop; iff execution fails give it two further tries, that's
@@ -625,45 +701,54 @@ do_netsetup ()
 	done
 
 	else
-	ipconfig ${DEVICE} | tee /netboot.config
-	fi
-
-	# source relevant ipconfig output
-	OLDHOSTNAME=${HOSTNAME}
-	. /tmp/net-${DEVICE}.conf
-	[ -z ${HOSTNAME} ] && HOSTNAME=${OLDHOSTNAME}
-	export HOSTNAME
-
-	if [ -n "${DEVICE}" ]
-	then
-		HWADDR="$(cat /sys/class/net/${DEVICE}/address)"
-	fi
-
-	if [ ! -e "/etc/resolv.conf" ]
-	then
-		echo "Creating /etc/resolv.conf"
-
-		if [ -n "${DNSDOMAIN}" ]
-		then
-			echo "domain ${DNSDOMAIN}" > /etc/resolv.conf
-			echo "search ${DNSDOMAIN}" > /etc/resolv.conf
-		fi
-
-		for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1}
-		do
-			echo "nameserver $i" >> /etc/resolv.conf
+		for interface in ${DEVICE}; do
+			ipconfig -t "$ETHDEV_TIMEOUT" ${interface} | tee /netboot-${interface}.config
+			[ -e /tmp/net-${interface}.conf ] && . /tmp/net-${interface}.conf
+			if [ "$IPV4ADDR" != "0.0.0.0" ]
+			then
+				break
+			fi
 		done
 	fi
 
-	# Check if we have a network device at all
-	if ! ls /sys/class/net/"$DEVICE" > /dev/null 2>&1 && \
-	   ! ls /sys/class/net/eth0 > /dev/null 2>&1 && \
-	   ! ls /sys/class/net/wlan0 > /dev/null 2>&1 && \
-	   ! ls /sys/class/net/ath0 > /dev/null 2>&1 && \
-	   ! ls /sys/class/net/ra0 > /dev/null 2>&1
-	then
-		panic "No supported network device found, maybe a non-mainline driver is required."
-	fi
+	for interface in ${DEVICE}; do
+		# source relevant ipconfig output
+		OLDHOSTNAME=${HOSTNAME}
+		[ -e /tmp/net-${interface}.conf ] && . /tmp/net-${interface}.conf
+		[ -z ${HOSTNAME} ] && HOSTNAME=${OLDHOSTNAME}
+		export HOSTNAME
+
+		if [ -n "${interface}" ]
+		then
+			HWADDR="$(cat /sys/class/net/${interface}/address)"
+		fi
+
+		if [ ! -e "/etc/resolv.conf" ]
+		then
+			echo "Creating /etc/resolv.conf"
+
+			if [ -n "${DNSDOMAIN}" ]
+			then
+				echo "domain ${DNSDOMAIN}" > /etc/resolv.conf
+				echo "search ${DNSDOMAIN}" > /etc/resolv.conf
+			fi
+
+			for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1}
+			do
+				echo "nameserver $i" >> /etc/resolv.conf
+			done
+		fi
+
+		# Check if we have a network device at all
+		if ! ls /sys/class/net/"$interface" > /dev/null 2>&1 && \
+		   ! ls /sys/class/net/eth0 > /dev/null 2>&1 && \
+		   ! ls /sys/class/net/wlan0 > /dev/null 2>&1 && \
+		   ! ls /sys/class/net/ath0 > /dev/null 2>&1 && \
+		   ! ls /sys/class/net/ra0 > /dev/null 2>&1
+		then
+			panic "No supported network device found, maybe a non-mainline driver is required."
+		fi
+	done
 }
 
 do_netmount()
@@ -713,7 +798,7 @@ do_iscsi()
 	[ "${DEBUG}" == "Yes" ] && debugopt="-d 8"
 	#FIXME this name is supposed to be unique - some date + ifconfig hash?
 	ISCSI_INITIATORNAME="iqn.1993-08.org.debian.live:01:$(echo "${HWADDR}" | sed -e s/://g)"
-        export ISCSI_INITIATORNAME
+	export ISCSI_INITIATORNAME
 	if [ -n "${ISCSI_SERVER}" ] ; then
 		iscsistart $debugopt -i "${ISCSI_INITIATORNAME}" -t "${ISCSI_TARGET}" -g 1 -a "${ISCSI_SERVER}" -p "${ISCSI_PORT}"
 	else
@@ -961,7 +1046,7 @@ find_snap ()
 
 try_snap ()
 {
-        # copy the contents of previously found snapshot to ${snap_mount}
+	# copy the contents of previously found snapshot to ${snap_mount}
 	# and remember the device and filename for resync on exit in live-boot.init
 
 	snapdata="${1}"
@@ -1077,7 +1162,7 @@ setup_unionfs ()
 {
 	image_directory="${1}"
 	rootmnt="${2}"
-        addimage_directory="${3}"
+	addimage_directory="${3}"
 
 	case ${UNIONTYPE} in
 		aufs|unionfs)
@@ -1106,7 +1191,6 @@ setup_unionfs ()
 	croot="/"
 
 	# Let's just mount the read-only file systems first
-	rofsstring=""
 	rofslist=""
 
 	if [ "${UNIONTYPE}" = "aufs" ]
@@ -1166,7 +1250,7 @@ setup_unionfs ()
 			image_string="$(echo ${image_string} | sed -e 's/ /\n/g' | sort )"
 		fi
 
-	[ -n "${MODULETORAMFILE}" ] && image_string="${image_directory}/$(basename ${MODULETORAMFILE})"
+		[ -n "${MODULETORAMFILE}" ] && image_string="${image_directory}/$(basename ${MODULETORAMFILE})"
 
 		mkdir -p "${croot}"
 
@@ -1183,7 +1267,6 @@ setup_unionfs ()
 			if [ -d "${image}" ]
 			then
 				# it is a plain directory: do nothing
-				rofsstring="${image}=${roopt}:${rofsstring}"
 				rofslist="${image} ${rofslist}"
 			elif [ -f "${image}" ]
 			then
@@ -1209,9 +1292,10 @@ setup_unionfs ()
 				if [ "${UNIONTYPE}" != "unionmount" ]
 				then
 					mpoint="${croot}/${imagename}"
-					rofsstring="${mpoint}=${roopt}:${rofsstring}" && rofslist="${mpoint} ${rofslist}"
+					rofslist="${mpoint} ${rofslist}"
 				else
 					mpoint="${rootmnt}"
+					rofslist="${rootmnt} ${rofslist}"
 				fi
 				mkdir -p "${mpoint}"
 				log_begin_msg "Mounting \"${image}\" on \"${mpoint}\" via \"${backdev}\""
@@ -1223,13 +1307,13 @@ setup_unionfs ()
 		# we have a plain root system
 		mkdir -p "${croot}/filesystem"
 		log_begin_msg "Mounting \"${image_directory}\" on \"${croot}/filesystem\""
-		mount -t $(get_fstype "${image_directory}") -o ro,noatime "${image_directory}" "${croot}/filesystem" || panic "Can not mount ${image_directory} on ${croot}/filesystem" && rofsstring="${croot}/filesystem=${roopt}:${rofsstring}" && rofslist="${croot}/filesystem ${rofslist}"
+		mount -t $(get_fstype "${image_directory}") -o ro,noatime "${image_directory}" "${croot}/filesystem" || \
+			panic "Can not mount ${image_directory} on ${croot}/filesystem" && \
+			rofslist="${croot}/filesystem ${rofslist}"
 		# probably broken:
 		mount -o bind ${croot}/filesystem $mountpoint
 		log_end_msg
 	fi
-
-	rofsstring=${rofsstring%:}
 
 	mkdir -p /cow
 
@@ -1332,30 +1416,30 @@ setup_unionfs ()
 	if [ "${UNIONTYPE}" != "unionmount" ]
 	then
 
-	if [ "${cow_fstype}" = "nfs" ]
-	then
-		log_begin_msg \
-			"Trying nfsmount ${nfs_cow_opts} ${cowdevice} /cow"
-		nfsmount ${nfs_cow_opts} ${cowdevice} /cow || \
-			panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on /cow"
-	else
-		mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} /cow || \
-			panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on /cow"
-	fi
+		if [ "${cow_fstype}" = "nfs" ]
+		then
+			log_begin_msg \
+				"Trying nfsmount ${nfs_cow_opts} ${cowdevice} /cow"
+			nfsmount ${nfs_cow_opts} ${cowdevice} /cow || \
+				panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on /cow"
+		else
+			mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} /cow || \
+				panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on /cow"
+		fi
 	fi
 
 	rofscount=$(echo ${rofslist} |wc -w)
 
+	if [ ${rofscount} -ne 1 ]
+	then
+		panic "only one RO file system supported with exposedroot: ${rofslist}"
+	fi
+	rofs=${rofslist%% }
+
 	if [ -n "${EXPOSED_ROOT}" ]
 	then
-		if [ ${rofscount} -ne 1 ]
-		then
-			panic "only one RO file system supported with exposedroot: ${rofslist}"
-		fi
-		exposedrootfs=${rofslist%% }
-
-		mount --bind ${exposedrootfs} ${rootmnt} || \
-			panic "bind mount of ${exposedrootfs} failed"
+		mount --bind ${rofs} ${rootmnt} || \
+			panic "bind mount of ${rofs} failed"
 
 		if [ -z "${SKIP_UNION_MOUNTS}" ]
 		then
@@ -1363,39 +1447,49 @@ setup_unionfs ()
 		else
 			cow_dirs=''
 		fi
-
-		for dir in ${cow_dirs}; do
-			mkdir -p /cow${dir}
-
-			case "${UNIONTYPE}" in
-				unionfs-fuse)
-					(ulimit -n 16384; unionfs-fuse -o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid /cow=RW:${exposedrootfs}${dir} "${rootmnt}${dir}" || panic "mount ${UNIONTYPE} on ${rootmnt}${dir} failed with option cow,noinitgroups,default_permissions,allow_other,use_ino,suid=/cow=RW:${exposedrootfs}${dir}")
-					mkdir -p /dev/.initramfs/varrun
-					pidof unionfs-fuse >> /dev/.initramfs/varrun/sendsigs.omit || true
-					;;
-
-				*)
-					mount -t ${UNIONTYPE} -o rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro ${UNIONTYPE} "${rootmnt}${dir}" || panic "mount ${UNIONTYPE} on ${rootmnt}${dir} failed with option rw,noatime,dirs=/cow${dir}=rw:${exposedrootfs}${dir}=ro"
-					;;
-			esac
-		done
 	else
+		cow_dirs="/"
+	fi
+
+	if [ "${cow_fstype}" != "tmpfs" ] && [ "${cow_dirs}" != "/" ] && [ "${UNIONTYPE}" = "unionmount" ]
+	then
+		true # FIXME: Maybe it does, I don't really know.
+		#panic "unionmount does not support subunions (${cow_dirs})."
+	fi
+
+	unionmountopts=""
+	unionmountpoint=""
+
+	for dir in ${cow_dirs}; do
+		mkdir -p /cow${dir}
+
+		unionmountpoint="${rootmnt}${dir}"
+		unionrw="/cow${dir}"
+		unionro="${rofs}${dir}"
+		# We don't handle spaces and other junk gracefully here, hopefully not needed.
 		case "${UNIONTYPE}" in
 			unionfs-fuse)
-				(ulimit -n 16384; unionfs-fuse -o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid /cow=RW:${rofsstring} "${rootmnt}" || panic "mount ${UNIONTYPE} on ${rootmnt} failed with option cow,noinitgroups,default_permissions,allow_other,use_ino,suid=/cow:RW:${rofsstring}")
-				mkdir -p /dev/.initramfs/varrun
-				pidof unionfs-fuse >> /dev/.initramfs/varrun/sendsigs.omit || true
+				unionmountopts="-o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid"
+				unionmountopts="${unionmountopts} ${unionrw}=RW:${unionro}=RO"
+				( sysctl -w fs.file-max=391524 ; ulimit -HSn 16384
+				unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
+					( mkdir -p /dev/.initramfs/varrun
+				pidof unionfs-fuse >> /dev/.initramfs/varrun/sendsigs.omit || true )
 				;;
 
 			unionmount)
-				mount_full -t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice} "${rootmnt}" || panic "${UNIONTYPE} ${cowdevice} on ${rootmnt} failed with option noatime,union,${cow_mountopt}"
+				unionmountopts="-t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice}"
+				mount_full $unionmountopts "${unionmountpoint}"
 				;;
 
+
 			*)
-				mount -t ${UNIONTYPE} -o noatime,${noxino_opt}dirs=/cow=rw:${rofsstring} ${UNIONTYPE} "${rootmnt}" || panic "mount ${UNIONTYPE} on ${rootmnt} failed with option noatime,${noxino_opt}dirs=/cow=rw:${rofsstring}"
+				unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=rw:${unionro}=${roopt}"
+				mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 				;;
-		esac
-	fi
+		esac || \
+			panic "mount ${UNIONTYPE} on ${unionmountpoint} failed with option ${unionmountopts}"
+	done
 
 	# Correct the permissions of /:
 	chmod 0755 "${rootmnt}"
@@ -1482,13 +1576,19 @@ check_dev ()
 
 		if [ "$ISO_DEVICE" = "/" ]
 		then
-			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live.log
+			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live-boot.log
 		else
-			mkdir /isofrom
-			mount -t auto "$ISO_DEVICE" /isofrom
-			ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
-			loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
-			devname="${loopdevname}"
+			fs_type=$(get_fstype "${ISO_DEVICE}")
+			if is_supported_fs ${fs_type}
+			then
+				mkdir /isofrom
+				mount -t $fs_type "$ISO_DEVICE" /isofrom
+				ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
+				loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
+				devname="${loopdevname}"
+			else
+				echo "Warning: unable to mount $ISO_DEVICE." >>/live.log
+			fi
 		fi
 	fi
 
@@ -1564,8 +1664,7 @@ find_livefs ()
 			do
 				if [ "$(cat ${sysblock}/removable)" = "1" ]
 				then
-					if readlink ${sysblock} | grep -q usb ||
-					   readlink ${sysblock}/device | grep -q usb # linux < 2.6.29
+					if readlink ${sysblock} | grep -q usb
 					then
 						for dev in $(subdevices "${sysblock}")
 						do
@@ -1689,15 +1788,15 @@ integrity_check ()
 
 mountroot ()
 {
-        if [ -x /scripts/local-top/cryptroot ]; then
+	if [ -x /scripts/local-top/cryptroot ]; then
 	    /scripts/local-top/cryptroot
 	fi
 
 	exec 6>&1
 	exec 7>&2
-	exec > live.log
+	exec > live-boot.log
 	exec 2>&1
-	tail -f live.log >&7 &
+	tail -f live-boot.log >&7 &
 	tailpid="${!}"
 
 	# Ensure 'panic' function is overridden
@@ -1857,5 +1956,5 @@ mountroot ()
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-
 	kill ${tailpid}
-	[ -w "${rootmnt}/var/log/" ] && cp live.log "${rootmnt}/var/log/" 2>/dev/null
+	[ -w "${rootmnt}/var/log/" ] && cp live-boot.log "${rootmnt}/var/log/" 2>/dev/null
 }
