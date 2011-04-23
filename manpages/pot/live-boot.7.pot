@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2011-03-14 06:27+0100\n"
+"POT-Creation-Date: 2011-04-23 13:48+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "2011-03-14"
+msgid "2011-04-23"
 msgstr ""
 
 #. type: TH
@@ -319,7 +319,7 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:73
 #, no-wrap
-msgid "B<ip>=[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<DEVICE>]:[I<AUTOCONF>] [,[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<DEVICE>]:[I<AUTOCONF>]]"
+msgid "B<ip>=[I<DEVICE>]:[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<AUTOCONF>] [,[I<DEVICE>]:[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<AUTOCONF>]]"
 msgstr ""
 
 #. type: Plain text
