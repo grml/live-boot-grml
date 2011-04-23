@@ -1473,8 +1473,8 @@ setup_unionfs ()
 				unionmountopts="${unionmountopts} ${unionrw}=RW:${unionro}=RO"
 				( sysctl -w fs.file-max=391524 ; ulimit -HSn 16384
 				unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
-					( mkdir -p /dev/.initramfs/varrun
-				pidof unionfs-fuse >> /dev/.initramfs/varrun/sendsigs.omit || true )
+					( mkdir -p /run/initramfs
+				pidof unionfs-fuse >> /run/initramfs/sendsigs.omit || true )
 				;;
 
 			unionmount)
