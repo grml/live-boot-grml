@@ -1,0 +1,64 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 26_support_dns_bootoption.dpatch by Michael Prokop <mika@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Support dns bootoption. Usage examples: dns=8.8.8.8 / dns=8.8.8.8,1.2.3.4
+
+@DPATCH@
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' live-boot-grml~/scripts/live live-boot-grml/scripts/live
+--- live-boot-grml~/scripts/live	2011-05-03 17:03:57.483541293 +0200
++++ live-boot-grml/scripts/live	2011-05-03 17:03:57.576874626 +0200
+@@ -73,6 +73,18 @@
+ 				export DEFCONSOLE
+ 				;;
+ 
++			dns=*)
++			  	DNSSERVER="${ARGUMENT#*=}"
++				if echo "${DNSSERVER}" | grep -q , ; then
++					DNSSERVER1="${DNSSERVER%,*}"
++					DNSSERVER2="${DNSSERVER#*,}"
++					export DNSSERVER1 DNSSERVER2
++				else
++					DNSSERVER1="$DNSSERVER"
++					export DNSSERVER1
++				fi
++				unset DNSSERVER
++				;;
+ 			debug)
+ 				DEBUG="Yes"
+ 				export DEBUG
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' live-boot-grml~/scripts/live-bottom/23networking_grml live-boot-grml/scripts/live-bottom/23networking_grml
+--- live-boot-grml~/scripts/live-bottom/23networking_grml	2011-05-03 17:03:57.426874629 +0200
++++ live-boot-grml/scripts/live-bottom/23networking_grml	2011-05-03 17:05:11.820206602 +0200
+@@ -44,7 +44,12 @@
+ 
+ # prepare a new /etc/network/interfaces file (and, possibly, a new /etc/resolv.conf)
+ IFFILE="/root/etc/network/interfaces"
+-RESOLVCONF="/root/etc/resolv.conf"
++if [ -L /root/etc/resolv.conf ] ; then
++  # assume we have resolvconf
++  RESOLVCONF=/root/etc/resolvconf/resolv.conf.d/base
++else
++  RESOLVCONF="/root/etc/resolv.conf"
++fi
+ 
+ # config for loopback networking
+ cat > $IFFILE << EOF
+@@ -105,3 +110,17 @@
+ 
+     echo>> $IFFILE
+ done
++
++# dns bootoption
++if [ -n "$DNSSERVER1" ]
++then
++	# disable any existing entries
++	if [ -r $RESOLVCONF ]
++	then
++		sed -i 's/nameserver/# nameserver/' $RESOLVCONF
++	fi
++	for i in $DNSSERVER1 $DNSSERVER2
++	do
++		echo "nameserver $i" >> $RESOLVCONF
++	done
++fi
