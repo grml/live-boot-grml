@@ -11,3 +11,4 @@
 16_nodhcp.dpatch
 19_revert_toram_bootoption_to_expected_behaviour.dpatch
 25_support_lvm_for_live-media.dpatch
+26_support_dns_bootoption.dpatch
