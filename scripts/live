@@ -730,12 +730,15 @@ do_netsetup ()
 			if [ -n "${DNSDOMAIN}" ]
 			then
 				echo "domain ${DNSDOMAIN}" > /etc/resolv.conf
-				echo "search ${DNSDOMAIN}" > /etc/resolv.conf
+				echo "search ${DNSDOMAIN}" >> /etc/resolv.conf
 			fi
 
 			for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1}
 			do
-				echo "nameserver $i" >> /etc/resolv.conf
+				if [ -n "$i" ] && [ "$i" != 0.0.0.0 ]
+				then
+					echo "nameserver $i" >> /etc/resolv.conf
+				fi
 			done
 		fi
 
