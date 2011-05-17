@@ -1942,6 +1942,13 @@ mountroot ()
 		log_end_msg
 	fi
 
+	if [ -f /etc/resolv.conf ] && [ ! -s ${rootmnt}/etc/resolv.conf ]
+	then
+		log_begin_msg "Copying /etc/resolv.conf to ${rootmnt}/etc/resolv.conf"
+		cp -v /etc/resolv.conf ${rootmnt}/etc/resolv.conf
+		log_end_msg
+	fi
+
 	maybe_break live-bottom
 	log_begin_msg "Running /scripts/live-bottom\n"
 
