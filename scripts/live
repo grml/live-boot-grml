@@ -730,12 +730,15 @@ do_netsetup ()
 			if [ -n "${DNSDOMAIN}" ]
 			then
 				echo "domain ${DNSDOMAIN}" > /etc/resolv.conf
-				echo "search ${DNSDOMAIN}" > /etc/resolv.conf
+				echo "search ${DNSDOMAIN}" >> /etc/resolv.conf
 			fi
 
 			for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1}
 			do
-				echo "nameserver $i" >> /etc/resolv.conf
+				if [ -n "$i" ] && [ "$i" != 0.0.0.0 ]
+				then
+					echo "nameserver $i" >> /etc/resolv.conf
+				fi
 			done
 		fi
 
@@ -1473,8 +1476,8 @@ setup_unionfs ()
 				unionmountopts="${unionmountopts} ${unionrw}=RW:${unionro}=RO"
 				( sysctl -w fs.file-max=391524 ; ulimit -HSn 16384
 				unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
-					( mkdir -p /dev/.initramfs/varrun
-				pidof unionfs-fuse >> /dev/.initramfs/varrun/sendsigs.omit || true )
+					( mkdir -p /run/initramfs
+				pidof unionfs-fuse >> /run/initramfs/sendsigs.omit || true )
 				;;
 
 			unionmount)
@@ -1939,6 +1942,13 @@ mountroot ()
 			mkdir -p "${rootmnt}/etc/live/boot.d"
 		fi
 		cp snapshot.conf "${rootmnt}/etc/live/boot.d/"
+		log_end_msg
+	fi
+
+	if [ -f /etc/resolv.conf ] && [ ! -s ${rootmnt}/etc/resolv.conf ]
+	then
+		log_begin_msg "Copying /etc/resolv.conf to ${rootmnt}/etc/resolv.conf"
+		cp -v /etc/resolv.conf ${rootmnt}/etc/resolv.conf
 		log_end_msg
 	fi
 

@@ -4,8 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 3.0~a16\n"
-"POT-Creation-Date: 2011-03-14 06:27+0100\n"
+"Project-Id-Version: live-boot 3.0~a17\n"
+"POT-Creation-Date: 2011-05-18 19:30+0300\n"
 "PO-Revision-Date: 2010-05-24 12:34+0300\n"
 "Last-Translator: Daniel Baumann <daniel@debian.org>\n"
 "Language-Team: none\n"
@@ -24,13 +24,14 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "2011-03-14"
+msgid "2011-05-18"
 msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1
-msgid "3.0~a16"
-msgstr "3.0~a16"
+#, no-wrap
+msgid "3.0~a17"
+msgstr "3.0~a17"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1
@@ -323,8 +324,8 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:73
 #, no-wrap
-msgid "B<ip>=[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<DEVICE>]:[I<AUTOCONF>] [,[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<DEVICE>]:[I<AUTOCONF>]]"
-msgstr "B<ip>=[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<DEVICE>]:[I<AUTOCONF>] [,[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<DEVICE>]:[I<AUTOCONF>]]"
+msgid "B<ip>=[I<DEVICE>]:[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<AUTOCONF>] [,[I<DEVICE>]:[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<AUTOCONF>]]"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:75

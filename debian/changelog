@@ -1,3 +1,20 @@
+live-boot (3.0~a17-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating to standards version 3.9.2.
+  * Using /run/initramfs instead of /dev/.initramfs/varrun for unionfs-
+    fuse sendsigs (Closes: #621908).
+  * Updating manpage wrt/ ip parameter squence (Closes: #616197).
+  * Making copyright file distribution neutral.
+  * Correcting top-level makefile to automatically get all the supported
+    languages, rather than defining a static list.
+
+  [ Michal Suchanek ]
+  * Copy resolv.conf to live system root (Closes: #627178).
+  * Tidy up resolv.conf a bit.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 18 May 2011 19:31:27 +0200
+
 live-boot (3.0~a16-1) unstable; urgency=low
 
   * Adding old 2.x changelog entries in debian changelog.
