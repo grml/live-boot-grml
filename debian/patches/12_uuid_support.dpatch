@@ -54,7 +54,7 @@ index abce3cd..851796c 100755
 +	fi
 +
 +	if [ -n "$BOOTID" ] && ! [ -r "${path}/conf/bootid.txt" ] ; then
-+		echo "  * Warning: bootid=... specified but no bootid.txt found on currently requested device.">>/live.log
++		echo "  * Warning: bootid=... specified but no bootid.txt found on currently requested device.">>/live-boot.log
 +		return 1
 +	fi
 +
@@ -64,15 +64,15 @@ index abce3cd..851796c 100755
 +
 +	if [ -z "$BOOTID" -a -z "$IGNORE_BOOTID" ]
 +	then
-+		echo " * Warning: bootid.txt found but ignore_bootid / bootid=.. bootoption missing...">>/live.log
++		echo " * Warning: bootid.txt found but ignore_bootid / bootid=.. bootoption missing...">>/live-boot.log
 +		return 1
 +	fi
 +
 +	if [ "$BOOTID" = "$bootid_conf" ]
 +	then
-+		echo " * Successfully verified /conf/bootid.txt from ISO, continuing... ">>/live.log
++		echo " * Successfully verified /conf/bootid.txt from ISO, continuing... ">>/live-boot.log
 +	else
-+		echo " * Warning: BOOTID of ISO does not match. Retrying and continuing search...">>/live.log
++		echo " * Warning: BOOTID of ISO does not match. Retrying and continuing search...">>/live-boot.log
 +		return 1
 +	fi
 +

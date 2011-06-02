@@ -1590,7 +1590,7 @@ check_dev ()
 				loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
 				devname="${loopdevname}"
 			else
-				echo "Warning: unable to mount $ISO_DEVICE." >>/live.log
+				echo "Warning: unable to mount $ISO_DEVICE." >>/live-boot.log
 			fi
 		fi
 	fi
