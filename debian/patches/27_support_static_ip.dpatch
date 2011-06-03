@@ -6,7 +6,7 @@
 
 @DPATCH@
 diff --git a/scripts/live b/scripts/live
-index 5681362..2d09e3f 100755
+index 5681362..feeaea2 100755
 --- a/scripts/live
 +++ b/scripts/live
 @@ -91,9 +91,8 @@ Arguments ()
@@ -38,34 +38,38 @@ index 5681362..2d09e3f 100755
 				export STATICIP
 				;;
 
-@@ -598,6 +593,23 @@ copy_live_to ()
+@@ -598,6 +593,24 @@ copy_live_to ()
 	return 0
  }
 
 +get_ipconfig_para()
 +{
-+    if [ $# != 1 ] ; then
-+        echo "Missin parameter for $0"
-+        return
-+    fi
-+    devname=$1
-+    for ip in ${STATICIP} ; do
-+        case $ip in
-+            *:$devname:*)
-+            echo $ip
-+            return
-+            ;;
-+        esac
-+    done
-+    echo $devname
++	if [ $# != 1 ] ; then
++		echo "Missin parameter for $0"
++		return
++	fi
++	devname=$1
++	for ip in ${STATICIP} ; do
++		case $ip in
++			*:$devname:*)
++			echo $ip
++			return
++			;;
++		esac
++	done
++	echo $devname
 +}
++
  do_netsetup ()
  {
 	modprobe -q af_packet # For DHCP
-@@ -612,6 +624,20 @@ do_netsetup ()
-	   [ -z "${HTTPFS}" ] && [ -z "${FTPFS}" ]
-	then
+@@ -608,9 +621,19 @@ do_netsetup ()
+	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
+	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
 
+-	if [ -z "${NETBOOT}" ] && [ -z "${FETCH}" ] && \
+-	   [ -z "${HTTPFS}" ] && [ -z "${FTPFS}" ]
+-	then
 +	# Our modus operandi for getting a working network setup is this:
 +	# * If ip=* is set, pass that to ipconfig and be done
 +	# * Else, try dhcp on all devices in this order:
@@ -79,11 +83,10 @@ index 5681362..2d09e3f 100755
 +	for device in ${ALLDEVICES}; do
 +		ipconfig -c none -d $device -t 1 2>/dev/null >/dev/null
 +	done
-+
+
 
 	# support for Syslinux IPAPPEND parameter
-	# it sets the BOOTIF variable on the kernel parameter
-@@ -653,7 +679,7 @@ do_netsetup ()
+@@ -653,7 +676,7 @@ do_netsetup ()
 
 				if [ "$bootif_mac" = "$current_mac" ]
 				then
@@ -92,7 +95,21 @@ index 5681362..2d09e3f 100755
 					break
 				fi
 			fi
-@@ -678,37 +704,22 @@ do_netsetup ()
+@@ -665,12 +688,7 @@ do_netsetup ()
+	# for *every* present network device (except for loopback of course)
+	if [ -z "$ETHDEVICE" ] ; then
+		echo "If you want to boot from a specific device use bootoption ethdevice=..."
+-		for device in /sys/class/net/*; do
+-			dev=${device##*/} ;
+-			if [ "$dev" != "lo" ] ; then
+-				ETHDEVICE="$ETHDEVICE $dev"
+-			fi
+-		done
++        ETHDEVICE="$ALLDEVICES"
+	fi
+
+	# split args of ethdevice=eth0,eth1 into "eth0 eth1"
+@@ -678,38 +696,22 @@ do_netsetup ()
 		devlist="$devlist $device"
 	done
 
@@ -124,8 +141,7 @@ index 5681362..2d09e3f 100755
 +			export DEVICE="$dev $DEVICE"
 +			# break  # exit loop as we just use the irst
 		fi
-+
-	done
+-	done
 
 -	else
 -		for interface in ${DEVICE}; do
@@ -136,6 +152,9 @@ index 5681362..2d09e3f 100755
 -				break
 -			fi
 -		done
-	fi
+-	fi
++	done
++	unset devlist
 
 	for interface in ${DEVICE}; do
+		# source relevant ipconfig output
