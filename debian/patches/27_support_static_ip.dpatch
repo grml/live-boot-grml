@@ -5,8 +5,9 @@
 ## DP: No description.
 
 @DPATCH@
+
 diff --git a/scripts/live b/scripts/live
-index 5681362..feeaea2 100755
+index 5681362..bf20cce 100755
 --- a/scripts/live
 +++ b/scripts/live
 @@ -91,9 +91,8 @@ Arguments ()
@@ -109,7 +110,7 @@ index 5681362..feeaea2 100755
 	fi
 
 	# split args of ethdevice=eth0,eth1 into "eth0 eth1"
-@@ -678,38 +696,22 @@ do_netsetup ()
+@@ -678,38 +696,27 @@ do_netsetup ()
 		devlist="$devlist $device"
 	done
 
@@ -124,10 +125,14 @@ index 5681362..feeaea2 100755
 -		if [ -r /proc/"$jobid"/status ] ; then
 -			echo "Killing job $jobid for device $dev as ipconfig ran into recursion..."
 -			kill -9 $jobid
--		fi
 +	for dev in $devlist ; do
-+		echo "Executing ipconfig -t $ETHDEV_TIMEOUT $(get_ipconfig_para $dev)"
-+		ipconfig -t "$ETHDEV_TIMEOUT" $(get_ipconfig_para $dev) | tee -a /netboot.config
++		param="$(get_ipconfig_para $dev)"
++		if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] ; then
++			echo "Ignoring network device $dev due to nodhcp." | tee -a /live-boot.log
++			continue
+		fi
++		echo "Executing ipconfig -t $ETHDEV_TIMEOUT $param"
++		ipconfig -t "$ETHDEV_TIMEOUT" "$param" | tee -a /netboot.config
 
 		# if configuration of device worked we should have an assigned
 		# IP address, iff so let's use the according as $DEVICE for later usage
