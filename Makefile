@@ -2,7 +2,7 @@
 
 SHELL := sh -e
 
-LANGUAGES = en $(shell cd manpages/po && ls)
+LANGUAGES = $(shell cd manpages/po && ls)
 
 SCRIPTS = bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*
 
