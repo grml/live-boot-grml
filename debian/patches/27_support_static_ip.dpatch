@@ -1,0 +1,141 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 27_support_staticip.dpatch by  <mru@grml.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff --git a/scripts/live b/scripts/live
+index 5681362..2d09e3f 100755
+--- a/scripts/live
++++ b/scripts/live
+@@ -91,9 +91,8 @@ Arguments ()
+				;;
+
+			ethdevice=*)
+-				DEVICE="${ARGUMENT#ethdevice=}"
+-				ETHDEVICE="${DEVICE}"
+-				export DEVICE ETHDEVICE
++				ETHDEVICE="${ARGUMENT#ethdevice=}"
++				export ETHDEVICE
+				;;
+
+			ethdevice-timeout=*)
+@@ -150,13 +149,9 @@ Arguments ()
+				;;
+
+			ip=*)
+-				STATICIP="${ARGUMENT#ip=}"
+-
+-				if [ -z "${STATICIP}" ]
+-				then
+-					STATICIP="frommedia"
+-				fi
+-
++				# copy complete ip=args into staticip, and
++				# keep multiple uses.
++				STATICIP="${STATICIP} ${ARGUMENT}"
+				export STATICIP
+				;;
+
+@@ -598,6 +593,23 @@ copy_live_to ()
+	return 0
+ }
+
++get_ipconfig_para()
++{
++    if [ $# != 1 ] ; then
++        echo "Missin parameter for $0"
++        return
++    fi
++    devname=$1
++    for ip in ${STATICIP} ; do
++        case $ip in
++            *:$devname:*)
++            echo $ip
++            return
++            ;;
++        esac
++    done
++    echo $devname
++}
+ do_netsetup ()
+ {
+	modprobe -q af_packet # For DHCP
+@@ -612,6 +624,20 @@ do_netsetup ()
+	   [ -z "${HTTPFS}" ] && [ -z "${FTPFS}" ]
+	then
+
++	# Our modus operandi for getting a working network setup is this:
++	# * If ip=* is set, pass that to ipconfig and be done
++	# * Else, try dhcp on all devices in this order:
++	#   ethdevice= bootif= <all interfaces>
++
++	ALLDEVICES="$(cd /sys/class/net/ && ls -1 2>/dev/null | grep -v '^lo$' )"
++
++	# Turn on all interfaces before doing anything, to avoid timing problems
++	# during link negotiation.
++	echo "Net: Turning on all device links..."
++	for device in ${ALLDEVICES}; do
++		ipconfig -c none -d $device -t 1 2>/dev/null >/dev/null
++	done
++
+
+	# support for Syslinux IPAPPEND parameter
+	# it sets the BOOTIF variable on the kernel parameter
+@@ -653,7 +679,7 @@ do_netsetup ()
+
+				if [ "$bootif_mac" = "$current_mac" ]
+				then
+-					DEVICE=${device##*/}
++					ETHDEVICE="${device##*/},$ETHDEVICE" # use ethdevice
+					break
+				fi
+			fi
+@@ -678,37 +704,22 @@ do_netsetup ()
+		devlist="$devlist $device"
+	done
+
+-	# this is tricky (and ugly) because ipconfig sometimes just hangs/runs into
+-	# an endless loop; iff execution fails give it two further tries, that's
+-	# why we use '$devlist $devlist $devlist' for the other for loop
+-	for dev in $devlist $devlist $devlist ; do
+-		echo "Executing ipconfig -t $ETHDEV_TIMEOUT $dev"
+-		ipconfig -t "$ETHDEV_TIMEOUT" $dev | tee -a /netboot.config &
+-		jobid=$!
+-		sleep "$ETHDEV_TIMEOUT" ; sleep 1
+-		if [ -r /proc/"$jobid"/status ] ; then
+-			echo "Killing job $jobid for device $dev as ipconfig ran into recursion..."
+-			kill -9 $jobid
+-		fi
++	for dev in $devlist ; do
++		echo "Executing ipconfig -t $ETHDEV_TIMEOUT $(get_ipconfig_para $dev)"
++		ipconfig -t "$ETHDEV_TIMEOUT" $(get_ipconfig_para $dev) | tee -a /netboot.config
+
+		# if configuration of device worked we should have an assigned
+		# IP address, iff so let's use the according as $DEVICE for later usage
+		# simple and primitive approach which seems to work fine
+-		if ifconfig $dev | grep -q 'inet.*addr:' ; then
+-			export DEVICE="$dev"
+-			break
++		IPV4ADDR="0.0.0.0"
++		. /tmp/net-${device}.conf
++		if [ "${IPV4ADDR}" != "0.0.0.0" ]; then
++			export DEVICE="$dev $DEVICE"
++			# break  # exit loop as we just use the irst
+		fi
++
+	done
+
+-	else
+-		for interface in ${DEVICE}; do
+-			ipconfig -t "$ETHDEV_TIMEOUT" ${interface} | tee /netboot-${interface}.config
+-			[ -e /tmp/net-${interface}.conf ] && . /tmp/net-${interface}.conf
+-			if [ "$IPV4ADDR" != "0.0.0.0" ]
+-			then
+-				break
+-			fi
+-		done
+	fi
+
+	for interface in ${DEVICE}; do
