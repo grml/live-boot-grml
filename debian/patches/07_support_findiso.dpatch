@@ -37,7 +37,7 @@ index d79beed..04ad61e 100755
 +				umount ${mountpoint}
 +				mkdir /live/findiso -p
 +				mount -t ${fstype} -o ro,noatime "${devname}" /live/findiso
-+				loopdevname=$(setup_loop "/live/findiso/${FINDISO}" "loop" "/sys/block/loop*" "" '')
++				loopdevname=$(setup_loop "/live/findiso/${FINDISO}" "loop" "/sys/block/loop*" 0 "")
 +				devname="${loopdevname}"
 +				mount -t iso9660 -o ro,noatime "${devname}" ${mountpoint}
 +			fi
