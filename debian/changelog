@@ -1,3 +1,39 @@
+live-boot (3.0~a17-1+grml.00) unstable; urgency=low
+
+  [ Christian Hofstaedtler ]
+  * [c9a70fd] Add dpatch support to build process.
+  * [a9ddc0a] Readd Grml patches.
+  * [675f2b2] Remove unused boot scripts.
+  * [c4993d4] Update debian/control for Grml.
+  * [0716b66] Ensure 10validateroot is executable.
+  * [b5b937f] Always honor the "nodhcp" boot option.
+  * [10cf847] Don't mess around with kernel/initramfs-tools' ip=.
+  * [aa93321] Networking_grml: DNS for systems without resolvconf.
+  * [2a859b8] Merge dhcphostname support into 23networking-grml.
+  * [10caf0b] Support DNS in boot environment.
+
+  [ Michael Prokop ]
+  * [6cd3977] Add patch number 19 to revert the toram bootoption
+    to expected behaviour.
+  * [65fa11b] Support dns bootoption.
+
+  [ Ulrich Dangel ]
+  * [df17b43] Support lvm devices for live-media.
+  * [8ff045c] Support raid devices as well.
+  * [2ad3c30] Change output to live-boot.log.
+  * [34b4518] Explicit specify offset parameter for setup_loop.
+    [Closes: issue1003]
+  * [3ac64e5] Remove dba from uploader as this is a Grml project.
+  * [b289379] Support static ip configuration.
+  * [1371673] Improve static version.
+  * [9487c5d] Change nodhcp patch to unset the DHCP option as well.
+  * [1662374] Support nodhcp bootoption.
+  * [7847abd] Ignore devices with no file matching the findiso parameter.
+  * [7158e84] Don't show an error message if /live/image is already
+    unmounted.
+
+ -- Michael Prokop <mika@grml.org>  Sun, 05 Jun 2011 21:29:14 +0200
+
 live-boot (3.0~a17-1) unstable; urgency=low
 
   [ Daniel Baumann ]
