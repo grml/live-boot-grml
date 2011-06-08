@@ -66,15 +66,6 @@ install:
 		install -D -m 0644 $${MANPAGE} $(DESTDIR)/usr/share/man/man$${SECTION}/$$(basename $${MANPAGE}); \
 	done
 
-	for LANGUAGE in $(LANGUAGES); \
-	do \
-		for MANPAGE in manpages/$${LANGUAGE}/*; \
-		do \
-			SECTION="$$(basename $${MANPAGE} | awk -F. '{ print $$3 }')"; \
-			install -D -m 0644 $${MANPAGE} $(DESTDIR)/usr/share/man/$${LANGUAGE}/man$${SECTION}/$$(basename $${MANPAGE} .$${LANGUAGE}.$${SECTION}).$${SECTION}; \
-		done; \
-	done
-
 uninstall:
 	# Uninstalling executables
 	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
