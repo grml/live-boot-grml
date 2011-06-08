@@ -1,3 +1,12 @@
+live-boot (3.0~a17-1+grml.01) unstable; urgency=low
+
+  * [6666658] Do not fail in multiarch environment when
+    installing libnss_dns.so.
+  * [ebdefd9] Drop installation of localized manpages
+    from upstream Makefile.
+
+ -- Michael Prokop <mika@grml.org>  Wed, 08 Jun 2011 12:15:23 +0200
+
 live-boot (3.0~a17-1+grml.00) unstable; urgency=low
 
   [ Christian Hofstaedtler ]
