@@ -49,7 +49,7 @@ index abce3cd..851796c 100755
 +	path="$1"
 +
 +	if [ -n "$IGNORE_BOOTID" ] ; then
-+		echo " * Ignoring verification of bootid.txt as requested via ignore_bootid.">>/live.log
++		echo " * Ignoring verification of bootid.txt as requested via ignore_bootid.">>/live-boot.log
 +		return 0
 +	fi
 +
