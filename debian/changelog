@@ -1,3 +1,12 @@
+live-boot (3.0~a18-1) unstable; urgency=low
+
+  * Updating and correcting sendsigs.omit support for /run (Closes:
+    #628188).
+  * Removing accidentally twice included English files when installing
+    manpages.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 11 Jun 2011 11:24:15 +0200
+
 live-boot (3.0~a17-1) unstable; urgency=low
 
   [ Daniel Baumann ]
