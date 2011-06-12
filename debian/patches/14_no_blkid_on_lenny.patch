@@ -10,7 +10,7 @@
 @DPATCH@
 --- a/scripts/live
 +++ b/scripts/live
-@@ -1577,7 +1577,12 @@ check_dev ()
+@@ -1680,7 +1680,12 @@
  
  	if is_supported_fs ${fstype}
  	then

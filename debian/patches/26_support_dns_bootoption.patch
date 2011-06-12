@@ -5,11 +5,10 @@
 ## DP: Support dns bootoption. Usage examples: dns=8.8.8.8 / dns=8.8.8.8,1.2.3.4
 
 @DPATCH@
-diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' live-boot-grml~/scripts/live live-boot-grml/scripts/live
---- live-boot-grml~/scripts/live	2011-05-03 17:03:57.483541293 +0200
-+++ live-boot-grml/scripts/live	2011-05-03 17:03:57.576874626 +0200
-@@ -73,6 +73,18 @@
- 				export DEFCONSOLE
+--- a/scripts/live
++++ b/scripts/live
+@@ -77,6 +77,18 @@
+ 				BOOTIF="${x#BOOTIF=}"
  				;;
  
 +			dns=*)
@@ -27,9 +26,8 @@ diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' 
  			debug)
  				DEBUG="Yes"
  				export DEBUG
-diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' live-boot-grml~/scripts/live-bottom/23networking_grml live-boot-grml/scripts/live-bottom/23networking_grml
---- live-boot-grml~/scripts/live-bottom/23networking_grml	2011-05-03 17:03:57.426874629 +0200
-+++ live-boot-grml/scripts/live-bottom/23networking_grml	2011-05-03 17:05:11.820206602 +0200
+--- a/scripts/live-bottom/23networking_grml
++++ b/scripts/live-bottom/23networking_grml
 @@ -44,7 +44,12 @@
  
  # prepare a new /etc/network/interfaces file (and, possibly, a new /etc/resolv.conf)

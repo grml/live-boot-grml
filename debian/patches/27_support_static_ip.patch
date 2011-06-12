@@ -6,26 +6,24 @@
 
 @DPATCH@
 
-diff --git a/scripts/live b/scripts/live
-index 5681362..bf20cce 100755
 --- a/scripts/live
 +++ b/scripts/live
-@@ -91,9 +91,8 @@ Arguments ()
-				;;
-
-			ethdevice=*)
+@@ -110,9 +110,8 @@
+ 				;;
+ 
+ 			ethdevice=*)
 -				DEVICE="${ARGUMENT#ethdevice=}"
 -				ETHDEVICE="${DEVICE}"
 -				export DEVICE ETHDEVICE
 +				ETHDEVICE="${ARGUMENT#ethdevice=}"
 +				export ETHDEVICE
-				;;
-
-			ethdevice-timeout=*)
-@@ -150,13 +149,9 @@ Arguments ()
-				;;
-
-			ip=*)
+ 				;;
+ 
+ 			ethdevice-timeout=*)
+@@ -179,13 +178,9 @@
+ 				;;
+ 
+ 			ip=*)
 -				STATICIP="${ARGUMENT#ip=}"
 -
 -				if [ -z "${STATICIP}" ]
@@ -36,13 +34,13 @@ index 5681362..bf20cce 100755
 +				# copy complete ip=args into staticip, and
 +				# keep multiple uses.
 +				STATICIP="${STATICIP} ${ARGUMENT}"
-				export STATICIP
-				;;
-
-@@ -598,6 +593,24 @@ copy_live_to ()
-	return 0
+ 				export STATICIP
+ 				;;
+ 
+@@ -667,6 +662,24 @@
+ 	return 0
  }
-
+ 
 +get_ipconfig_para()
 +{
 +	if [ $# != 1 ] ; then
@@ -63,11 +61,11 @@ index 5681362..bf20cce 100755
 +
  do_netsetup ()
  {
-	modprobe -q af_packet # For DHCP
-@@ -608,9 +621,19 @@ do_netsetup ()
-	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
-	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
-
+ 	modprobe -q af_packet # For DHCP
+@@ -677,9 +690,19 @@
+ 	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
+ 	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
+ 
 -	if [ -z "${NETBOOT}" ] && [ -z "${FETCH}" ] && \
 -	   [ -z "${HTTPFS}" ] && [ -z "${FTPFS}" ]
 -	then
@@ -84,22 +82,22 @@ index 5681362..bf20cce 100755
 +	for device in ${ALLDEVICES}; do
 +		ipconfig -c none -d $device -t 1 2>/dev/null >/dev/null
 +	done
-
-
-	# support for Syslinux IPAPPEND parameter
-@@ -653,7 +676,7 @@ do_netsetup ()
-
-				if [ "$bootif_mac" = "$current_mac" ]
-				then
+ 
+ 
+ 	# support for Syslinux IPAPPEND parameter
+@@ -722,7 +745,7 @@
+ 
+ 				if [ "$bootif_mac" = "$current_mac" ]
+ 				then
 -					DEVICE=${device##*/}
 +					ETHDEVICE="${device##*/},$ETHDEVICE" # use ethdevice
-					break
-				fi
-			fi
-@@ -665,12 +688,7 @@ do_netsetup ()
-	# for *every* present network device (except for loopback of course)
-	if [ -z "$ETHDEVICE" ] ; then
-		echo "If you want to boot from a specific device use bootoption ethdevice=..."
+ 					break
+ 				fi
+ 			fi
+@@ -734,12 +757,7 @@
+ 	# for *every* present network device (except for loopback of course)
+ 	if [ -z "$ETHDEVICE" ] ; then
+ 		echo "If you want to boot from a specific device use bootoption ethdevice=..."
 -		for device in /sys/class/net/*; do
 -			dev=${device##*/} ;
 -			if [ "$dev" != "lo" ] ; then
@@ -107,13 +105,13 @@ index 5681362..bf20cce 100755
 -			fi
 -		done
 +        ETHDEVICE="$ALLDEVICES"
-	fi
-
-	# split args of ethdevice=eth0,eth1 into "eth0 eth1"
-@@ -678,38 +696,27 @@ do_netsetup ()
-		devlist="$devlist $device"
-	done
-
+ 	fi
+ 
+ 	# split args of ethdevice=eth0,eth1 into "eth0 eth1"
+@@ -747,38 +765,27 @@
+ 		devlist="$devlist $device"
+ 	done
+ 
 -	# this is tricky (and ugly) because ipconfig sometimes just hangs/runs into
 -	# an endless loop; iff execution fails give it two further tries, that's
 -	# why we use '$devlist $devlist $devlist' for the other for loop
@@ -130,13 +128,13 @@ index 5681362..bf20cce 100755
 +		if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] ; then
 +			echo "Ignoring network device $dev due to nodhcp." | tee -a /live-boot.log
 +			continue
-		fi
+ 		fi
 +		echo "Executing ipconfig -t $ETHDEV_TIMEOUT $param"
 +		ipconfig -t "$ETHDEV_TIMEOUT" "$param" | tee -a /netboot.config
-
-		# if configuration of device worked we should have an assigned
-		# IP address, iff so let's use the according as $DEVICE for later usage
-		# simple and primitive approach which seems to work fine
+ 
+ 		# if configuration of device worked we should have an assigned
+ 		# IP address, iff so let's use the according as $DEVICE for later usage
+ 		# simple and primitive approach which seems to work fine
 -		if ifconfig $dev | grep -q 'inet.*addr:' ; then
 -			export DEVICE="$dev"
 -			break
@@ -145,9 +143,9 @@ index 5681362..bf20cce 100755
 +		if [ "${IPV4ADDR}" != "0.0.0.0" ]; then
 +			export DEVICE="$dev $DEVICE"
 +			# break  # exit loop as we just use the irst
-		fi
+ 		fi
 -	done
-
+ 
 -	else
 -		for interface in ${DEVICE}; do
 -			ipconfig -t "$ETHDEV_TIMEOUT" ${interface} | tee /netboot-${interface}.config
@@ -160,6 +158,6 @@ index 5681362..bf20cce 100755
 -	fi
 +	done
 +	unset devlist
-
-	for interface in ${DEVICE}; do
-		# source relevant ipconfig output
+ 
+ 	for interface in ${DEVICE}; do
+ 		# source relevant ipconfig output

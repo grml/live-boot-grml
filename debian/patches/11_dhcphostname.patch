@@ -11,11 +11,9 @@ Support 'nodhcphostname' option which will disable setting the
 hostname of the booted system according to the DNS information.
 This patch takes care of the netboot case.
 
-diff --git a/scripts/live-bottom/23networking b/scripts/live-bottom/23networking
-index 9554b77..9270e9c 100755
 --- a/scripts/live
 +++ b/scripts/live
-@@ -216,6 +216,11 @@ Arguments ()
+@@ -220,6 +220,11 @@
  				export NOACCESSIBILITY
  				;;
  
@@ -27,4 +25,3 @@ index 9554b77..9270e9c 100755
  			nofastboot)
  				NOFASTBOOT="Yes"
  				export NOFASTBOOT
-

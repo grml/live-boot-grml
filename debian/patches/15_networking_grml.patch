@@ -119,4 +119,3 @@ diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_
 +
 +    echo>> $IFFILE
 +done
-+

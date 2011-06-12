@@ -6,11 +6,9 @@
 
 @DPATCH@
 
-diff --git a/scripts/live-functions b/scripts/live-functions
-index 5efe432..faaf23e 100644
 --- a/scripts/live-functions
 +++ b/scripts/live-functions
-@@ -88,14 +88,20 @@ panic() {
+@@ -88,14 +88,20 @@
  	printf "     ${DEB_1}\n"
  	printf "     ${DEB_2}  \033[1;37mBOOT FAILED!\033[0m\n"
  	printf "     ${DEB_3}\n"

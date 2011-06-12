@@ -6,14 +6,12 @@
 
 @DPATCH@
 
-diff --git a/scripts/live b/scripts/live
-index 5681362..46ef54b 100755
 --- a/scripts/live
 +++ b/scripts/live
-@@ -88,6 +88,8 @@ Arguments ()
+@@ -93,6 +93,8 @@
  
  			nodhcp)
-				unset DHCP
+ 				unset DHCP
 +				NODHCP="Yes"
 +				export NODHCP
  				;;

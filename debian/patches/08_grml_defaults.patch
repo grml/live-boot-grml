@@ -5,11 +5,9 @@
 ## DP: Pseudo-brand as grml
 
 @DPATCH@
-diff --git a/scripts/live b/scripts/live
-index d79beed..04ad61e 100755
 --- a/scripts/live
 +++ b/scripts/live
-@@ -16,9 +16,9 @@ home_persistence="home-rw"
+@@ -16,9 +16,9 @@
  root_snapshot_label="live-sn"
  home_snapshot_label="home-sn"
  
@@ -22,4 +20,3 @@ index d79beed..04ad61e 100755
  
  mkdir -p "${mountpoint}"
  tried="/tmp/tried"
-

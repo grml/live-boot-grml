@@ -11,11 +11,9 @@ Date:   Wed Jun 8 10:19:29 2011 +0200
     
     So lets drop the localized manpages and just install the english ones.
 
-diff --git a/Makefile b/Makefile
-index 4e579a3..46de269 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -66,15 +66,6 @@ install:
+@@ -66,15 +66,6 @@
  		install -D -m 0644 $${MANPAGE} $(DESTDIR)/usr/share/man/man$${SECTION}/$$(basename $${MANPAGE}); \
  	done
  

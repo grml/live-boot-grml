@@ -12,11 +12,9 @@ Date:   Tue Jun 7 10:15:52 2011 +0200
     /lib/libnss_dns.so.* but could also be e.g.
     /lib/x86_64-linux-gnu/libnss_dns.so.*.
 
-diff --git a/hooks/live b/hooks/live
-index 3862a60..b3de1e5 100755
 --- a/hooks/live
 +++ b/hooks/live
-@@ -254,7 +254,16 @@ fi
+@@ -260,7 +260,16 @@
  
  # DNS for initramfs
  #copy_exec /lib/libnss_files.so.*      /lib  # /etc/hosts and /etc/passwd

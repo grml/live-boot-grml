@@ -6,11 +6,9 @@ Date:   Fri Mar 25 23:02:38 2011 +0100
     
     Thanks to Ulrich Dangel for discovering this. [Closes: issue848]
 
-diff --git a/hooks/live b/hooks/live
-index 309c26f..3862a60 100755
 --- a/hooks/live
 +++ b/hooks/live
-@@ -252,17 +252,14 @@ then
+@@ -258,17 +258,14 @@
  	manual_add_modules crc32c
  fi
  
@@ -20,16 +18,15 @@ index 309c26f..3862a60 100755
 -	#copy_exec /lib/libnss_files.so.*      /lib  # /etc/hosts and /etc/passwd
 -	copy_exec /lib/libnss_dns.so.*      /lib  # DNS server
 -	#copy_exec /lib/libnss_compat.so.*      /lib  # /etc/passwd
--
--	# Configuration file - may be needed if /etc/hosts is used.
--	#mkdir -p $DESTDIR/etc
--	#cp -p /etc/nsswitch.conf $DESTDIR/etc
--fi
 +# DNS for initramfs
 +#copy_exec /lib/libnss_files.so.*      /lib  # /etc/hosts and /etc/passwd
 +copy_exec /lib/libnss_dns.so.*      /lib  # DNS server
 +#copy_exec /lib/libnss_compat.so.*      /lib  # /etc/passwd
-+
+ 
+-	# Configuration file - may be needed if /etc/hosts is used.
+-	#mkdir -p $DESTDIR/etc
+-	#cp -p /etc/nsswitch.conf $DESTDIR/etc
+-fi
 +# Configuration file - may be needed if /etc/hosts is used.
 +#mkdir -p $DESTDIR/etc
 +#cp -p /etc/nsswitch.conf $DESTDIR/etc
