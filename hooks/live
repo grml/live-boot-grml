@@ -254,16 +254,7 @@ fi
 
 # DNS for initramfs
 #copy_exec /lib/libnss_files.so.*      /lib  # /etc/hosts and /etc/passwd
-# DNS server:
-if ls /lib/libnss_dns.so.* >/dev/null 2>&1 ; then # non-multiarch libc
-        copy_exec /lib/libnss_dns.so.*      /lib
-elif ls /lib/*/libnss_dns.so.* >/dev/null 2>&1 ; then # multiarch libc
-        for libnss in /lib/*/libnss_dns.so.* ; do
-                copy_exec "$libnss"
-        done
-else
-        echo "Warning: libnss_dns.so.* not found. DNS in initramfs not functional."
-fi
+copy_exec /lib/libnss_dns.so.*      /lib  # DNS server
 #copy_exec /lib/libnss_compat.so.*      /lib  # /etc/passwd
 
 # Configuration file - may be needed if /etc/hosts is used.
