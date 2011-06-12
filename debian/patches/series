@@ -14,3 +14,4 @@
 26_support_dns_bootoption.patch
 27_support_static_ip.patch
 28_remove_localized_manpages.patch
+30_support_multiarch_dns.patch
