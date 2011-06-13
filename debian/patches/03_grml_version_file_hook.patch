@@ -6,12 +6,10 @@
 
 @DPATCH@
 
-diff --git a/hooks/live b/hooks/live
-index b5d43f2..ef95275 100755
 --- a/hooks/live
 +++ b/hooks/live
-@@ -38,6 +38,12 @@ then
-        done
+@@ -40,6 +40,12 @@
+ 	done
  fi
  
 +# Grml version information:
@@ -22,4 +20,4 @@ index b5d43f2..ef95275 100755
 +
  # Handling live-boot
  
- # Configuration
+ [ "${QUIET}" ] || echo -n " "core
