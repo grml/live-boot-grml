@@ -12,11 +12,9 @@
 ## DP: * no bootid.txt + ignore_bootid=...                => boots
 
 @DPATCH@
-diff --git a/scripts/live b/scripts/live
-index abce3cd..851796c 100755
 --- a/scripts/live
 +++ b/scripts/live
-@@ -63,6 +63,11 @@ Arguments ()
+@@ -63,6 +63,11 @@
  				export ACCESS
  				;;
  
@@ -28,7 +26,7 @@ index abce3cd..851796c 100755
  			console=*)
  				DEFCONSOLE="${ARGUMENT#*=}"
  				export DEFCONSOLE
-@@ -140,6 +145,11 @@ Arguments ()
+@@ -144,6 +149,11 @@
  				export FROMISO
  				;;
  
@@ -40,7 +38,7 @@ index abce3cd..851796c 100755
  			ignore_uuid)
  				IGNORE_UUID="Yes"
  				export IGNORE_UUID
-@@ -392,6 +402,42 @@ is_live_path ()
+@@ -410,6 +420,42 @@
  	return 1
  }
  
@@ -83,7 +81,7 @@ index abce3cd..851796c 100755
  matches_uuid ()
  {
  	if [ "${IGNORE_UUID}" ] || [ ! -e /conf/uuid.conf ]
-@@ -1550,7 +1596,7 @@ check_dev ()
+@@ -1655,7 +1701,7 @@
  		fi
  
  		if is_live_path ${mountpoint} && \
@@ -92,7 +90,7 @@ index abce3cd..851796c 100755
  		then
  			echo ${mountpoint}
  			return 0
-@@ -1665,19 +1711,6 @@ find_livefs ()
+@@ -1769,19 +1815,6 @@
  					return 0
  				fi
  			done

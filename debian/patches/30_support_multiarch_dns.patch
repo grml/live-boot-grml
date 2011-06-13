@@ -1,0 +1,34 @@
+commit 6666658535b255cb71d48ddeb415aeb3023e1251
+Author: Michael Prokop <mika@grml.org>
+Date:   Tue Jun 7 10:15:52 2011 +0200
+
+    Do not fail in multiarch environment when installing libnss_dns.so.
+    
+    Updating initramfs fails with:
+    
+    | live-boot: core filesystems devices utils:memdisk udev wget blockdevE: /usr/share/initramfs-tools/hooks/live failed with return 1.
+    
+    with multiarch libc because the filename is no longer necessarily
+    /lib/libnss_dns.so.* but could also be e.g.
+    /lib/x86_64-linux-gnu/libnss_dns.so.*.
+
+--- a/hooks/live
++++ b/hooks/live
+@@ -260,7 +260,16 @@
+ 
+ # DNS for initramfs
+ #copy_exec /lib/libnss_files.so.*      /lib  # /etc/hosts and /etc/passwd
+-copy_exec /lib/libnss_dns.so.*      /lib  # DNS server
++# DNS server:
++if ls /lib/libnss_dns.so.* >/dev/null 2>&1 ; then # non-multiarch libc
++        copy_exec /lib/libnss_dns.so.*      /lib
++elif ls /lib/*/libnss_dns.so.* >/dev/null 2>&1 ; then # multiarch libc
++        for libnss in /lib/*/libnss_dns.so.* ; do
++                copy_exec "$libnss"
++        done
++else
++        echo "Warning: libnss_dns.so.* not found. DNS in initramfs not functional."
++fi
+ #copy_exec /lib/libnss_compat.so.*      /lib  # /etc/passwd
+ 
+ # Configuration file - may be needed if /etc/hosts is used.

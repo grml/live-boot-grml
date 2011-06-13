@@ -5,8 +5,6 @@
 ## DP: add live-bottom/10validateroot
 
 @DPATCH@
-diff --git a/scripts/live-bottom/10validateroot b/scripts/live-bottom/10validateroot
-index 0000000..8d42afc
 --- /dev/null
 +++ b/scripts/live-bottom/10validateroot
 @@ -0,0 +1,27 @@

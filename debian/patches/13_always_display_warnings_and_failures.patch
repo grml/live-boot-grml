@@ -5,8 +5,8 @@
 ## DP: Always display failure and warning messages.
 
 @DPATCH@
---- live-initramfs-grml~/scripts/live-functions	2010-02-20 16:03:43.155342432 +0100
-+++ live-initramfs-grml/scripts/live-functions	2010-02-20 16:04:08.675380352 +0100
+--- a/scripts/live-functions
++++ b/scripts/live-functions
 @@ -2,6 +2,17 @@
  . /scripts/functions
  . /live.vars

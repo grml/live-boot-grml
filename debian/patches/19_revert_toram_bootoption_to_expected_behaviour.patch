@@ -29,7 +29,7 @@
 index d79beed..1b6926e 100755
 --- a/scripts/live
 +++ b/scripts/live
-@@ -484,7 +484,7 @@ copy_live_to ()
+@@ -563,7 +563,7 @@
  
  	if [ -z "${MODULETORAM}" ]
  	then
@@ -38,10 +38,7 @@ index d79beed..1b6926e 100755
  	else
  		MODULETORAMFILE="${copyfrom}/${LIVE_MEDIA_PATH}/${MODULETORAM}"
  
-index d79beed..57d1b41 100755
---- a/scripts/live
-+++ b/scripts/live
-@@ -553,8 +553,7 @@ copy_live_to ()
+@@ -639,8 +639,7 @@
  				echo " * Copying whole medium to RAM" 1>/dev/console
  				rsync -a --progress ${copyfrom}/* ${copyto} 1>/dev/console  # "cp -a" from busybox also copies hidden files
  			else
