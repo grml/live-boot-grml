@@ -78,7 +78,7 @@ install:
 uninstall:
 	# Uninstalling executables
 	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin || true
 
 	rm -rf $(DESTDIR)/usr/share/live-boot
 
@@ -86,18 +86,18 @@ uninstall:
 	rm -rf $(DESTDIR)/usr/share/initramfs-tools/scripts/live*
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top/live
 
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/hooks
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/hooks || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr || true
 
 	# Uninstalling docs
 	rm -rf $(DESTDIR)/usr/share/doc/live-boot
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/doc
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/doc || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr || true
 
 	# Uninstalling manpages
 	for MANPAGE in manpages/en/*; \
