@@ -24,6 +24,8 @@ Description: Debian Live - System Boot Scripts
 Package: live-boot-doc
 Architecture: all
 Depends: ${misc:Depends}
+Conflicts: live-boot (<< 3.0~a18~)
+Replaces: live-boot
 Description: Debian Live - System Boot Scripts (documentation)
  live-boot contains the scripts that configure a Debian Live system during the
  boot process (early userspace).
