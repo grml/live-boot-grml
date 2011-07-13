@@ -25,7 +25,7 @@ build: po4a.cfg
 		echo "E: po4a - command not found"; \
 		echo "I: po4a can be optained from:"; \
 		echo "I:   http://po4a.alioth.debian.org/"; \
-		echo "I: On Debian systems, po4a can be installed with:"; \
+		echo "I: On Debian based systems, po4a can be installed with:"; \
 		echo "I:   apt-get install po4a"; \
 		exit 1; \
 	fi
