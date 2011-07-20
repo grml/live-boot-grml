@@ -12,7 +12,7 @@ Vcs-Git: git://live.debian.net/git/live-boot.git
 Package: live-boot
 Architecture: all
 Depends: ${misc:Depends}, live-boot-initramfs-tools | live-boot-backend
-Recommends: eject, file, rsync, uuid-runtime
+Recommends: live-boot-doc, eject, file, rsync, uuid-runtime
 Suggests: curlftpfs, cryptsetup, httpfs2, unionfs-fuse, wget
 Description: Debian Live - System Boot Scripts
  live-boot contains the scripts that configure a Debian Live system during the
@@ -20,6 +20,17 @@ Description: Debian Live - System Boot Scripts
  .
  In addition to live-boot, a backend for the initrd generation is required, such
  as live-boot-initramfs-tools.
+
+Package: live-boot-doc
+Architecture: all
+Depends: ${misc:Depends}
+Conflicts: live-boot (<< 3.0~a18~)
+Replaces: live-boot
+Description: Debian Live - System Boot Scripts (documentation)
+ live-boot contains the scripts that configure a Debian Live system during the
+ boot process (early userspace).
+ .
+ This package contains the documentation.
 
 Package: live-boot-initramfs-tools
 Architecture: all
