@@ -12,8 +12,10 @@
 ## DP: * no bootid.txt + ignore_bootid=...                => boots
 
 @DPATCH@
---- a/scripts/live
-+++ b/scripts/live
+Index: b/scripts/live
+===================================================================
+--- a/scripts/live	2011-07-24 22:08:02.000000000 +0200
++++ b/scripts/live	2011-07-24 22:08:03.000000000 +0200
 @@ -63,6 +63,11 @@
  				export ACCESS
  				;;

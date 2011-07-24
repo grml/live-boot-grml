@@ -8,8 +8,10 @@
 ## DP: /lib/udev/vol_id in /scripts/live as well
 
 @DPATCH@
---- a/scripts/live
-+++ b/scripts/live
+Index: b/scripts/live
+===================================================================
+--- a/scripts/live	2011-07-24 22:08:03.000000000 +0200
++++ b/scripts/live	2011-07-24 22:08:06.000000000 +0200
 @@ -1680,7 +1680,12 @@
  
  	if is_supported_fs ${fstype}

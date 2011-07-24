@@ -10,19 +10,22 @@ build:
 	dh ${@} --with quilt
 
 override_dh_auto_install:
-	dh_auto_install -- DESTDIR=debian/live-boot-grml
+	dh_auto_install -- DESTDIR=debian/tmp
 
 	# Removing useless files
-	rm -f debian/live-boot-grml/usr/share/doc/live-boot-grml/COPYING
+	rm -f debian/tmp/usr/share/doc/live-boot-grml/COPYING
+	# Some more useless files
+	rm -f debian/tmp/usr/share/initramfs-tools/scripts/live-bottom/12fstab
+	rm -f debian/tmp/usr/share/initramfs-tools/scripts/live-bottom/23networking
+	rm -f debian/tmp/usr/share/initramfs-tools/scripts/live-bottom/24preseed
+	rm -f debian/tmp/usr/share/initramfs-tools/scripts/live-bottom/30accessibility
 
 	# live-boot-initramfs-tools
 	mkdir -p debian/live-boot-grml-initramfs-tools/usr/share
-	mv debian/live-boot-grml/usr/share/initramfs-tools debian/live-boot-grml-initramfs-tools/usr/share
-	# Some more useless files
-	rm -f debian/live-boot-grml-initramfs-tools/usr/share/initramfs-tools/scripts/live-bottom/12fstab
-	rm -f debian/live-boot-grml-initramfs-tools/usr/share/initramfs-tools/scripts/live-bottom/23networking
-	rm -f debian/live-boot-grml-initramfs-tools/usr/share/initramfs-tools/scripts/live-bottom/24preseed
-	rm -f debian/live-boot-grml-initramfs-tools/usr/share/initramfs-tools/scripts/live-bottom/30accessibility
+	mv debian/tmp/usr/share/initramfs-tools debian/live-boot-grml-initramfs-tools/usr/share
 
 override_dh_installinit:
 	dh_installinit -p live-boot-grml --no-restart-on-upgrade --no-start --update-rcd-params='start 89 0 6 .'
+
+override_dh_install:
+	dh_install --fail-missing

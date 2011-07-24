@@ -5,8 +5,10 @@
 ## DP: Pseudo-brand as grml
 
 @DPATCH@
---- a/scripts/live
-+++ b/scripts/live
+Index: b/scripts/live
+===================================================================
+--- a/scripts/live	2011-07-24 22:07:58.000000000 +0200
++++ b/scripts/live	2011-07-24 22:07:59.000000000 +0200
 @@ -16,9 +16,9 @@
  root_snapshot_label="live-sn"
  home_snapshot_label="home-sn"

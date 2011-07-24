@@ -6,8 +6,10 @@
 
 @DPATCH@
 
---- a/scripts/live
-+++ b/scripts/live
+Index: b/scripts/live
+===================================================================
+--- a/scripts/live	2011-07-24 22:08:10.000000000 +0200
++++ b/scripts/live	2011-07-24 22:08:11.000000000 +0200
 @@ -1669,6 +1669,29 @@
  			umount $mountpoint
  		fi

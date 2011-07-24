@@ -12,8 +12,10 @@ Date:   Tue Jun 7 10:15:52 2011 +0200
     /lib/libnss_dns.so.* but could also be e.g.
     /lib/x86_64-linux-gnu/libnss_dns.so.*.
 
---- a/hooks/live
-+++ b/hooks/live
+Index: b/hooks/live
+===================================================================
+--- a/hooks/live	2011-07-24 22:08:17.000000000 +0200
++++ b/hooks/live	2011-07-24 22:08:18.000000000 +0200
 @@ -260,7 +260,16 @@
  
  # DNS for initramfs

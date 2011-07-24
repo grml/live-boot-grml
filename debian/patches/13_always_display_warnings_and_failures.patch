@@ -5,8 +5,10 @@
 ## DP: Always display failure and warning messages.
 
 @DPATCH@
---- a/scripts/live-functions
-+++ b/scripts/live-functions
+Index: b/scripts/live-functions
+===================================================================
+--- a/scripts/live-functions	2011-07-24 22:07:56.000000000 +0200
++++ b/scripts/live-functions	2011-07-24 22:08:04.000000000 +0200
 @@ -2,6 +2,17 @@
  . /scripts/functions
  . /live.vars

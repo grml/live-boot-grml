@@ -6,8 +6,10 @@
 
 @DPATCH@
 
---- a/scripts/live-functions
-+++ b/scripts/live-functions
+Index: b/scripts/live-functions
+===================================================================
+--- a/scripts/live-functions	2011-07-24 22:07:22.000000000 +0200
++++ b/scripts/live-functions	2011-07-24 22:07:56.000000000 +0200
 @@ -88,14 +88,20 @@
  	printf "     ${DEB_1}\n"
  	printf "     ${DEB_2}  \033[1;37mBOOT FAILED!\033[0m\n"
