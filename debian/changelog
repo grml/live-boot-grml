@@ -1,3 +1,25 @@
+live-boot (3.0~a19-1) unstable; urgency=low
+
+  * Correct rmdir call in top-level Makefiles uninstall target to not
+    fail if there was no prior live-boot installation.
+  * Making references to debian more distribution neutral.
+  * Replacing reference to old alioth page in live-snapshot.
+  * Splitting out documentation so that it can be accesses separately
+    from the initramfs code.
+  * Adding conflicts/replaces for live-boot to live-boot-doc to not
+    break upgrades.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 13 Jul 2011 10:28:33 +0200
+
+live-boot (3.0~a18-1) unstable; urgency=low
+
+  * Updating and correcting sendsigs.omit support for /run (Closes:
+    #628188).
+  * Removing accidentally twice included English files when installing
+    manpages.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 11 Jun 2011 11:24:15 +0200
+
 live-boot (3.0~a17-1+grml.01) unstable; urgency=low
 
   * [6666658] Do not fail in multiarch environment when

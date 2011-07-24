@@ -211,15 +211,8 @@ do_stop ()
 }
 
 case "${1}" in
-	restart|reload|force-reload|status)
+	start|restart|reload|force-reload|status)
 		[ "${VERBOSE}" != no ] && log_end_msg 0
-		;;
-	start)
-		log_begin_msg "${NAME} is configuring sendsigs..."
-		if [ -f /live/root.pid ] ; then
-			cat /live/root.pid >> /var/run/sendsigs.omit
-		fi
-		log_end_msg 0
 		;;
 
 	stop)

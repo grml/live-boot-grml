@@ -10,11 +10,11 @@ Vcs-Git: git://git.grml.org/live-boot-grml.git
 
 Package: live-boot-grml
 Architecture: all
-Depends: ${misc:Depends}, live-boot-grml-initramfs-tools (=${binary:Version})
+Depends: ${misc:Depends}, live-boot-grml-initramfs-tools
+Recommends: live-boot-grml-doc, eject, file, rsync, uuid-runtime
 Conflicts: live-boot
 Replaces: live-boot
 Provides: live-boot
-Recommends: eject, file, rsync, uuid-runtime
 Suggests: curlftpfs, cryptsetup, httpfs2, unionfs-fuse, wget
 Description: Debian Live - System Boot Scripts
  live-boot contains the scripts that configure a Debian Live system during the
@@ -22,6 +22,22 @@ Description: Debian Live - System Boot Scripts
  .
  In addition to live-boot, a backend for the initrd generation is required, such
  as live-boot-initramfs-tools.
+ .
+ Please notice that this package is maintained by the grml.org team.
+ This is NOT a fork of Debian's live-boot, it's just a customized
+ version to better fit Grml's needs.
+
+Package: live-boot-grml-doc
+Architecture: all
+Depends: ${misc:Depends}
+Conflicts: live-boot (<< 3.0~a18~), live-boot-doc
+Replaces: live-boot, live-boot-doc
+Provides: live-boot-doc
+Description: Debian Live - System Boot Scripts (documentation)
+ live-boot contains the scripts that configure a Debian Live system during the
+ boot process (early userspace).
+ .
+ This package contains the documentation.
  .
  Please notice that this package is maintained by the grml.org team.
  This is NOT a fork of Debian's live-boot, it's just a customized
