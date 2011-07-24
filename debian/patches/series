@@ -17,3 +17,4 @@
 28_remove_localized_manpages.patch
 29_support_dns_in_initramfs.patch
 30_support_multiarch_dns.patch
+31_package_rename.patch

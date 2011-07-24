@@ -1,0 +1,29 @@
+Index: b/Makefile
+===================================================================
+--- a/Makefile	2011-07-24 22:58:34.000000000 +0200
++++ b/Makefile	2011-07-24 22:59:00.000000000 +0200
+@@ -52,11 +52,11 @@
+ 	cp -r hooks scripts $(DESTDIR)/usr/share/initramfs-tools
+ 
+ 	# Installing docs
+-	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
+-	cp -r COPYING docs/* $(DESTDIR)/usr/share/doc/live-boot
++	mkdir -p $(DESTDIR)/usr/share/doc/live-boot-grml
++	cp -r COPYING docs/* $(DESTDIR)/usr/share/doc/live-boot-grml
+ 
+-	mkdir -p $(DESTDIR)/usr/share/doc/live-boot/examples
+-	cp -r etc/* $(DESTDIR)/usr/share/doc/live-boot/examples
++	mkdir -p $(DESTDIR)/usr/share/doc/live-boot-grml/examples
++	cp -r etc/* $(DESTDIR)/usr/share/doc/live-boot-grml/examples
+ 	# (FIXME)
+ 
+ 	# Installing manpages
+@@ -85,7 +85,7 @@
+ 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr
+ 
+ 	# Uninstalling docs
+-	rm -rf $(DESTDIR)/usr/share/doc/live-boot
++	rm -rf $(DESTDIR)/usr/share/doc/live-boot-grml
+ 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/doc
+ 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share
+ 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr

@@ -45,18 +45,18 @@ install:
 	mkdir -p $(DESTDIR)/sbin
 	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin
 
-	mkdir -p $(DESTDIR)/usr/share/live-boot-grml
-	cp bin/live-preseed bin/live-reconfigure local/languagelist $(DESTDIR)/usr/share/live-boot-grml
+	mkdir -p $(DESTDIR)/usr/share/live-boot
+	cp bin/live-preseed bin/live-reconfigure local/languagelist $(DESTDIR)/usr/share/live-boot
 
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools
 	cp -r hooks scripts $(DESTDIR)/usr/share/initramfs-tools
 
 	# Installing docs
-	mkdir -p $(DESTDIR)/usr/share/doc/live-boot-grml
-	cp -r COPYING docs/* $(DESTDIR)/usr/share/doc/live-boot-grml
+	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
+	cp -r COPYING docs/* $(DESTDIR)/usr/share/doc/live-boot
 
-	mkdir -p $(DESTDIR)/usr/share/doc/live-boot-grml/examples
-	cp -r etc/* $(DESTDIR)/usr/share/doc/live-boot-grml/examples
+	mkdir -p $(DESTDIR)/usr/share/doc/live-boot/examples
+	cp -r etc/* $(DESTDIR)/usr/share/doc/live-boot/examples
 	# (FIXME)
 
 	# Installing manpages
@@ -80,7 +80,7 @@ uninstall:
 	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin
 
-	rm -rf $(DESTDIR)/usr/share/live-boot-grml
+	rm -rf $(DESTDIR)/usr/share/live-boot
 
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	rm -rf $(DESTDIR)/usr/share/initramfs-tools/scripts/live*
@@ -94,7 +94,7 @@ uninstall:
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr
 
 	# Uninstalling docs
-	rm -rf $(DESTDIR)/usr/share/doc/live-boot-grml
+	rm -rf $(DESTDIR)/usr/share/doc/live-boot
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/doc
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr
