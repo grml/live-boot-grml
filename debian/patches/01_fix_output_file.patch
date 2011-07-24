@@ -1,5 +1,7 @@
---- a/scripts/live
-+++ b/scripts/live
+Index: b/scripts/live
+===================================================================
+--- a/scripts/live	2011-07-24 22:07:22.000000000 +0200
++++ b/scripts/live	2011-07-24 22:07:54.000000000 +0200
 @@ -1590,7 +1590,7 @@
  				loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
  				devname="${loopdevname}"

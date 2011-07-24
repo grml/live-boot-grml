@@ -6,8 +6,10 @@ Date:   Fri Mar 25 23:02:38 2011 +0100
     
     Thanks to Ulrich Dangel for discovering this. [Closes: issue848]
 
---- a/hooks/live
-+++ b/hooks/live
+Index: b/hooks/live
+===================================================================
+--- a/hooks/live	2011-07-24 22:07:55.000000000 +0200
++++ b/hooks/live	2011-07-24 22:08:17.000000000 +0200
 @@ -258,17 +258,14 @@
  	manual_add_modules crc32c
  fi

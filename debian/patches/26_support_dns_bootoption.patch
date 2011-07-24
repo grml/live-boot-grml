@@ -5,8 +5,10 @@
 ## DP: Support dns bootoption. Usage examples: dns=8.8.8.8 / dns=8.8.8.8,1.2.3.4
 
 @DPATCH@
---- a/scripts/live
-+++ b/scripts/live
+Index: b/scripts/live
+===================================================================
+--- a/scripts/live	2011-07-24 22:08:11.000000000 +0200
++++ b/scripts/live	2011-07-24 22:08:13.000000000 +0200
 @@ -77,6 +77,18 @@
  				BOOTIF="${x#BOOTIF=}"
  				;;
@@ -26,8 +28,10 @@
  			debug)
  				DEBUG="Yes"
  				export DEBUG
---- a/scripts/live-bottom/23networking_grml
-+++ b/scripts/live-bottom/23networking_grml
+Index: b/scripts/live-bottom/23networking_grml
+===================================================================
+--- a/scripts/live-bottom/23networking_grml	2011-07-24 22:08:07.000000000 +0200
++++ b/scripts/live-bottom/23networking_grml	2011-07-24 22:08:13.000000000 +0200
 @@ -44,7 +44,12 @@
  
  # prepare a new /etc/network/interfaces file (and, possibly, a new /etc/resolv.conf)
