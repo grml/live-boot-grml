@@ -8,9 +8,12 @@ Homepage: http://live.debian.net/devel/live-boot/
 Vcs-Browser: http://git.grml.org/?p=live-boot-grml.git
 Vcs-Git: git://git.grml.org/live-boot-grml.git
 
-Package: live-boot
+Package: live-boot-grml
 Architecture: all
-Depends: ${misc:Depends}, live-boot-initramfs-tools (=${binary:Version}) | live-boot-backend (=${binary:Version}) 
+Depends: ${misc:Depends}, live-boot-grml-initramfs-tools (=${binary:Version})
+Conflicts: live-boot
+Replaces: live-boot
+Provides: live-boot
 Recommends: eject, file, rsync, uuid-runtime
 Suggests: curlftpfs, cryptsetup, httpfs2, unionfs-fuse, wget
 Description: Debian Live - System Boot Scripts
@@ -24,7 +27,7 @@ Description: Debian Live - System Boot Scripts
  This is NOT a fork of Debian's live-boot, it's just a customized
  version to better fit Grml's needs.
 
-Package: live-boot-initramfs-tools
+Package: live-boot-grml-initramfs-tools
 Architecture: all
 Depends:
  ${misc:Depends}, busybox | busybox-initramfs, initramfs-tools, udev
@@ -40,15 +43,3 @@ Description: Debian Live - System Boot Scripts (initramfs-tools backend)
  Please notice that this package is maintained by the grml.org team.
  This is NOT a fork of Debian's live-boot, it's just a customized
  version to better fit Grml's needs.
-
-Package: live-initramfs
-Architecture: all
-Depends:
- ${misc:Depends}, live-boot, live-boot-initramfs-tools, live-config,
- live-config-sysvinit
-Description: Debian Live - System Boot Scripts (transitional package)
- Package to ease upgrading from older live-initramfs packages to the new
- live-boot-initramfs-tools package.
- .
- This package can be purged at anytime once the live-boot-initramfs-tools
- package has been installed.
