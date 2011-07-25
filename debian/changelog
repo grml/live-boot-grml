@@ -1,3 +1,28 @@
+live-boot (3.0~a19-1+grml.00) unstable; urgency=low
+
+  * Resync with Debian. This brings in:
+    [ Daniel Baumann ]
+    * Updating and correcting sendsigs.omit support for /run (Closes: #628188).
+    * Removing accidentally twice included English files when installing manpages.
+    * Correct rmdir call in top-level Makefiles uninstall target to not fail if there was no prior live-boot installation.
+    * Making references to debian more distribution neutral.
+    * Replacing reference to old alioth page in live-snapshot.
+    * Splitting out documentation so that it can be accesses separately from the initramfs code.
+    * Adding conflicts/replaces for live-boot to live-boot-doc to not break upgrades.
+
+  * Grml changes:
+    [ Ulrich Dangel ]
+    * [8424e93] Use quilt instead of dpatch
+    * [86ca4d5] Remove old manpage live-snapshot.it.1.txt
+    * [7fb9e91] Support comma delimited devices in live-media-path
+    * [6b21c57] Depend on the same live-boot-initramfs-tools/live-boot-backend version.
+  
+    [ Christian Hofstaedtler ]
+    * Rename packages to not clash with Debian.
+    * Resynced with Debian.
+
+ -- Christian Hofstaedtler <ch@grml.org>  Mon, 25 Jul 2011 02:26:40 +0200
+
 live-boot (3.0~a19-1) unstable; urgency=low
 
   * Correct rmdir call in top-level Makefiles uninstall target to not
