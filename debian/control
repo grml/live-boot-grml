@@ -2,7 +2,7 @@ Source: live-boot
 Section: misc
 Priority: optional
 Maintainer: Grml Team <team@grml.org>
-Build-Depends: debhelper (>= 8), quilt
+Build-Depends: debhelper (>= 8), quilt (>= 0.46-7~)
 Standards-Version: 3.9.2
 Homepage: http://live.debian.net/devel/live-boot/
 Vcs-Browser: http://git.grml.org/?p=live-boot-grml.git
