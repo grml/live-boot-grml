@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2011\-07\-13 3.0~a19 "Debian Live Project"
+.TH LIVE\-BOOT 7 2011\-08\-04 3.0~a20 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -14,6 +14,8 @@ At boot time it will look for a (read\-only) media containing a "/live" director
 
 .SH CONFIGURATION
 \fBlive\-boot\fR can be configured through a boot parameter or a configuration file.
+.PP
+To configure the live\-boot parameters used by default in a live image, see the \-\-bootappend\-live option in the \fIlb_config\fR(1) manual page.
 
 .SS Kernel Parameters
 \fBlive\-boot\fR is only activated if 'boot=live' was used as a kernel parameter.
