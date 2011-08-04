@@ -1,3 +1,20 @@
+live-boot (3.0~a20-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating section for live-boot-doc.
+
+  [ Ben Armstrong ]
+  * Cross-referencing lb_config --bootappend-live.
+
+  [ Daniel Baumann ]
+  * Correcting bootappend-live reference in live-boot manpage.
+  * Applying patch from grml to update forgotten use of live.log with
+    live-boot.log.
+  * Applying reformated patch from Ulrich Dangel <mru@grml.org> to add
+    support for lvm and md devices.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 04 Aug 2011 21:20:47 +0200
+
 live-boot (3.0~a19-1) unstable; urgency=low
 
   * Correct rmdir call in top-level Makefiles uninstall target to not
