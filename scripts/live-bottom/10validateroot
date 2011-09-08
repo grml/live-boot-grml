@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Error out in case a "wrong" file system was chosen.
+
+#set -e
+
+# initramfs-tools header
+
+PREREQ=""
+ 
+prereqs()
+{
+	echo "${PREREQ}"
+}
+
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
+esac
+
+. /scripts/live-functions
+. /scripts/live-helpers
+
+if ! [ -d "/root/usr/share/doc/live-boot" ]
+then
+	panic "A wrong rootfs was mounted."
+fi
