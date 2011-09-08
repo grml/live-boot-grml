@@ -1,3 +1,30 @@
+live-boot (3.0~a21-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Silencing rmdir calls in makefile.
+  * Printing out a warning message in initramfs-tools hook if backend is
+    installed but no live-boot package, exiting early and not breaking
+    update-initramfs (Closes: #639884).
+
+  [ Tails developers ]
+  * Fixing cache_path: cache non-executable libs dependencies as well.
+  * Fixing cache_path: taking into account the three forms of ldd output
+    lines.
+  * Adding a white_listed_devices parameter to find_cow_device and
+    find_files.
+  * Factorizing loops on removable/non-removable devices.
+  * Adding support for persistent-media={removable,removable-usb}.
+  * Silencing umount in case live/image was unmounted already, extracted
+    from a patch by Michael Schierl <schierlm@gmx.de>.
+  * Erroring out in case a "wrong" filesystem was chosen.
+
+  [ Daniel Baumann ]
+  * Using /usr/share/live-boot instead of unreliable
+    /usr/share/doc/live-boot in validateroot bootscript, stripped live
+    systems may or may not carry /usr/share/doc.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 08 Sep 2011 21:06:28 +0200
+
 live-boot (3.0~a20-1) unstable; urgency=low
 
   [ Daniel Baumann ]

@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 04.08.2011 3.0~a20 "Debian Live Projekt"
+.TH LIVE\-BOOT 7 08.09.2011 3.0~a21 "Debian Live Projekt"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Skripte
@@ -187,6 +187,11 @@ files. This results in shorter boot times.
 If "cryptsetup" is specified, filesystems stored on Luks\-encrypted devices
 will be considered as well as others when searching for a persistence
 filesystem; the user will be prompted for any needed decryption passphrase.
+.IP \fBpersistent\-media\fP={\fIremovable\fP|\fIremovable\-usb\fP} 4
+If you specify the keyword 'removable', live\-boot will try to find
+persistent and snapshot partitions on removable media only. Note that if you
+want to further restrict the media to usb mass storage only, you can use the
+\&'removable\-usb' keyword.
 .IP \fBpersistent\-path\fP=\fIPATH\fP 4
 live\-boot will look for persistency files in the root directory of a
 partition, with this parameter, the path can be configured so that you can
