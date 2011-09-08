@@ -7,7 +7,7 @@
 # initramfs-tools header
 
 PREREQ=""
- 
+
 prereqs()
 {
 	echo "${PREREQ}"
@@ -23,7 +23,7 @@ esac
 . /scripts/live-functions
 . /scripts/live-helpers
 
-if ! [ -d "/root/usr/share/doc/live-boot" ]
+if ! [ -d "/root/usr/share/live-boot" ]
 then
 	panic "A wrong rootfs was mounted."
 fi
