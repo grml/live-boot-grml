@@ -1683,7 +1683,7 @@ check_dev ()
 			echo ${mountpoint}
 			return 0
 		else
-			umount ${mountpoint}
+			umount ${mountpoint} 2>/dev/null
 		fi
 	fi
 
