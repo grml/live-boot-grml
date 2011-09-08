@@ -283,10 +283,13 @@ find_cow_device ()
 {
 	# Returns a device containing a partition labeled "${pers_label}" or containing a file named the same way
 	#  in the latter case the partition containing the file is left mounted
-	#  if is not in black_listed_devices
+	#  if is not in black_listed_devices.
+	#  Additionally, if the white_listed_devices list is non-empty, the
+	#  parent block device of the returned device must be part of this list.
 	pers_label="${1}"
 	cow_backing="/${pers_label}-backing"
 	black_listed_devices="${2}"
+	white_listed_devices="${3}"
 
 	if [ -z "${PERSISTENT_PATH}" ]
 	then
@@ -303,6 +306,15 @@ find_cow_device ()
 		then
 			# skip this device entirely
 			break
+		fi
+
+		if [ -n "${white_listed_devices}" ]
+		then
+			if echo "${white_listed_devices}" | grep -v -q -w "${fulldevname}"
+			then
+				# skip this device entirely
+				break
+			fi
 		fi
 
 		for dev in $(subdevices "${sysblock}")
@@ -383,11 +395,15 @@ find_cow_device ()
 find_files ()
 {
 	# return the a string composed by device name, mountpoint an the first of ${filenames} found on a supported partition
+	#  if is not in black_listed_devices.
+	#  Additionally, if the white_listed_devices list is non-empty, the
+	#  parent block device of the returned device must be part of this list.
 	# FIXME: merge with above function
 
 	filenames="${1}"
 	snap_backing="/snap-backing"
 	black_listed_devices="${2}"
+	white_listed_devices="${3}"
 
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
 	do
@@ -397,6 +413,15 @@ find_files ()
 		then
 			# skip this device entirely
 			break
+		fi
+
+		if [ -n "${white_listed_devices}" ]
+		then
+			if echo "${white_listed_devices}" | grep -v -q -w "${fulldevname}"
+			then
+				# skip this device entirely
+				break
+			fi
 		fi
 
 		for dev in $(subdevices "${sysblock}")
@@ -462,4 +487,74 @@ is_luks()
 	return 1
     fi
 
+}
+
+removable_dev ()
+{
+	output_format="${1}"
+	want_usb="${2}"
+	ret=
+
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+	do
+		dev_ok=
+		if [ "$(cat ${sysblock}/removable)" = "1" ]
+		then
+			if [ -z "${want_usb}" ]
+			then
+				dev_ok="yes"
+			else
+				if readlink ${sysblock} | grep -q usb
+				then
+					dev_ok="yes"
+				fi
+			fi
+		fi
+
+		if [ "${dev_ok}" = "yes" ]
+		then
+			case "${output_format}" in
+				sys)
+					ret="${ret} ${sysblock}"
+					;;
+				*)
+					devname=$(sys2dev "${sysblock}")
+					ret="${ret} ${devname}"
+					;;
+			esac
+		fi
+	done
+
+	echo "${ret}"
+}
+
+removable_usb_dev ()
+{
+	output_format="${1}"
+
+	removable_dev "${output_format}" "want_usb"
+}
+
+non_removable_dev ()
+{
+	output_format="${1}"
+	ret=
+
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+	do
+		if [ "$(cat ${sysblock}/removable)" = "0" ]
+		then
+			case "${output_format}" in
+				sys)
+					ret="${ret} ${sysblock}"
+					;;
+				*)
+					devname=$(sys2dev "${sysblock}")
+					ret="${ret} ${devname}"
+					;;
+			esac
+		fi
+	done
+
+	echo "${ret}"
 }

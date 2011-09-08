@@ -253,6 +253,11 @@ Arguments ()
 				export PERSISTENT
 				;;
 
+			persistent-media=*)
+				PERSISTENT_MEDIA="${ARGUMENT#*=}"
+				export PERSISTENT_MEDIA
+				;;
+
 			persistent-path=*)
 				PERSISTENT_PATH="${ARGUMENT#persistent-path=}"
 				export PERSISTENT_PATH
@@ -1033,16 +1038,17 @@ find_snap ()
 	# Look for ${snap_label}.* in block devices
 	snap_label="${1}"
 	black_listed_devices="${2}"
+	white_listed_devices="${3}"
 
 	if [ "${PERSISTENT}" != "nofiles" ]
 	then
 		# search for image files
-		snapdata=$(find_files "${PERSISTENT_PATH}${snap_label}.squashfs ${PERSISTENT_PATH}${snap_label}.cpio.gz ${PERSISTENT_PATH}${snap_label}.ext2 ${PERSISTENT_PATH}${snap_label}.ext3 ${PERSISTENT_PATH}${snap_label}.ext4 ${PERSISTENT_PATH}${snap_label}.jffs2" "${black_listed_devices}")
+		snapdata=$(find_files "${PERSISTENT_PATH}${snap_label}.squashfs ${PERSISTENT_PATH}${snap_label}.cpio.gz ${PERSISTENT_PATH}${snap_label}.ext2 ${PERSISTENT_PATH}${snap_label}.ext3 ${PERSISTENT_PATH}${snap_label}.ext4 ${PERSISTENT_PATH}${snap_label}.jffs2" "${black_listed_devices}" "${white_listed_devices}")
 	fi
 
 	if [ -z "${snapdata}" ]
 	then
-		snapdata=$(find_cow_device "${snap_label}" "${black_listed_devices}")
+		snapdata=$(find_cow_device "${snap_label}" "${black_listed_devices}" "${white_listed_devices}")
 	fi
 	echo "${snapdata}"
 }
@@ -1323,6 +1329,7 @@ setup_unionfs ()
 	# Looking for "${root_persistence}" device or file
 	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
 	then
+
 		if [ -z "${QUICKUSBMODULES}" ]
 		then
 			# Load USB modules
@@ -1350,8 +1357,20 @@ setup_unionfs ()
 			done
 		fi
 
+		case "${PERSISTENT_MEDIA}" in
+			removable)
+				whitelistdev="$(removable_dev)"
+				;;
+			removable-usb)
+				whitelistdev="$(removable_usb_dev)"
+				;;
+			*)
+				whitelistdev=""
+				;;
+		esac
+
 		# search for label and files (this could be hugely optimized)
-		cowprobe=$(find_cow_device "${root_persistence}")
+		cowprobe=$(find_cow_device "${root_persistence}" "${blacklistdev}" "${whitelistdev}")
 		if [ -b "${cowprobe}" ]
 		then
 			# Blacklist /cow device, to avoid inconsistent setups for overlapping snapshots
@@ -1363,17 +1382,17 @@ setup_unionfs ()
 			export PERSISTENCE_IS_ON
 		fi
 		# homecow just mount something on /home, this should be generalized some way
-		homecow=$(find_cow_device "${home_persistence}" "${blacklistdev}")
+		homecow=$(find_cow_device "${home_persistence}" "${blacklistdev}" "${whitelistdev}")
 		if [ -b "${homecow}" ]
 		then
 			PERSISTENCE_IS_ON="1"
 			export PERSISTENCE_IS_ON
 		fi
-		root_snapdata=$(find_snap "${root_snapshot_label}" "${blacklistdev}")
+		root_snapdata=$(find_snap "${root_snapshot_label}" "${blacklistdev}" "${whitelistdev}")
 		# This second type should be removed when snapshot will get smarter,
 		# hence when "/etc/live-snapshot*list" will be supported also by
 		# ext2|ext3|ext4|jffs2 snapshot types.
-		home_snapdata=$(find_snap "${home_snapshot_label}" "${blacklistdev}")
+		home_snapdata=$(find_snap "${home_snapshot_label}" "${blacklistdev}" "${whitelistdev}")
 
 		if [ -b "${cowprobe}" ]
 		then
@@ -1664,7 +1683,7 @@ check_dev ()
 			echo ${mountpoint}
 			return 0
 		else
-			umount ${mountpoint}
+			umount ${mountpoint} 2>/dev/null
 		fi
 	fi
 
@@ -1692,38 +1711,29 @@ find_livefs ()
 	# first look at the one specified in the command line
 	case "${LIVE_MEDIA}" in
 		removable-usb)
-			for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+			for sysblock in $(removable_usb_dev "sys")
 			do
-				if [ "$(cat ${sysblock}/removable)" = "1" ]
-				then
-					if readlink ${sysblock} | grep -q usb
+				for dev in $(subdevices "${sysblock}")
+				do
+					if check_dev "${dev}"
 					then
-						for dev in $(subdevices "${sysblock}")
-						do
-							if check_dev "${dev}"
-							then
-								return 0
-							fi
-						done
+						return 0
 					fi
-				fi
+				done
 			done
 			return 1
 			;;
 
 		removable)
-			for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+			for sysblock in $(removable_dev "sys")
 			do
-				if [ "$(cat ${sysblock}/removable)" = "1" ]
-				then
-					for dev in $(subdevices "${sysblock}")
-					do
-						if check_dev "${dev}"
-						then
-							return 0
-						fi
-					done
-				fi
+				for dev in $(subdevices "${sysblock}")
+				do
+					if check_dev "${dev}"
+					then
+						return 0
+					fi
+				done
 			done
 			return 1
 			;;
@@ -1741,16 +1751,7 @@ find_livefs ()
 
 	# or do the scan of block devices
 	# prefer removable devices over non-removable devices, so scan them first
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | egrep -v "/(loop|ram|dm-|fd)")
-	do
-		if [ "$(cat ${sysblock}/removable)" = "1" ]
-		then
-			removable_devices_to_scan="$removable_devices_to_scan $sysblock"
-		else
-			nonremovable_devices_to_scan="$nonremovable_devices_to_scan $sysblock"
-		fi
-	done
-	devices_to_scan="$removable_devices_to_scan $nonremovable_devices_to_scan"
+	devices_to_scan="$(removable_dev 'sys') $(non_removable_dev 'sys')"
 
 	for sysblock in $devices_to_scan
 	do

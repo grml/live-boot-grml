@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2011\-08\-04 3.0~a20 "Debian Live Project"
+.TH LIVE\-BOOT 7 2011\-09\-08 3.0~a21 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -112,6 +112,8 @@ live\-boot will look for persistent and snapshot partitions or files labeled "li
 If "nofiles" is specified, only filesystems with matching labels will be searched; no filesystems will be traversed looking for archives or image files. This results in shorter boot times.
 .br
 If "cryptsetup" is specified, filesystems stored on Luks\-encrypted devices will be considered as well as others when searching for a persistence filesystem; the user will be prompted for any needed decryption passphrase.
+.IP "\fBpersistent\-media\fR={\fIremovable\fR|\fIremovable\-usb\fR}" 4
+If you specify the keyword 'removable', live\-boot will try to find persistent and snapshot partitions on removable media only. Note that if you want to further restrict the media to usb mass storage only, you can use the 'removable\-usb' keyword.
 .IP "\fBpersistent\-path\fR=\fIPATH\fR" 4
 live\-boot will look for persistency files in the root directory of a partition, with this parameter, the path can be configured so that you can have multiple directories on the same partition to store persistency files.
 .IP "\fBpersistent\-subtext\fR=\fISUFFIX\fR" 4

@@ -42,6 +42,13 @@ fi
 
 # Handling live-boot
 
+if [ ! -e /usr/share/live-boot ]
+then
+	echo "W: live-boot-initramfs-tools (backend) installed without live-boot,"
+	echo "W: this initramfs will *NOT* have live support."
+	exit 0
+fi
+
 [ "${QUIET}" ] || echo -n " "core
 # Configuration
 if [ -e /usr/share/live-boot/languagelist ]
