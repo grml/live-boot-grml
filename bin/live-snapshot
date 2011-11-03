@@ -409,6 +409,13 @@ Do_filelist ()
 Do_snapshot ()
 {
 	TMP_FILELIST=$(mktemp -p "${SAFE_TMPDIR}" "${TMP_FILELIST}.XXXXXX")
+	if [ -e "${EXCLUDE_LIST}" ]
+	then
+		# Create a TMP filelist removing empty lines (grep -f does not like them)
+		# and comments (for speedup and LST)
+		TMP_EXCLUDE_LIST=$(mktemp -p "${SAFE_TMPDIR}" "${PROGRAM}_excludelist.XXXXXX")
+		grep -v '^#.*$' "${EXCLUDE_LIST}" | grep -v '^ *$' > "${TMP_EXCLUDE_LIST}"
+	fi
 
 	case "${SNAP_TYPE}" in
 		squashfs)
@@ -420,7 +427,7 @@ Do_snapshot ()
 			if [ -e "${EXCLUDE_LIST}" ]
 			then
 				# Add explicitly excluded files
-				grep -v '^#.*$' "${EXCLUDE_LIST}" | grep -v '^ *$' >> "${TMP_FILELIST}"
+				cat "${TMP_EXCLUDE_LIST}" >> "${TMP_FILELIST}"
 			fi
 
 			cd "${OLDPWD}"
@@ -439,12 +446,13 @@ Do_snapshot ()
 			cd "${WORKING_DIR}"
 			if [ -e "${EXCLUDE_LIST}" ]
 			then
+
 				# Convert \0 to \n and tag existing (rare but possible) \n in filenames,
 				# this to let grep -F -v do a proper work in filtering out
 				cat "${TMP_FILELIST}" | \
 					tr '\n' '\1' | \
 					tr '\0' '\n' | \
-					grep -F -v -f "${EXCLUDE_LIST}" | \
+					grep -F -v -f "${TMP_EXCLUDE_LIST}" | \
 					tr '\n' '\0' | \
 					tr '\1' '\n' | \
 					eval $COPY_CMD || exit 1
@@ -468,10 +476,14 @@ Do_snapshot ()
 			;;
 	esac
 
-	if [ -f "${TMP_FILELIST}" ]
-	then
-		rm -f "${TMP_FILELIST}"
-	fi
+	# Remove temporary file lists
+	for filelist in "${TMP_FILELIST}" "${TMP_EXCLUDE_LIST}"
+	do
+		if [ -f "${filelist}" ]
+		then
+			rm -f "${filelist}"
+		fi
+	done
 }
 
 Clean ()
