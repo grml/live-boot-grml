@@ -1,3 +1,19 @@
+live-boot (3.0~a22-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Using compression level 9 also for binary packages.
+  * Updating matching in is_nice_device to, amongst others, match for
+    virtio devices.
+  * Include overlayfs modules in initramfs if existing.
+
+  [ Marco Amadori ]
+  * Fix live-snapshot exclude.list handling (Closes: #610337)
+
+  [ Daniel Baumann ]
+  * Sorting overrides in rules alphabetically.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 04 Nov 2011 11:37:28 +0100
+
 live-boot (3.0~a21-1) unstable; urgency=low
 
   [ Daniel Baumann ]
