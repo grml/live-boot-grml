@@ -253,6 +253,10 @@ Arguments ()
 				PERSISTENT_MEDIA="${ARGUMENT#*=}"
 				export PERSISTENT_MEDIA
 				;;
+			persistent-method=*)
+				PERSISTENT_METHOD="${ARGUMENT#*=}"
+				export PERSISTENT_METHOD
+				;;
 
 			persistent-path=*)
 				PERSISTENT_PATH="${ARGUMENT#persistent-path=}"
@@ -385,6 +389,12 @@ Arguments ()
 	then
 		UNIONTYPE="aufs"
 		export UNIONTYPE
+	fi
+
+	if [ -n "${PERSISTENT}" ] && [ -z "${PERSISTENT_METHOD}" ]
+	then
+		PERSISTENT_METHOD="snapshot,overlay"
+		export PERSISTENT_METHOD
 	fi
 
 	if [ -n "${PERSISTENT}" ] && [ -z "${PERSISTENT_STORAGE}" ]
@@ -1385,30 +1395,37 @@ setup_unionfs ()
 				;;
 		esac
 
-		# search for label and files (this could be hugely optimized)
-		cowprobe=$(find_cow_device "${root_persistence}" "${blacklistdev}" "${whitelistdev}")
-		if [ -b "${cowprobe}" ]
+		if echo ${PERSISTENT_METHOD} | grep -qw overlay
 		then
-			# Blacklist /cow device, to avoid inconsistent setups for overlapping snapshots
-			# makes sense to have both persistence for /cow and /home mounted, maybe also with
-			# snapshots to be sure to really store some e.g key config files,
-			# but not on the same media
-			blacklistdev="${cowprobe}"
-			PERSISTENCE_IS_ON="1"
-			export PERSISTENCE_IS_ON
+			# search for label and files (this could be hugely optimized)
+			cowprobe=$(find_cow_device "${root_persistence}" "${blacklistdev}" "${whitelistdev}")
+			if [ -b "${cowprobe}" ]
+			then
+				# Blacklist /cow device, to avoid inconsistent setups for overlapping snapshots
+				# makes sense to have both persistence for /cow and /home mounted, maybe also with
+				# snapshots to be sure to really store some e.g key config files,
+				# but not on the same media
+				blacklistdev="${cowprobe}"
+				PERSISTENCE_IS_ON="1"
+				export PERSISTENCE_IS_ON
+			fi
+			# homecow just mount something on /home, this should be generalized some way
+			homecow=$(find_cow_device "${home_persistence}" "${blacklistdev}" "${whitelistdev}")
+			if [ -b "${homecow}" ]
+			then
+				PERSISTENCE_IS_ON="1"
+				export PERSISTENCE_IS_ON
+			fi
 		fi
-		# homecow just mount something on /home, this should be generalized some way
-		homecow=$(find_cow_device "${home_persistence}" "${blacklistdev}" "${whitelistdev}")
-		if [ -b "${homecow}" ]
+
+		if echo ${PERSISTENT_METHOD} | grep -qw snapshot
 		then
-			PERSISTENCE_IS_ON="1"
-			export PERSISTENCE_IS_ON
+			root_snapdata=$(find_snap "${root_snapshot_label}" "${blacklistdev}" "${whitelistdev}")
+			# This second type should be removed when snapshot will get smarter,
+			# hence when "/etc/live-snapshot*list" will be supported also by
+			# ext2|ext3|ext4|jffs2 snapshot types.
+			home_snapdata=$(find_snap "${home_snapshot_label}" "${blacklistdev}" "${whitelistdev}")
 		fi
-		root_snapdata=$(find_snap "${root_snapshot_label}" "${blacklistdev}" "${whitelistdev}")
-		# This second type should be removed when snapshot will get smarter,
-		# hence when "/etc/live-snapshot*list" will be supported also by
-		# ext2|ext3|ext4|jffs2 snapshot types.
-		home_snapdata=$(find_snap "${home_snapshot_label}" "${blacklistdev}" "${whitelistdev}")
 
 		if [ -b "${cowprobe}" ]
 		then
