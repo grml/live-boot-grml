@@ -330,6 +330,12 @@ find_cow_device ()
 			# Checking for a luks device
 			if [ "${PERSISTENT_ENCRYPTION}" = "luks" ] && [ -e /sbin/cryptsetup ]
 			then
+				if ! modprobe dm-crypt
+				then
+					log_warning_msg "Unable to load module dm-crypt"
+					continue
+				fi
+
 				if ! /sbin/cryptsetup isLuks ${devname}
 				then
 					# we only look for encrypted subdevices
