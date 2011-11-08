@@ -244,15 +244,6 @@ Arguments ()
 				export PERSISTENT
 				;;
 
-			persistent=*)
-				PERSISTENT="${ARGUMENT#persistent=}"
-				if [ -z "${PERSISTENT}" ]
-				then
-					PERSISTENT="Yes"
-				fi
-				export PERSISTENT
-				;;
-
 			persistent-encryption=*)
 				PERSISTENT_ENCRYPTION="${ARGUMENT#*=}"
 				export PERSISTENT_ENCRYPTION
