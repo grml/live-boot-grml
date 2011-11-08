@@ -324,12 +324,18 @@ find_cow_device ()
 			if echo "${black_listed_devices}" | grep -q -w "${devname}"
 			then
 				# skip this subdevice
-				break
+				continue
 			fi
 
 			# Checking for a luks device
-			if [ "${PERSISTENT_ENCRYPTION}" = "luks" ] && [ -e /sbin/cryptsetup ] && /sbin/cryptsetup isLuks ${devname}
+			if [ "${PERSISTENT_ENCRYPTION}" = "luks" ] && [ -e /sbin/cryptsetup ]
 			then
+				if ! /sbin/cryptsetup isLuks ${devname}
+				then
+					# we only look for encrypted subdevices
+					continue
+				fi
+
 				while true
 				do
 					load_keymap
