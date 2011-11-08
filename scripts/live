@@ -253,6 +253,11 @@ Arguments ()
 				export PERSISTENT
 				;;
 
+			persistent-encryption=*)
+				PERSISTENT_ENCRYPTION="${ARGUMENT#*=}"
+				export PERSISTENT_ENCRYPTION
+				;;
+
 			persistent-media=*)
 				PERSISTENT_MEDIA="${ARGUMENT#*=}"
 				export PERSISTENT_MEDIA
