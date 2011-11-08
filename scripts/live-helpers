@@ -369,13 +369,13 @@ find_cow_device ()
 				done
 			fi
 
-			if [ "$(/sbin/blkid -s LABEL -o value $devname 2>/dev/null)" = "${pers_label}" ]
+			if echo ${PERSISTENT_STORAGE} | grep -qw filesystem && [ "$(/sbin/blkid -s LABEL -o value $devname 2>/dev/null)" = "${pers_label}" ]
 			then
 				echo "${devname}"
 				return 0
 			fi
 
-			if [ "${PERSISTENT}" = "nofiles" ]
+			if ! echo ${PERSISTENT_STORAGE} | grep -qw file
 			then
 				# do not mount the device to find for image files
 				# just skip this

@@ -268,6 +268,11 @@ Arguments ()
 				export PERSISTENT_PATH
 				;;
 
+			persistent-storage=*)
+				PERSISTENT_STORAGE="${ARGUMENT#persistent-storage=}"
+				export PERSISTENT_STORAGE
+				;;
+
 			persistent-subtext=*)
 				root_persistence="${root_persistence}-${ARGUMENT#persistent-subtext=}"
 				home_persistence="${home_persistence}-${ARGUMENT#persistent-subtext=}"
@@ -389,6 +394,12 @@ Arguments ()
 	then
 		UNIONTYPE="aufs"
 		export UNIONTYPE
+	fi
+
+	if [ -n "${PERSISTENT}" ] && [ -z "${PERSISTENT_STORAGE}" ]
+	then
+		PERSISTENT_STORAGE="filesystem,file"
+		export PERSISTENT_STORAGE
 	fi
 }
 
@@ -1054,13 +1065,13 @@ find_snap ()
 	black_listed_devices="${2}"
 	white_listed_devices="${3}"
 
-	if [ "${PERSISTENT}" != "nofiles" ]
+	if echo ${PERSISTENT_STORAGE} | grep -qw file
 	then
 		# search for image files
 		snapdata=$(find_files "${PERSISTENT_PATH}${snap_label}.squashfs ${PERSISTENT_PATH}${snap_label}.cpio.gz ${PERSISTENT_PATH}${snap_label}.ext2 ${PERSISTENT_PATH}${snap_label}.ext3 ${PERSISTENT_PATH}${snap_label}.ext4 ${PERSISTENT_PATH}${snap_label}.jffs2" "${black_listed_devices}" "${white_listed_devices}")
 	fi
 
-	if [ -z "${snapdata}" ]
+	if echo ${PERSISTENT_STORAGE} | grep -qw filesystem && [ -z "${snapdata}" ]
 	then
 		snapdata=$(find_cow_device "${snap_label}" "${black_listed_devices}" "${white_listed_devices}")
 	fi
