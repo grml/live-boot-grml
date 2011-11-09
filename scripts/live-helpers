@@ -364,7 +364,8 @@ find_cow_device ()
 					if [ "$(echo "${answer}" | cut -b1 | tr A-Z a-z)" = "n" ]
 					then
 						unset answer
-						break
+						# skip to next subdevice
+						continue 2
 					fi
 				done
 			fi
