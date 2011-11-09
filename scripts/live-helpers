@@ -388,23 +388,22 @@ find_cow_device ()
 			continue
 		fi
 
-		case "$(get_fstype ${dev})" in
-			vfat|ext2|ext3|ext4|jffs2)
-				mkdir -p "${cow_backing}"
-				if try_mount "${dev}" "${cow_backing}" "rw"
+		devfstype="$(get_fstype ${dev})"
+
+		if is_supported_fs ${devfstype}
+		then
+			mkdir -p "${cow_backing}"
+			if try_mount "${dev}" "${cow_backing}" "rw"
+			then
+				if [ -f "${pers_fpath}" ]
 				then
-					if [ -f "${pers_fpath}" ]
-					then
-						echo $(setup_loop "${pers_fpath}" "loop" "/sys/block/loop*")
-						return 0
-					else
-						umount ${cow_backing} > /dev/null 2>&1 || true
-					fi
+					echo $(setup_loop "${pers_fpath}" "loop" "/sys/block/loop*")
+					return 0
+				else
+					umount ${cow_backing} > /dev/null 2>&1 || true
 				fi
-				;;
-			*)
-				;;
-		esac
+			fi
+		fi
 	done
 	return 1
 }
