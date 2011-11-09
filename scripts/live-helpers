@@ -37,6 +37,38 @@ subdevices ()
 	echo ${r}
 }
 
+storage_devices()
+{
+	black_listed_devices="${1}"
+	white_listed_devices="${2}"
+
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "loop|ram|fd")
+	do
+		fulldevname=$(sys2dev "${sysblock}")
+
+		if echo "${black_listed_devices}" | grep -qw "${fulldevname}" || \
+			[ -n "${white_listed_devices}" ] && \
+			echo "${white_listed_devices}" | grep -vqw "${fulldevname}"
+		then
+			# skip this device entirely
+			continue
+		fi
+
+		for dev in $(subdevices "${sysblock}")
+		do
+			devname=$(sys2dev "${dev}")
+
+			if echo "${black_listed_devices}" | grep -qw "${devname}"
+			then
+				# skip this subdevice
+				continue
+			else
+				echo "${devname}"
+			fi
+		done
+	done
+}
+
 is_supported_fs ()
 {
 	fstype="${1}"
@@ -298,109 +330,81 @@ find_cow_device ()
 		pers_fpath=${cow_backing}/${PERSISTENT_PATH}/${pers_label}
 	fi
 
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
+	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
-		fulldevname=$(sys2dev "${sysblock}")
-
-		if echo "${black_listed_devices}" | grep -q -w "${fulldevname}"
+		# Checking for a luks device
+		if [ "${PERSISTENT_ENCRYPTION}" = "luks" ] && [ -e /sbin/cryptsetup ]
 		then
-			# skip this device entirely
-			break
-		fi
-
-		if [ -n "${white_listed_devices}" ]
-		then
-			if echo "${white_listed_devices}" | grep -v -q -w "${fulldevname}"
+			if ! modprobe dm-crypt
 			then
-				# skip this device entirely
-				break
-			fi
-		fi
-
-		for dev in $(subdevices "${sysblock}")
-		do
-			devname=$(sys2dev "${dev}")
-
-			if echo "${black_listed_devices}" | grep -q -w "${devname}"
-			then
-				# skip this subdevice
+				log_warning_msg "Unable to load module dm-crypt"
 				continue
 			fi
 
-			# Checking for a luks device
-			if [ "${PERSISTENT_ENCRYPTION}" = "luks" ] && [ -e /sbin/cryptsetup ]
+			if ! /sbin/cryptsetup isLuks ${dev}
 			then
-				if ! modprobe dm-crypt
-				then
-					log_warning_msg "Unable to load module dm-crypt"
-					continue
-				fi
-
-				if ! /sbin/cryptsetup isLuks ${devname}
-				then
-					# we only look for encrypted subdevices
-					continue
-				fi
-
-				while true
-				do
-					load_keymap
-
-					/lib/cryptsetup/askpass "Enter passphrase for ${pers_label} on ${devname}: " | /sbin/cryptsetup -T 1 luksOpen ${devname} $(basename ${devname}) --key-file=-
-					error=${?}
-
-					devname="/dev/mapper/$(basename ${devname})"
-
-					if [ 0 -eq ${error} ]
-					then
-						unset error
-						break
-					fi
-
-					echo >&6
-					echo -n "There was an error decrypting ${devname} ... Retry? [Y/n] " >&6
-					read answer
-
-					if [ "$(echo "${answer}" | cut -b1 | tr A-Z a-z)" = "n" ]
-					then
-						unset answer
-						# skip to next subdevice
-						continue 2
-					fi
-				done
-			fi
-
-			if echo ${PERSISTENT_STORAGE} | grep -qw filesystem && [ "$(/sbin/blkid -s LABEL -o value $devname 2>/dev/null)" = "${pers_label}" ]
-			then
-				echo "${devname}"
-				return 0
-			fi
-
-			if ! echo ${PERSISTENT_STORAGE} | grep -qw file
-			then
-				# do not mount the device to find for image files
-				# just skip this
+				# we only look for encrypted subdevices
 				continue
 			fi
 
-			case "$(get_fstype ${devname})" in
-				vfat|ext2|ext3|ext4|jffs2)
-					mkdir -p "${cow_backing}"
-					if try_mount "${devname}" "${cow_backing}" "rw"
+			while true
+			do
+				load_keymap
+
+				/lib/cryptsetup/askpass "Enter passphrase for ${pers_label} on ${dev}: " | /sbin/cryptsetup -T 1 luksOpen ${dev} $(basename ${dev}) --key-file=-
+				error=${?}
+
+				dev="/dev/mapper/$(basename ${dev})"
+
+				if [ 0 -eq ${error} ]
+				then
+					unset error
+					break
+				fi
+
+				echo >&6
+				echo -n "There was an error decrypting ${dev} ... Retry? [Y/n] " >&6
+				read answer
+
+				if [ "$(echo "${answer}" | cut -b1 | tr A-Z a-z)" = "n" ]
+				then
+					unset answer
+					# skip to next subdevice
+					continue 2
+				fi
+			done
+		fi
+
+		if echo ${PERSISTENT_STORAGE} | grep -qw filesystem && [ "$(/sbin/blkid -s LABEL -o value $dev 2>/dev/null)" = "${pers_label}" ]
+		then
+			echo "${dev}"
+			return 0
+		fi
+
+		if ! echo ${PERSISTENT_STORAGE} | grep -qw file
+		then
+			# do not mount the device to find for image files
+			# just skip this
+			continue
+		fi
+
+		case "$(get_fstype ${dev})" in
+			vfat|ext2|ext3|ext4|jffs2)
+				mkdir -p "${cow_backing}"
+				if try_mount "${dev}" "${cow_backing}" "rw"
+				then
+					if [ -f "${pers_fpath}" ]
 					then
-						if [ -f "${pers_fpath}" ]
-						then
-							echo $(setup_loop "${pers_fpath}" "loop" "/sys/block/loop*")
-							return 0
-						else
-							umount ${cow_backing} > /dev/null 2>&1 || true
-						fi
+						echo $(setup_loop "${pers_fpath}" "loop" "/sys/block/loop*")
+						return 0
+					else
+						umount ${cow_backing} > /dev/null 2>&1 || true
 					fi
-					;;
-				*)
-					;;
-			esac
-		done
+				fi
+				;;
+			*)
+				;;
+		esac
 	done
 	return 1
 }
@@ -418,56 +422,28 @@ find_files ()
 	black_listed_devices="${2}"
 	white_listed_devices="${3}"
 
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
+	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
-		fulldevname=$(sys2dev "${sysblock}")
+		devfstype="$(get_fstype ${dev})"
 
-		if echo "${black_listed_devices}" | grep -q -w "${fulldevname}"
+		if is_supported_fs ${devfstype}
 		then
-			# skip this device entirely
-			break
+			mkdir -p "${snap_backing}"
+
+			if try_mount "${dev}" "${snap_backing}" "ro" "${devfstype}"
+			then
+				for filename in ${filenames}
+				do
+					if [ -f "${snap_backing}/${filename}" ]
+					then
+						echo "${dev} ${snap_backing} ${filename}"
+						umount ${snap_backing}
+						return 0
+					fi
+				done
+			fi
+			umount ${snap_backing}
 		fi
-
-		if [ -n "${white_listed_devices}" ]
-		then
-			if echo "${white_listed_devices}" | grep -v -q -w "${fulldevname}"
-			then
-				# skip this device entirely
-				break
-			fi
-		fi
-
-		for dev in $(subdevices "${sysblock}")
-		do
-			devname=$(sys2dev "${dev}")
-			devfstype="$(get_fstype ${devname})"
-
-			if echo "${black_listed_devices}" | grep -q -w "${devname}"
-			then
-				# skip this subdevice
-				break
-			fi
-
-			if is_supported_fs ${devfstype}
-			then
-				mkdir -p "${snap_backing}"
-
-				if try_mount "${devname}" "${snap_backing}" "ro" "${devfstype}"
-				then
-					for filename in ${filenames}
-					do
-						if [ -f "${snap_backing}/${filename}" ]
-						then
-							echo "${devname} ${snap_backing} ${filename}"
-							umount ${snap_backing}
-							return 0
-						fi
-					done
-				fi
-
-				umount ${snap_backing}
-			fi
-		done
 	done
 }
 
