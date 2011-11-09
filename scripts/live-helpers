@@ -357,7 +357,7 @@ find_cow_device ()
 						break
 					fi
 
-					echo
+					echo >&6
 					echo -n "There was an error decrypting ${devname} ... Retry? [Y/n] " >&6
 					read answer
 
