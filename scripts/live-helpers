@@ -234,7 +234,7 @@ setup_loop ()
 				fi
 			fi
 
-			if [ 0 -lt "${offset}" ]
+			if [ -n "${offset}" ] && [ 0 -lt "${offset}" ]
 			then
 				options="${options} -o ${offset}"
 			fi
