@@ -311,27 +311,38 @@ try_mount ()
 	fi
 }
 
-find_cow_device ()
+find_persistent_media ()
 {
-	# Returns a device containing a partition labeled "${pers_label}" or containing a file named the same way
-	#  in the latter case the partition containing the file is left mounted
-	#  if is not in black_listed_devices.
-	#  Additionally, if the white_listed_devices list is non-empty, the
-	#  parent block device of the returned device must be part of this list.
-	pers_label="${1}"
-	cow_backing="/${pers_label}-backing"
-	black_listed_devices="${2}"
-	white_listed_devices="${3}"
+	# Scans devices for overlays and snapshots, and returns a whitespace
+	# separated list of how to use them. Only overlays with a partition
+	# label or file name in ${overlays} are returned, and ditto for
+	# snapshots with labels in ${snapshots}.
+	#
+	# When scanning a LUKS device, the user will be asked to enter the
+	# passphrase; on failure to enter it, or if no persistent partitions
+	# or files were found, the LUKS device is closed.
+	#
+	# For a snapshot file the return value is ${label}=${snapdata}", where
+	# ${snapdata} is the parameter used for try_snap().
+	#
+	# For all other cases (overlay/snapshot partition and overlay file) the
+	# return value is "${label}=${device}", where ${device} a device that
+	# can mount the content. In the case of an overlay file, the device
+	# containing the file will remain mounted as a side-effect.
+	#
+	# No devices in ${black_listed_devices} will be scanned, and if
+	# ${white_list_devices} is non-empty, only devices in it will be
+	# scanned.
 
-	if [ -z "${PERSISTENT_PATH}" ]
-	then
-		pers_fpath=${cow_backing}/${pers_label}
-	else
-		pers_fpath=${cow_backing}/${PERSISTENT_PATH}/${pers_label}
-	fi
+	overlays="${1}"
+	snapshots="${2}"
+	black_listed_devices="${3}"
+	white_listed_devices="${4}"
 
 	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
+		luks_device=""
+
 		# Checking for a luks device
 		if [ "${PERSISTENT_ENCRYPTION}" = "luks" ] && [ -e /sbin/cryptsetup ]
 		then
@@ -341,24 +352,28 @@ find_cow_device ()
 				continue
 			fi
 
-			if ! /sbin/cryptsetup isLuks ${dev}
+			if [ ! -x /lib/cryptsetup/askpass ] || [ ! -x /sbin/cryptsetup ]
 			then
-				# we only look for encrypted subdevices
+				log_warning_msg "cryptsetup in unavailable"
 				continue
 			fi
 
+			if ! /sbin/cryptsetup isLuks ${dev}
+			then
+				# skip device since we strictly want luks devices
+				continue
+			fi
+
+			load_keymap
+
 			while true
 			do
-				load_keymap
+				/lib/cryptsetup/askpass "Enter passphrase for ${dev}: " | /sbin/cryptsetup -T 1 luksOpen ${dev} $(basename ${dev}) --key-file=-
 
-				/lib/cryptsetup/askpass "Enter passphrase for ${pers_label} on ${dev}: " | /sbin/cryptsetup -T 1 luksOpen ${dev} $(basename ${dev}) --key-file=-
-				error=${?}
-
-				dev="/dev/mapper/$(basename ${dev})"
-
-				if [ 0 -eq ${error} ]
+				if [ 0 -eq ${?} ]
 				then
-					unset error
+					luks_device="/dev/mapper/$(basename ${dev})"
+					dev="${luks_device}"
 					break
 				fi
 
@@ -368,80 +383,68 @@ find_cow_device ()
 
 				if [ "$(echo "${answer}" | cut -b1 | tr A-Z a-z)" = "n" ]
 				then
-					unset answer
-					# skip to next subdevice
+					break
+				fi
+			done
+		fi
+
+		if echo ${PERSISTENT_STORAGE} | grep -qw filesystem
+		then
+			for label in ${overlays} ${snapshots}
+			do
+				if [ "$(/sbin/blkid -s LABEL -o value $dev 2>/dev/null)" = "${label}" ]
+				then
+					overlays=$(echo ${overlays} | sed -e "s|\<${label}\>||")
+					snapshots=$(echo ${snapshots} | sed -e "s|\<${label}\>||")
+					echo "${label}=${dev}"
+					# skip to the next device
 					continue 2
 				fi
 			done
 		fi
 
-		if echo ${PERSISTENT_STORAGE} | grep -qw filesystem && [ "$(/sbin/blkid -s LABEL -o value $dev 2>/dev/null)" = "${pers_label}" ]
+		if echo ${PERSISTENT_STORAGE} | grep -qw file
 		then
-			echo "${dev}"
-			return 0
-		fi
-
-		if ! echo ${PERSISTENT_STORAGE} | grep -qw file
-		then
-			# do not mount the device to find for image files
-			# just skip this
-			continue
-		fi
-
-		devfstype="$(get_fstype ${dev})"
-
-		if is_supported_fs ${devfstype}
-		then
-			mkdir -p "${cow_backing}"
-			if try_mount "${dev}" "${cow_backing}" "rw"
+			devfstype="$(get_fstype ${dev})"
+			overlay_on_dev=""
+			snapshot_on_dev=""
+			backing="/$(basename ${dev})-backing"
+			mkdir -p "${backing}"
+			if is_supported_fs ${devfstype} && try_mount "${dev}" "${backing}" "rw" "${devfstype}"
 			then
-				if [ -f "${pers_fpath}" ]
-				then
-					echo $(setup_loop "${pers_fpath}" "loop" "/sys/block/loop*")
-					return 0
-				else
-					umount ${cow_backing} > /dev/null 2>&1 || true
-				fi
-			fi
-		fi
-	done
-	return 1
-}
-
-find_files ()
-{
-	# return the a string composed by device name, mountpoint an the first of ${filenames} found on a supported partition
-	#  if is not in black_listed_devices.
-	#  Additionally, if the white_listed_devices list is non-empty, the
-	#  parent block device of the returned device must be part of this list.
-	# FIXME: merge with above function
-
-	filenames="${1}"
-	snap_backing="/snap-backing"
-	black_listed_devices="${2}"
-	white_listed_devices="${3}"
-
-	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
-	do
-		devfstype="$(get_fstype ${dev})"
-
-		if is_supported_fs ${devfstype}
-		then
-			mkdir -p "${snap_backing}"
-
-			if try_mount "${dev}" "${snap_backing}" "ro" "${devfstype}"
-			then
-				for filename in ${filenames}
+				for label in ${overlays}
 				do
-					if [ -f "${snap_backing}/${filename}" ]
+					path=${backing}/${PERSISTENT_PATH}${label}
+					if [ -f "${path}" ]
 					then
-						echo "${dev} ${snap_backing} ${filename}"
-						umount ${snap_backing}
-						return 0
+						overlays=$(echo ${overlays} | sed -e "s|\<${label}\>||")
+						overlay_on_dev="yes"
+						echo "${label}=$(setup_loop "${path}" "loop" "/sys/block/loop*")"
 					fi
 				done
+
+				for label in ${snapshots}
+				do
+					for ext in squashfs cpio.gz ext2 ext3 ext4 jffs2
+					do
+						path="${PERSISTENT_PATH}${label}.${ext}"
+						if [ -f "${backing}/${path}" ]
+						then
+							snapshots=$(echo ${snapshots} | sed -e "s|\<${label}\>||")
+							snapshot_on_dev="yes"
+							echo "${label}=${dev}:${backing}:${path}"
+						fi
+					done
+				done
 			fi
-			umount ${snap_backing}
+			if [ -z "${overlay_on_dev}" ]
+			then
+				umount ${backing} > /dev/null 2>&1 || true
+				if [ -z "${snapshot_on_dev}" ] && [ -n "${luks_device}" ] && /sbin/cryptsetup status "${luks_device}" 1> /dev/null
+				then
+					/sbin/cryptsetup luksClose "${luks_device}"
+				fi
+			fi
 		fi
 	done
 }

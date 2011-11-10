@@ -1059,26 +1059,6 @@ do_snap_copy ()
 	fi
 }
 
-find_snap ()
-{
-	# Look for ${snap_label}.* in block devices
-	snap_label="${1}"
-	black_listed_devices="${2}"
-	white_listed_devices="${3}"
-
-	if echo ${PERSISTENT_STORAGE} | grep -qw file
-	then
-		# search for image files
-		snapdata=$(find_files "${PERSISTENT_PATH}${snap_label}.squashfs ${PERSISTENT_PATH}${snap_label}.cpio.gz ${PERSISTENT_PATH}${snap_label}.ext2 ${PERSISTENT_PATH}${snap_label}.ext3 ${PERSISTENT_PATH}${snap_label}.ext4 ${PERSISTENT_PATH}${snap_label}.jffs2" "${black_listed_devices}" "${white_listed_devices}")
-	fi
-
-	if echo ${PERSISTENT_STORAGE} | grep -qw filesystem && [ -z "${snapdata}" ]
-	then
-		snapdata=$(find_cow_device "${snap_label}" "${black_listed_devices}" "${white_listed_devices}")
-	fi
-	echo "${snapdata}"
-}
-
 try_snap ()
 {
 	# copy the contents of previously found snapshot to ${snap_mount}
@@ -1397,34 +1377,43 @@ setup_unionfs ()
 
 		if echo ${PERSISTENT_METHOD} | grep -qw overlay
 		then
-			# search for label and files (this could be hugely optimized)
-			cowprobe=$(find_cow_device "${root_persistence}" "${blacklistdev}" "${whitelistdev}")
-			if [ -b "${cowprobe}" ]
-			then
-				# Blacklist /cow device, to avoid inconsistent setups for overlapping snapshots
-				# makes sense to have both persistence for /cow and /home mounted, maybe also with
-				# snapshots to be sure to really store some e.g key config files,
-				# but not on the same media
-				blacklistdev="${cowprobe}"
-				PERSISTENCE_IS_ON="1"
-				export PERSISTENCE_IS_ON
-			fi
-			# homecow just mount something on /home, this should be generalized some way
-			homecow=$(find_cow_device "${home_persistence}" "${blacklistdev}" "${whitelistdev}")
-			if [ -b "${homecow}" ]
-			then
-				PERSISTENCE_IS_ON="1"
-				export PERSISTENCE_IS_ON
-			fi
+			overlays="${root_persistence} ${home_persistence}"
 		fi
 
 		if echo ${PERSISTENT_METHOD} | grep -qw snapshot
 		then
-			root_snapdata=$(find_snap "${root_snapshot_label}" "${blacklistdev}" "${whitelistdev}")
-			# This second type should be removed when snapshot will get smarter,
-			# hence when "/etc/live-snapshot*list" will be supported also by
-			# ext2|ext3|ext4|jffs2 snapshot types.
-			home_snapdata=$(find_snap "${home_snapshot_label}" "${blacklistdev}" "${whitelistdev}")
+			snapshots="${root_snapshot_label} ${home_snapshot_label}"
+		fi
+
+
+		for media in $(find_persistent_media "${overlays}" "${snapshots}" "${blacklistdev}" "${whitelistdev}")
+		do
+			media="$(echo ${media} | tr ":" " ")"
+			case ${media} in
+				${root_persistence}=*)
+					cowprobe="${media#*=}"
+					;;
+				${home_persistence}=*)
+					homecow="${media#*=}"
+					;;
+				${root_snapshot_label}=*)
+					root_snapdata="${media#*=}"
+					;;
+				${home_snapshot_label}=*)
+					# This second type should be removed when snapshot will get smarter,
+					# hence when "/etc/live-snapshot*list" will be supported also by
+					# ext2|ext3|ext4|jffs2 snapshot types.
+					home_snapdata="${media#*=}"
+					;;
+				*)
+					;;
+			 esac
+		done
+
+		if [ -b "${cowprobe}" ] || [ -b "${homecow}" ]
+		then
+			PERSISTENCE_IS_ON="1"
+			export PERSISTENCE_IS_ON
 		fi
 
 		if [ -b "${cowprobe}" ]
@@ -1438,7 +1427,6 @@ setup_unionfs ()
 				fsck -y ${cowdevice}
 			fi
 		else
-			log_warning_msg "Unable to find the persistent medium"
 			cowdevice="tmpfs"
 			cow_fstype="tmpfs"
 			cow_mountopt="rw,noatime,mode=755"
