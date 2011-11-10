@@ -262,6 +262,10 @@ Arguments ()
 				PERSISTENT_PATH="${ARGUMENT#persistent-path=}"
 				export PERSISTENT_PATH
 				;;
+			persistent-read-only)
+				PERSISTENT_READONLY="Yes"
+				export PERSISTENT_READONLY
+				;;
 
 			persistent-storage=*)
 				PERSISTENT_STORAGE="${ARGUMENT#persistent-storage=}"
@@ -1186,7 +1190,10 @@ try_snap ()
 		return 1
 	fi
 
-	echo "export ${snap_type}SNAP=${snap_relpath}:${snapdev}:${snapfile}" >> snapshot.conf # for resync on reboot/halt
+	if [ -z ${PERSISTENT_READONLY} ]
+	then
+		echo "export ${snap_type}SNAP=${snap_relpath}:${snapdev}:${snapfile}" >> snapshot.conf # for resync on reboot/halt
+	fi
 	return 0
 }
 
