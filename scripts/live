@@ -391,6 +391,23 @@ Arguments ()
 		export UNIONTYPE
 	fi
 
+	if [ "${PERSISTENT_ENCRYPTION}" = "luks" ]
+	then
+		if ! modprobe dm-crypt
+		then
+			log_warning_msg "Unable to load module dm-crypt"
+			PERSISTENT_ENCRYPTION="none"
+			export PERSISTENT_ENCRYPTION
+		fi
+
+		if [ ! -x /lib/cryptsetup/askpass ] || [ ! -x /sbin/cryptsetup ]
+		then
+			log_warning_msg "cryptsetup in unavailable"
+			PERSISTENT_ENCRYPTION="none"
+			export PERSISTENT_ENCRYPTION
+		fi
+	fi
+
 	if [ -n "${PERSISTENT}" ] && [ -z "${PERSISTENT_METHOD}" ]
 	then
 		PERSISTENT_METHOD="snapshot,overlay"

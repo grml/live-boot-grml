@@ -344,20 +344,8 @@ find_persistent_media ()
 		luks_device=""
 
 		# Checking for a luks device
-		if [ "${PERSISTENT_ENCRYPTION}" = "luks" ] && [ -e /sbin/cryptsetup ]
+		if [ "${PERSISTENT_ENCRYPTION}" = "luks" ]
 		then
-			if ! modprobe dm-crypt
-			then
-				log_warning_msg "Unable to load module dm-crypt"
-				continue
-			fi
-
-			if [ ! -x /lib/cryptsetup/askpass ] || [ ! -x /sbin/cryptsetup ]
-			then
-				log_warning_msg "cryptsetup in unavailable"
-				continue
-			fi
-
 			if ! /sbin/cryptsetup isLuks ${dev}
 			then
 				# skip device since we strictly want luks devices
