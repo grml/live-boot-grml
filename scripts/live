@@ -395,19 +395,23 @@ Arguments ()
 		export UNIONTYPE
 	fi
 
-	if [ "${PERSISTENT_ENCRYPTION}" = "luks" ]
+	if [ -z "${PERSISTENT_ENCRYPTION}" ]
+	then
+		PERSISTENT_ENCRYPTION="none"
+		export PERSISTENT_ENCRYPTION
+	elif echo ${PERSISTENT_ENCRYPTION} | grep -qw luks
 	then
 		if ! modprobe dm-crypt
 		then
 			log_warning_msg "Unable to load module dm-crypt"
-			PERSISTENT_ENCRYPTION="none"
+			PERSISTENT_ENCRYPTION=$(echo ${PERSISTENT_ENCRYPTION} | sed -e 's/\<luks,\|,\?luks$//g')
 			export PERSISTENT_ENCRYPTION
 		fi
 
 		if [ ! -x /lib/cryptsetup/askpass ] || [ ! -x /sbin/cryptsetup ]
 		then
 			log_warning_msg "cryptsetup in unavailable"
-			PERSISTENT_ENCRYPTION="none"
+			PERSISTENT_ENCRYPTION=$(echo ${PERSISTENT_ENCRYPTION} | sed -e 's/\<luks,\|,\?luks$//g')
 			export PERSISTENT_ENCRYPTION
 		fi
 	fi

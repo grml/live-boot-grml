@@ -311,6 +311,37 @@ try_mount ()
 	fi
 }
 
+open_luks_device ()
+{
+	dev="${1}"
+	name="$(basename ${dev})"
+	opts="--key-file=-"
+
+	load_keymap
+
+	while true
+	do
+		/lib/cryptsetup/askpass "Enter passphrase for ${dev}: " | \
+			/sbin/cryptsetup -T 1 luksOpen ${dev} ${name} ${opts}
+
+		if [ 0 -eq ${?} ]
+		then
+			luks_device="/dev/mapper/${name}"
+			echo ${luks_device}
+			return 0
+		fi
+
+		echo >&6
+		echo -n "There was an error decrypting ${dev} ... Retry? [Y/n] " >&6
+		read answer
+
+		if [ "$(echo "${answer}" | cut -b1 | tr A-Z a-z)" = "n" ]
+		then
+			return 2
+		fi
+	done
+}
+
 find_persistent_media ()
 {
 	# Scans devices for overlays and snapshots, and returns a whitespace
@@ -344,36 +375,20 @@ find_persistent_media ()
 		luks_device=""
 
 		# Checking for a luks device
-		if [ "${PERSISTENT_ENCRYPTION}" = "luks" ]
+		if echo ${PERSISTENT_ENCRYPTION} | grep -qw luks && \
+		   /sbin/cryptsetup isLuks ${dev}
 		then
-			if ! /sbin/cryptsetup isLuks ${dev}
+			if luks_device=$(open_luks_device "${dev}")
 			then
-				# skip device since we strictly want luks devices
+				dev="${luks_device}"
+			else
+				# skip $dev since we failed/chose not to open it
 				continue
 			fi
-
-			load_keymap
-
-			while true
-			do
-				/lib/cryptsetup/askpass "Enter passphrase for ${dev}: " | /sbin/cryptsetup -T 1 luksOpen ${dev} $(basename ${dev}) --key-file=-
-
-				if [ 0 -eq ${?} ]
-				then
-					luks_device="/dev/mapper/$(basename ${dev})"
-					dev="${luks_device}"
-					break
-				fi
-
-				echo >&6
-				echo -n "There was an error decrypting ${dev} ... Retry? [Y/n] " >&6
-				read answer
-
-				if [ "$(echo "${answer}" | cut -b1 | tr A-Z a-z)" = "n" ]
-				then
-					break
-				fi
-			done
+		elif echo ${PERSISTENT_ENCRYPTION} | grep -qwv none
+		then
+			# skip $dev since we don't allow unencrypted storage
+			continue
 		fi
 
 		if echo ${PERSISTENT_STORAGE} | grep -qw filesystem
