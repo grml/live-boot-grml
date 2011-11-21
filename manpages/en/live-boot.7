@@ -106,16 +106,16 @@ This tells live-boot not to prompt to eject the CD (when noprompt=cd) or remove 
 This parameters allows to set a custom ramdisk size (it's the '\-o size' option of tmpfs mount). By default, there is no ramdisk size set, so the default of mount applies (currently 50% of available RAM). Note that this option has no currently no effect when booting with toram.
 .IP "\fBswapon\fR" 4
 This parameter enables usage of local swap partitions.
-.IP "\fBpersistent\fR[=nofiles]" 4
+.IP "\fBpersistent\fR" 4
 live\-boot will look for persistent and snapshot partitions or files labeled "live\-rw", "home\-rw", and files called "live\-sn*", "home\-sn*" and will try to, in order: mount as /cow the first, mount the second in /home, and just copy the contents of the latter in appropriate locations (snapshots). Snapshots will be tried to be updated on reboot/shutdown. Look at live\-snapshot(1) for more informations.
-.br
-If "nofiles" is specified, only filesystems with matching labels will be searched; no filesystems will be traversed looking for archives or image files. This results in shorter boot times.
 .IP "\fBpersistent\-encryption\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
 This option determines which types of encryption that we allow to be used when probing devices for persistent media. If "none" is in the list, we allow unencrypted media; if "luks" is in the list, we allow LUKS\-encrypted media. Whenever a device containing encrypted media is probed the user will be prompted for the passphrase. The default value is "none".
 .IP "\fBpersistent\-media\fR={\fIremovable\fR|\fIremovable\-usb\fR}" 4
 If you specify the keyword 'removable', live\-boot will try to find persistent and snapshot partitions on removable media only. Note that if you want to further restrict the media to usb mass storage only, you can use the 'removable\-usb' keyword.
 .IP "\fBpersistent\-path\fR=\fIPATH\fR" 4
 live\-boot will look for persistency files in the root directory of a partition, with this parameter, the path can be configured so that you can have multiple directories on the same partition to store persistency files.
+.IP "\fBpersistent\-storage\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
+This option determines which types of persistent storage to consider when probing for persistent media. If "filesystem" is in the list, filesystems with matching labels will be used; if "file" is in the list, all filesystems will be probed for archives and image files with matching filenames. The default is "file,filesystem".
 .IP "\fBpersistent\-subtext\fR=\fISUFFIX\fR" 4
 Add a suffix when searching for the image filenames or partition labels to use for the above mentioned persistent feature, the SUFFIX will be added after a dash (e.g.: "live-sn" would transform to "live-sn-SUFFIX"). This is handy to test multiple live-boot based live-systems with different persistent storage choices.
 .IP "{\fBpreseed/file\fR|\fBfile\fR}=\fIFILE\fR" 4
