@@ -316,6 +316,10 @@ open_luks_device ()
 	dev="${1}"
 	name="$(basename ${dev})"
 	opts="--key-file=-"
+	if [ -n "${PERSISTENT_READONLY}" ]
+	then
+		opts="${opts} --readonly"
+	fi
 
 	load_keymap
 

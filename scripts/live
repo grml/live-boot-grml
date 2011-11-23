@@ -1448,16 +1448,17 @@ setup_unionfs ()
 		then
 			cowdevice=${cowprobe}
 			cow_fstype=$(get_fstype "${cowprobe}")
-			cow_mountopt="rw,noatime"
+			if [ -z "${PERSISTENT_READONLY}" ]
+			then
+				cow_mountopt="rw,noatime"
+			else
+				cow_mountopt="ro,noatime"
+			fi
 
 			if [ "${FORCEPERSISTENTFSCK}" = "Yes" ]
 			then
 				fsck -y ${cowdevice}
 			fi
-		else
-			cowdevice="tmpfs"
-			cow_fstype="tmpfs"
-			cow_mountopt="rw,noatime,mode=755"
 		fi
 	elif [ -n "${NFS_COW}" ] && [ -z "${NOPERSISTENT}" ]
 	then
@@ -1470,6 +1471,12 @@ setup_unionfs ()
 			nfs_cow_opts="-o nolock"
 			nfs_cow=${NFS_COW}
 		fi
+
+		if [ -n "${PERSISTENT_READONLY}" ]
+		then
+			nfs_cow_opts="${nfs_cow_opts},nocto,ro"
+		fi
+
 		mac="$(get_mac)"
 		if [ -n "${mac}" ]
 		then
@@ -1478,7 +1485,10 @@ setup_unionfs ()
 		else
 			panic "unable to determine mac address"
 		fi
-	else
+	fi
+
+	if [ -z "${cowdevice}" ]
+	then
 		cowdevice="tmpfs"
 		cow_fstype="tmpfs"
 		cow_mountopt="rw,noatime,mode=755"
@@ -1486,16 +1496,23 @@ setup_unionfs ()
 
 	if [ "${UNIONTYPE}" != "unionmount" ]
 	then
+		if [ -n "${PERSISTENT_READONLY}" ]
+		then
+			persistent_root="/$(basename ${cowdevice})-backing"
+			mkdir -p ${persistent_root}
+		else
+			persistent_root="/cow"
+		fi
 
 		if [ "${cow_fstype}" = "nfs" ]
 		then
 			log_begin_msg \
-				"Trying nfsmount ${nfs_cow_opts} ${cowdevice} /cow"
-			nfsmount ${nfs_cow_opts} ${cowdevice} /cow || \
-				panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on /cow"
+				"Trying nfsmount ${nfs_cow_opts} ${cowdevice} ${persistent_root}"
+			nfsmount ${nfs_cow_opts} ${cowdevice} ${persistent_root} || \
+				panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on ${persistent_root}"
 		else
-			mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} /cow || \
-				panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on /cow"
+			mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} ${persistent_root} || \
+				panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on ${persistent_root}"
 		fi
 	fi
 
@@ -1555,7 +1572,13 @@ setup_unionfs ()
 
 
 			*)
-				unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=rw:${unionro}=${roopt}"
+				if [ -n "${PERSISTENT_READONLY}" ]
+				then
+					mount -t tmpfs -o rw,noatime,mode=755 tmpfs "${unionrw}"
+					unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=rw:${persistent_root}=${roopt}:${unionro}=${roopt}"
+				else
+					unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=rw:${unionro}=${roopt}"
+				fi
 				mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 				;;
 		esac || \
