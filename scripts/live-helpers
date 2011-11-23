@@ -46,9 +46,9 @@ storage_devices()
 	do
 		fulldevname=$(sys2dev "${sysblock}")
 
-		if echo "${black_listed_devices}" | grep -qw "${fulldevname}" || \
+		if echo "${black_listed_devices}" | grep -qe "\<${fulldevname}\>" || \
 			[ -n "${white_listed_devices}" ] && \
-			echo "${white_listed_devices}" | grep -vqw "${fulldevname}"
+			echo "${white_listed_devices}" | grep -qve "\<${fulldevname}\>"
 		then
 			# skip this device entirely
 			continue
@@ -58,7 +58,7 @@ storage_devices()
 		do
 			devname=$(sys2dev "${dev}")
 
-			if echo "${black_listed_devices}" | grep -qw "${devname}"
+			if echo "${black_listed_devices}" | grep -qe "\<${devname}\>"
 			then
 				# skip this subdevice
 				continue
@@ -379,7 +379,7 @@ find_persistent_media ()
 		luks_device=""
 
 		# Checking for a luks device
-		if echo ${PERSISTENT_ENCRYPTION} | grep -qw luks && \
+		if echo ${PERSISTENT_ENCRYPTION} | grep -qe "\<luks\>" && \
 		   /sbin/cryptsetup isLuks ${dev}
 		then
 			if luks_device=$(open_luks_device "${dev}")
@@ -389,13 +389,13 @@ find_persistent_media ()
 				# skip $dev since we failed/chose not to open it
 				continue
 			fi
-		elif echo ${PERSISTENT_ENCRYPTION} | grep -qwv none
+		elif echo ${PERSISTENT_ENCRYPTION} | grep -qve "\<none\>"
 		then
 			# skip $dev since we don't allow unencrypted storage
 			continue
 		fi
 
-		if echo ${PERSISTENT_STORAGE} | grep -qw filesystem
+		if echo ${PERSISTENT_STORAGE} | grep -qe "\<filesystem\>"
 		then
 			for label in ${overlays} ${snapshots}
 			do
@@ -410,7 +410,7 @@ find_persistent_media ()
 			done
 		fi
 
-		if echo ${PERSISTENT_STORAGE} | grep -qw file
+		if echo ${PERSISTENT_STORAGE} | grep -qe "\<file\>"
 		then
 			devfstype="$(get_fstype ${dev})"
 			overlay_on_dev=""

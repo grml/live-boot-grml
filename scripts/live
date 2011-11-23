@@ -399,7 +399,7 @@ Arguments ()
 	then
 		PERSISTENT_ENCRYPTION="none"
 		export PERSISTENT_ENCRYPTION
-	elif echo ${PERSISTENT_ENCRYPTION} | grep -qw luks
+	elif echo ${PERSISTENT_ENCRYPTION} | grep -qe "\<luks\>"
 	then
 		if ! modprobe dm-crypt
 		then
@@ -1403,12 +1403,12 @@ setup_unionfs ()
 				;;
 		esac
 
-		if echo ${PERSISTENT_METHOD} | grep -qw overlay
+		if echo ${PERSISTENT_METHOD} | grep -qe "\<overlay\>"
 		then
 			overlays="${root_persistence} ${home_persistence}"
 		fi
 
-		if echo ${PERSISTENT_METHOD} | grep -qw snapshot
+		if echo ${PERSISTENT_METHOD} | grep -qe "\<snapshot\>"
 		then
 			snapshots="${root_snapshot_label} ${home_snapshot_label}"
 		fi
