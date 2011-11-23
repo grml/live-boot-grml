@@ -1578,7 +1578,17 @@ setup_unionfs ()
 
 		if [ -b "${homecow}" ]
 		then
-			mount -t $(get_fstype "${homecow}") -o rw,noatime "${homecow}" "${rootmnt}/home"
+			if [ -z "${PERSISTENT_READONLY}" ]
+			then
+				mount -t $(get_fstype "${homecow}") -o rw,noatime "${homecow}" "${rootmnt}/home"
+			else
+				homerw="/cow/home"
+			        homero="/$(basename ${homecow})-backing"
+				homemountpoint="${rootmnt}/home"
+				mkdir -p ${homerw} ${homero} ${homemountpoint}
+				mount -t $(get_fstype "${homecow}") -o ro "${homecow}" "${homero}"
+				mount -t "${UNIONTYPE}" -o "noatime,${noxino_opt}dirs=${homerw}=rw:${homero}=${roopt}" "${UNIONTYPE}" "${homemountpoint}"
+			fi
 			export HOMEMOUNTED=1 # used to proper calculate free space in do_snap_copy()
 		else
 			log_warning_msg "Unable to find the persistent home medium"
