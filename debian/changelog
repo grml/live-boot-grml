@@ -1,3 +1,42 @@
+live-boot (3.0~a23-1) unstable; urgency=low
+
+  [ Tails developers ]
+  * Enabling whiteouts support for aufs.
+
+  [ Daniel Baumann ]
+  * Update udevs path_id changes as of version 174, thanks to Baurzhan
+    Muftakhidinov <baurthefirst@gmail.com> for spotting it.
+
+  [ Tails developers ]
+  * Adding persistent-encryption={none|luks}.
+  * Making persistent-encryption=luks strict.
+  * Making sure dm-crypt is loaded when dealing with LUKS devices.
+  * Adding persistent-storage=TYPE...
+  * Removing now obsolete persistent=* arguments.
+  * Adding persistent-method=METHOD...
+  * Fixing an incorrectly redirected newline.
+  * Clarifying what happens when you don't retry decrypting a device.
+  * Refactoring device scanning in find_{cow_device,files}.
+  * Making use of is_supported_fs in find_cow_devices (like in
+    find_files).
+  * Refactoring overlay and snapshot scanning code.
+  * Fixing a "sh: bad number" when $offset is not passed to
+    setup_loop().
+  * Disabling persistent-encryption=luks if dependencies are
+    unavailable.
+  * Adding persistent-read-only boot parameter.
+  * Changing persistent-encryption to accept a list TYPE... instead.
+  * Updating live-boot man page for persistent-encryption.
+  * Updating live-boot man page for persistent-storage.
+  * Updating live-boot man page for persistent-method.
+  * Updating and rewording live-boot man page for the persistent option.
+  * Making persistent-read-only work for home-rw overlays.
+  * Making persistent-read-only work for live-rw overlays.
+  * Updating live-boot man page for persistent-read-only.
+  * Adding workaround for a busybox bug with grep -w.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 28 Nov 2011 18:26:11 +0100
+
 live-boot (3.0~a22-1) unstable; urgency=low
 
   [ Daniel Baumann ]
