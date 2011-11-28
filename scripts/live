@@ -244,23 +244,32 @@ Arguments ()
 				export PERSISTENT
 				;;
 
-			persistent=*)
-				PERSISTENT="${ARGUMENT#persistent=}"
-				if [ -z "${PERSISTENT}" ]
-				then
-					PERSISTENT="Yes"
-				fi
-				export PERSISTENT
+			persistent-encryption=*)
+				PERSISTENT_ENCRYPTION="${ARGUMENT#*=}"
+				export PERSISTENT_ENCRYPTION
 				;;
 
 			persistent-media=*)
 				PERSISTENT_MEDIA="${ARGUMENT#*=}"
 				export PERSISTENT_MEDIA
 				;;
+			persistent-method=*)
+				PERSISTENT_METHOD="${ARGUMENT#*=}"
+				export PERSISTENT_METHOD
+				;;
 
 			persistent-path=*)
 				PERSISTENT_PATH="${ARGUMENT#persistent-path=}"
 				export PERSISTENT_PATH
+				;;
+			persistent-read-only)
+				PERSISTENT_READONLY="Yes"
+				export PERSISTENT_READONLY
+				;;
+
+			persistent-storage=*)
+				PERSISTENT_STORAGE="${ARGUMENT#persistent-storage=}"
+				export PERSISTENT_STORAGE
 				;;
 
 			persistent-subtext=*)
@@ -385,6 +394,39 @@ Arguments ()
 		UNIONTYPE="aufs"
 		export UNIONTYPE
 	fi
+
+	if [ -z "${PERSISTENT_ENCRYPTION}" ]
+	then
+		PERSISTENT_ENCRYPTION="none"
+		export PERSISTENT_ENCRYPTION
+	elif echo ${PERSISTENT_ENCRYPTION} | grep -qe "\<luks\>"
+	then
+		if ! modprobe dm-crypt
+		then
+			log_warning_msg "Unable to load module dm-crypt"
+			PERSISTENT_ENCRYPTION=$(echo ${PERSISTENT_ENCRYPTION} | sed -e 's/\<luks,\|,\?luks$//g')
+			export PERSISTENT_ENCRYPTION
+		fi
+
+		if [ ! -x /lib/cryptsetup/askpass ] || [ ! -x /sbin/cryptsetup ]
+		then
+			log_warning_msg "cryptsetup in unavailable"
+			PERSISTENT_ENCRYPTION=$(echo ${PERSISTENT_ENCRYPTION} | sed -e 's/\<luks,\|,\?luks$//g')
+			export PERSISTENT_ENCRYPTION
+		fi
+	fi
+
+	if [ -n "${PERSISTENT}" ] && [ -z "${PERSISTENT_METHOD}" ]
+	then
+		PERSISTENT_METHOD="snapshot,overlay"
+		export PERSISTENT_METHOD
+	fi
+
+	if [ -n "${PERSISTENT}" ] && [ -z "${PERSISTENT_STORAGE}" ]
+	then
+		PERSISTENT_STORAGE="filesystem,file"
+		export PERSISTENT_STORAGE
+	fi
 }
 
 is_live_path ()
@@ -485,7 +527,16 @@ is_nice_device ()
 {
 	sysfs_path="${1#/sys}"
 
-	if /lib/udev/path_id "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-[^-]*-(ide|sas|scsi|usb|virtio)|platform-sata_mv|platform-orion-ehci|platform-mmc|platform-mxsdhci)"
+	if [ -e /lib/udev/path_id ]
+	then
+		# squeeze
+		PATH_ID="/lib/udev/path_id"
+	else
+		# wheezy/sid (udev >= 174)
+		PATH_ID="/sbin/udevadm test-builtin path_id"
+	fi
+
+	if "${PATH_ID}" "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-[^-]*-(ide|sas|scsi|usb|virtio)|platform-sata_mv|platform-orion-ehci|platform-mmc|platform-mxsdhci)"
 	then
 		return 0
 	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
@@ -1033,26 +1084,6 @@ do_snap_copy ()
 	fi
 }
 
-find_snap ()
-{
-	# Look for ${snap_label}.* in block devices
-	snap_label="${1}"
-	black_listed_devices="${2}"
-	white_listed_devices="${3}"
-
-	if [ "${PERSISTENT}" != "nofiles" ]
-	then
-		# search for image files
-		snapdata=$(find_files "${PERSISTENT_PATH}${snap_label}.squashfs ${PERSISTENT_PATH}${snap_label}.cpio.gz ${PERSISTENT_PATH}${snap_label}.ext2 ${PERSISTENT_PATH}${snap_label}.ext3 ${PERSISTENT_PATH}${snap_label}.ext4 ${PERSISTENT_PATH}${snap_label}.jffs2" "${black_listed_devices}" "${white_listed_devices}")
-	fi
-
-	if [ -z "${snapdata}" ]
-	then
-		snapdata=$(find_cow_device "${snap_label}" "${black_listed_devices}" "${white_listed_devices}")
-	fi
-	echo "${snapdata}"
-}
-
 try_snap ()
 {
 	# copy the contents of previously found snapshot to ${snap_mount}
@@ -1163,7 +1194,10 @@ try_snap ()
 		return 1
 	fi
 
-	echo "export ${snap_type}SNAP=${snap_relpath}:${snapdev}:${snapfile}" >> snapshot.conf # for resync on reboot/halt
+	if [ -z ${PERSISTENT_READONLY} ]
+	then
+		echo "export ${snap_type}SNAP=${snap_relpath}:${snapdev}:${snapfile}" >> snapshot.conf # for resync on reboot/halt
+	fi
 	return 0
 }
 
@@ -1204,7 +1238,7 @@ setup_unionfs ()
 
 	if [ "${UNIONTYPE}" = "aufs" ]
 	then
-		roopt="rr"
+		roopt="rr+wh"
 		noxino_opt="noxino,"
 	elif [ "${UNIONTYPE}" = "unionfs-fuse" ]
 	then
@@ -1369,46 +1403,62 @@ setup_unionfs ()
 				;;
 		esac
 
-		# search for label and files (this could be hugely optimized)
-		cowprobe=$(find_cow_device "${root_persistence}" "${blacklistdev}" "${whitelistdev}")
-		if [ -b "${cowprobe}" ]
+		if echo ${PERSISTENT_METHOD} | grep -qe "\<overlay\>"
 		then
-			# Blacklist /cow device, to avoid inconsistent setups for overlapping snapshots
-			# makes sense to have both persistence for /cow and /home mounted, maybe also with
-			# snapshots to be sure to really store some e.g key config files,
-			# but not on the same media
-			blacklistdev="${cowprobe}"
+			overlays="${root_persistence} ${home_persistence}"
+		fi
+
+		if echo ${PERSISTENT_METHOD} | grep -qe "\<snapshot\>"
+		then
+			snapshots="${root_snapshot_label} ${home_snapshot_label}"
+		fi
+
+
+		for media in $(find_persistent_media "${overlays}" "${snapshots}" "${blacklistdev}" "${whitelistdev}")
+		do
+			media="$(echo ${media} | tr ":" " ")"
+			case ${media} in
+				${root_persistence}=*)
+					cowprobe="${media#*=}"
+					;;
+				${home_persistence}=*)
+					homecow="${media#*=}"
+					;;
+				${root_snapshot_label}=*)
+					root_snapdata="${media#*=}"
+					;;
+				${home_snapshot_label}=*)
+					# This second type should be removed when snapshot will get smarter,
+					# hence when "/etc/live-snapshot*list" will be supported also by
+					# ext2|ext3|ext4|jffs2 snapshot types.
+					home_snapdata="${media#*=}"
+					;;
+				*)
+					;;
+			 esac
+		done
+
+		if [ -b "${cowprobe}" ] || [ -b "${homecow}" ]
+		then
 			PERSISTENCE_IS_ON="1"
 			export PERSISTENCE_IS_ON
 		fi
-		# homecow just mount something on /home, this should be generalized some way
-		homecow=$(find_cow_device "${home_persistence}" "${blacklistdev}" "${whitelistdev}")
-		if [ -b "${homecow}" ]
-		then
-			PERSISTENCE_IS_ON="1"
-			export PERSISTENCE_IS_ON
-		fi
-		root_snapdata=$(find_snap "${root_snapshot_label}" "${blacklistdev}" "${whitelistdev}")
-		# This second type should be removed when snapshot will get smarter,
-		# hence when "/etc/live-snapshot*list" will be supported also by
-		# ext2|ext3|ext4|jffs2 snapshot types.
-		home_snapdata=$(find_snap "${home_snapshot_label}" "${blacklistdev}" "${whitelistdev}")
 
 		if [ -b "${cowprobe}" ]
 		then
 			cowdevice=${cowprobe}
 			cow_fstype=$(get_fstype "${cowprobe}")
-			cow_mountopt="rw,noatime"
+			if [ -z "${PERSISTENT_READONLY}" ]
+			then
+				cow_mountopt="rw,noatime"
+			else
+				cow_mountopt="ro,noatime"
+			fi
 
 			if [ "${FORCEPERSISTENTFSCK}" = "Yes" ]
 			then
 				fsck -y ${cowdevice}
 			fi
-		else
-			log_warning_msg "Unable to find the persistent medium"
-			cowdevice="tmpfs"
-			cow_fstype="tmpfs"
-			cow_mountopt="rw,noatime,mode=755"
 		fi
 	elif [ -n "${NFS_COW}" ] && [ -z "${NOPERSISTENT}" ]
 	then
@@ -1421,6 +1471,12 @@ setup_unionfs ()
 			nfs_cow_opts="-o nolock"
 			nfs_cow=${NFS_COW}
 		fi
+
+		if [ -n "${PERSISTENT_READONLY}" ]
+		then
+			nfs_cow_opts="${nfs_cow_opts},nocto,ro"
+		fi
+
 		mac="$(get_mac)"
 		if [ -n "${mac}" ]
 		then
@@ -1429,7 +1485,10 @@ setup_unionfs ()
 		else
 			panic "unable to determine mac address"
 		fi
-	else
+	fi
+
+	if [ -z "${cowdevice}" ]
+	then
 		cowdevice="tmpfs"
 		cow_fstype="tmpfs"
 		cow_mountopt="rw,noatime,mode=755"
@@ -1437,16 +1496,23 @@ setup_unionfs ()
 
 	if [ "${UNIONTYPE}" != "unionmount" ]
 	then
+		if [ -n "${PERSISTENT_READONLY}" ]
+		then
+			persistent_root="/$(basename ${cowdevice})-backing"
+			mkdir -p ${persistent_root}
+		else
+			persistent_root="/cow"
+		fi
 
 		if [ "${cow_fstype}" = "nfs" ]
 		then
 			log_begin_msg \
-				"Trying nfsmount ${nfs_cow_opts} ${cowdevice} /cow"
-			nfsmount ${nfs_cow_opts} ${cowdevice} /cow || \
-				panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on /cow"
+				"Trying nfsmount ${nfs_cow_opts} ${cowdevice} ${persistent_root}"
+			nfsmount ${nfs_cow_opts} ${cowdevice} ${persistent_root} || \
+				panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on ${persistent_root}"
 		else
-			mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} /cow || \
-				panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on /cow"
+			mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} ${persistent_root} || \
+				panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on ${persistent_root}"
 		fi
 	fi
 
@@ -1506,7 +1572,13 @@ setup_unionfs ()
 
 
 			*)
-				unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=rw:${unionro}=${roopt}"
+				if [ -n "${PERSISTENT_READONLY}" ]
+				then
+					mount -t tmpfs -o rw,noatime,mode=755 tmpfs "${unionrw}"
+					unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=rw:${persistent_root}=${roopt}:${unionro}=${roopt}"
+				else
+					unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=rw:${unionro}=${roopt}"
+				fi
 				mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 				;;
 		esac || \
@@ -1529,7 +1601,17 @@ setup_unionfs ()
 
 		if [ -b "${homecow}" ]
 		then
-			mount -t $(get_fstype "${homecow}") -o rw,noatime "${homecow}" "${rootmnt}/home"
+			if [ -z "${PERSISTENT_READONLY}" ]
+			then
+				mount -t $(get_fstype "${homecow}") -o rw,noatime "${homecow}" "${rootmnt}/home"
+			else
+				homerw="/cow/home"
+			        homero="/$(basename ${homecow})-backing"
+				homemountpoint="${rootmnt}/home"
+				mkdir -p ${homerw} ${homero} ${homemountpoint}
+				mount -t $(get_fstype "${homecow}") -o ro "${homecow}" "${homero}"
+				mount -t "${UNIONTYPE}" -o "noatime,${noxino_opt}dirs=${homerw}=rw:${homero}=${roopt}" "${UNIONTYPE}" "${homemountpoint}"
+			fi
 			export HOMEMOUNTED=1 # used to proper calculate free space in do_snap_copy()
 		else
 			log_warning_msg "Unable to find the persistent home medium"
