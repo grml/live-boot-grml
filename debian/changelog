@@ -1,3 +1,10 @@
+live-boot (3.0~a19-1+grml.01) grml-testing; urgency=low
+
+  * Depend on quilt with a version to quiet lintian
+  * Add debian/control headers Origin, Bugs
+
+ -- Christian Hofstaedtler <ch@grml.org>  Wed, 30 Nov 2011 13:24:41 +0100
+
 live-boot (3.0~a19-1+grml.00) unstable; urgency=low
 
   * Resync with Debian. This brings in:
