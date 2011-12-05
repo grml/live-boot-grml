@@ -3,6 +3,7 @@
 build:
 	# this is needed because dpatch doesn't do file modes on diffs.
 	chmod a+rx scripts/live-bottom/*
+	chmod a+rx hooks/*
 	# regular build.
 	dh build
 

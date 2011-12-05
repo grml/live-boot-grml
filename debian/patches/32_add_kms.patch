@@ -1,17 +1,28 @@
---- a/Makefile
-+++ b/Makefile
-@@ -49,7 +49,7 @@
- 	cp bin/live-preseed bin/live-reconfigure local/languagelist $(DESTDIR)/usr/share/live-boot
- 
- 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools
--	cp -r hooks scripts $(DESTDIR)/usr/share/initramfs-tools
-+	cp -r hooks scripts modules.d $(DESTDIR)/usr/share/initramfs-tools
- 
- 	# Installing docs
- 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot-grml
 --- /dev/null
-+++ b/modules.d/kms
-@@ -0,0 +1,3 @@
-+i915
-+nouveau
-+radeon
++++ b/hooks/kms
+@@ -0,0 +1,25 @@
++#!/bin/sh
++# hook for adding kms modules
++
++set -e
++
++# initramfs-tools header
++
++PREREQ=""
++prereqs()
++{
++	echo "${PREREQ}"
++}
++
++case "${1}" in
++	prereqs)
++		prereqs
++		exit 0
++		;;
++esac
++
++. /usr/share/initramfs-tools/hook-functions
++
++for module in i915 radeon nouveau ; do
++	manual_add_modules $module
++done
