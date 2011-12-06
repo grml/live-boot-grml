@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 13.07.2011 3.0~a19 "Debian Live Projekt"
+.TH LIVE\-BOOT 7 04.12.2011 3.0~a24\-1 "Debian Live Projekt"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Skripte
@@ -27,6 +27,9 @@ aufs, for Debian like systems to boot from.
 .SH KONFIGURATION
 \fBlive\-boot\fP kann durch Boot Parameter oder durch Konfigurationsdateien
 konfiguriert werden.
+.PP
+To configure the live\-boot parameters used by default in a live image, see
+the \-\-bootappend\-live option in the \fIlb_config\fP(1) manual page.
 
 .SS "Kernel Parameter"
 \fBlive\-boot\fP ist nur dann aktiv, wenn 'boot=live' als Kernel Parameter
@@ -169,25 +172,47 @@ default of mount applies (currently 50% of available RAM). Note that this
 option has no currently no effect when booting with toram.
 .IP \fBswapon\fP 4
 This parameter enables usage of local swap partitions.
-.IP \fBpersistent\fP[={nofiles|cryptsetup}] 4
-live\-boot will look for persistent and snapshot partitions or files labeled
-"live\-rw", "home\-rw", and files called "live\-sn*", "home\-sn*" and will try
-to, in order: mount as /cow the first, mount the second in /home, and just
-copy the contents of the latter in appropriate locations
-(snapshots). Snapshots will be tried to be updated on reboot/shutdown. Look
-at live\-snapshot(1) for more informations.
-.br
-If "nofiles" is specified, only filesystems with matching labels will be
-searched; no filesystems will be traversed looking for archives or image
-files. This results in shorter boot times.
-.br
-If "cryptsetup" is specified, filesystems stored on Luks\-encrypted devices
-will be considered as well as others when searching for a persistence
-filesystem; the user will be prompted for any needed decryption passphrase.
+.IP \fBpersistent\fP 4
+live\-boot will probe filesystems for persistent media. These can either be
+the filesystems themselves, if labeled correctly, or image/archive files, if
+named correctly. Overlays are labeled/named either "live\-rw" or "home\-rw"
+and will be mounted on / or /home, respectively; snapshots are labeled/named
+either "live\-sn" or "home\-sn" and will be extracted into / or /home,
+respectively (see live\-snapshot(1) for more information). Overlays are
+mounted before snapshots are extracted, and for both overlays and snapshots,
+"live\-*" are handled before "home\-*". Overlay image files and snapshot
+archive files have extensions which determines their filesystem or archive
+type, e.g. "live\-rw.ext3" and "\home\-sn.squashfs".
+.IP "\fBpersistent\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
+This option determines which types of encryption that we allow to be used
+when probing devices for persistent media. If "none" is in the list, we
+allow unencrypted media; if "luks" is in the list, we allow LUKS\-encrypted
+media. Whenever a device containing encrypted media is probed the user will
+be prompted for the passphrase. The default value is "none".
+.IP \fBpersistent\-media\fP={\fIremovable\fP|\fIremovable\-usb\fP} 4
+If you specify the keyword 'removable', live\-boot will try to find
+persistent and snapshot partitions on removable media only. Note that if you
+want to further restrict the media to usb mass storage only, you can use the
+\&'removable\-usb' keyword.
+.IP "\fBpersistent\-method\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
+This option determines which types of persistent media we allow. If
+"overlay" is in the list, we consider overlays (i.e. "live\-rw" and
+"home\-rw"); if "snapshot" is in the list, we consider snapshots
+(i.e. "live\-sn" and "home\-sn"). The default is "overlay,snapshot".
 .IP \fBpersistent\-path\fP=\fIPATH\fP 4
 live\-boot will look for persistency files in the root directory of a
 partition, with this parameter, the path can be configured so that you can
 have multiple directories on the same partition to store persistency files.
+.IP \fBpersistent\-read\-only\fP 4
+Filesystem changes are not saved back to persistent media. In particular,
+overlays and netboot NFS mounts are mounted read\-only, and snapshots are not
+resynced on shutdown.
+.IP "\fBpersistent\-storage\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
+This option determines which types of persistent storage to consider when
+probing for persistent media. If "filesystem" is in the list, filesystems
+with matching labels will be used; if "file" is in the list, all filesystems
+will be probed for archives and image files with matching filenames. The
+default is "file,filesystem".
 .IP \fBpersistent\-subtext\fP=\fISUFFIX\fP 4
 Add a suffix when searching for the image filenames or partition labels to
 use for the above mentioned persistent feature, the SUFFIX will be added

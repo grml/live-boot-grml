@@ -42,6 +42,13 @@ fi
 
 # Handling live-boot
 
+if [ ! -e /usr/share/live-boot ]
+then
+	echo "W: live-boot-initramfs-tools (backend) installed without live-boot,"
+	echo "W: this initramfs will *NOT* have live support."
+	exit 0
+fi
+
 [ "${QUIET}" ] || echo -n " "core
 # Configuration
 if [ -e /usr/share/live-boot/languagelist ]
@@ -134,8 +141,9 @@ manual_add_modules squashfs
 manual_add_modules sqlzma
 manual_add_modules unlzma
 
-# Filesystem: aufs/unionfs
+# Filesystem: aufs/overlayfs/unionfs
 manual_add_modules aufs
+manual_add_modules overlayfs
 manual_add_modules unionfs
 
 # Filesystem: unionfs-fuse

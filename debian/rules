@@ -25,8 +25,11 @@ override_dh_auto_install:
 	mkdir -p debian/live-boot-grml-initramfs-tools/usr/share
 	mv debian/tmp/usr/share/initramfs-tools debian/live-boot-grml-initramfs-tools/usr/share
 
-override_dh_installinit:
-	dh_installinit -p live-boot-grml --no-restart-on-upgrade --no-start --update-rcd-params='start 89 0 6 .'
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip -z9
 
 override_dh_install:
 	dh_install --fail-missing
+
+override_dh_installinit:
+	dh_installinit -p live-boot-grml --no-restart-on-upgrade --no-start --update-rcd-params='start 89 0 6 .'

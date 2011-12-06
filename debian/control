@@ -30,6 +30,7 @@ Description: Debian Live - System Boot Scripts
  version to better fit Grml's needs.
 
 Package: live-boot-grml-doc
+Section: doc
 Architecture: all
 Depends: ${misc:Depends}
 Conflicts: live-boot (<< 3.0~a18~), live-boot-doc
