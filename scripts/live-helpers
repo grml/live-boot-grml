@@ -37,6 +37,38 @@ subdevices ()
 	echo ${r}
 }
 
+storage_devices()
+{
+	black_listed_devices="${1}"
+	white_listed_devices="${2}"
+
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "loop|ram|fd")
+	do
+		fulldevname=$(sys2dev "${sysblock}")
+
+		if echo "${black_listed_devices}" | grep -qe "\<${fulldevname}\>" || \
+			[ -n "${white_listed_devices}" ] && \
+			echo "${white_listed_devices}" | grep -qve "\<${fulldevname}\>"
+		then
+			# skip this device entirely
+			continue
+		fi
+
+		for dev in $(subdevices "${sysblock}")
+		do
+			devname=$(sys2dev "${dev}")
+
+			if echo "${black_listed_devices}" | grep -qe "\<${devname}\>"
+			then
+				# skip this subdevice
+				continue
+			else
+				echo "${devname}"
+			fi
+		done
+	done
+}
+
 is_supported_fs ()
 {
 	fstype="${1}"
@@ -202,7 +234,7 @@ setup_loop ()
 				fi
 			fi
 
-			if [ 0 -lt "${offset}" ]
+			if [ -n "${offset}" ] && [ 0 -lt "${offset}" ]
 			then
 				options="${options} -o ${offset}"
 			fi
@@ -279,157 +311,148 @@ try_mount ()
 	fi
 }
 
-find_cow_device ()
+open_luks_device ()
 {
-	# Returns a device containing a partition labeled "${pers_label}" or containing a file named the same way
-	#  in the latter case the partition containing the file is left mounted
-	#  if is not in black_listed_devices
-	pers_label="${1}"
-	cow_backing="/${pers_label}-backing"
-	black_listed_devices="${2}"
-
-	if [ -z "${PERSISTENT_PATH}" ]
+	dev="${1}"
+	name="$(basename ${dev})"
+	opts="--key-file=-"
+	if [ -n "${PERSISTENT_READONLY}" ]
 	then
-		pers_fpath=${cow_backing}/${pers_label}
-	else
-		pers_fpath=${cow_backing}/${PERSISTENT_PATH}/${pers_label}
+		opts="${opts} --readonly"
 	fi
 
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
-	do
-		fulldevname=$(sys2dev "${sysblock}")
+	load_keymap
 
-		if echo "${black_listed_devices}" | grep -q -w "${fulldevname}"
+	while true
+	do
+		/lib/cryptsetup/askpass "Enter passphrase for ${dev}: " | \
+			/sbin/cryptsetup -T 1 luksOpen ${dev} ${name} ${opts}
+
+		if [ 0 -eq ${?} ]
 		then
-			# skip this device entirely
-			break
+			luks_device="/dev/mapper/${name}"
+			echo ${luks_device}
+			return 0
 		fi
 
-		for dev in $(subdevices "${sysblock}")
-		do
-			devname=$(sys2dev "${dev}")
+		echo >&6
+		echo -n "There was an error decrypting ${dev} ... Retry? [Y/n] " >&6
+		read answer
 
-			if echo "${black_listed_devices}" | grep -q -w "${devname}"
-			then
-				# skip this subdevice
-				break
-			fi
-
-			# Checking for a luks device
-			if [ "${PERSISTENT}" = "cryptsetup" ] && [ -e /sbin/cryptsetup ] && /sbin/cryptsetup isLuks ${devname}
-			then
-				while true
-				do
-					load_keymap
-
-					/lib/cryptsetup/askpass "Enter passphrase for ${pers_label} on ${devname}: " | /sbin/cryptsetup -T 1 luksOpen ${devname} $(basename ${devname}) --key-file=-
-					error=${?}
-
-					devname="/dev/mapper/$(basename ${devname})"
-
-					if [ 0 -eq ${error} ]
-					then
-						unset error
-						break
-					fi
-
-					echo
-					echo -n "There was an error decrypting ${devname} ... Retry? [Y/n] " >&6
-					read answer
-
-					if [ "$(echo "${answer}" | cut -b1 | tr A-Z a-z)" = "n" ]
-					then
-						unset answer
-						break
-					fi
-				done
-			fi
-
-			if [ "$(/sbin/blkid -s LABEL -o value $devname 2>/dev/null)" = "${pers_label}" ]
-			then
-				echo "${devname}"
-				return 0
-			fi
-
-			if [ "${PERSISTENT}" = "nofiles" ]
-			then
-				# do not mount the device to find for image files
-				# just skip this
-				continue
-			fi
-
-			case "$(get_fstype ${devname})" in
-				vfat|ext2|ext3|ext4|jffs2)
-					mkdir -p "${cow_backing}"
-					if try_mount "${devname}" "${cow_backing}" "rw"
-					then
-						if [ -f "${pers_fpath}" ]
-						then
-							echo $(setup_loop "${pers_fpath}" "loop" "/sys/block/loop*")
-							return 0
-						else
-							umount ${cow_backing} > /dev/null 2>&1 || true
-						fi
-					fi
-					;;
-				*)
-					;;
-			esac
-		done
+		if [ "$(echo "${answer}" | cut -b1 | tr A-Z a-z)" = "n" ]
+		then
+			return 2
+		fi
 	done
-	return 1
 }
 
-find_files ()
+find_persistent_media ()
 {
-	# return the a string composed by device name, mountpoint an the first of ${filenames} found on a supported partition
-	# FIXME: merge with above function
+	# Scans devices for overlays and snapshots, and returns a whitespace
+	# separated list of how to use them. Only overlays with a partition
+	# label or file name in ${overlays} are returned, and ditto for
+	# snapshots with labels in ${snapshots}.
+	#
+	# When scanning a LUKS device, the user will be asked to enter the
+	# passphrase; on failure to enter it, or if no persistent partitions
+	# or files were found, the LUKS device is closed.
+	#
+	# For a snapshot file the return value is ${label}=${snapdata}", where
+	# ${snapdata} is the parameter used for try_snap().
+	#
+	# For all other cases (overlay/snapshot partition and overlay file) the
+	# return value is "${label}=${device}", where ${device} a device that
+	# can mount the content. In the case of an overlay file, the device
+	# containing the file will remain mounted as a side-effect.
+	#
+	# No devices in ${black_listed_devices} will be scanned, and if
+	# ${white_list_devices} is non-empty, only devices in it will be
+	# scanned.
 
-	filenames="${1}"
-	snap_backing="/snap-backing"
-	black_listed_devices="${2}"
+	overlays="${1}"
+	snapshots="${2}"
+	black_listed_devices="${3}"
+	white_listed_devices="${4}"
 
-	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -v loop | grep -v ram | grep -v fd)
+	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
-		fulldevname=$(sys2dev "${sysblock}")
+		luks_device=""
 
-		if echo "${black_listed_devices}" | grep -q -w "${fulldevname}"
+		# Checking for a luks device
+		if echo ${PERSISTENT_ENCRYPTION} | grep -qe "\<luks\>" && \
+		   /sbin/cryptsetup isLuks ${dev}
 		then
-			# skip this device entirely
-			break
+			if luks_device=$(open_luks_device "${dev}")
+			then
+				dev="${luks_device}"
+			else
+				# skip $dev since we failed/chose not to open it
+				continue
+			fi
+		elif echo ${PERSISTENT_ENCRYPTION} | grep -qve "\<none\>"
+		then
+			# skip $dev since we don't allow unencrypted storage
+			continue
 		fi
 
-		for dev in $(subdevices "${sysblock}")
-		do
-			devname=$(sys2dev "${dev}")
-			devfstype="$(get_fstype ${devname})"
-
-			if echo "${black_listed_devices}" | grep -q -w "${devname}"
-			then
-				# skip this subdevice
-				break
-			fi
-
-			if is_supported_fs ${devfstype}
-			then
-				mkdir -p "${snap_backing}"
-
-				if try_mount "${devname}" "${snap_backing}" "ro" "${devfstype}"
+		if echo ${PERSISTENT_STORAGE} | grep -qe "\<filesystem\>"
+		then
+			for label in ${overlays} ${snapshots}
+			do
+				if [ "$(/sbin/blkid -s LABEL -o value $dev 2>/dev/null)" = "${label}" ]
 				then
-					for filename in ${filenames}
+					overlays=$(echo ${overlays} | sed -e "s|\<${label}\>||")
+					snapshots=$(echo ${snapshots} | sed -e "s|\<${label}\>||")
+					echo "${label}=${dev}"
+					# skip to the next device
+					continue 2
+				fi
+			done
+		fi
+
+		if echo ${PERSISTENT_STORAGE} | grep -qe "\<file\>"
+		then
+			devfstype="$(get_fstype ${dev})"
+			overlay_on_dev=""
+			snapshot_on_dev=""
+			backing="/$(basename ${dev})-backing"
+			mkdir -p "${backing}"
+			if is_supported_fs ${devfstype} && try_mount "${dev}" "${backing}" "rw" "${devfstype}"
+			then
+				for label in ${overlays}
+				do
+					path=${backing}/${PERSISTENT_PATH}${label}
+					if [ -f "${path}" ]
+					then
+						overlays=$(echo ${overlays} | sed -e "s|\<${label}\>||")
+						overlay_on_dev="yes"
+						echo "${label}=$(setup_loop "${path}" "loop" "/sys/block/loop*")"
+					fi
+				done
+
+				for label in ${snapshots}
+				do
+					for ext in squashfs cpio.gz ext2 ext3 ext4 jffs2
 					do
-						if [ -f "${snap_backing}/${filename}" ]
+						path="${PERSISTENT_PATH}${label}.${ext}"
+						if [ -f "${backing}/${path}" ]
 						then
-							echo "${devname} ${snap_backing} ${filename}"
-							umount ${snap_backing}
-							return 0
+							snapshots=$(echo ${snapshots} | sed -e "s|\<${label}\>||")
+							snapshot_on_dev="yes"
+							echo "${label}=${dev}:${backing}:${path}"
 						fi
 					done
-				fi
-
-				umount ${snap_backing}
+				done
 			fi
-		done
+			if [ -z "${overlay_on_dev}" ]
+			then
+				umount ${backing} > /dev/null 2>&1 || true
+				if [ -z "${snapshot_on_dev}" ] && [ -n "${luks_device}" ] && /sbin/cryptsetup status "${luks_device}" 1> /dev/null
+				then
+					/sbin/cryptsetup luksClose "${luks_device}"
+				fi
+			fi
+		fi
 	done
 }
 
@@ -462,4 +485,74 @@ is_luks()
 	return 1
     fi
 
+}
+
+removable_dev ()
+{
+	output_format="${1}"
+	want_usb="${2}"
+	ret=
+
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+	do
+		dev_ok=
+		if [ "$(cat ${sysblock}/removable)" = "1" ]
+		then
+			if [ -z "${want_usb}" ]
+			then
+				dev_ok="yes"
+			else
+				if readlink ${sysblock} | grep -q usb
+				then
+					dev_ok="yes"
+				fi
+			fi
+		fi
+
+		if [ "${dev_ok}" = "yes" ]
+		then
+			case "${output_format}" in
+				sys)
+					ret="${ret} ${sysblock}"
+					;;
+				*)
+					devname=$(sys2dev "${sysblock}")
+					ret="${ret} ${devname}"
+					;;
+			esac
+		fi
+	done
+
+	echo "${ret}"
+}
+
+removable_usb_dev ()
+{
+	output_format="${1}"
+
+	removable_dev "${output_format}" "want_usb"
+}
+
+non_removable_dev ()
+{
+	output_format="${1}"
+	ret=
+
+	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
+	do
+		if [ "$(cat ${sysblock}/removable)" = "0" ]
+		then
+			case "${output_format}" in
+				sys)
+					ret="${ret} ${sysblock}"
+					;;
+				*)
+					devname=$(sys2dev "${sysblock}")
+					ret="${ret} ${devname}"
+					;;
+			esac
+		fi
+	done
+
+	echo "${ret}"
 }

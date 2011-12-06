@@ -22,6 +22,7 @@ Description: Debian Live - System Boot Scripts
  as live-boot-initramfs-tools.
 
 Package: live-boot-doc
+Section: doc
 Architecture: all
 Depends: ${misc:Depends}
 Conflicts: live-boot (<< 3.0~a18~)
