@@ -6,10 +6,10 @@
 
 @DPATCH@
 
-Index: b/hooks/live
+Index: live-boot-grml/hooks/live
 ===================================================================
---- a/hooks/live	2011-07-24 22:07:22.000000000 +0200
-+++ b/hooks/live	2011-07-24 22:07:55.000000000 +0200
+--- live-boot-grml.orig/hooks/live	2011-12-06 22:10:13.000000000 +0100
++++ live-boot-grml/hooks/live	2011-12-06 22:10:17.000000000 +0100
 @@ -40,6 +40,12 @@
  	done
  fi
@@ -22,4 +22,4 @@ Index: b/hooks/live
 +
  # Handling live-boot
  
- [ "${QUIET}" ] || echo -n " "core
+ if [ ! -e /usr/share/live-boot ]

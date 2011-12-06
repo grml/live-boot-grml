@@ -8,11 +8,11 @@
 ## DP: /lib/udev/vol_id in /scripts/live as well
 
 @DPATCH@
-Index: b/scripts/live
+Index: live-boot-grml/scripts/live
 ===================================================================
---- a/scripts/live	2011-07-24 22:08:03.000000000 +0200
-+++ b/scripts/live	2011-07-24 22:08:06.000000000 +0200
-@@ -1680,7 +1680,12 @@
+--- live-boot-grml.orig/scripts/live	2011-12-06 22:10:25.000000000 +0100
++++ live-boot-grml/scripts/live	2011-12-06 22:10:30.000000000 +0100
+@@ -1810,7 +1810,12 @@
  
  	if is_supported_fs ${fstype}
  	then

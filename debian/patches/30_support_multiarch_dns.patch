@@ -12,11 +12,11 @@ Date:   Tue Jun 7 10:15:52 2011 +0200
     /lib/libnss_dns.so.* but could also be e.g.
     /lib/x86_64-linux-gnu/libnss_dns.so.*.
 
-Index: b/hooks/live
+Index: live-boot-grml/hooks/live
 ===================================================================
---- a/hooks/live	2011-07-24 22:08:17.000000000 +0200
-+++ b/hooks/live	2011-07-24 22:08:18.000000000 +0200
-@@ -260,7 +260,16 @@
+--- live-boot-grml.orig/hooks/live	2011-12-06 22:10:47.000000000 +0100
++++ live-boot-grml/hooks/live	2011-12-06 22:10:55.000000000 +0100
+@@ -268,7 +268,16 @@
  
  # DNS for initramfs
  #copy_exec /lib/libnss_files.so.*      /lib  # /etc/hosts and /etc/passwd

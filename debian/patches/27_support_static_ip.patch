@@ -6,10 +6,10 @@
 
 @DPATCH@
 
-Index: b/scripts/live
+Index: live-boot-grml/scripts/live
 ===================================================================
---- a/scripts/live	2011-07-24 22:08:13.000000000 +0200
-+++ b/scripts/live	2011-07-24 22:08:14.000000000 +0200
+--- live-boot-grml.orig/scripts/live	2011-12-06 22:10:37.000000000 +0100
++++ live-boot-grml/scripts/live	2011-12-06 22:10:39.000000000 +0100
 @@ -110,9 +110,8 @@
  				;;
  
@@ -39,7 +39,7 @@ Index: b/scripts/live
  				export STATICIP
  				;;
  
-@@ -667,6 +662,24 @@
+@@ -723,6 +718,24 @@
  	return 0
  }
  
@@ -64,7 +64,7 @@ Index: b/scripts/live
  do_netsetup ()
  {
  	modprobe -q af_packet # For DHCP
-@@ -677,9 +690,19 @@
+@@ -733,9 +746,19 @@
  	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
  	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
  
@@ -87,7 +87,7 @@ Index: b/scripts/live
  
  
  	# support for Syslinux IPAPPEND parameter
-@@ -722,7 +745,7 @@
+@@ -778,7 +801,7 @@
  
  				if [ "$bootif_mac" = "$current_mac" ]
  				then
@@ -96,7 +96,7 @@ Index: b/scripts/live
  					break
  				fi
  			fi
-@@ -734,12 +757,7 @@
+@@ -790,12 +813,7 @@
  	# for *every* present network device (except for loopback of course)
  	if [ -z "$ETHDEVICE" ] ; then
  		echo "If you want to boot from a specific device use bootoption ethdevice=..."
@@ -110,7 +110,7 @@ Index: b/scripts/live
  	fi
  
  	# split args of ethdevice=eth0,eth1 into "eth0 eth1"
-@@ -747,38 +765,27 @@
+@@ -803,38 +821,27 @@
  		devlist="$devlist $device"
  	done
  

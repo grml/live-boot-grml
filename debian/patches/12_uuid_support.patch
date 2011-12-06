@@ -12,10 +12,10 @@
 ## DP: * no bootid.txt + ignore_bootid=...                => boots
 
 @DPATCH@
-Index: b/scripts/live
+Index: live-boot-grml/scripts/live
 ===================================================================
---- a/scripts/live	2011-07-24 22:08:02.000000000 +0200
-+++ b/scripts/live	2011-07-24 22:08:03.000000000 +0200
+--- live-boot-grml.orig/scripts/live	2011-12-06 22:10:24.000000000 +0100
++++ live-boot-grml/scripts/live	2011-12-06 22:10:25.000000000 +0100
 @@ -63,6 +63,11 @@
  				export ACCESS
  				;;
@@ -40,7 +40,7 @@ Index: b/scripts/live
  			ignore_uuid)
  				IGNORE_UUID="Yes"
  				export IGNORE_UUID
-@@ -410,6 +420,42 @@
+@@ -457,6 +467,42 @@
  	return 1
  }
  
@@ -83,7 +83,7 @@ Index: b/scripts/live
  matches_uuid ()
  {
  	if [ "${IGNORE_UUID}" ] || [ ! -e /conf/uuid.conf ]
-@@ -1655,7 +1701,7 @@
+@@ -1785,7 +1831,7 @@
  		fi
  
  		if is_live_path ${mountpoint} && \
@@ -92,7 +92,7 @@ Index: b/scripts/live
  		then
  			echo ${mountpoint}
  			return 0
-@@ -1769,19 +1815,6 @@
+@@ -1881,19 +1927,6 @@
  					return 0
  				fi
  			done
