@@ -78,7 +78,7 @@ install:
 uninstall:
 	# Uninstalling executables
 	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin > /dev/null 2>&1 || true
 
 	rm -rf $(DESTDIR)/usr/share/live-boot
 
@@ -86,18 +86,18 @@ uninstall:
 	rm -rf $(DESTDIR)/usr/share/initramfs-tools/scripts/live*
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top/live
 
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/hooks || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/hooks > /dev/null 2>&1 || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top > /dev/null 2>&1 || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts > /dev/null 2>&1 || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools > /dev/null 2>&1 || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share > /dev/null 2>&1 || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr > /dev/null 2>&1 || true
 
 	# Uninstalling docs
 	rm -rf $(DESTDIR)/usr/share/doc/live-boot
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/doc || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/doc > /dev/null 2>&1 || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share > /dev/null 2>&1 || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr > /dev/null 2>&1 || true
 
 	# Uninstalling manpages
 	for MANPAGE in manpages/en/*; \
@@ -117,15 +117,15 @@ uninstall:
 
 	for SECTION in $(ls manpages/en/* | awk -F. '{ print $2 }'); \
 	do \
-		rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man/man$${SECTION} || true; \
-		rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man/*/man$${SECTION} || true; \
+		rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man/man$${SECTION} > /dev/null 2>&1 || true; \
+		rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man/*/man$${SECTION} > /dev/null 2>&1 || true; \
 	done
 
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man > /dev/null 2>&1 || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share > /dev/null 2>&1 || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr > /dev/null 2>&1 || true
 
-	rmdir --ignore-fail-on-non-empty $(DESTDIR) || true
+	rmdir --ignore-fail-on-non-empty $(DESTDIR) > /dev/null 2>&1 || true
 
 clean:
 	@echo "Nothing to clean."
