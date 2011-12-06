@@ -1,3 +1,24 @@
+live-boot (3.0~a24-1+grml.1) grml-testing; urgency=low
+
+  * Resynchronized with Debian.
+
+  [ Christian Hofstaedtler ]
+  * Resynchronized with Debian.
+  * Drop upstream-applied patch: 01_fix_output_file
+  * Drop upstream-applied patch: 10_validateroot
+  * Drop upstream-applied patch: 25_support_lvm_for_live-media
+  * 07_support_findiso: remove upstream-applied parts
+  * Manually refreshd patch 31_package_rename
+
+  [ Ulrich Dangel ]
+  * Add kms modules to initramfs
+  * Install hook instead of specifying modules.d
+
+  [ Michael Prokop ]
+  * Try loading phram module twice to fix loading issue.
+
+ -- Christian Hofstaedtler <ch@grml.org>  Tue, 06 Dec 2011 22:26:32 +0100
+
 live-boot (3.0~a24-1) unstable; urgency=low
 
   * Removing quotes from udev path_id command to actually execute the
