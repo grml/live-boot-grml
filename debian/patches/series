@@ -9,7 +9,6 @@
 15_networking_grml.patch
 16_nodhcp.patch
 19_revert_toram_bootoption_to_expected_behaviour.patch
-25_support_lvm_for_live-media.patch
 26_support_dns_bootoption.patch
 27_support_static_ip.patch
 28_remove_localized_manpages.patch
