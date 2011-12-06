@@ -1,7 +1,7 @@
-Index: b/Makefile
+Index: live-boot-grml/Makefile
 ===================================================================
---- a/Makefile	2011-07-24 23:49:55.000000000 +0200
-+++ b/Makefile	2011-07-24 23:50:20.000000000 +0200
+--- live-boot-grml.orig/Makefile	2011-12-06 22:08:57.000000000 +0100
++++ live-boot-grml/Makefile	2011-12-06 22:09:19.000000000 +0100
 @@ -52,11 +52,11 @@
  	cp -r hooks scripts $(DESTDIR)/usr/share/initramfs-tools
  
@@ -19,11 +19,11 @@ Index: b/Makefile
  
  	# Installing manpages
 @@ -85,7 +85,7 @@
- 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr || true
+ 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr > /dev/null 2>&1 || true
  
  	# Uninstalling docs
 -	rm -rf $(DESTDIR)/usr/share/doc/live-boot
 +	rm -rf $(DESTDIR)/usr/share/doc/live-boot-grml
- 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/doc || true
- 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share || true
- 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr || true
+ 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/doc > /dev/null 2>&1 || true
+ 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share > /dev/null 2>&1 || true
+ 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr > /dev/null 2>&1 || true
