@@ -10,10 +10,10 @@
 # file is searched inside that ISO file then.
 
 @DPATCH@
-Index: b/scripts/live
+Index: live-boot-grml/scripts/live
 ===================================================================
---- a/scripts/live	2011-07-24 22:07:54.000000000 +0200
-+++ b/scripts/live	2011-07-24 22:07:58.000000000 +0200
+--- live-boot-grml.orig/scripts/live	2011-12-06 21:34:27.000000000 +0100
++++ live-boot-grml/scripts/live	2011-12-06 21:48:28.000000000 +0100
 @@ -106,6 +106,11 @@
  				export FETCH
  				;;
@@ -26,7 +26,7 @@ Index: b/scripts/live
  			forcepersistentfsck)
  				FORCEPERSISTENTFSCK="Yes"
  				export FORCEPERSISTENTFSCK
-@@ -1629,13 +1634,28 @@
+@@ -1759,6 +1764,21 @@
  		mount -t ${fstype} -o ro,noatime "${devname}" ${mountpoint} || continue
  		[ -n "$devuid" ] && echo "$devuid" >> $tried
  
@@ -48,15 +48,7 @@ Index: b/scripts/live
  		if is_live_path ${mountpoint} && \
  			([ "${skip_uuid_check}" ] || matches_uuid ${mountpoint})
  		then
- 			echo ${mountpoint}
- 			return 0
- 		else
--			umount ${mountpoint}
-+			umount ${mountpoint} 2>/dev/null
- 		fi
- 	fi
- 
-@@ -1933,6 +1953,22 @@
+@@ -2046,6 +2066,22 @@
  	# when booting FAI, this simple workaround solves it
  	ls /root/* >/dev/null 2>&1
  
