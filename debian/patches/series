@@ -16,3 +16,4 @@
 30_support_multiarch_dns.patch
 31_package_rename.patch
 32_add_kms.patch
+33_retry_phram.patch
