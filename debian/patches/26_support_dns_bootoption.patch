@@ -5,10 +5,8 @@
 ## DP: Support dns bootoption. Usage examples: dns=8.8.8.8 / dns=8.8.8.8,1.2.3.4
 
 @DPATCH@
-Index: b/scripts/live
-===================================================================
---- a/scripts/live	2011-07-24 22:08:11.000000000 +0200
-+++ b/scripts/live	2011-07-24 22:08:13.000000000 +0200
+--- a/scripts/live
++++ b/scripts/live
 @@ -77,6 +77,18 @@
  				BOOTIF="${x#BOOTIF=}"
  				;;
@@ -28,10 +26,17 @@ Index: b/scripts/live
  			debug)
  				DEBUG="Yes"
  				export DEBUG
-Index: b/scripts/live-bottom/23networking_grml
-===================================================================
---- a/scripts/live-bottom/23networking_grml	2011-07-24 22:08:07.000000000 +0200
-+++ b/scripts/live-bottom/23networking_grml	2011-07-24 22:08:13.000000000 +0200
+@@ -846,7 +858,7 @@
+ 				echo "search ${DNSDOMAIN}" >> /etc/resolv.conf
+ 			fi
+ 
+-			for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1}
++			for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1} ${DNSSERVER1} ${DNSSERVER2}
+ 			do
+ 				if [ -n "$i" ] && [ "$i" != 0.0.0.0 ]
+ 				then
+--- a/scripts/live-bottom/23networking_grml
++++ b/scripts/live-bottom/23networking_grml
 @@ -44,7 +44,12 @@
  
  # prepare a new /etc/network/interfaces file (and, possibly, a new /etc/resolv.conf)
