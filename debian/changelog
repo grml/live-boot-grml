@@ -1,3 +1,15 @@
+live-boot (3.0~a24-1+grml.2) grml-testing; urgency=low
+
+  [ Ulrich Dangel ]
+  * [87a8e76] Append nameservers provided via dns bootoption into
+    initramfs resolv.conf
+
+  [ Michael Prokop ]
+  * [1d25495] Add genext2fs to depends [Closes: issue1126] Thanks to
+    Charles A. Hewson for the bugreport
+
+ -- Michael Prokop <mika@grml.org>  Wed, 04 Jan 2012 16:48:38 +0100
+
 live-boot (3.0~a24-1+grml.1) grml-testing; urgency=low
 
   * Resynchronized with Debian.
