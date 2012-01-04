@@ -12,7 +12,7 @@ Bugs: mailto:bugs@grml.org
 
 Package: live-boot-grml
 Architecture: all
-Depends: ${misc:Depends}, live-boot-grml-initramfs-tools
+Depends: ${misc:Depends}, genext2fs, live-boot-grml-initramfs-tools
 Recommends: live-boot-grml-doc, eject, file, rsync, uuid-runtime
 Conflicts: live-boot
 Replaces: live-boot
