@@ -12,9 +12,9 @@ alt_mountpoint="/media"
 LIVE_MEDIA_PATH="live"
 
 root_persistence="live-rw"
-home_persistence="home-rw"
 root_snapshot_label="live-sn"
 home_snapshot_label="home-sn"
+persistence_list="live.persist"
 
 USERNAME="user"
 USERFULLNAME="Live user"
@@ -1405,7 +1405,7 @@ setup_unionfs ()
 
 		if echo ${PERSISTENT_METHOD} | grep -qe "\<overlay\>"
 		then
-			overlays="${root_persistence} ${home_persistence}"
+			overlays="${root_persistence}"
 		fi
 
 		if echo ${PERSISTENT_METHOD} | grep -qe "\<snapshot\>"
@@ -1413,17 +1413,11 @@ setup_unionfs ()
 			snapshots="${root_snapshot_label} ${home_snapshot_label}"
 		fi
 
-
+		overlay_devices=""
 		for media in $(find_persistent_media "${overlays}" "${snapshots}" "${blacklistdev}" "${whitelistdev}")
 		do
 			media="$(echo ${media} | tr ":" " ")"
 			case ${media} in
-				${root_persistence}=*)
-					cowprobe="${media#*=}"
-					;;
-				${home_persistence}=*)
-					homecow="${media#*=}"
-					;;
 				${root_snapshot_label}=*)
 					root_snapdata="${media#*=}"
 					;;
@@ -1434,6 +1428,8 @@ setup_unionfs ()
 					home_snapdata="${media#*=}"
 					;;
 				*)
+					device="${media#*=}"
+					overlay_devices="${overlay_devices} ${device}"
 					;;
 			 esac
 		done
@@ -1600,26 +1596,136 @@ setup_unionfs ()
 	# Adding other custom mounts
 	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
 	then
-		# directly mount /home
-		# FIXME: add a custom mounts configurable system
-
-		if [ -b "${homecow}" ]
-		then
+		bindings="/${persistence_list}"
+		touch ${bindings}
+		for device in ${overlay_devices}
+		do
+			if [ ! -b "${device}" ]
+			then
+			    continue
+			fi
+			backing="/$(basename ${device})-backing"
+			mkdir -p "${backing}"
+			device_fstype="$(get_fstype ${device})"
 			if [ -z "${PERSISTENT_READONLY}" ]
 			then
-				mount -t $(get_fstype "${homecow}") -o rw,noatime "${homecow}" "${rootmnt}/home"
+				device_mount_opts="rw,noatime"
 			else
-				homerw="/cow/home"
-			        homero="/$(basename ${homecow})-backing"
-				homemountpoint="${rootmnt}/home"
-				mkdir -p ${homerw} ${homero} ${homemountpoint}
-				mount -t $(get_fstype "${homecow}") -o ro "${homecow}" "${homero}"
-				mount -t "${UNIONTYPE}" -o "noatime,${noxino_opt}dirs=${homerw}=rw:${homero}=${roopt}" "${UNIONTYPE}" "${homemountpoint}"
+				device_mount_opts="ro,noatime"
 			fi
-			export HOMEMOUNTED=1 # used to proper calculate free space in do_snap_copy()
-		else
-			log_warning_msg "Unable to find the persistent home medium"
-		fi
+			device_used=""
+			mount -t "${device_fstype}" -o "${device_mount_opts}" "${device}" "${backing}"
+			include_list="${backing}/${persistence_list}"
+			if [ ! -r "${include_list}" ]
+			then
+				umount "${backing}"
+				rmdir "${backing}"
+				continue
+			fi
+
+			# FIXME: debug stuff, remove me?
+			[ "${DEBUG}" == "Yes" ] && cat ${include_list} >> ${rootmnt}/${bindings}-origs
+			while read source dest
+			do
+				if echo ${source} | grep -qe "^[[:space:]]*#"
+				then
+					# skipping commented line
+					continue
+				fi
+				if [ -z "${dest}" ]
+				then
+					dest="${source}"
+				fi
+				if echo ${dest} | grep -qe "^/\+$"
+				then
+					log_warning_msg "Skipping custom mount on /"
+					continue
+				fi
+
+				# FIXME: handle case: we already have /a/b in $bindings, but now we find /a -- /a should replace /a/b in $bindings.
+				# FIXME: handle case: we have /a in $bindings, now we find /a/b, so we skip /a/b
+
+				# ensure that no multiple-/ occur in paths
+				full_source="$(echo ${backing}/${source}/ | sed -e 's|/\+|/|g')"
+				full_dest="$(echo ${rootmnt}/${dest}/ | sed -e 's|/\+|/|g')"
+				device_used="yes"
+				echo "${full_source} ${full_dest}" >> ${bindings}
+			done < ${include_list}
+
+			if [ -z "${device_used}" ]
+			then
+				# this device was not used for / earlier, or custom mount point now, so it's useless
+				umount "${backing}"
+				rmdir "${backing}"
+			fi
+		done
+
+		# we sort the list according to destination so we're sure that we won't hide a previous mount. we also ignore duplicate destinations in a more or less arbitrary way
+		sort -k2 -sbu ${bindings} -o ${bindings}
+
+		# FIXME: debug stuff, remove me?
+		[ "${DEBUG}" == "Yes" ] && cp ${bindings} ${rootmnt}/${bindings}-results
+
+		while read source dest
+		do
+			if mountpoint -q "${dest}";
+			then
+				log_warning_msg "Skipping custom mount ${source} on ${dest}: destination is already a mount point"
+				continue
+			fi
+
+			# FIXME: we don't handle already existing non-directory files in the paths of both $source and $dest.
+
+			if [ ! -d "${dest}" ]
+			then
+				# if ${dest} is in /home/$user, try fixing proper ownership
+				# FIXME: this should really be handled by live-config since we don't know for sure which uid a certain user has until then
+				if echo ${dest} | grep -qe "^${rootmnt}/*home/\+[^/]\+"
+				then
+					path="/"
+					for dir in $(echo ${dest} | sed -e 's|/\+| |g')
+					do
+						path=${path}/${dir}
+						if [ ! -e ${path} ]
+						then
+							mkdir -p ${path}
+							# assume that the intended user is the first, which is usually the case
+							chown 1000:1000 ${path}
+						fi
+					done
+				else
+					mkdir -p ${dest}
+				fi
+			fi
+
+			# FIXME: could we instead only save the aufs-diff in the persistent media? implications? What about when there's changes in the live image?
+
+			# if ${source} doesn't exist on our persistent media we
+			# bootstrap it with $dest from the live filesystem.
+			# this both makes sense and is critical if we're
+			# dealing with /etc or other system dir.
+			if [ ! -d "${source}" ]
+			then
+				if [ -n "${PERSISTENT_READONLY}" ]
+				then
+					continue
+				fi
+				# ensure that $dest is not copied *into* $source
+				mkdir -p "$(dirname ${source})"
+				cp -a "${dest}" "${source}"
+			fi
+
+			if [ -z "${PERSISTENT_READONLY}" ]
+			then
+				mount --bind "${source}" "${dest}"
+			else
+				unionrw="$(echo ${dest} | sed -e "s|${rootmnt}|/cow/|")"
+				mkdir -p ${unionrw}
+				unionmountopts="noatime,${noxino_opt}dirs=${unionrw}=rw:${source}=${roopt}"
+				mount -t "${UNIONTYPE}" -o "${unionmountopts}" "${UNIONTYPE}" "${dest}"
+			fi
+		done < ${bindings}
+		rm ${bindings}
 
 		# Look for other snapshots to copy in
 		try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
