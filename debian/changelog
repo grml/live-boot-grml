@@ -1,3 +1,13 @@
+live-boot (3.0~a25-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating to debhelper version 9.
+
+  [ Michal Suchanek ]
+  * Add overlayfs support (Closes: #658265).
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 06 Feb 2012 23:27:38 +0100
+
 live-boot (3.0~a24-1) unstable; urgency=low
 
   * Removing quotes from udev path_id command to actually execute the
