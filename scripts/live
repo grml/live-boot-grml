@@ -1208,7 +1208,7 @@ setup_unionfs ()
 	addimage_directory="${3}"
 
 	case ${UNIONTYPE} in
-		aufs|unionfs)
+		aufs|unionfs|overlayfs)
 			modprobe -q -b ${UNIONTYPE}
 
 			if ! cut -f2 /proc/filesystems | grep -q "^${UNIONTYPE}\$" && [ -x /bin/unionfs-fuse ]
@@ -1570,6 +1570,10 @@ setup_unionfs ()
 				mount_full $unionmountopts "${unionmountpoint}"
 				;;
 
+			overlayfs)
+				unionmountopts="-o noatime,${noxino_opt},lowerdir=${unionro},upperdir=${unionrw}"
+				mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
+				;;
 
 			*)
 				if [ -n "${PERSISTENT_READONLY}" ]
