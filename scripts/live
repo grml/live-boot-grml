@@ -1636,9 +1636,10 @@ setup_unionfs ()
 				then
 					dest="${source}"
 				fi
-				if echo ${dest} | grep -qe "^/\+$"
+				if echo ${dest} | grep -qe "^/\+$\|^/\+live\(/.*\)\?$"
 				then
-					log_warning_msg "Skipping custom mount on /"
+					# mounting on / or /live could cause trouble
+					log_warning_msg "Skipping unsafe custom mount on ${dest}"
 					continue
 				fi
 
