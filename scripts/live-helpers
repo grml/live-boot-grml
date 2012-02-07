@@ -556,3 +556,55 @@ non_removable_dev ()
 
 	echo "${ret}"
 }
+
+link_files ()
+{
+	# create source's directory structure in dest, and recursively
+	# create symlinks in dest to to all files in source. if mask
+	# is non-empty, remove mask from all source paths when
+	# creating links (will be necessary if we change root, which
+	# live-boot normally does (into $rootmnt)).
+
+	# remove multiple /:s and ensure ending on /
+	local src_dir="$(echo "${1}"/ | sed -e 's|/\+|/|g')"
+	local dest_dir="$(echo "${2}"/ | sed -e 's|/\+|/|g')"
+	local src_mask="${3}"
+
+	# This check can only trigger on the inital, non-recursive call since
+	# we create the destination before recursive calls
+	if [ ! -d "${dest_dir}" ];
+	then
+		log_warning_msg "Must link_files into a directory"
+		return
+	fi
+
+	find "${src_dir}" -mindepth 1 -maxdepth 1 | while read x; do
+		local src="${x}"
+		local dest="${dest_dir}$(basename "${x}")"
+		if [ -d "${src}" ];
+		then
+			if [ -z "$(ls -A "${src}")" ];
+			then
+				continue
+			fi
+			if [ ! -d "${dest}" ];
+			then
+				mkdir -p "${dest}"
+				prev="$(dirname "${dest}")"
+				chown $(stat -c %u:%g "${prev}") "${dest}"
+				chmod $(stat -c %a "${prev}") "${dest}"
+			fi
+			link_files "${src}" "${dest}" "${src_mask}"
+		else
+			if [ -e "${dest}" ];
+			then
+				rm -rf "${dest}"
+			fi
+			if [ -n "${src}" ];
+			then
+				src="$(echo ${src} | sed "s|^${src_mask}||")"
+			fi
+			ln -s "${src}" "${dest}"
+		fi
+	done
+}

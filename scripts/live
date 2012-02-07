@@ -1596,15 +1596,21 @@ setup_unionfs ()
 	# Adding other custom mounts
 	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
 	then
-		bindings="/${persistence_list}"
-		touch ${bindings}
+		bindings="/bindings.list"
+		links="/links.list"
+		custom_mounts="/custom_mounts.list"
+		rm -f ${bindings} ${links} ${custom_mounts} >/dev/null 2>&1
+		persistent_backing="${rootmnt}/live/persistent"
+
+		# First we scan all media and gather all information about custom mounts
 		for device in ${overlay_devices}
 		do
 			if [ ! -b "${device}" ]
 			then
 				continue
 			fi
-			backing="/$(basename ${device})-backing"
+			device_name="$(basename ${device})"
+			backing="${persistent_backing}/${device_name}"
 			mkdir -p "${backing}"
 			device_fstype="$(get_fstype ${device})"
 			if [ -z "${PERSISTENT_READONLY}" ]
@@ -1623,19 +1629,24 @@ setup_unionfs ()
 				continue
 			fi
 
-			# FIXME: debug stuff, remove me?
-			[ "${DEBUG}" = "Yes" ] && cat ${include_list} >> ${rootmnt}/${bindings}-origs
-			while read source dest
+			[ "${DEBUG}" = "Yes" ] && cp ${include_list} ${persistent_backing}/${persistence_list}.${device_name}
+			while read source dest options # < ${include_list}
 			do
 				if echo ${source} | grep -qe "^[[:space:]]*#"
 				then
 					# skipping commented line
 					continue
 				fi
-				if [ -z "${dest}" ]
+
+				if echo ${dest} | grep -qe "^[^/]"
+				then
+					options="${dest}"
+					dest="${source}"
+				elif [ -z "${dest}" ]
 				then
 					dest="${source}"
 				fi
+
 				if echo ${dest} | grep -qe "^/\+$\|^/\+live\(/.*\)\?$"
 				then
 					# mounting on / or /live could cause trouble
@@ -1643,14 +1654,31 @@ setup_unionfs ()
 					continue
 				fi
 
-				# FIXME: handle case: we already have /a/b in $bindings, but now we find /a -- /a should replace /a/b in $bindings.
-				# FIXME: handle case: we have /a in $bindings, now we find /a/b, so we skip /a/b
+				for opt in $(echo ${options} | tr ',' ' ');
+				do
+					case "${opt}" in
+						"linkfiles")
+							;;
+						*)
+							log_warning_msg "Skipping custom mount with unkown option: ${opt}"
+							continue
+							;;
+					esac
+				done
+
+				# FIXME: handle case: we already have /a/b in $bindings added from current $device, but now we find /a -- /a should replace /a/b in $bindings.
+				# FIXME: handle case: we have /a in $bindings from current $device, now we find /a/b, so we skip /a/b
 
 				# ensure that no multiple-/ occur in paths
 				full_source="$(echo ${backing}/${source}/ | sed -e 's|/\+|/|g')"
 				full_dest="$(echo ${rootmnt}/${dest}/ | sed -e 's|/\+|/|g')"
 				device_used="yes"
-				echo "${full_source} ${full_dest}" >> ${bindings}
+				if echo ${options} | grep -qe "\<linkfiles\>";
+				then
+					echo "${full_source} ${full_dest} ${options}" >> ${links}
+				else
+					echo "${full_source} ${full_dest} ${options}" >> ${bindings}
+				fi
 			done < ${include_list}
 
 			if [ -z "${device_used}" ]
@@ -1661,13 +1689,19 @@ setup_unionfs ()
 			fi
 		done
 
-		# we sort the list according to destination so we're sure that we won't hide a previous mount. we also ignore duplicate destinations in a more or less arbitrary way
-		sort -k2 -sbu ${bindings} -o ${bindings}
+		# We sort the list according to destination so we're sure 
+		# that we won't hide a previous mount. We also  ignore
+		# duplicate destinations in a more or less arbitrary way.
+		[ -e "${bindings}" ] && sort -k2 -sbu ${bindings} >> ${custom_mounts}
 
-		# FIXME: debug stuff, remove me?
-		[ "${DEBUG}" = "Yes" ] && cp ${bindings} ${rootmnt}/${bindings}-results
+		# After all mounts are considered we add symlinks so they
+		# won't be hidden by some mount.
+		[ -e "${links}" ] && sort -k2 -sbu ${links} >> ${custom_mounts}
 
-		while read source dest
+		[ "${DEBUG}" = "Yes" ] && cp ${custom_mounts} ${persistent_backing}
+
+		# Now we do the actual mounting (and symlinking)
+		while read source dest options	# < ${custom_mounts}
 		do
 			if mountpoint -q "${dest}";
 			then
@@ -1707,7 +1741,7 @@ setup_unionfs ()
 			# dealing with /etc or other system dir.
 			if [ ! -d "${source}" ]
 			then
-				if [ -n "${PERSISTENT_READONLY}" ]
+				if [ -n "${PERSISTENT_READONLY}" ] || echo ${options} | grep -qe "\<linkfiles\>"
 				then
 					continue
 				fi
@@ -1718,14 +1752,31 @@ setup_unionfs ()
 
 			if [ -z "${PERSISTENT_READONLY}" ]
 			then
-				mount --bind "${source}" "${dest}"
+				if echo ${options} | grep -qe "\<linkfiles\>";
+				then
+					links_source="${source}"
+					links_dest="${dest}"
+				else
+					mount --bind "${source}" "${dest}"
+				fi
 			else
+				if echo ${options} | grep -qe "\<linkfiles\>";
+				then
+					links_dest="${dest}"
+					dest="$(mktemp -d ${persistent_backing}/links_source-XXXXXX)"
+					links_source="${dest}"
+				fi
 				unionrw="$(echo ${dest} | sed -e "s|${rootmnt}|/cow/|")"
 				mkdir -p ${unionrw}
 				unionmountopts="noatime,${noxino_opt}dirs=${unionrw}=rw:${source}=${roopt}"
 				mount -t "${UNIONTYPE}" -o "${unionmountopts}" "${UNIONTYPE}" "${dest}"
 			fi
-		done < ${bindings}
+
+			if echo $options | grep -qe "\<linkfiles\>";
+			then
+				link_files "${links_source}" "${links_dest}" "${rootmnt}"
+			fi
+		done < ${custom_mounts}
 		rm -f ${bindings}
 
 		# Look for other snapshots to copy in
