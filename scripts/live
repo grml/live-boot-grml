@@ -11,7 +11,8 @@ mountpoint="/live/image"
 alt_mountpoint="/media"
 LIVE_MEDIA_PATH="live"
 
-root_persistence="live-rw"
+root_overlay_label="full-ov"
+custom_overlay_label="custom-ov"
 root_snapshot_label="live-sn"
 home_snapshot_label="home-sn"
 persistence_list="live.persist"
@@ -273,8 +274,8 @@ Arguments ()
 				;;
 
 			persistent-subtext=*)
-				root_persistence="${root_persistence}-${ARGUMENT#persistent-subtext=}"
-				home_persistence="${home_persistence}-${ARGUMENT#persistent-subtext=}"
+				root_overlay_label="${root_overlay_label}-${ARGUMENT#persistent-subtext=}"
+				custom_overlay_label="${custom_overlay_label}-${ARGUMENT#persistent-subtext=}"
 				root_snapshot_label="${root_snapshot_label}-${ARGUMENT#persistent-subtext=}"
 				home_snapshot_label="${home_snapshot_label}-${ARGUMENT#persistent-subtext=}"
 				;;
@@ -1360,7 +1361,7 @@ setup_unionfs ()
 
 	mkdir -p /cow
 
-	# Looking for "${root_persistence}" device or file
+	# Looking for persistent devices or files
 	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
 	then
 
@@ -1405,7 +1406,7 @@ setup_unionfs ()
 
 		if echo ${PERSISTENT_METHOD} | grep -qe "\<overlay\>"
 		then
-			overlays="${root_persistence}"
+			overlays="${root_overlay_label} ${custom_overlay_label}"
 		fi
 
 		if echo ${PERSISTENT_METHOD} | grep -qe "\<snapshot\>"
@@ -1427,23 +1428,24 @@ setup_unionfs ()
 					# ext2|ext3|ext4|jffs2 snapshot types.
 					home_snapdata="${media#*=}"
 					;;
-				*)
+				${root_overlay_label}=*)
+					device="${media#*=}"
+					root_overlay_device="${device}"
+					;;
+				${custom_overlay_label}=*)
 					device="${media#*=}"
 					overlay_devices="${overlay_devices} ${device}"
 					;;
 			 esac
 		done
 
-		if [ -b "${cowprobe}" ] || [ -b "${homecow}" ]
+		if [ -b "${root_overlay_device}" ]
 		then
 			PERSISTENCE_IS_ON="1"
 			export PERSISTENCE_IS_ON
-		fi
 
-		if [ -b "${cowprobe}" ]
-		then
-			cowdevice=${cowprobe}
-			cow_fstype=$(get_fstype "${cowprobe}")
+			cowdevice=${root_overlay_device}
+			cow_fstype=$(get_fstype "${root_overlay_device}")
 			if [ -z "${PERSISTENT_READONLY}" ]
 			then
 				cow_mountopt="rw,noatime"
@@ -1776,6 +1778,9 @@ setup_unionfs ()
 			then
 				link_files "${links_source}" "${links_dest}" "${rootmnt}"
 			fi
+
+			PERSISTENCE_IS_ON="1"
+			export PERSISTENCE_IS_ON
 		done < ${custom_mounts}
 		rm -f ${bindings}
 
