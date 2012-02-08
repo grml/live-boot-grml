@@ -1663,7 +1663,7 @@ setup_unionfs ()
 							;;
 						*)
 							log_warning_msg "Skipping custom mount with unkown option: ${opt}"
-							continue
+							continue 2
 							;;
 					esac
 				done
