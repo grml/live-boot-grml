@@ -1237,17 +1237,6 @@ setup_unionfs ()
 	# Let's just mount the read-only file systems first
 	rofslist=""
 
-	if [ "${UNIONTYPE}" = "aufs" ]
-	then
-		roopt="rr+wh"
-		noxino_opt="noxino,"
-	elif [ "${UNIONTYPE}" = "unionfs-fuse" ]
-	then
-		roopt="RO"
-	else
-		roopt="ro"
-	fi
-
 	if [ -z "${PLAIN_ROOT}" ]
 	then
 		# Read image names from ${MODULE}.module if it exists
@@ -1496,21 +1485,21 @@ setup_unionfs ()
 	then
 		if [ -n "${PERSISTENT_READONLY}" ]
 		then
-			persistent_root="/$(basename ${cowdevice})-backing"
-			mkdir -p ${persistent_root}
+			root_backing="/${rootmnt}/live/persistent/$(basename ${cowdevice})-root"
+			mkdir -p ${root_backing}
 		else
-			persistent_root="/cow"
+			root_backing="/cow"
 		fi
 
 		if [ "${cow_fstype}" = "nfs" ]
 		then
 			log_begin_msg \
-				"Trying nfsmount ${nfs_cow_opts} ${cowdevice} ${persistent_root}"
-			nfsmount ${nfs_cow_opts} ${cowdevice} ${persistent_root} || \
-				panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on ${persistent_root}"
+				"Trying nfsmount ${nfs_cow_opts} ${cowdevice} ${root_backing}"
+			nfsmount ${nfs_cow_opts} ${cowdevice} ${root_backing} || \
+				panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on ${root_backing}"
 		else
-			mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} ${persistent_root} || \
-				panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on ${persistent_root}"
+			mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} ${root_backing} || \
+				panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on ${root_backing}"
 		fi
 	fi
 
@@ -1547,44 +1536,18 @@ setup_unionfs ()
 	unionmountpoint=""
 
 	for dir in ${cow_dirs}; do
-		mkdir -p /cow${dir}
-
-		unionmountpoint="${rootmnt}${dir}"
 		unionrw="/cow${dir}"
 		unionro="${rofs}${dir}"
-		# We don't handle spaces and other junk gracefully here, hopefully not needed.
-		case "${UNIONTYPE}" in
-			unionfs-fuse)
-				unionmountopts="-o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid"
-				unionmountopts="${unionmountopts} ${unionrw}=RW:${unionro}=RO"
-				( sysctl -w fs.file-max=391524 ; ulimit -HSn 16384
-				unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
-				( mkdir -p /run/sendsigs.omit.d
-				pidof unionfs-fuse >> /run/sendsigs.omit.d/unionfs-fuse || true )
-				;;
-
-			unionmount)
-				unionmountopts="-t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice}"
-				mount_full $unionmountopts "${unionmountpoint}"
-				;;
-
-			overlayfs)
-				unionmountopts="-o noatime,${noxino_opt},lowerdir=${unionro},upperdir=${unionrw}"
-				mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
-				;;
-
-			*)
-				if [ -n "${PERSISTENT_READONLY}" ]
-				then
-					mount -t tmpfs -o rw,noatime,mode=755 tmpfs "${unionrw}"
-					unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=rw:${persistent_root}=${roopt}:${unionro}=${roopt}"
-				else
-					unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=rw:${unionro}=${roopt}"
-				fi
-				mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
-				;;
-		esac || \
-			panic "mount ${UNIONTYPE} on ${unionmountpoint} failed with option ${unionmountopts}"
+		unionmountpoint="${rootmnt}${dir}"
+		mkdir -p ${unionrw}
+		if [ "${UNIONTYPE}" = "unionmount" ]
+		then
+			# FIXME: handle PERSISTENT_READONLY
+			unionmountopts="-t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice}"
+			mount_full $unionmountopts "${unionmountpoint}"
+		else
+			do_union ${root_backing} ${unionrw} ${unionro} ${unionmountpoint}
+		fi || panic "mount ${UNIONTYPE} on ${unionmountpoint} failed with option ${unionmountopts}"
 	done
 
 	# Correct the permissions of /:
@@ -1783,7 +1746,7 @@ setup_unionfs ()
 				unionrw="$(echo ${dest} | sed -e "s|${rootmnt}|/cow/|")"
 				mkdir -p ${unionrw}
 				unionmountopts="noatime,${noxino_opt}dirs=${unionrw}=rw:${source}=${roopt}"
-				mount -t "${UNIONTYPE}" -o "${unionmountopts}" "${UNIONTYPE}" "${dest}"
+				do_union ${root_backing} ${unionrw} ${source} ${dest}
 			fi
 
 			if [ -n "${opt_linkfiles}" ]
