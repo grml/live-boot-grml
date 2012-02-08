@@ -1695,10 +1695,12 @@ setup_unionfs ()
 		# that we won't hide a previous mount. We also  ignore
 		# duplicate destinations in a more or less arbitrary way.
 		[ -e "${bindings}" ] && sort -k2 -sbu ${bindings} >> ${custom_mounts}
+		rm ${bindings}
 
 		# After all mounts are considered we add symlinks so they
 		# won't be hidden by some mount.
 		[ -e "${links}" ] && sort -k2 -sbu ${links} >> ${custom_mounts}
+		rm ${links}
 
 		[ "${DEBUG}" = "Yes" ] && cp ${custom_mounts} ${persistent_backing}
 
