@@ -1707,6 +1707,16 @@ setup_unionfs ()
 		# Now we do the actual mounting (and symlinking)
 		while read source dest options	# < ${custom_mounts}
 		do
+			local opt_linkfiles=""
+			for opt in $(echo ${options} | tr ',' ' ');
+			do
+				 case "${opt}" in
+					"linkfiles")
+						opt_linkfiles="yes"
+						;;
+				esac
+			done
+
 			if mountpoint -q "${dest}";
 			then
 				log_warning_msg "Skipping custom mount ${source} on ${dest}: destination is already a mount point"
@@ -1745,7 +1755,7 @@ setup_unionfs ()
 			# dealing with /etc or other system dir.
 			if [ ! -d "${source}" ]
 			then
-				if [ -n "${PERSISTENT_READONLY}" ] || echo ${options} | grep -qe "\<linkfiles\>"
+				if [ -n "${PERSISTENT_READONLY}" ] || [ -n "${opt_linkfiles}" ]
 				then
 					continue
 				fi
@@ -1756,7 +1766,7 @@ setup_unionfs ()
 
 			if [ -z "${PERSISTENT_READONLY}" ]
 			then
-				if echo ${options} | grep -qe "\<linkfiles\>";
+				if [ -n "${opt_linkfiles}" ]
 				then
 					links_source="${source}"
 					links_dest="${dest}"
@@ -1764,7 +1774,7 @@ setup_unionfs ()
 					mount --bind "${source}" "${dest}"
 				fi
 			else
-				if echo ${options} | grep -qe "\<linkfiles\>";
+				if [ -n "${opt_linkfiles}" ]
 				then
 					links_dest="${dest}"
 					dest="$(mktemp -d ${persistent_backing}/links_source-XXXXXX)"
@@ -1776,7 +1786,7 @@ setup_unionfs ()
 				mount -t "${UNIONTYPE}" -o "${unionmountopts}" "${UNIONTYPE}" "${dest}"
 			fi
 
-			if echo $options | grep -qe "\<linkfiles\>";
+			if [ -n "${opt_linkfiles}" ]
 			then
 				link_files "${links_source}" "${links_dest}" "${rootmnt}"
 			fi
