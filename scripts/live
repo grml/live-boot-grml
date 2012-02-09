@@ -1566,12 +1566,13 @@ setup_unionfs ()
 
 	live_rofs_list=""
 	# SHOWMOUNTS is necessary for custom mounts with the union option
-	if [ -n "${SHOWMOUNTS}" ] || ( [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ] )
+	# Since we may want to do custom mounts in user-space it's best to always enable SHOWMOUNTS
+	if true #[ -n "${SHOWMOUNTS}" ] || ( [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ] 1)
 	then
 		# XXX: is the for loop really necessary? rofslist can only contain one item (see above XXX about EXPOSEDROOT) and this is also assumed elsewhere above (see use of $rofs above).
 		for d in ${rofslist}
 		do
-			live_rofs="${rootmnt}/live/${d##*/}"
+			live_rofs="${rootmnt}/live/rofs/${d##*/}"
 			live_rofs_list="${live_rofs_list} ${live_rofs}"
 			mkdir -p "${live_rofs}"
 			case d in
@@ -1592,227 +1593,20 @@ setup_unionfs ()
 		done
 	fi
 
-	# Adding other custom mounts
+	# Adding custom persistent
 	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
 	then
-		bindings="/bindings.list"
-		links="/links.list"
-		custom_mounts="/custom_mounts.list"
-		rm -f ${bindings} ${links} ${custom_mounts} >/dev/null 2>&1
-		persistent_backing="${rootmnt}/live/persistent"
+		local custom_mounts="/custom_mounts.list"
+		rm -rf ${custom_mounts} 2> /dev/null
 
-		# First we scan all media and gather all information about custom mounts
-		for device in ${overlay_devices}
-		do
-			if [ ! -b "${device}" ]
-			then
-				continue
-			fi
-			device_name="$(basename ${device})"
-			backing="${persistent_backing}/${device_name}"
-			mkdir -p "${backing}"
-			device_fstype="$(get_fstype ${device})"
-			if [ -z "${PERSISTENT_READONLY}" ]
-			then
-				device_mount_opts="rw,noatime"
-			else
-				device_mount_opts="ro,noatime"
-			fi
-			device_used=""
-			mount -t "${device_fstype}" -o "${device_mount_opts}" "${device}" "${backing}"
-			include_list="${backing}/${persistence_list}"
-			if [ ! -r "${include_list}" ]
-			then
-				umount "${backing}"
-				rmdir "${backing}"
-				continue
-			fi
+		# Gather information about custom mounts from devies detected as overlays
+		get_custom_mounts ${overlay_devices} ${custom_mounts} ${rootmnt}
 
-			[ "${DEBUG}" = "Yes" ] && cp ${include_list} ${persistent_backing}/${persistence_list}.${device_name}
-			while read source dest options # < ${include_list}
-			do
-				if echo ${source} | grep -qe "^[[:space:]]*\(#.*\)\?$"
-				then
-					# skipping empty or commented lines
-					continue
-				fi
-
-				if echo ${dest} | grep -qe "^[^/]"
-				then
-					options="${dest}"
-					dest="${source}"
-				elif [ -z "${dest}" ]
-				then
-					dest="${source}"
-				fi
-
-				if echo ${dest} | grep -qe "^/\+$\|^/\+live\(/.*\)\?$"
-				then
-					# mounting on / or /live could cause trouble
-					log_warning_msg "Skipping unsafe custom mount on ${dest}"
-					continue
-				fi
-
-				for opt in $(echo ${options} | tr ',' ' ');
-				do
-					case "${opt}" in
-						linkfiles|union)
-							;;
-						*)
-							log_warning_msg "Skipping custom mount with unkown option: ${opt}"
-							continue 2
-							;;
-					esac
-				done
-
-				# FIXME: handle case: we already have /a/b in $bindings added from current $device, but now we find /a -- /a should replace /a/b in $bindings.
-				# FIXME: handle case: we have /a in $bindings from current $device, now we find /a/b, so we skip /a/b
-
-				# ensure that no multiple-/ occur in paths
-				full_source="$(echo ${backing}/${source}/ | sed -e 's|/\+|/|g')"
-				full_dest="$(echo ${rootmnt}/${dest}/ | sed -e 's|/\+|/|g')"
-				device_used="yes"
-				if echo ${options} | grep -qe "\<linkfiles\>";
-				then
-					echo "${full_source} ${full_dest} ${options}" >> ${links}
-				else
-					echo "${full_source} ${full_dest} ${options}" >> ${bindings}
-				fi
-			done < ${include_list}
-
-			if [ -z "${device_used}" ]
-			then
-				# this device was not used for / earlier, or custom mount point now, so it's useless
-				umount "${backing}"
-				rmdir "${backing}"
-			fi
-		done
-
-		# We sort the list according to destination so we're sure 
-		# that we won't hide a previous mount. We also  ignore
-		# duplicate destinations in a more or less arbitrary way.
-		[ -e "${bindings}" ] && sort -k2 -sbu ${bindings} >> ${custom_mounts}
-		rm -f ${bindings}
-
-		# After all mounts are considered we add symlinks so they
-		# won't be hidden by some mount.
-		[ -e "${links}" ] && sort -k2 -sbu ${links} >> ${custom_mounts}
-		rm -f ${links}
-
-		[ "${DEBUG}" = "Yes" ] && cp ${custom_mounts} ${persistent_backing}
+		[ "${DEBUG}" = "Yes" ] && cp ${custom_mounts} "${rootmnt}/live/persistent"
 
 		# Now we do the actual mounting (and symlinking)
-		while read source dest options	# < ${custom_mounts}
-		do
-			local opt_linkfiles=""
-			local opt_union=""
-			for opt in $(echo ${options} | tr ',' ' ');
-			do
-				 case "${opt}" in
-					linkfiles)
-						opt_linkfiles="yes"
-						;;
-					union)
-						opt_union="yes"
-						;;
-				esac
-			done
-
-			if mountpoint -q "${dest}";
-			then
-				log_warning_msg "Skipping custom mount ${source} on ${dest}: destination is already a mount point"
-				continue
-			fi
-
-			# FIXME: we don't handle already existing non-directory files in the paths of both $source and $dest.
-
-			if [ ! -d "${dest}" ]
-			then
-				# if ${dest} is in /home/$user, try fixing proper ownership
-				# FIXME: this should really be handled by live-config since we don't know for sure which uid a certain user has until then
-				if echo ${dest} | grep -qe "^${rootmnt}/*home/\+[^/]\+"
-				then
-					path="/"
-					for dir in $(echo ${dest} | sed -e 's|/\+| |g')
-					do
-						path=${path}/${dir}
-						if [ ! -e ${path} ]
-						then
-							mkdir -p ${path}
-							# assume that the intended user is the first, which is usually the case
-							chown 1000:1000 ${path}
-						fi
-					done
-				else
-					mkdir -p ${dest}
-				fi
-			fi
-
-			# if ${source} doesn't exist on our persistent media we
-			# bootstrap it with $dest from the live filesystem.
-			# this both makes sense and is critical if we're
-			# dealing with /etc or other system dir.
-			if [ ! -d "${source}" ]
-			then
-				if [ -n "${PERSISTENT_READONLY}" ] || [ -n "${opt_linkfiles}" ]
-				then
-					continue
-				elif [ -n "${opt_union}" ]
-				then
-					# union's don't need to be bootstrapped
-					mkdir "${source}"
-				else
-					# ensure that $dest is not copied *into* $source
-					mkdir -p "$(dirname ${source})"
-					cp -a "${dest}" "${source}"
-				fi
-			fi
-
-			rofs_dest_backing=""
-			for d in ${live_rofs_list}
-			do
-				rofs_dest_backing="${d}/$(echo ${dest} | sed -e "s|${rootmnt}||")"
-				if [ -d "${rofs_dest_backing}" ]
-				then
-					break
-				else
-					rofs_dest_backing=""
-				fi
-			done
-
-			if [ -z "${PERSISTENT_READONLY}" ]
-			then
-				if [ -n "${opt_linkfiles}" ]
-				then
-					links_source="${source}"
-					links_dest="${dest}"
-				elif [ -n "${opt_union}" ]
-				then
-					do_union ${dest} ${source} ${rofs_dest_backing}
-				else
-					mount --bind "${source}" "${dest}"
-				fi
-			else
-				if [ -n "${opt_linkfiles}" ]
-				then
-					links_dest="${dest}"
-					dest="$(mktemp -d ${persistent_backing}/links_source-XXXXXX)"
-					links_source="${dest}"
-				fi
-				cow_dir="$(echo ${dest} | sed -e "s|${rootmnt}|/cow/|")"
-				mkdir -p ${cow_dir}
-				do_union ${dest} ${cow_dir} ${source} ${rofs_dest_backing}
-			fi
-
-			if [ -n "${opt_linkfiles}" ]
-			then
-				link_files "${links_source}" "${links_dest}" "${rootmnt}"
-			fi
-
-			PERSISTENCE_IS_ON="1"
-			export PERSISTENCE_IS_ON
-		done < ${custom_mounts}
-		rm -f ${custom_mounts}
+		do_custom_mounts ${custom_mounts} ${rootmnt}
+		rm ${custom_mounts}
 
 		# Look for other snapshots to copy in
 		try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
