@@ -1603,9 +1603,9 @@ setup_unionfs ()
 			[ "${DEBUG}" = "Yes" ] && cp ${include_list} ${persistent_backing}/${persistence_list}.${device_name}
 			while read source dest options # < ${include_list}
 			do
-				if echo ${source} | grep -qe "^[[:space:]]*#"
+				if echo ${source} | grep -qe "^[[:space:]]*\(#.*\)\?$"
 				then
-					# skipping commented line
+					# skipping empty or commented lines
 					continue
 				fi
 
