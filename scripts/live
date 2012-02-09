@@ -1564,6 +1564,34 @@ setup_unionfs ()
 	mkdir -p "${rootmnt}/live"
 	mount -t tmpfs tmpfs ${rootmnt}/live
 
+	live_rofs_list=""
+	# SHOWMOUNTS is necessary for custom mounts with the union option
+	if [ -n "${SHOWMOUNTS}" ] || ( [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ] )
+	then
+		# XXX: is the for loop really necessary? rofslist can only contain one item (see above XXX about EXPOSEDROOT) and this is also assumed elsewhere above (see use of $rofs above).
+		for d in ${rofslist}
+		do
+			live_rofs="${rootmnt}/live/${d##*/}"
+			live_rofs_list="${live_rofs_list} ${live_rofs}"
+			mkdir -p "${live_rofs}"
+			case d in
+				*.dir)
+					# do nothing # mount -o bind "${d}" "${live_rofs}"
+					;;
+				*)
+					case "${UNIONTYPE}" in
+						unionfs-fuse)
+							mount -o bind "${d}" "${live_rofs}"
+							;;
+						*)
+							mount -o move "${d}" "${live_rofs}"
+							;;
+					esac
+					;;
+			esac
+		done
+	fi
+
 	# Adding other custom mounts
 	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
 	then
@@ -1628,7 +1656,7 @@ setup_unionfs ()
 				for opt in $(echo ${options} | tr ',' ' ');
 				do
 					case "${opt}" in
-						"linkfiles")
+						linkfiles|union)
 							;;
 						*)
 							log_warning_msg "Skipping custom mount with unkown option: ${opt}"
@@ -1677,11 +1705,15 @@ setup_unionfs ()
 		while read source dest options	# < ${custom_mounts}
 		do
 			local opt_linkfiles=""
+			local opt_union=""
 			for opt in $(echo ${options} | tr ',' ' ');
 			do
 				 case "${opt}" in
-					"linkfiles")
+					linkfiles)
 						opt_linkfiles="yes"
+						;;
+					union)
+						opt_union="yes"
 						;;
 				esac
 			done
@@ -1716,8 +1748,6 @@ setup_unionfs ()
 				fi
 			fi
 
-			# FIXME: could we instead only save the aufs-diff in the persistent media? implications? What about when there's changes in the live image?
-
 			# if ${source} doesn't exist on our persistent media we
 			# bootstrap it with $dest from the live filesystem.
 			# this both makes sense and is critical if we're
@@ -1727,11 +1757,28 @@ setup_unionfs ()
 				if [ -n "${PERSISTENT_READONLY}" ] || [ -n "${opt_linkfiles}" ]
 				then
 					continue
+				elif [ -n "${opt_union}" ]
+				then
+					# union's don't need to be bootstrapped
+					mkdir "${source}"
+				else
+					# ensure that $dest is not copied *into* $source
+					mkdir -p "$(dirname ${source})"
+					cp -a "${dest}" "${source}"
 				fi
-				# ensure that $dest is not copied *into* $source
-				mkdir -p "$(dirname ${source})"
-				cp -a "${dest}" "${source}"
 			fi
+
+			rofs_dest_backing=""
+			for d in ${live_rofs_list}
+			do
+				rofs_dest_backing="${d}/$(echo ${dest} | sed -e "s|${rootmnt}||")"
+				if [ -d "${rofs_dest_backing}" ]
+				then
+					break
+				else
+					rofs_dest_backing=""
+				fi
+			done
 
 			if [ -z "${PERSISTENT_READONLY}" ]
 			then
@@ -1739,6 +1786,9 @@ setup_unionfs ()
 				then
 					links_source="${source}"
 					links_dest="${dest}"
+				elif [ -n "${opt_union}" ]
+				then
+					do_union ${dest} ${source} ${rofs_dest_backing}
 				else
 					mount --bind "${source}" "${dest}"
 				fi
@@ -1751,8 +1801,7 @@ setup_unionfs ()
 				fi
 				cow_dir="$(echo ${dest} | sed -e "s|${rootmnt}|/cow/|")"
 				mkdir -p ${cow_dir}
-				# XXX: broken! will be fixed in the next few commits...
-				do_union ${dest} ${cow_dir} ${source}
+				do_union ${dest} ${cow_dir} ${source} ${rofs_dest_backing}
 			fi
 
 			if [ -n "${opt_linkfiles}" ]
@@ -1769,32 +1818,6 @@ setup_unionfs ()
 		try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
 		# This second type should be removed when snapshot grow smarter
 		try_snap "${home_snapdata}" "${rootmnt}" "HOME" "/home"
-	fi
-
-	if [ -n "${SHOWMOUNTS}" ]
-	then
-		for d in ${rofslist}
-		do
-			mkdir -p "${rootmnt}/live/${d##*/}"
-
-			case d in
-				*.dir)
-					# do nothing # mount -o bind "${d}" "${rootmnt}/live/${d##*/}"
-					;;
-
-				*)
-					case "${UNIONTYPE}" in
-						unionfs-fuse)
-							mount -o bind "${d}" "${rootmnt}/live/${d##*/}"
-							;;
-
-						*)
-							mount -o move "${d}" "${rootmnt}/live/${d##*/}"
-							;;
-					esac
-					;;
-			esac
-		done
 	fi
 
 	# shows cow fs on /cow for use by live-snapshot
