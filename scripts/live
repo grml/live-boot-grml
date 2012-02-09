@@ -1763,7 +1763,7 @@ setup_unionfs ()
 			PERSISTENCE_IS_ON="1"
 			export PERSISTENCE_IS_ON
 		done < ${custom_mounts}
-		rm -f ${bindings}
+		rm -f ${custom_mounts}
 
 		# Look for other snapshots to copy in
 		try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
