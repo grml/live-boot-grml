@@ -596,7 +596,7 @@ link_files ()
 			fi
 			link_files "${src}" "${dest}" "${src_mask}"
 		else
-			if [ -n "${src}" ];
+			if [ -n "${src_mask}" ];
 			then
 				src="$(echo ${src} | sed "s|^${src_mask}||")"
 			fi
