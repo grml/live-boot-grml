@@ -1485,7 +1485,8 @@ setup_unionfs ()
 	then
 		if [ -n "${PERSISTENT_READONLY}" ]
 		then
-			root_backing="/${rootmnt}/live/persistent/$(basename ${cowdevice})-root"
+			mount -t tmpfs -o rw,noatime,mode=755 tmpfs "/cow"
+			root_backing="${rootmnt}/live/persistent/$(basename ${cowdevice})-root"
 			mkdir -p ${root_backing}
 		else
 			root_backing="/cow"
@@ -1505,6 +1506,7 @@ setup_unionfs ()
 
 	rofscount=$(echo ${rofslist} |wc -w)
 
+	# XXX: we now ensure that there can only be one read-only filesystem. Should this be inside the EXPOSED_ROOT if?
 	if [ ${rofscount} -ne 1 ]
 	then
 		panic "only one RO file system supported with exposedroot: ${rofslist}"
@@ -1532,21 +1534,25 @@ setup_unionfs ()
 		#panic "unionmount does not support subunions (${cow_dirs})."
 	fi
 
-	unionmountopts=""
-	unionmountpoint=""
-
 	for dir in ${cow_dirs}; do
-		unionrw="/cow${dir}"
-		unionro="${rofs}${dir}"
 		unionmountpoint="${rootmnt}${dir}"
-		mkdir -p ${unionrw}
+		mkdir -p ${unionmountpoint}
 		if [ "${UNIONTYPE}" = "unionmount" ]
 		then
 			# FIXME: handle PERSISTENT_READONLY
 			unionmountopts="-t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice}"
 			mount_full $unionmountopts "${unionmountpoint}"
 		else
-			do_union ${root_backing} ${unionrw} ${unionro} ${unionmountpoint}
+			cow_dir="/cow${dir}"
+			rofs_dir="${rofs}${dir}"
+			mkdir -p ${cow_dir}
+			if [ -n "${PERSISTENT_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
+			then
+				#mount -t tmpfs -o rw,noatime,mode=755 tmpfs "${cow_dir}"
+				do_union ${unionmountpoint} ${cow_dir} ${root_backing} ${rofs_dir}
+			else
+				do_union ${unionmountpoint} ${cow_dir} ${rofs_dir}
+			fi
 		fi || panic "mount ${UNIONTYPE} on ${unionmountpoint} failed with option ${unionmountopts}"
 	done
 
@@ -1743,10 +1749,10 @@ setup_unionfs ()
 					dest="$(mktemp -d ${persistent_backing}/links_source-XXXXXX)"
 					links_source="${dest}"
 				fi
-				unionrw="$(echo ${dest} | sed -e "s|${rootmnt}|/cow/|")"
-				mkdir -p ${unionrw}
-				unionmountopts="noatime,${noxino_opt}dirs=${unionrw}=rw:${source}=${roopt}"
-				do_union ${root_backing} ${unionrw} ${source} ${dest}
+				cow_dir="$(echo ${dest} | sed -e "s|${rootmnt}|/cow/|")"
+				mkdir -p ${cow_dir}
+				# XXX: broken! will be fixed in the next few commits...
+				do_union ${dest} ${cow_dir} ${source}
 			fi
 
 			if [ -n "${opt_linkfiles}" ]

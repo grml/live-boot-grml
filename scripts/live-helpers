@@ -607,16 +607,16 @@ link_files ()
 }
 
 do_union () {
-	root_backing="${1}"
-	unionrw="${2}"
-	unionro="${3}"
-	unionmountpoint="${4}"
+	local unionmountpoint="${1}"	# directory where the union is mounted
+	local unionrw="${2}"		# branch where the union changes are stored
+	local unionro1="${3}"		# first underlying read-only branch (optional)
+	local unionro2="${4}"		# second underlying read-only branch (optional)
 
 	if [ "${UNIONTYPE}" = "aufs" ]
 	then
 		rw_opt="rw"
 		ro_opt="rr+wh"
-		noxino_opt="noxino,"
+		noxino_opt="noxino"
 	elif [ "${UNIONTYPE}" = "unionfs-fuse" ]
 	then
 		rw_opt="RW"
@@ -628,9 +628,16 @@ do_union () {
 
 	case "${UNIONTYPE}" in
 		unionfs-fuse)
-			# FIXME: handle PERSISTENT_READONLY
 			unionmountopts="-o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid"
-			unionmountopts="${unionmountopts} ${unionrw}=${rw_opt}:${unionro}=${ro_opt}"
+			unionmountopts="${unionmountopts} ${unionrw}=${rw_opt}"
+			if [ -n "${unionro1}" ]
+			then
+				unionmountopts="${unionmountopts}:${unionro1}=${ro_opt}"
+			fi
+			if [ -n "${unionro2}" ]
+			then
+				unionmountopts="${unionmountopts}:${unionro2}=${ro_opt}"
+			fi
 			( sysctl -w fs.file-max=391524 ; ulimit -HSn 16384
 			unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
 			( mkdir -p /run/sendsigs.omit.d
@@ -638,18 +645,21 @@ do_union () {
 			;;
 
 		overlayfs)
-			# FIXME: is PERSISTENT_READONLY possible? (overlayfs only handles two dirs, but perhaps they can be chained?)
-			unionmountopts="-o noatime,lowerdir=${unionro},upperdir=${unionrw}"
+			# XXX: can unionro2 be used? (overlayfs only handles two dirs, but perhaps they can be chained?)
+			# XXX: and can unionro1 be optional? i.e. can overlayfs skip lowerdir?
+			unionmountopts="-o noatime,lowerdir=${unionro1},upperdir=${unionrw}"
 			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 			;;
 
 		*)
-			if [ -n "${PERSISTENT_READONLY}" ]
+			unionmountopts="-o noatime,${noxino_opt},dirs=${unionrw}=${rw_opt}"
+			if [ -n "${unionro1}" ]
 			then
-				mount -t tmpfs -o rw,noatime,mode=755 tmpfs "${unionrw}"
-				unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=${rw_opt}:${root_backing}=${ro_opt}:${unionro}=${ro_opt}"
-			else
-				unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=${rw_opt}:${unionro}=${ro_opt}"
+				unionmountopts="${unionmountopts}:${unionro1}=${ro_opt}"
+			fi
+			if [ -n "${unionro2}" ]
+			then
+				unionmountopts="${unionmountopts}:${unionro2}=${ro_opt}"
 			fi
 			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 			;;
