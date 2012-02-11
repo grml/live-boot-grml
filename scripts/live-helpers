@@ -401,8 +401,6 @@ find_persistent_media ()
 			do
 				if [ "$(/sbin/blkid -s LABEL -o value $dev 2>/dev/null)" = "${label}" ]
 				then
-					overlays=$(echo ${overlays} | sed -e "s|\<${label}\>||")
-					snapshots=$(echo ${snapshots} | sed -e "s|\<${label}\>||")
 					echo "${label}=${dev}"
 					# skip to the next device
 					continue 2
@@ -424,7 +422,6 @@ find_persistent_media ()
 					path=${backing}/${PERSISTENT_PATH}${label}
 					if [ -f "${path}" ]
 					then
-						overlays=$(echo ${overlays} | sed -e "s|\<${label}\>||")
 						overlay_on_dev="yes"
 						echo "${label}=$(setup_loop "${path}" "loop" "/sys/block/loop*")"
 					fi
@@ -437,7 +434,6 @@ find_persistent_media ()
 						path="${PERSISTENT_PATH}${label}.${ext}"
 						if [ -f "${backing}/${path}" ]
 						then
-							snapshots=$(echo ${snapshots} | sed -e "s|\<${label}\>||")
 							snapshot_on_dev="yes"
 							echo "${label}=${dev}:${backing}:${path}"
 						fi
