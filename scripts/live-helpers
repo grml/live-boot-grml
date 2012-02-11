@@ -373,6 +373,7 @@ find_persistent_media ()
 	snapshots="${2}"
 	black_listed_devices="${3}"
 	white_listed_devices="${4}"
+	persistent_backing="${rootmnt}/live/persistent"
 
 	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
@@ -413,7 +414,7 @@ find_persistent_media ()
 			devfstype="$(get_fstype ${dev})"
 			overlay_on_dev=""
 			snapshot_on_dev=""
-			backing="/$(basename ${dev})-backing"
+			backing="${persistent_backing}/$(basename ${dev})"
 			mkdir -p "${backing}"
 			if is_supported_fs ${devfstype} && try_mount "${dev}" "${backing}" "rw" "${devfstype}"
 			then
