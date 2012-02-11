@@ -409,11 +409,11 @@ find_persistent_media ()
 			done
 		fi
 
+		overlay_on_dev=""
+		snapshot_on_dev=""
 		if echo ${PERSISTENT_STORAGE} | grep -qe "\<file\>"
 		then
 			devfstype="$(get_fstype ${dev})"
-			overlay_on_dev=""
-			snapshot_on_dev=""
 			backing="${persistent_backing}/$(basename ${dev})"
 			mkdir -p "${backing}"
 			if is_supported_fs ${devfstype} && try_mount "${dev}" "${backing}" "rw" "${devfstype}"
@@ -441,14 +441,16 @@ find_persistent_media ()
 					done
 				done
 			fi
-			if [ -z "${overlay_on_dev}" ]
+			if [ -z "${overlay_on_dev}" ] && [ -z "${snapshot_on_dev}" ]
 			then
 				umount ${backing} > /dev/null 2>&1 || true
-				if [ -z "${snapshot_on_dev}" ] && [ -n "${luks_device}" ] && /sbin/cryptsetup status "${luks_device}" 1> /dev/null
-				then
-					/sbin/cryptsetup luksClose "${luks_device}"
-				fi
 			fi
+		fi
+		if [ -z "${overlay_on_dev}" ] && [ -z "${snapshot_on_dev}" ] && \
+		   [ -n "${luks_device}" ] && \
+		   /sbin/cryptsetup status "${luks_device}" 1> /dev/null 2>&1
+		then
+			/sbin/cryptsetup luksClose "${luks_device}"
 		fi
 	done
 }
