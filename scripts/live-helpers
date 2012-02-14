@@ -740,6 +740,37 @@ open_luks_device ()
 	done
 }
 
+get_gpt_name () {
+    local dev="${1}"
+    /sbin/blkid -s PART_ENTRY_NAME -p -o value ${dev} 2>/dev/null
+}
+
+is_gpt_device () {
+    local dev="${1}"
+    [ "$(/sbin/blkid -s PART_ENTRY_SCHEME -p -o value ${dev} 2>/dev/null)" = "gpt" ]
+}
+
+probe_for_gpt_name ()
+{
+	local overlays="${1}"
+	local snapshots="${2}"
+	local dev="${3}"
+
+	if ! is_gpt_device ${dev} || \
+	   ( echo ${PERSISTENT_ENCRYPTION} | grep -qve "\<luks\>" && \
+	     /sbin/cryptsetup isLuks ${dev} > /dev/null 2>&1 )
+	then
+		return
+	fi
+	for label in ${overlays} ${snapshots}
+	do
+		if [ "$(get_gpt_name ${dev})" = "${label}" ]
+		then
+			echo "${label}=${dev}"
+		fi
+	done
+}
+
 probe_for_fs_label () {
 	local overlays="${1}"
 	local snapshots="${2}"
@@ -818,22 +849,28 @@ find_persistent_media ()
 	# ${white_list_devices} is non-empty, only devices in it will be
 	# scanned.
 
-	overlays="${1}"
-	snapshots="${2}"
-	black_listed_devices="${3}"
-	white_listed_devices="${4}"
-	persistent_backing="${rootmnt}/live/persistent"
+	local overlays="${1}"
+	local snapshots="${2}"
+	local black_listed_devices="${3}"
+	local white_listed_devices="${4}"
+	local ret=""
 
 	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
-		luks_device=""
+		local result=""
 
-		# Checking for a luks device
+		local real_dev=""
+		local luks_device=""
+		# Check if it's a luks device; we'll have to open the device
+		# in order to probe any filesystem it contains, like we do
+		# below. do_custom_mounts() also depends on that any luks
+		# device already has been opened.
 		if echo ${PERSISTENT_ENCRYPTION} | grep -qe "\<luks\>" && \
-		   /sbin/cryptsetup isLuks ${dev}
+		   /sbin/cryptsetup isLuks ${dev} >/dev/null 2>&1
 		then
 			if luks_device=$(open_luks_device "${dev}")
 			then
+				real_dev="${dev}"
 				dev="${luks_device}"
 			else
 				# skip $dev since we failed/chose not to open it
@@ -845,9 +882,24 @@ find_persistent_media ()
 			continue
 		fi
 
-		# Probe for filesystems with matching label
+		# Probe for matching GPT partition names or filesystem labels
 		if echo ${PERSISTENT_STORAGE} | grep -qe "\<filesystem\>"
 		then
+			local gpt_dev="${dev}"
+			if [ -n "${luks_device}" ]
+			then
+				# When we probe GPT partitions we need to look
+				# at the real device, not the virtual, opened
+				# luks device
+				gpt_dev="${real_dev}"
+			fi
+			result=$(probe_for_gpt_name "${overlays}" "${snapshots}" ${gpt_dev})
+			if [ -n "${result}" ]
+			then
+				ret="${ret} ${result}"
+				continue
+			fi
+
 			result=$(probe_for_fs_label "${overlays}" "${snapshots}" ${dev})
 			if [ -n "${result}" ]
 			then
