@@ -11,12 +11,6 @@ mountpoint="/live/image"
 alt_mountpoint="/media"
 LIVE_MEDIA_PATH="live"
 
-root_overlay_label="full-ov"
-custom_overlay_label="custom-ov"
-root_snapshot_label="live-sn"
-home_snapshot_label="home-sn"
-persistence_list="live.persist"
-
 USERNAME="user"
 USERFULLNAME="Live user"
 HOSTNAME="host"

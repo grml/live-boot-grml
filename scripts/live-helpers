@@ -15,6 +15,12 @@ else
 	udevinfo='udevinfo'
 fi
 
+root_overlay_label="full-ov"
+custom_overlay_label="custom-ov"
+root_snapshot_label="live-sn"
+home_snapshot_label="home-sn"
+persistence_list="live.persist"
+
 Arguments ()
 {
 	PRESEEDS=""
