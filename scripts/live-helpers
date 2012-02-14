@@ -1162,23 +1162,38 @@ get_custom_mounts () {
 		then
 			continue
 		fi
+
 		local device_name="$(basename ${device})"
-		local backing="${persistent_backing}/${device_name}"
-		mkdir -p "${backing}"
-		local device_fstype="$(get_fstype ${device})"
-		if [ -z "${PERSISTENT_READONLY}" ]
-		then
-			device_mount_opts="rw,noatime"
-		else
-			device_mount_opts="ro,noatime"
-		fi
 		local device_used=""
-		mount -t "${device_fstype}" -o "${device_mount_opts}" "${device}" "${backing}"
+		# $device may already have been mounted by
+		# probe_for_file_name() in find_persistent_media() ...
+		local backing=$(where_is_mounted ${device})
+		if [ -z "${backing}" ]
+		then
+			# ... otherwise we mount it now
+			backing="${persistent_backing}/${device_name}"
+			mkdir -p "${backing}"
+			local device_fstype="$(get_fstype ${device})"
+			if [ -z "${PERSISTENT_READONLY}" ]
+			then
+				device_mount_opts="rw,noatime"
+			else
+				device_mount_opts="ro,noatime"
+			fi
+			if ! mount -t "${device_fstype}" -o "${device_mount_opts}" "${device}" "${backing}" >/dev/null 2>&1
+			then
+				log_warning_msg "Could not mount persistent media ${device} (${device_fstype})"
+			fi
+		fi
 		local include_list="${backing}/${persistence_list}"
 		if [ ! -r "${include_list}" ]
 		then
-			umount "${backing}"
-			rmdir "${backing}"
+			umount "${backing}" >/dev/null 2>&1
+			rmdir "${backing}" >/dev/null 2>&1
+			if /sbin/cryptsetup status ${device_name} >/dev/null 2>&1
+			then
+				/sbin/cryptsetup luksClose "${device_name}"
+			fi
 			continue
 		fi
 
