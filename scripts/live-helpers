@@ -1068,8 +1068,8 @@ link_files ()
 			then
 				mkdir -p "${dest}"
 				prev="$(dirname "${dest}")"
-				chown $(stat -c %u:%g "${prev}") "${dest}"
-				chmod $(stat -c %a "${prev}") "${dest}"
+				chown --reference "${prev}" "${dest}"
+				chmod --reference "${prev}" "${dest}"
 			fi
 			link_files "${src}" "${dest}" "${src_mask}"
 		else
@@ -1252,16 +1252,11 @@ get_custom_mounts () {
 	# We sort the list according to destination so we're sure that
 	# we won't hide a previous mount. We also ignore duplicate
 	# destinations in a more or less arbitrary way.
-	[ -e "${bindings}" ] && sort -k2 -sbu ${bindings} >> ${custom_mounts}
-	rm ${bindings}
+	[ -e "${bindings}" ] && sort -k2 -sbu ${bindings} >> ${custom_mounts} && rm ${bindings}
 
 	# After all mounts are considered we add symlinks so they
 	# won't be hidden by some mount.
-	[ -e "${links}" ] && sort -k2 -sbu ${links} >> ${custom_mounts}
-	rm ${links}
-
-	rm -f ${bindings} ${links} 2> /dev/null
-	echo ${custom_mounts}
+	[ -e "${links}" ] && sort -k2 -sbu ${links} >> ${custom_mounts} && rm ${links}
 }
 
 do_custom_mounts () {
