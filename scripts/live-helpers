@@ -740,6 +740,61 @@ open_luks_device ()
 	done
 }
 
+probe_for_fs_label () {
+	local overlays="${1}"
+	local snapshots="${2}"
+	local dev="${3}"
+
+	for label in ${overlays} ${snapshots}
+	do
+		if [ "$(/sbin/blkid -s LABEL -o value $dev 2>/dev/null)" = "${label}" ]
+		then
+			echo "${label}=${dev}"
+		fi
+	done
+}
+
+probe_for_file_name () {
+	local overlays="${1}"
+	local snapshots="${2}"
+	local dev="${3}"
+
+	local devfstype="$(get_fstype ${dev})"
+	local backing="${rootmnt}/live/persistent/$(basename ${dev})"
+	local ret=""
+	if is_supported_fs ${devfstype} && mkdir -p "${backing}" && \
+	   try_mount "${dev}" "${backing}" "rw" "${devfstype}"
+	then
+		for label in ${overlays}
+		do
+			path=${backing}/${PERSISTENT_PATH}${label}
+			if [ -f "${path}" ]
+			then
+				local loopdev=$(setup_loop "${path}" "loop" "/sys/block/loop*")
+				ret="${ret} ${label}=${loopdev}"
+			fi
+		done
+		for label in ${snapshots}
+		do
+			for ext in squashfs cpio.gz ext2 ext3 ext4 jffs2
+			do
+				path="${PERSISTENT_PATH}${label}.${ext}"
+				if [ -f "${backing}/${path}" ]
+				then
+					ret="${ret} ${label}=${dev}:${backing}:${path}"
+				fi
+			done
+		done
+
+		if [ -n "${ret}" ]
+		then
+			echo ${ret}
+		else
+			umount ${backing} > /dev/null 2>&1 || true
+		fi
+	fi
+}
+
 find_persistent_media ()
 {
 	# Scans devices for overlays and snapshots, and returns a whitespace
@@ -790,63 +845,40 @@ find_persistent_media ()
 			continue
 		fi
 
+		# Probe for filesystems with matching label
 		if echo ${PERSISTENT_STORAGE} | grep -qe "\<filesystem\>"
 		then
-			for label in ${overlays} ${snapshots}
-			do
-				if [ "$(/sbin/blkid -s LABEL -o value $dev 2>/dev/null)" = "${label}" ]
-				then
-					echo "${label}=${dev}"
-					# skip to the next device
-					continue 2
-				fi
-			done
+			result=$(probe_for_fs_label "${overlays}" "${snapshots}" ${dev})
+			if [ -n "${result}" ]
+			then
+				ret="${ret} ${result}"
+				continue
+			fi
 		fi
 
-		overlay_on_dev=""
-		snapshot_on_dev=""
+		# Probe for files with matching name on mounted partition
 		if echo ${PERSISTENT_STORAGE} | grep -qe "\<file\>"
 		then
-			devfstype="$(get_fstype ${dev})"
-			backing="${persistent_backing}/$(basename ${dev})"
-			mkdir -p "${backing}"
-			if is_supported_fs ${devfstype} && try_mount "${dev}" "${backing}" "rw" "${devfstype}"
+			result=$(probe_for_file_name "${overlays}" "${snapshots}" ${dev})
+			if [ -n "${result}" ]
 			then
-				for label in ${overlays}
-				do
-					path=${backing}/${PERSISTENT_PATH}${label}
-					if [ -f "${path}" ]
-					then
-						overlay_on_dev="yes"
-						echo "${label}=$(setup_loop "${path}" "loop" "/sys/block/loop*")"
-					fi
-				done
-
-				for label in ${snapshots}
-				do
-					for ext in squashfs cpio.gz ext2 ext3 ext4 jffs2
-					do
-						path="${PERSISTENT_PATH}${label}.${ext}"
-						if [ -f "${backing}/${path}" ]
-						then
-							snapshot_on_dev="yes"
-							echo "${label}=${dev}:${backing}:${path}"
-						fi
-					done
-				done
-			fi
-			if [ -z "${overlay_on_dev}" ] && [ -z "${snapshot_on_dev}" ]
-			then
-				umount ${backing} > /dev/null 2>&1 || true
+				ret="${ret} ${result}"
+				continue
 			fi
 		fi
-		if [ -z "${overlay_on_dev}" ] && [ -z "${snapshot_on_dev}" ] && \
-		   [ -n "${luks_device}" ] && \
+
+		# Close luks device if it isn't used
+		if [ -z "${result}" ] && [ -n "${luks_device}" ] && \
 		   /sbin/cryptsetup status "${luks_device}" 1> /dev/null 2>&1
 		then
 			/sbin/cryptsetup luksClose "${luks_device}"
 		fi
 	done
+
+	if [ -n "${ret}" ]
+	then
+		echo ${ret}
+	fi
 }
 
 get_mac ()
