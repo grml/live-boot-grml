@@ -16,8 +16,11 @@ else
 fi
 
 root_overlay_label="full-ov"
+old_root_overlay_label="live-rw"
+old_home_overlay_label="home-rw"
 custom_overlay_label="custom-ov"
 root_snapshot_label="live-sn"
+old_root_snapshot_label="live-sn"
 home_snapshot_label="home-sn"
 persistence_list="live.persist"
 
@@ -254,8 +257,11 @@ Arguments ()
 
 			persistent-subtext=*)
 				root_overlay_label="${root_overlay_label}-${ARGUMENT#persistent-subtext=}"
+				old_root_overlay_label="${old_root_overlay_label}-${ARGUMENT#persistent-subtext=}"
+				old_home_overlay_label="${old_home_overlay_label}-${ARGUMENT#persistent-subtext=}"
 				custom_overlay_label="${custom_overlay_label}-${ARGUMENT#persistent-subtext=}"
 				root_snapshot_label="${root_snapshot_label}-${ARGUMENT#persistent-subtext=}"
+				old_root_snapshot_label="${root_snapshot_label}-${ARGUMENT#persistent-subtext=}"
 				home_snapshot_label="${home_snapshot_label}-${ARGUMENT#persistent-subtext=}"
 				;;
 
@@ -1404,4 +1410,33 @@ do_custom_mounts () {
 		PERSISTENCE_IS_ON="1"
 		export PERSISTENCE_IS_ON
 	done < ${custom_mounts}
+}
+
+fix_home_rw_compatibility ()
+{
+	local device=${1}
+
+	if [ -n "${PERSISTENT_READONLY}" ]
+	then
+		return
+	fi
+
+	local backing="$(where_is_mounted ${device})"
+	if [ -z "${backing}" ]
+	then
+		backing="${rootmnt}/live/persistent/$(basename ${device})"
+		mkdir -p "${backing}"
+		local device_fstype="$(get_fstype ${device})"
+	local device_mount_opts="rw,noatime"
+	if ! mount -t "${device_fstype}" -o "${device_mount_opts}" "${device}" "${backing}" >/dev/null 2>&1
+	then
+		return
+	fi
+
+	local include_list="${backing}/${persistence_list}"
+	if [ ! -r "${include_list}" ]
+	then
+		echo "# home-rw backwards compatibility:
+. /home" > "${include_list}"
+	fi
 }
