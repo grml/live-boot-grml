@@ -1013,7 +1013,7 @@ setup_unionfs ()
 		local home_snapshot_label=""
 		local root_overlay_label=""
 		local overlay_devices=""
-		for media in $(find_persistent_media "${overlays}" "${snapshots}" "${blacklistdev}" "${whitelistdev}")
+		for media in $(find_persistent_media "${overlays}" "${snapshots}" "${whitelistdev}")
 		do
 			media="$(echo ${media} | tr ":" " ")"
 			case ${media} in

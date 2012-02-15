@@ -857,11 +857,10 @@ find_persistent_media ()
 
 	local overlays="${1}"
 	local snapshots="${2}"
-	local black_listed_devices="${3}"
-	local white_listed_devices="${4}"
+	local white_listed_devices="${3}"
 	local ret=""
 
-	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
+	for dev in $(storage_devices "" "${white_listed_devices}")
 	do
 		local result=""
 
