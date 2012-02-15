@@ -761,12 +761,14 @@ open_luks_device ()
 	done
 }
 
-get_gpt_name () {
+get_gpt_name ()
+{
     local dev="${1}"
     /sbin/blkid -s PART_ENTRY_NAME -p -o value ${dev} 2>/dev/null
 }
 
-is_gpt_device () {
+is_gpt_device ()
+{
     local dev="${1}"
     [ "$(/sbin/blkid -s PART_ENTRY_SCHEME -p -o value ${dev} 2>/dev/null)" = "gpt" ]
 }
@@ -792,7 +794,8 @@ probe_for_gpt_name ()
 	done
 }
 
-probe_for_fs_label () {
+probe_for_fs_label ()
+{
 	local overlays="${1}"
 	local snapshots="${2}"
 	local dev="${3}"
@@ -806,7 +809,8 @@ probe_for_fs_label () {
 	done
 }
 
-probe_for_file_name () {
+probe_for_file_name ()
+{
 	local overlays="${1}"
 	local snapshots="${2}"
 	local dev="${3}"
@@ -1103,7 +1107,8 @@ link_files ()
 	done
 }
 
-do_union () {
+do_union ()
+{
 	local unionmountpoint="${1}"	# directory where the union is mounted
 	local unionrw="${2}"		# branch where the union changes are stored
 	local unionro1="${3}"		# first underlying read-only branch (optional)
@@ -1163,7 +1168,8 @@ do_union () {
 	esac
 }
 
-get_custom_mounts () {
+get_custom_mounts ()
+{
 	# Side-effect: leaves $devices with live.persist mounted in ${rootmnt}/live/persistent
 	# Side-effect: prints info to file $custom_mounts
 
@@ -1294,7 +1300,8 @@ get_custom_mounts () {
 	[ -e "${links}" ] && sort -k2 -sbu ${links} >> ${custom_mounts} && rm ${links}
 }
 
-do_custom_mounts () {
+do_custom_mounts ()
+{
 	local custom_mounts="${1}" # the ouput from get_custom_mounts()
 	local rootmnt="${2}"       # should be set empty post-live-boot
 
