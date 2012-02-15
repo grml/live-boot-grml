@@ -721,6 +721,21 @@ open_luks_device ()
 		opts="${opts} --readonly"
 	fi
 
+	if /sbin/cryptsetup status "${name}" >/dev/null 2>&1
+	then
+		re="^[[:space:]]*device:[[:space:]]*\([^[:space:]]*\)$"
+		opened_dev=$(cryptsetup status ${name} 2>/dev/null | grep "${re}" | sed "s|${re}|\1|")
+		if [ "${opened_dev}" = "${dev}" ]
+		then
+			luks_device="/dev/mapper/${name}"
+			echo ${luks_device}
+			return 0
+		else
+			log_warning_msg "Cannot open luks device ${dev} since ${opened_dev} already is opened with its name"
+			return 1
+		fi
+	fi
+
 	load_keymap
 
 	while true
