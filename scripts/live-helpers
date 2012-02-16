@@ -514,12 +514,19 @@ get_fstype ()
 where_is_mounted ()
 {
 	device=${1}
+	# return first found
+	grep -m1 "^${device} " /proc/mounts | cut -f2 -d ' '
+}
 
-	if grep -q "^${device} " /proc/mounts
-	then
-		# return the first found
-		grep -m1 "^${device} " /proc/mounts | cut -f2 -d ' '
-	fi
+trim_path () {
+    # remove all unnecessary /:s in the path, including last
+    echo ${1} | sed 's|//|/|g' | sed 's|/$||'
+}
+
+what_is_mounted_on ()
+{
+	local dir="$(trim_path ${1})"
+	grep -m1 "^[^ ]\+ ${dir} " /proc/mounts | cut -d' ' -f1
 }
 
 lastline ()
@@ -711,6 +718,52 @@ try_mount ()
 	fi
 }
 
+mount_persistent_media ()
+{
+	local device=${1}
+	local backing=""
+
+	# We can't mount into ${rootmnt}/live before ${rootmnt} has been
+	# mounted since that would cover our mountpoint.
+	if [ -n "${rootmnt}" ] && [ -z "$(what_is_mounted_on ${rootmnt})" ]
+	then
+		backing="/$(basename ${device})-backing"
+	else
+		backing="${rootmnt}/live/persistent/$(basename ${device})"
+	fi
+
+	mkdir -p "${backing}"
+	local old_backing="$(where_is_mounted ${device})"
+	if [ -z "${old_backing}" ]
+	then
+		local fstype="$(get_fstype ${device})"
+		local mount_opts="rw,noatime"
+		if [ -n "${PERSISTENT_READONLY}" ]
+		then
+			mount_opts="ro,noatime"
+		fi
+		if mount -t "${fstype}" -o "${mount_opts}" "${device}" "${backing}" >/dev/null
+		then
+			echo ${backing}
+			return 0
+		else
+			log_warning_msg "Failed to mount persistent media ${device}"
+			return 1
+		fi
+	elif [ "${backing}" != "${old_backing}" ]
+	then
+		if mount --move ${old_backing} ${backing} >/dev/null
+		then
+			echo ${backing}
+			return 0
+		else
+			log_warning_msg "Failed to move persistent media ${device}"
+			return 1
+		fi
+	fi
+	return 0
+}
+
 open_luks_device ()
 {
 	dev="${1}"
@@ -815,39 +868,39 @@ probe_for_file_name ()
 	local snapshots="${2}"
 	local dev="${3}"
 
-	local devfstype="$(get_fstype ${dev})"
-	local backing="${rootmnt}/live/persistent/$(basename ${dev})"
 	local ret=""
-	if is_supported_fs ${devfstype} && mkdir -p "${backing}" && \
-	   try_mount "${dev}" "${backing}" "rw" "${devfstype}"
+	local backing="$(mount_persistent_media ${dev})"
+	if [ -z "${backing}" ]
 	then
-		for label in ${overlays}
+	    return
+	fi
+
+	for label in ${overlays}
+	do
+		path=${backing}/${PERSISTENT_PATH}${label}
+		if [ -f "${path}" ]
+		then
+			local loopdev=$(setup_loop "${path}" "loop" "/sys/block/loop*")
+			ret="${ret} ${label}=${loopdev}"
+		fi
+	done
+	for label in ${snapshots}
+	do
+		for ext in squashfs cpio.gz ext2 ext3 ext4 jffs2
 		do
-			path=${backing}/${PERSISTENT_PATH}${label}
-			if [ -f "${path}" ]
+			path="${PERSISTENT_PATH}${label}.${ext}"
+			if [ -f "${backing}/${path}" ]
 			then
-				local loopdev=$(setup_loop "${path}" "loop" "/sys/block/loop*")
-				ret="${ret} ${label}=${loopdev}"
+				ret="${ret} ${label}=${dev}:${backing}:${path}"
 			fi
 		done
-		for label in ${snapshots}
-		do
-			for ext in squashfs cpio.gz ext2 ext3 ext4 jffs2
-			do
-				path="${PERSISTENT_PATH}${label}.${ext}"
-				if [ -f "${backing}/${path}" ]
-				then
-					ret="${ret} ${label}=${dev}:${backing}:${path}"
-				fi
-			done
-		done
+	done
 
-		if [ -n "${ret}" ]
-		then
-			echo ${ret}
-		else
-			umount ${backing} > /dev/null 2>&1 || true
-		fi
+	if [ -n "${ret}" ]
+	then
+		echo ${ret}
+	else
+		umount ${backing} > /dev/null 2>&1 || true
 	fi
 }
 
@@ -1180,7 +1233,6 @@ get_custom_mounts ()
 	local bindings="/bindings.list"
 	local links="/links.list"
 	rm -rf ${bindings} ${links} 2> /dev/null
-	local persistent_backing="${rootmnt}/live/persistent"
 
 	for device in ${devices}
 	do
@@ -1191,26 +1243,12 @@ get_custom_mounts ()
 
 		local device_name="$(basename ${device})"
 		local device_used=""
-		# $device may already have been mounted by
-		# probe_for_file_name() in find_persistent_media() ...
-		local backing=$(where_is_mounted ${device})
+		local backing=$(mount_persistent_media ${device})
 		if [ -z "${backing}" ]
 		then
-			# ... otherwise we mount it now
-			backing="${persistent_backing}/${device_name}"
-			mkdir -p "${backing}"
-			local device_fstype="$(get_fstype ${device})"
-			if [ -z "${PERSISTENT_READONLY}" ]
-			then
-				device_mount_opts="rw,noatime"
-			else
-				device_mount_opts="ro,noatime"
-			fi
-			if ! mount -t "${device_fstype}" -o "${device_mount_opts}" "${device}" "${backing}" >/dev/null 2>&1
-			then
-				log_warning_msg "Could not mount persistent media ${device} (${device_fstype})"
-			fi
+			continue
 		fi
+
 		local include_list="${backing}/${persistence_list}"
 		if [ ! -r "${include_list}" ]
 		then
@@ -1223,7 +1261,11 @@ get_custom_mounts ()
 			continue
 		fi
 
-		[ "${DEBUG}" = "Yes" ] && cp ${include_list} ${persistent_backing}/${persistence_list}.${device_name}
+		if [ -n "${DEBUG}" ] && [ -e "${include_list}" ]
+		then
+			cp ${include_list} ${rootmnt}/live/persistent/${persistence_list}.${device_name}
+		fi
+
 		while read source dest options # < ${include_list}
 		do
 			if echo ${source} | grep -qe "^[[:space:]]*\(#.*\)\?$"
@@ -1321,9 +1363,9 @@ do_custom_mounts ()
 			esac
 		done
 
-		if mountpoint -q "${dest}";
+		if [ -n "$(what_is_mounted_on "${dest}")" ]
 		then
-			log_warning_msg "Skipping custom mount ${source} on ${dest}: destination is already a mount point"
+			log_warning_msg "Skipping custom mount ${source} on ${dest}: $(what_is_mounted_on "${dest}") is already mounted there"
 			continue
 		fi
 
@@ -1442,14 +1484,8 @@ fix_home_rw_compatibility ()
 		return
 	fi
 
-	local backing="$(where_is_mounted ${device})"
+	local backing="$(mount_persistent_media ${device})"
 	if [ -z "${backing}" ]
-	then
-		backing="${rootmnt}/live/persistent/$(basename ${device})"
-		mkdir -p "${backing}"
-		local device_fstype="$(get_fstype ${device})"
-	local device_mount_opts="rw,noatime"
-	if ! mount -t "${device_fstype}" -o "${device_mount_opts}" "${device}" "${backing}" >/dev/null 2>&1
 	then
 		return
 	fi
