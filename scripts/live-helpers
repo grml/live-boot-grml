@@ -1126,22 +1126,21 @@ link_files ()
 
 	# This check can only trigger on the inital, non-recursive call since
 	# we create the destination before recursive calls
-	if [ ! -d "${dest_dir}" ];
+	if [ ! -d "${dest_dir}" ]
 	then
 		log_warning_msg "Must link_files into a directory"
 		return
 	fi
 
-	find "${src_dir}" -mindepth 1 -maxdepth 1 | while read x; do
-		local src="${x}"
-		local dest="${dest_dir}$(basename "${x}")"
-		if [ -d "${src}" ];
+	find "${src_dir}" -mindepth 1 -maxdepth 1 | while read src; do
+		local dest="${dest_dir}$(basename "${src}")"
+		if [ -d "${src}" ]
 		then
-			if [ -z "$(ls -A "${src}")" ];
+			if [ -z "$(ls -A "${src}")" ]
 			then
 				continue
 			fi
-			if [ ! -d "${dest}" ];
+			if [ ! -d "${dest}" ]
 			then
 				mkdir -p "${dest}"
 				prev="$(dirname "${dest}")"
@@ -1228,10 +1227,9 @@ get_custom_mounts ()
 
 	local devices="${1}"
 	local custom_mounts="${2}" # print result to this file
-	local rootmnt="${3}"       # should be set empty post-live-boot
 
-	local bindings="/bindings.list"
-	local links="/links.list"
+	local bindings="/tmp/bindings.list"
+	local links="/tmp/links.list"
 	rm -rf ${bindings} ${links} 2> /dev/null
 
 	for device in ${devices}
@@ -1345,7 +1343,6 @@ get_custom_mounts ()
 do_custom_mounts ()
 {
 	local custom_mounts="${1}" # the ouput from get_custom_mounts()
-	local rootmnt="${2}"       # should be set empty post-live-boot
 
 	while read source dest options # < ${custom_mounts}
 	do
@@ -1426,7 +1423,6 @@ do_custom_mounts ()
 				rofs_dest_backing="${d}/$(echo ${dest} | sed -e "s|${rootmnt}||")"
 			else
 				rofs_dest_backing="${d}/${dest}"
-
 			fi
 			if [ -d "${rofs_dest_backing}" ]
 			then

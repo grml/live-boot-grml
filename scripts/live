@@ -1219,16 +1219,16 @@ setup_unionfs ()
 	# Adding custom persistent
 	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
 	then
-		local custom_mounts="/custom_mounts.list"
+		local custom_mounts="/tmp/custom_mounts.list"
 		rm -rf ${custom_mounts} 2> /dev/null
 
 		# Gather information about custom mounts from devies detected as overlays
-		get_custom_mounts ${overlay_devices} ${custom_mounts} ${rootmnt}
+		get_custom_mounts ${overlay_devices} ${custom_mounts}
 
-		[ "${DEBUG}" = "Yes" ] && cp ${custom_mounts} "${rootmnt}/live/persistent"
+		[ -n "${DEBUG}" ] && cp ${custom_mounts} "${rootmnt}/live/persistent"
 
 		# Now we do the actual mounting (and symlinking)
-		do_custom_mounts ${custom_mounts} ${rootmnt}
+		do_custom_mounts ${custom_mounts}
 		rm ${custom_mounts}
 
 		# Look for other snapshots to copy in
