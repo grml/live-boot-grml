@@ -1300,15 +1300,6 @@ get_custom_mounts ()
 				esac
 			done
 
-			# FIXME: handle case: we already have /a/b in
-			# $bindings added from current $device, but
-			# now we find /a -- /a should replace /a/b in
-			# $bindings.
-
-			# FIXME: handle case: we have /a in $bindings
-			# from current $device, now we find /a/b, so
-			# we skip /a/b
-
 			# ensure that no multiple-/ occur in paths
 			local full_source="$(echo ${backing}/${source}/ | sed -e 's|/\+|/|g')"
 			local full_dest="$(echo ${rootmnt}/${dest}/ | sed -e 's|/\+|/|g')"
