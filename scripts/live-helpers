@@ -1306,8 +1306,8 @@ get_custom_mounts ()
 			done
 
 			# ensure that no multiple-/ occur in paths
-			local full_source="$(echo ${backing}/${source}/ | sed -e 's|/\+|/|g')"
-			local full_dest="$(echo ${rootmnt}/${dest}/ | sed -e 's|/\+|/|g')"
+			local full_source="$(trim_path ${backing}/${source})"
+			local full_dest="$(trim_path ${rootmnt}/${dest})"
 			device_used="yes"
 			if echo ${options} | grep -qe "\<linkfiles\>";
 			then
@@ -1373,7 +1373,7 @@ do_custom_mounts ()
 			# FIXME: this should really be handled by
 			# live-config since we don't know for sure
 			# which uid a certain user has until then
-			if echo ${dest} | grep -qe "^${rootmnt}/*home/\+[^/]\+"
+			if trim_path ${dest} | grep -qe "^${rootmnt}/*home/[^/]\+"
 			then
 				path="/"
 				for dir in $(echo ${dest} | sed -e 's|/\+| |g')
