@@ -1281,10 +1281,15 @@ get_custom_mounts ()
 				dest="${source}"
 			fi
 
-			if echo ${dest} | grep -qe "^/\+$\|^/\+live\(/.*\)\?$"
+			if trim_path ${source} | grep -qe "^\(.*/\)\?\.\.\?\(/.*\)\?$"
 			then
-				# mounting on / or /live could cause trouble
-				log_warning_msg "Skipping unsafe custom mount on ${dest}"
+				log_warning_msg "Skipping unsafe custom mount with source ${source}: the source is a relative or absolute path w.r.t. the persistent media root and cannot use \".\" or \"..\""
+				continue
+			fi
+
+			if trim_path ${dest} | grep -q -e "^/$" -e "^/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
+			then
+				log_warning_msg "Skipping unsafe custom mount with desination ${dest}: the destination must be an absolute path using neither \".\" nor \"..\", and cannot be /live (or any sub-directory therein) or / (for the latter, use ${root_overlay_label}-type persistence instead)"
 				continue
 			fi
 
@@ -1481,6 +1486,6 @@ fix_home_rw_compatibility ()
 	if [ ! -r "${include_list}" ]
 	then
 		echo "# home-rw backwards compatibility:
-. /home" > "${include_list}"
+/ /home" > "${include_list}"
 	fi
 }
