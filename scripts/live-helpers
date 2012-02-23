@@ -832,15 +832,23 @@ probe_for_gpt_name ()
 	local snapshots="${2}"
 	local dev="${3}"
 
-	if ! is_gpt_device ${dev} || \
-	   ( echo ${PERSISTENT_ENCRYPTION} | grep -qve "\<luks\>" && \
-	     /sbin/cryptsetup isLuks ${dev} > /dev/null 2>&1 )
+	local gpt_dev="${dev}"
+	if is_active_luks_mapping ${dev}
+	then
+		# if $dev is an opened luks device, we need to check
+		# GPT stuff on the backing device
+		gpt_dev=$(get_luks_backing_device "${dev}")
+	fi
+
+	if ! is_gpt_device ${gpt_dev}
 	then
 		return
 	fi
+
+	local gpt_name=$(get_gpt_name ${gpt_dev})
 	for label in ${overlays} ${snapshots}
 	do
-		if [ "$(get_gpt_name ${dev})" = "${label}" ]
+		if [ "${gpt_name}" = "${label}" ]
 		then
 			echo "${label}=${dev}"
 		fi
@@ -936,18 +944,16 @@ find_persistent_media ()
 	do
 		local result=""
 
-		local real_dev=""
 		local luks_device=""
 		# Check if it's a luks device; we'll have to open the device
 		# in order to probe any filesystem it contains, like we do
 		# below. do_custom_mounts() also depends on that any luks
 		# device already has been opened.
 		if echo ${PERSISTENT_ENCRYPTION} | grep -qe "\<luks\>" && \
-		   /sbin/cryptsetup isLuks ${dev} >/dev/null 2>&1
+		   is_luks_partition ${dev}
 		then
 			if luks_device=$(open_luks_device "${dev}")
 			then
-				real_dev="${dev}"
 				dev="${luks_device}"
 			else
 				# skip $dev since we failed/chose not to open it
@@ -962,15 +968,7 @@ find_persistent_media ()
 		# Probe for matching GPT partition names or filesystem labels
 		if echo ${PERSISTENT_STORAGE} | grep -qe "\<filesystem\>"
 		then
-			local gpt_dev="${dev}"
-			if [ -n "${luks_device}" ]
-			then
-				# When we probe GPT partitions we need to look
-				# at the real device, not the virtual, opened
-				# luks device
-				gpt_dev="${real_dev}"
-			fi
-			result=$(probe_for_gpt_name "${overlays}" "${snapshots}" ${gpt_dev})
+			result=$(probe_for_gpt_name "${overlays}" "${snapshots}" ${dev})
 			if [ -n "${result}" ]
 			then
 				ret="${ret} ${result}"
@@ -998,7 +996,7 @@ find_persistent_media ()
 
 		# Close luks device if it isn't used
 		if [ -z "${result}" ] && [ -n "${luks_device}" ] && \
-		   /sbin/cryptsetup status "${luks_device}" 1> /dev/null 2>&1
+		   is_active_luks_mapping "${luks_device}"
 		then
 			/sbin/cryptsetup luksClose "${luks_device}"
 		fi
@@ -1028,17 +1026,22 @@ get_mac ()
 	echo ${mac}
 }
 
-is_luks()
+is_luks_partition ()
 {
-    devname="${1}"
-    if [ -x /sbin/cryptsetup ]
-    then
-	/sbin/cryptsetup isLuks "${devname}" 2>/dev/null || ret=${?}
-	return ${ret}
-    else
-	return 1
-    fi
+	device="${1}"
+	/sbin/cryptsetup isLuks "${device}" 1>/dev/null 2>&1
+}
 
+is_active_luks_mapping ()
+{
+	device="${1}"
+	/sbin/cryptsetup status "${device}" 1>/dev/null 2>&1
+}
+
+get_luks_backing_device () {
+	device=${1}
+	cryptsetup status ${device} 2> /dev/null | \
+		awk '{if ($1 == "device:") print $2}'
 }
 
 removable_dev ()
