@@ -1228,8 +1228,9 @@ get_custom_mounts ()
 	# Side-effect: leaves $devices with live.persist mounted in ${rootmnt}/live/persistent
 	# Side-effect: prints info to file $custom_mounts
 
-	local devices="${1}"
-	local custom_mounts="${2}" # print result to this file
+	local custom_mounts=${1}
+	shift
+	local devices=${@}
 
 	local bindings="/tmp/bindings.list"
 	local links="/tmp/links.list"
