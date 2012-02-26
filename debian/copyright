@@ -1,10 +1,16 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: live-boot
+Upstream-Contact: Debian Live Project <debian-live@lists.debian.org>
+Source: http://live.debian.net/archive/packages/live-boot/
+
 Files: *
-Copyright:
- (C) 2007-2012 Daniel Baumann <daniel@debian.org>
- (C) 2005-2008 Canonical Ltd. <http://www.cannonical.com/>
- (C) 2008 Chris Lamb <chris@debian.org>
- (C) 2006-2007 Marco Amadori <marco.amadori@gmail.com>
- (C) 2008 Dell Inc. <http://www.dell.com/>
+Copyright: 2006-2012 Daniel Baumann <daniel@debian.org>
+           2005-2008 Canonical Ltd. <http://www.cannonical.com/>
+           2008 Chris Lamb <chris@debian.org>
+           2006-2007 Marco Amadori <marco.amadori@gmail.com>
+           2008 Dell Inc. <http://www.dell.com/>
+License: GPL-3+
+
 License: GPL-3+
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
