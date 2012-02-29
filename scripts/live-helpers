@@ -1458,6 +1458,8 @@ do_custom_mounts ()
 				cow_dir="/live/cow/${dest}"
 			fi
 			mkdir -p ${cow_dir}
+			chown --reference "${source}" "${cow_dir}"
+			chmod --reference "${source}" "${cow_dir}"
 			do_union ${dest} ${cow_dir} ${source} ${rofs_dest_backing}
 		fi
 
