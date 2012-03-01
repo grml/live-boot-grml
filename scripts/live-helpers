@@ -1276,24 +1276,20 @@ get_custom_mounts ()
 				continue
 			fi
 
-			if echo ${dest} | grep -qe "^[^/]"
-			then
-				options="${dest}"
-				dest="${source}"
-			elif [ -z "${dest}" ]
+			if [ -z "${dest}" ]
 			then
 				dest="${source}"
 			fi
 
-			if trim_path ${source} | grep -qe "^\(.*/\)\?\.\.\?\(/.*\)\?$"
+			if trim_path ${source} | grep -q -e "^[^/]" -e "^\(.*/\)\?\.\.\?\(/.*\)\?$"
 			then
-				log_warning_msg "Skipping unsafe custom mount with source ${source}: the source is a relative or absolute path w.r.t. the persistent media root and cannot use \".\" or \"..\""
+				log_warning_msg "Skipping unsafe custom mount with source ${source}: the source must be an absolute path w.r.t. the persistent media root and cannot contain \".\" or \"..\""
 				continue
 			fi
 
-			if trim_path ${dest} | grep -q -e "^/$" -e "^/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
+			if trim_path ${dest} | grep -q -e "^[^/]" -e "^/$" -e "^/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
 			then
-				log_warning_msg "Skipping unsafe custom mount with desination ${dest}: the destination must be an absolute path using neither \".\" nor \"..\", and cannot be /live (or any sub-directory therein) or / (for the latter, use ${root_overlay_label}-type persistence instead)"
+				log_warning_msg "Skipping unsafe custom mount with desination ${dest}: the destination must be an absolute path containing neither \".\" nor \"..\", and cannot be /live (or any sub-directory therein) or / (for the latter, use ${root_overlay_label}-type persistence instead)"
 				continue
 			fi
 
