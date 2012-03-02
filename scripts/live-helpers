@@ -764,6 +764,22 @@ mount_persistent_media ()
 	return 0
 }
 
+close_persistent_media () {
+	local device=${1}
+	local backing="$(where_is_mounted ${device})"
+
+	if [ -d "${backing}" ]
+	then
+		umount "${backing}" >/dev/null 2>&1
+		rmdir "${backing}" >/dev/null 2>&1
+	fi
+
+	if is_active_luks_mapping ${device}
+	then
+		/sbin/cryptsetup luksClose ${device}
+	fi
+}
+
 open_luks_device ()
 {
 	dev="${1}"
@@ -947,7 +963,7 @@ find_persistent_media ()
 		local luks_device=""
 		# Check if it's a luks device; we'll have to open the device
 		# in order to probe any filesystem it contains, like we do
-		# below. do_custom_mounts() also depends on that any luks
+		# below. activate_custom_mounts() also depends on that any luks
 		# device already has been opened.
 		if echo ${PERSISTENT_ENCRYPTION} | grep -qe "\<luks\>" && \
 		   is_luks_partition ${dev}
@@ -1244,7 +1260,6 @@ get_custom_mounts ()
 		fi
 
 		local device_name="$(basename ${device})"
-		local device_used=""
 		local backing=$(mount_persistent_media ${device})
 		if [ -z "${backing}" ]
 		then
@@ -1254,12 +1269,6 @@ get_custom_mounts ()
 		local include_list="${backing}/${persistence_list}"
 		if [ ! -r "${include_list}" ]
 		then
-			umount "${backing}" >/dev/null 2>&1
-			rmdir "${backing}" >/dev/null 2>&1
-			if /sbin/cryptsetup status ${device_name} >/dev/null 2>&1
-			then
-				/sbin/cryptsetup luksClose "${device_name}"
-			fi
 			continue
 		fi
 
@@ -1308,39 +1317,31 @@ get_custom_mounts ()
 			# ensure that no multiple-/ occur in paths
 			local full_source="$(trim_path ${backing}/${source})"
 			local full_dest="$(trim_path ${rootmnt}/${dest})"
-			device_used="yes"
 			if echo ${options} | grep -qe "\<linkfiles\>";
 			then
-				echo "${full_source} ${full_dest} ${options}" >> ${links}
+				echo "${device} ${full_source} ${full_dest} ${options}" >> ${links}
 			else
-				echo "${full_source} ${full_dest} ${options}" >> ${bindings}
+				echo "${device} ${full_source} ${full_dest} ${options}" >> ${bindings}
 			fi
 		done < ${include_list}
-
-		if [ -z "${device_used}" ]
-		then
-			# this device was not used for / earlier, or
-			# custom mount point now, so it's useless
-			umount "${backing}"
-			rmdir "${backing}"
-		fi
 	done
 
 	# We sort the list according to destination so we're sure that
 	# we won't hide a previous mount. We also ignore duplicate
 	# destinations in a more or less arbitrary way.
-	[ -e "${bindings}" ] && sort -k2 -sbu ${bindings} >> ${custom_mounts} && rm ${bindings}
+	[ -e "${bindings}" ] && sort -k3 -sbu ${bindings} >> ${custom_mounts} && rm ${bindings}
 
 	# After all mounts are considered we add symlinks so they
 	# won't be hidden by some mount.
-	[ -e "${links}" ] && sort -k2 -sbu ${links} >> ${custom_mounts} && rm ${links}
+	[ -e "${links}" ] && sort -k3 -sbu ${links} >> ${custom_mounts} && rm ${links}
 }
 
-do_custom_mounts ()
+activate_custom_mounts ()
 {
 	local custom_mounts="${1}" # the ouput from get_custom_mounts()
+	local used_devices=""
 
-	while read source dest options # < ${custom_mounts}
+	while read device source dest options # < ${custom_mounts}
 	do
 		local opt_linkfiles=""
 		local opt_union=""
@@ -1466,7 +1467,14 @@ do_custom_mounts ()
 
 		PERSISTENCE_IS_ON="1"
 		export PERSISTENCE_IS_ON
+
+		if echo ${used_devices} | grep -qve "^\(.* \)\?${device}\( .*\)\?$"
+		then
+			used_devices="${used_devices} ${device}"
+		fi
 	done < ${custom_mounts}
+
+	echo ${used_devices}
 }
 
 fix_home_rw_compatibility ()

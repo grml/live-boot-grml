@@ -1228,8 +1228,18 @@ setup_unionfs ()
 		[ -n "${DEBUG}" ] && cp ${custom_mounts} "${rootmnt}/live/persistent"
 
 		# Now we do the actual mounting (and symlinking)
-		do_custom_mounts ${custom_mounts}
+		local used_overlays=""
+		used_overlays=$(activate_custom_mounts ${custom_mounts})
 		rm ${custom_mounts}
+
+		# Close unused overlays (e.g. due to missing $persistence_list)
+		for overlay in ${overlay_devices}
+		do
+			if echo ${used_overlays} | grep -qve "^\(.* \)\?${device}\( .*\)\?$"
+			then
+				close_persistent_media ${overlay}
+			fi
+		done
 
 		# Look for other snapshots to copy in
 		try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
