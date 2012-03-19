@@ -1357,6 +1357,11 @@ activate_custom_mounts ()
 			esac
 		done
 
+		if [ -n "${opt_linkfiles}" ] && [ -n "${opt_union}" ]
+		then
+			log_warning_msg "Skipping custom mount ${dest} with options ${options}: \"linkfiles\" and \"union\" are mutually exclusive options"
+		fi
+
 		if [ -n "$(what_is_mounted_on "${dest}")" ]
 		then
 			log_warning_msg "Skipping custom mount ${source} on ${dest}: $(what_is_mounted_on "${dest}") is already mounted there"
