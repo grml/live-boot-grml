@@ -1398,12 +1398,13 @@ activate_custom_mounts ()
 		# dealing with /etc or other system dir.
 		if [ ! -d "${source}" ]
 		then
-			if [ -n "${PERSISTENT_READONLY}" ] || [ -n "${opt_linkfiles}" ]
+			if [ -n "${PERSISTENT_READONLY}" ]
 			then
 				continue
-			elif [ -n "${opt_union}" ]
+			elif [ -n "${opt_union}" ] || [ -n "${opt_linkfiles}" ]
 			then
-				# union's don't need to be bootstrapped
+				# unions and don't need to be bootstrapped
+				# linkfiles dirs can't be bootstrapped in a sensible way
 				mkdir "${source}"
 			else
 				# ensure that $dest is not copied *into* $source
