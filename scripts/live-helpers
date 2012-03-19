@@ -1277,35 +1277,32 @@ get_custom_mounts ()
 			cp ${include_list} ${rootmnt}/live/persistent/${persistence_list}.${device_name}
 		fi
 
-		while read source dest options # < ${include_list}
+		while read dir options # < ${include_list}
 		do
-			if echo ${source} | grep -qe "^[[:space:]]*\(#.*\)\?$"
+			if echo ${dir} | grep -qe "^[[:space:]]*\(#.*\)\?$"
 			then
 				# skipping empty or commented lines
 				continue
 			fi
 
-			if [ -z "${dest}" ]
+			if trim_path ${dir} | grep -q -e "^[^/]" -e "^/$" -e "^/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
 			then
-				dest="${source}"
-			fi
-
-			if trim_path ${source} | grep -q -e "^[^/]" -e "^\(.*/\)\?\.\.\?\(/.*\)\?$"
-			then
-				log_warning_msg "Skipping unsafe custom mount with source ${source}: the source must be an absolute path w.r.t. the persistent media root and cannot contain \".\" or \"..\""
+				log_warning_msg "Skipping unsafe custom mount ${dir}: must be an absolute path containing neither the \".\" nor \"..\" special dirs, and cannot be \"/live\" (or any sub-directory therein) or \"/\" (for the latter, use ${root_overlay_label}-type persistence)"
 				continue
 			fi
 
-			if trim_path ${dest} | grep -q -e "^[^/]" -e "^/$" -e "^/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
-			then
-				log_warning_msg "Skipping unsafe custom mount with desination ${dest}: the destination must be an absolute path containing neither \".\" nor \"..\", and cannot be /live (or any sub-directory therein) or / (for the latter, use ${root_overlay_label}-type persistence instead)"
-				continue
-			fi
-
+			local opt_source=""
+			local opt_linkfiles=""
 			for opt in $(echo ${options} | tr ',' ' ');
 			do
 				case "${opt}" in
-					linkfiles|union)
+					source=*)
+						opt_source=${opt#source=}
+						;;
+					linkfiles)
+						opt_linkfiles="yes"
+						;;
+					union)
 						;;
 					*)
 						log_warning_msg "Skipping custom mount with unkown option: ${opt}"
@@ -1314,10 +1311,21 @@ get_custom_mounts ()
 				esac
 			done
 
-			# ensure that no multiple-/ occur in paths
+			local source="${dir}"
+			if [ -n "${opt_source}" ]
+			then
+				if echo ${opt_source} | grep -q -e "^/" -e "^\(.*/\)\?\.\.\?\(/.*\)\?$" && [ "${source}" != "." ]
+				then
+					log_warning_msg "Skipping unsafe custom mount with option source=${opt_source}: must be either \".\" (the media root) a relative path w.r.t. the media root that doesn't contain comas or the special dirs \".\" and \"..\""
+					continue
+				else
+					source="${opt_source}"
+				fi
+			fi
+
 			local full_source="$(trim_path ${backing}/${source})"
-			local full_dest="$(trim_path ${rootmnt}/${dest})"
-			if echo ${options} | grep -qe "\<linkfiles\>";
+			local full_dest="$(trim_path ${rootmnt}/${dir})"
+			if [ -n "${opt_linkfiles}" ]
 			then
 				echo "${device} ${full_source} ${full_dest} ${options}" >> ${links}
 			else
@@ -1364,7 +1372,7 @@ activate_custom_mounts ()
 
 		if [ -n "$(what_is_mounted_on "${dest}")" ]
 		then
-			log_warning_msg "Skipping custom mount ${source} on ${dest}: $(what_is_mounted_on "${dest}") is already mounted there"
+			log_warning_msg "Skipping custom mount ${dest}: $(what_is_mounted_on "${dest}") is already mounted there"
 			continue
 		fi
 
@@ -1506,6 +1514,6 @@ fix_home_rw_compatibility ()
 	if [ ! -r "${include_list}" ]
 	then
 		echo "# home-rw backwards compatibility:
-/ /home" > "${include_list}"
+/home source=." > "${include_list}"
 	fi
 }
