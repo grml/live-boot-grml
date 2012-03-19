@@ -1420,6 +1420,8 @@ activate_custom_mounts ()
 			fi
 		fi
 
+		# XXX: If CONFIG_AUFS_ROBR is added to the Debian kernel we can
+		# ignore the loop below and set rofs_dest_backing=$dest
 		rofs_dest_backing=""
 		for d in ${rootmnt}/live/rofs/*
 		do
