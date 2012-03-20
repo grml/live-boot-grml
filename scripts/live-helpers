@@ -519,8 +519,9 @@ where_is_mounted ()
 }
 
 trim_path () {
-    # remove all unnecessary /:s in the path, including last
-    echo ${1} | sed 's|//|/|g' | sed 's|/$||'
+    # remove all unnecessary /:s in the path, including last one (except
+    # if path is just "/")
+    echo ${1} | sed 's|//\+|/|g' | sed 's|^\(.*[^/]\)/$|\1|'
 }
 
 what_is_mounted_on ()
