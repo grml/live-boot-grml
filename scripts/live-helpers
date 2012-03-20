@@ -1342,7 +1342,24 @@ get_custom_mounts ()
 
 	# After all mounts are considered we add symlinks so they
 	# won't be hidden by some mount.
-	[ -e "${links}" ] && sort -k3 -sbu ${links} >> ${custom_mounts} && rm ${links}
+	[ -e "${links}" ] && cat ${links} >> ${custom_mounts} && rm ${links}
+
+	# We need to make sure that no two custom mounts have the same sources
+	# or are nested; if that is the case, too much weird stuff can happen.
+	local prev_source="impossible source" # first iteration must not match
+	local prev_dest=""
+	# This sort will ensure that a source /a comes right before a source
+	# /a/b so we only need to look at the previous source
+	sort -k2 -b ${custom_mounts} |
+	while read device source dest options
+	do
+		if echo ${source} | grep -qe "^${prev_source}\(/.*\)\?$"
+		then
+			panic "Two persistent mounts have the same or nested sources: ${source} on ${dest}, and ${prev_source} on ${prev_dest}"
+		fi
+		prev_source=${source}
+		prev_dest=${dest}
+	done
 }
 
 activate_custom_mounts ()
@@ -1356,7 +1373,7 @@ activate_custom_mounts ()
 		local opt_union=""
 		for opt in $(echo ${options} | tr ',' ' ');
 		do
-			 case "${opt}" in
+			case "${opt}" in
 				linkfiles)
 					opt_linkfiles="yes"
 					;;
