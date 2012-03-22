@@ -1317,7 +1317,7 @@ get_custom_mounts ()
 			then
 				if echo ${opt_source} | grep -q -e "^/" -e "^\(.*/\)\?\.\.\?\(/.*\)\?$" && [ "${source}" != "." ]
 				then
-					log_warning_msg "Skipping unsafe custom mount with option source=${opt_source}: must be either \".\" (the media root) a relative path w.r.t. the media root that doesn't contain comas or the special dirs \".\" and \"..\""
+					log_warning_msg "Skipping unsafe custom mount with option source=${opt_source}: must be either \".\" (the media root) or a relative path w.r.t. the media root that contains neither comas, nor the special \".\" and \"..\" path components"
 					continue
 				else
 					source="${opt_source}"
