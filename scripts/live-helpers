@@ -1490,6 +1490,13 @@ activate_custom_mounts ()
 			else
 				cow_dir="/live/cow/${dest}"
 			fi
+			if [ -e "${cow_dir}" ]
+			then
+				# If an earlier custom mount has files here
+				# it will "block" the current mount's files
+				# which is undesirable
+				rm -rf "${cow_dir}"
+			fi
 			mkdir -p ${cow_dir}
 			chown --reference "${source}" "${cow_dir}"
 			chmod --reference "${source}" "${cow_dir}"
