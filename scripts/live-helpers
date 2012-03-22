@@ -1436,7 +1436,7 @@ activate_custom_mounts ()
 			then
 				# unions and don't need to be bootstrapped
 				# linkfiles dirs can't be bootstrapped in a sensible way
-				mkdir "${source}"
+				mkdir -p "${source}"
 				chown --reference "${dest}" "${source}"
 				chmod --reference "${dest}" "${source}"
 			else
