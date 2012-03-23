@@ -1394,33 +1394,29 @@ activate_custom_mounts ()
 			continue
 		fi
 
-		# FIXME: we don't handle already existing
-		# non-directory files in the paths of both $source and
-		# $dest.
-
 		if [ ! -d "${dest}" ]
 		then
-			# if ${dest} is in /home/$user, try fixing
-			# proper ownership
-			# FIXME: this should really be handled by
-			# live-config since we don't know for sure
-			# which uid a certain user has until then
-			if trim_path ${dest} | grep -qe "^${rootmnt}/*home/[^/]\+"
-			then
-				path="/"
-				for dir in $(echo ${dest} | sed -e 's|/\+| |g')
-				do
-					path=${path}/${dir}
-					if [ ! -e ${path} ]
+			# create the destination and delete existing files in
+			# its path that are in the way
+			path="/"
+			for dir in $(echo ${dest} | sed -e 's|/\+| |g')
+			do
+				path=$(trim_path ${path}/${dir})
+				if [ -f ${path} ]
+				then
+					rm -f ${path}
+				fi
+				if [ ! -e ${path} ]
+				then
+					mkdir -p ${path}
+					if echo ${path} | grep -qe "^${rootmnt}/*home/[^/]\+"
 					then
-						mkdir -p ${path}
-						# assume that the intended user is the first, which is usually the case
+						# if ${dest} is in /home try fixing proper ownership by assuming that the intended user is the first, which is usually the case
+						# FIXME: this should really be handled by live-config since we don't know for sure which uid a certain user has until then
 						chown 1000:1000 ${path}
 					fi
-				done
-			else
-				mkdir -p ${dest}
-			fi
+				fi
+			done
 		fi
 
 		# if ${source} doesn't exist on our persistent media
