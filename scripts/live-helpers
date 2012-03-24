@@ -530,6 +530,24 @@ what_is_mounted_on ()
 	grep -m1 "^[^ ]\+ ${dir} " /proc/mounts | cut -d' ' -f1
 }
 
+chown_ref ()
+{
+	local reference="${1}"
+	shift
+	local targets=${@}
+	local owner=$(stat -c %u:%g "${reference}")
+	chown -h ${owner} ${targets}
+}
+
+chmod_ref ()
+{
+	local reference="${1}"
+	shift
+	local targets=${@}
+	local rights=$(stat -c %a "${reference}")
+	chmod ${rights} ${targets}
+}
+
 lastline ()
 {
 	while read lines
@@ -1164,8 +1182,8 @@ link_files ()
 			then
 				mkdir -p "${dest}"
 				prev="$(dirname "${dest}")"
-				chown --reference "${prev}" "${dest}"
-				chmod --reference "${prev}" "${dest}"
+				chown_ref "${prev}" "${dest}"
+				chmod_ref "${prev}" "${dest}"
 			fi
 			link_files "${src}" "${dest}" "${src_mask}"
 		else
@@ -1433,8 +1451,8 @@ activate_custom_mounts ()
 				# unions and don't need to be bootstrapped
 				# linkfiles dirs can't be bootstrapped in a sensible way
 				mkdir -p "${source}"
-				chown --reference "${dest}" "${source}"
-				chmod --reference "${dest}" "${source}"
+				chown_ref "${dest}" "${source}"
+				chmod_ref "${dest}" "${source}"
 			else
 				# ensure that $dest is not copied *into* $source
 				mkdir -p "$(dirname ${source})"
@@ -1494,8 +1512,8 @@ activate_custom_mounts ()
 				rm -rf "${cow_dir}"
 			fi
 			mkdir -p ${cow_dir}
-			chown --reference "${source}" "${cow_dir}"
-			chmod --reference "${source}" "${cow_dir}"
+			chown_ref "${source}" "${cow_dir}"
+			chmod_ref "${source}" "${cow_dir}"
 			do_union ${dest} ${cow_dir} ${source} ${rofs_dest_backing}
 		fi
 
