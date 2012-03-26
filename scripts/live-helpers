@@ -1181,9 +1181,8 @@ link_files ()
 			if [ ! -d "${dest}" ]
 			then
 				mkdir -p "${dest}"
-				prev="$(dirname "${dest}")"
-				chown_ref "${prev}" "${dest}"
-				chmod_ref "${prev}" "${dest}"
+				chown_ref "${src}" "${dest}"
+				chmod_ref "${src}" "${dest}"
 			fi
 			link_files "${src}" "${dest}" "${src_mask}"
 		else
