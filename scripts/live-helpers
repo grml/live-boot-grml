@@ -1158,8 +1158,8 @@ link_files ()
 	# live-boot normally does (into $rootmnt)).
 
 	# remove multiple /:s and ensure ending on /
-	local src_dir="$(echo "${1}"/ | sed -e 's|/\+|/|g')"
-	local dest_dir="$(echo "${2}"/ | sed -e 's|/\+|/|g')"
+	local src_dir="$(trim_path ${1})/"
+	local dest_dir="$(trim_path ${2})/"
 	local src_mask="${3}"
 
 	# This check can only trigger on the inital, non-recursive call since
