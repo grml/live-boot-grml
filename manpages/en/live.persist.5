@@ -67,8 +67,10 @@ relevant if you want to nest custom mounts, which otherwise would
 cause errors, or if you want to make the whole media root available
 (similar to the now deprecated \fBhome-rw\fR type of persistence).
 .PP
-The following options will override the default bind-mount behaviour
-of custom mounts, and are mutually exclusive:
+The following options are mutually exclusive (only the last given one
+will be in effect):
+.IP "\fBbind\fR" 4
+Bind-mount the source directory to \fIDIR\fR. This is the default.
 .IP "\fBlinkfiles\fR" 4
 Create the directory structure of the source directory on the
 persistent media in \fIDIR\fR and create symbolic links from the

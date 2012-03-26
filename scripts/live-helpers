@@ -1323,7 +1323,7 @@ get_custom_mounts ()
 					linkfiles)
 						opt_linkfiles="yes"
 						;;
-					union)
+					union|bind)
 						;;
 					*)
 						log_warning_msg "Skipping custom mount with unkown option: ${opt}"
@@ -1389,24 +1389,26 @@ activate_custom_mounts ()
 
 	while read device source dest options # < ${custom_mounts}
 	do
+		local opt_bind="yes"
 		local opt_linkfiles=""
 		local opt_union=""
 		for opt in $(echo ${options} | tr ',' ' ');
 		do
 			case "${opt}" in
+				bind)
+					opt_bind="yes"
+					unset opt_linkfiles opt_union
+					;;
 				linkfiles)
 					opt_linkfiles="yes"
+					unset opt_bind opt_union
 					;;
 				union)
 					opt_union="yes"
+					unset opt_bind opt_linkfiles
 					;;
 			esac
 		done
-
-		if [ -n "${opt_linkfiles}" ] && [ -n "${opt_union}" ]
-		then
-			log_warning_msg "Skipping custom mount ${dest} with options ${options}: \"linkfiles\" and \"union\" are mutually exclusive options"
-		fi
 
 		if [ -n "$(what_is_mounted_on "${dest}")" ]
 		then
@@ -1455,7 +1457,8 @@ activate_custom_mounts ()
 				mkdir -p "${source}"
 				chown_ref "${dest}" "${source}"
 				chmod_ref "${dest}" "${source}"
-			else
+			elif [ -n "${opt_bind}" ]
+			then
 				# ensure that $dest is not copied *into* $source
 				mkdir -p "$(dirname ${source})"
 				cp -a "${dest}" "${source}"
