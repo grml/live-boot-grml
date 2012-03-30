@@ -1,19 +1,13 @@
 #!/bin/sh
 
-PATH=/usr/sbin:/usr/bin:/sbin:/bin
-NAME=live-boot
-SCRIPTNAME=/etc/init.d/${NAME}
-DO_SNAPSHOT=/sbin/live-snapshot
-SNAPSHOT_CONF="/etc/live/boot.d/snapshot.conf"
-
 # Exit if system was not booted by live-boot
 grep -qs boot=live /proc/cmdline || exit 0
 
+DO_SNAPSHOT=/sbin/live-snapshot
+SNAPSHOT_CONF="/etc/live/boot.d/snapshot.conf"
+
 # Read snapshot configuration variables
 [ -r ${SNAPSHOT_CONF} ] && . ${SNAPSHOT_CONF}
-
-# Load the VERBOSE setting and other rcS variables
-[ -f /etc/default/rcS ] && . /etc/default/rcS
 
 # Define LSB log_* functions.
 # Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
@@ -88,146 +82,117 @@ device_is_USB_flash_drive()
 	return 1
 }
 
-do_stop ()
-{
-	if ! grep -qs nopersistent /proc/cmdline && grep -qs persistent /proc/cmdline
+log_begin_msg "live-boot: resyncing snapshots and caching reboot files..."
+
+if ! grep -qs nopersistent /proc/cmdline && grep -qs persistent /proc/cmdline
+then
+	# ROOTSNAP and HOMESNAP are defined in ${SNAPSHOT_CONF} file
+	if [ ! -z "${ROOTSNAP}" ]
 	then
-		# ROOTSNAP and HOMESNAP are defined in ${SNAPSHOT_CONF} file
-		if [ ! -z "${ROOTSNAP}" ]
+		${DO_SNAPSHOT} --resync-string="${ROOTSNAP}"
+	fi
+
+	if [ ! -z "${HOMESNAP}" ]
+	then
+		${DO_SNAPSHOT} --resync-string="${HOMESNAP}"
+	fi
+fi
+
+# check for netboot
+if [ ! -z "${NETBOOT}" ] || grep -qs netboot /proc/cmdline || grep -qsi root=/dev/nfs /proc/cmdline  || grep -qsi root=/dev/cifs /proc/cmdline
+then
+	return 0
+fi
+
+# check for toram
+if grep -qs toram /proc/cmdline
+then
+	return 0
+fi
+
+# Don't prompt to eject the SD card on Babbage board, where we reuse it
+# as a quasi-boot-floppy. Technically this uses a bit of ubiquity
+# (archdetect), but since this is mostly only relevant for
+# installations, who cares ...
+if type archdetect >/dev/null 2>&1
+then
+	subarch="$(archdetect)"
+
+	case $subarch in
+		arm*/imx51)
+			return 0
+			;;
+	esac
+fi
+
+prompt=1
+if [ "${NOPROMPT}" = "Yes" ]
+then
+	prompt=
+fi
+
+for path in $(which halt) $(which reboot) /etc/rc?.d /etc/default $(which stty) /bin/plymouth
+do
+	cache_path "${path}"
+done
+
+for x in $(cat /proc/cmdline)
+do
+	case ${x} in
+		quickreboot)
+			QUICKREBOOT="Yes"
+			;;
+	esac
+done
+
+mount -o remount,ro /live/cow
+
+if [ -z ${QUICKREBOOT} ]
+then
+	# Exit if the system was booted from an ISO image rather than a physical CD
+	grep -qs find_iso= /proc/cmdline && return 0
+	# TODO: i18n
+	BOOT_DEVICE="$(get_boot_device)"
+
+	if device_is_USB_flash_drive ${BOOT_DEVICE}
+	then
+		# do NOT eject USB flash drives!
+		# otherwise rebooting with most USB flash drives
+		# failes because they actually remember the
+		# "ejected" state even after reboot
+		MESSAGE="Please remove the USB flash drive"
+
+		if [ "${NOPROMPT}" = "usb" ]
 		then
-			${DO_SNAPSHOT} --resync-string="${ROOTSNAP}"
+			prompt=
 		fi
 
-		if [ ! -z "${HOMESNAP}" ]
+	else
+		# ejecting is a very good idea here
+		MESSAGE="Please remove the disc, close the tray (if any)"
+
+		if [ -x /usr/bin/eject ]
 		then
-			${DO_SNAPSHOT} --resync-string="${HOMESNAP}"
+			eject -p -m /live/image >/dev/null 2>&1
+		fi
+
+		if [ "${NOPROMPT}" = "cd" ]
+		then
+			prompt=
 		fi
 	fi
 
-	# check for netboot
-	if [ ! -z "${NETBOOT}" ] || grep -qs netboot /proc/cmdline || grep -qsi root=/dev/nfs /proc/cmdline  || grep -qsi root=/dev/cifs /proc/cmdline
+	[ "$prompt" ] || return 0
+
+	if [ -x /bin/plymouth ] && plymouth --ping
 	then
-		return 0
+		plymouth message --text="${MESSAGE} and press ENTER to continue:"
+		plymouth watch-keystroke > /dev/null
+	else
+		stty sane < /dev/console
+
+		printf "\n\n${MESSAGE} and press ENTER to continue:" > /dev/console
+
+		read x < /dev/console
 	fi
-
-	# check for toram
-	if grep -qs toram /proc/cmdline
-	then
-		return 0
-	fi
-
-	# Don't prompt to eject the SD card on Babbage board, where we reuse it
-	# as a quasi-boot-floppy. Technically this uses a bit of ubiquity
-	# (archdetect), but since this is mostly only relevant for
-	# installations, who cares ...
-	if type archdetect >/dev/null 2>&1
-	then
-		subarch="$(archdetect)"
-
-		case $subarch in
-			arm*/imx51)
-				return 0
-				;;
-		esac
-	fi
-
-	prompt=1
-	if [ "${NOPROMPT}" = "Yes" ]
-	then
-		prompt=
-	fi
-
-	for path in $(which halt) $(which reboot) /etc/rc?.d /etc/default $(which stty) /bin/plymouth
-	do
-		cache_path "${path}"
-	done
-
-	for x in $(cat /proc/cmdline)
-	do
-		case ${x} in
-			quickreboot)
-				QUICKREBOOT="Yes"
-				;;
-		esac
-	done
-
-	mount -o remount,ro /live/cow
-
-	if [ -z ${QUICKREBOOT} ]
-	then
-
-		# Exit if the system was booted from an ISO image rather than a physical CD
-		grep -qs find_iso= /proc/cmdline && return 0
-		# TODO: i18n
-		BOOT_DEVICE="$(get_boot_device)"
-
-		if device_is_USB_flash_drive ${BOOT_DEVICE}
-		then
-			# do NOT eject USB flash drives!
-			# otherwise rebooting with most USB flash drives
-			# failes because they actually remember the
-			# "ejected" state even after reboot
-			MESSAGE="Please remove the USB flash drive"
-
-			if [ "${NOPROMPT}" = "usb" ]
-			then
-				prompt=
-			fi
-
-		else
-			# ejecting is a very good idea here
-			MESSAGE="Please remove the disc, close the tray (if any)"
-
-			if [ -x /usr/bin/eject ]
-			then
-				eject -p -m /live/image >/dev/null 2>&1
-			fi
-
-			if [ "${NOPROMPT}" = "cd" ]
-			then
-				prompt=
-			fi
-
-		fi
-
-		[ "$prompt" ] || return 0
-
-		if [ -x /bin/plymouth ] && plymouth --ping
-		then
-			plymouth message --text="${MESSAGE} and press ENTER to continue:"
-			plymouth watch-keystroke > /dev/null
-		else
-			stty sane < /dev/console
-
-			printf "\n\n${MESSAGE} and press ENTER to continue:" > /dev/console
-
-			read x < /dev/console
-		fi
-	fi
-}
-
-case "${1}" in
-	start|restart|reload|force-reload|status)
-		[ "${VERBOSE}" != no ] && log_end_msg 0 || exit 0
-		;;
-
-	stop)
-		log_begin_msg "${NAME} is resyncing snapshots and caching reboot files..."
-		do_stop
-
-		case "${?}" in
-			0|1)
-				[ "${VERBOSE}" != no ] && log_end_msg 0 || exit 0
-				;;
-
-			2)
-				[ "${VERBOSE}" != no ] && log_end_msg 1 || exit 1
-				;;
-		esac
-		;;
-
-	*)
-		log_success_msg "Usage: ${SCRIPTNAME} {start|stop|restart|force-reload}" >&2
-		exit 3
-		;;
-esac
+fi
