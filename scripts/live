@@ -1725,7 +1725,7 @@ setup_unionfs ()
 				mount -t "${UNIONTYPE}" -o "${unionmountopts}" "${UNIONTYPE}" "${dest}"
 			fi
 		done < ${bindings}
-		rm ${bindings}
+		rm -f ${bindings}
 
 		# Look for other snapshots to copy in
 		try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
