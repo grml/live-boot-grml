@@ -854,7 +854,7 @@ do_iscsi()
 	#modprobe ib_iser
 	modprobe iscsi_tcp
 	local debugopt=""
-	[ "${DEBUG}" == "Yes" ] && debugopt="-d 8"
+	[ "${DEBUG}" = "Yes" ] && debugopt="-d 8"
 	#FIXME this name is supposed to be unique - some date + ifconfig hash?
 	ISCSI_INITIATORNAME="iqn.1993-08.org.debian.live:01:$(echo "${HWADDR}" | sed -e s/://g)"
 	export ISCSI_INITIATORNAME
@@ -1624,7 +1624,7 @@ setup_unionfs ()
 			fi
 
 			# FIXME: debug stuff, remove me?
-			[ "${DEBUG}" == "Yes" ] && cat ${include_list} >> ${rootmnt}/${bindings}-origs
+			[ "${DEBUG}" = "Yes" ] && cat ${include_list} >> ${rootmnt}/${bindings}-origs
 			while read source dest
 			do
 				if echo ${source} | grep -qe "^[[:space:]]*#"
@@ -1664,7 +1664,7 @@ setup_unionfs ()
 		sort -k2 -sbu ${bindings} -o ${bindings}
 
 		# FIXME: debug stuff, remove me?
-		[ "${DEBUG}" == "Yes" ] && cp ${bindings} ${rootmnt}/${bindings}-results
+		[ "${DEBUG}" = "Yes" ] && cp ${bindings} ${rootmnt}/${bindings}-results
 
 		while read source dest
 		do
