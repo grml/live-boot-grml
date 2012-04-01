@@ -1602,7 +1602,7 @@ setup_unionfs ()
 		do
 			if [ ! -b "${device}" ]
 			then
-			    continue
+				continue
 			fi
 			backing="/$(basename ${device})-backing"
 			mkdir -p "${backing}"
