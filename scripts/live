@@ -988,9 +988,9 @@ do_nfsmount ()
 
 	modprobe -q nfs
 
-	if [ -z "${NFSOPTS}" ]
+	if [ -n "${NFSOPTS}" ]
 	then
-		NFSOPTS=""
+		NFSOPTS="-o ${NFSOPTS}"
 	fi
 
 	log_begin_msg "Trying nfsmount -o nolock -o ro ${NFSOPTS} ${NFSROOT} ${mountpoint}"
@@ -1017,7 +1017,7 @@ do_cifsmount ()
 		then
 			CIFSOPTS="-ouser=root,password="
 		else
-			CIFSOPTS="${NFSOPTS}"
+			CIFSOPTS="-o ${NFSOPTS}"
 		fi
 
 		log_begin_msg "Trying mount.cifs ${NFSROOT} ${mountpoint} ${CIFSOPTS}"
