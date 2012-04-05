@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 3.0~a22-1\n"
-"POT-Creation-Date: 2012-02-06 23:27+0100\n"
+"POT-Creation-Date: 2012-04-05 07:55+0300\n"
 "PO-Revision-Date: 2010-05-24 12:34+0300\n"
 "Last-Translator: Daniel Baumann <daniel@debian.org>\n"
 "Language-Team: none\n"
@@ -16,45 +16,43 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. type: TH
-#: en/live-boot.7:1 en/live-snapshot.1:1
+#: en/live-boot.7:1 en/live-snapshot.1:1 en/live.persist.5:1
 #, no-wrap
 msgid "LIVE-BOOT"
 msgstr "LIVE-BOOT"
 
 #. type: TH
-#: en/live-boot.7:1 en/live-snapshot.1:1
-#, fuzzy, no-wrap
-#| msgid "2011-12-04"
-msgid "2012-02-06"
-msgstr "04.12.2011"
+#: en/live-boot.7:1 en/live-snapshot.1:1 en/live.persist.5:1
+#, no-wrap
+msgid "2012-04-05"
+msgstr "05.04.2012"
 
 #. type: TH
-#: en/live-boot.7:1 en/live-snapshot.1:1
-#, fuzzy, no-wrap
-#| msgid "3.0~a24-1"
+#: en/live-boot.7:1 en/live-snapshot.1:1 en/live.persist.5:1
+#, no-wrap
 msgid "3.0~a25-1"
-msgstr "3.0~a24-1"
+msgstr "3.0~a25-1"
 
 #. type: TH
-#: en/live-boot.7:1 en/live-snapshot.1:1
+#: en/live-boot.7:1 en/live-snapshot.1:1 en/live.persist.5:1
 #, no-wrap
 msgid "Debian Live Project"
 msgstr "Debian Live Projekt"
 
 #. type: SH
-#: en/live-boot.7:3 en/live-snapshot.1:3
+#: en/live-boot.7:3 en/live-snapshot.1:3 en/live.persist.5:3
 #, no-wrap
 msgid "NAME"
 msgstr "NAME"
 
 #. type: SH
-#: en/live-boot.7:6 en/live-snapshot.1:17
+#: en/live-boot.7:6 en/live-snapshot.1:17 en/live.persist.5:7
 #, no-wrap
 msgid "DESCRIPTION"
 msgstr "BESCHREIBUNG"
 
 #. type: SH
-#: en/live-boot.7:28 en/live-snapshot.1:20
+#: en/live-boot.7:28 en/live-snapshot.1:20 en/live.persist.5:57
 #, no-wrap
 msgid "OPTIONS"
 msgstr "OPTIONEN"
@@ -122,34 +120,34 @@ msgid "FILES"
 msgstr "DATEIEN"
 
 #. type: SH
-#: en/live-boot.7:161 en/live-snapshot.1:54
+#: en/live-boot.7:162 en/live-snapshot.1:54 en/live.persist.5:191
 #, no-wrap
 msgid "SEE ALSO"
 msgstr "SIEHE AUCH"
 
 #. type: Plain text
-#: en/live-boot.7:165 en/live-snapshot.1:58
+#: en/live-boot.7:168 en/live-snapshot.1:58 en/live.persist.5:195
 msgid "I<live-build>(7)"
 msgstr "I<live-build>(7)"
 
 #. type: Plain text
-#: en/live-boot.7:167 en/live-snapshot.1:60
+#: en/live-boot.7:170 en/live-snapshot.1:60 en/live.persist.5:197
 msgid "I<live-config>(7)"
 msgstr "I<live-config>(7)"
 
 #. type: Plain text
-#: en/live-boot.7:169 en/live-snapshot.1:62
+#: en/live-boot.7:172 en/live-snapshot.1:62 en/live.persist.5:199
 msgid "I<live-tools>(7)"
 msgstr "I<live-tools>(7)"
 
 #. type: SH
-#: en/live-boot.7:170 en/live-snapshot.1:63
+#: en/live-boot.7:173 en/live-snapshot.1:63 en/live.persist.5:200
 #, no-wrap
 msgid "HOMEPAGE"
 msgstr "HOMEPAGE"
 
 #. type: Plain text
-#: en/live-boot.7:172 en/live-snapshot.1:65
+#: en/live-boot.7:175 en/live-snapshot.1:65 en/live.persist.5:204
 msgid ""
 "More information about live-boot and the Debian Live project can be found on "
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
@@ -160,13 +158,13 @@ msgstr ""
 "unter E<lt>I<http://live.debian.net/manual/>E<gt> gefunden werden."
 
 #. type: SH
-#: en/live-boot.7:173 en/live-snapshot.1:66
+#: en/live-boot.7:176 en/live-snapshot.1:66 en/live.persist.5:205
 #, no-wrap
 msgid "BUGS"
 msgstr "FEHLER"
 
 #. type: Plain text
-#: en/live-boot.7:175 en/live-snapshot.1:68
+#: en/live-boot.7:178 en/live-snapshot.1:68 en/live.persist.5:210
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
 "the Debian Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
@@ -180,13 +178,13 @@ msgstr ""
 "werden."
 
 #. type: SH
-#: en/live-boot.7:176 en/live-snapshot.1:69
+#: en/live-boot.7:179 en/live-snapshot.1:69 en/live.persist.5:211
 #, no-wrap
 msgid "AUTHOR"
 msgstr "AUTOR"
 
 #. type: Plain text
-#: en/live-boot.7:177 en/live-snapshot.1:70
+#: en/live-boot.7:180 en/live-snapshot.1:70
 msgid ""
 "live-boot was written by Daniel Baumann E<lt>I<daniel@debian.org>E<gt> for "
 "the Debian project."

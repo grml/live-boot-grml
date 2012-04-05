@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 2012\-02\-06 3.0~a25\-1 "Debian Live Projekt"
+.TH LIVE\-BOOT 7 05.04.2012 3.0~a25\-1 "Debian Live Projekt"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Skripte
@@ -173,16 +173,16 @@ option has no currently no effect when booting with toram.
 .IP \fBswapon\fP 4
 This parameter enables usage of local swap partitions.
 .IP \fBpersistent\fP 4
-live\-boot will probe filesystems for persistent media. These can either be
-the filesystems themselves, if labeled correctly, or image/archive files, if
-named correctly. Overlays are labeled/named either "live\-rw" or "home\-rw"
-and will be mounted on / or /home, respectively; snapshots are labeled/named
+live\-boot will probe devices for persistent media. These can be partitions
+(with the correct GPT name), filesystems (with the correct label) or
+image/archive files (with the correct file name). Overlays are labeled/named
+either "full\-ov", which will be mounted on /, or "custom\-ov", which can be
+completely customized (see \fIlive.persist\fP(5)); snapshots are labeled/named
 either "live\-sn" or "home\-sn" and will be extracted into / or /home,
-respectively (see live\-snapshot(1) for more information). Overlays are
-mounted before snapshots are extracted, and for both overlays and snapshots,
-"live\-*" are handled before "home\-*". Overlay image files and snapshot
-archive files have extensions which determines their filesystem or archive
-type, e.g. "live\-rw.ext3" and "\home\-sn.squashfs".
+respectively (see \fIlive\-snapshot\fP(1) for more information). The order these
+are handled are: full\-ov, custom\-ov, live\-sn, home\-sn. Overlay image files
+and snapshot archive files have extensions which determines their filesystem
+or archive type, e.g. "custom\-ov.ext3" and "\home\-sn.squashfs".
 .IP "\fBpersistent\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 This option determines which types of encryption that we allow to be used
 when probing devices for persistent media. If "none" is in the list, we
@@ -283,9 +283,12 @@ directory with a tmpfs on the original path.
 .IP \fB/etc/live/boot.d/\fP 4
 .IP \fBlive/boot.conf\fP 4
 .IP \fBlive/boot.d/\fP 4
+.IP \fBlive.persistent\fP 4
 
 .SH "SIEHE AUCH"
 \fIlive\-snapshot\fP(1)
+.PP
+\fIlive.persist\fP(1)
 .PP
 \fIlive\-build\fP(7)
 .PP
