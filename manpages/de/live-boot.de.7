@@ -3,14 +3,14 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 2012\-02\-06 3.0~a25\-1 "Debian Live Projekt"
+.TH LIVE\-BOOT 7 2012\-04\-05 3.0~a26\-1 "Debian Live Project"
 
 .SH NAME
-\fBlive\-boot\fP \- System Boot Skripte
+\fBlive\-boot\fP \- System Boot Scripts
 
-.SH BESCHREIBUNG
-\fBlive\-config\fP enthaelt die Skripte welche ein Debian Live System waehrend
-des Startvorganes (early userspace) konfigurieren.
+.SH DESCRIPTION
+\fBlive\-boot\fP contains the scripts that configure a Debian Live system during
+the boot process (early userspace).
 .PP
 .\" FIXME
 live\-boot is a hook for the initramfs\-tools, used to generate a initramfs
@@ -24,27 +24,27 @@ directory where a root filesystems (often a compressed filesystem image like
 squashfs) is stored. If found, it will create a writable environment, using
 aufs, for Debian like systems to boot from.
 
-.SH KONFIGURATION
-\fBlive\-boot\fP kann durch Boot Parameter oder durch Konfigurationsdateien
-konfiguriert werden.
+.SH CONFIGURATION
+\fBlive\-boot\fP can be configured through a boot parameter or a configuration
+file.
 .PP
 To configure the live\-boot parameters used by default in a live image, see
 the \-\-bootappend\-live option in the \fIlb_config\fP(1) manual page.
 
-.SS "Kernel Parameter"
-\fBlive\-boot\fP ist nur dann aktiv, wenn 'boot=live' als Kernel Parameter
-benutzt wird.
+.SS "Kernel Parameters"
+\fBlive\-boot\fP is only activated if 'boot=live' was used as a kernel
+parameter.
 .PP
 In addition, there are some more boot parameters to influence the behaviour,
 see below.
 
-.SS Konfigurationsdateien
+.SS "Configuration Files"
 \fBlive\-boot\fP can be configured (but not activated) through configuration
 files. Those files can be placed either in the root filesystem itself
 (/etc/live/boot.conf, /etc/live/boot.d/), or on the live media
 (live/boot.conf, live/boot.d/).
 
-.SH OPTIONEN
+.SH OPTIONS
 .\" FIXME
 \fBlive\-boot\fP currently features the following parameters.
 .IP \fBaccess\fP=\fIACCESS\fP 4
@@ -173,16 +173,16 @@ option has no currently no effect when booting with toram.
 .IP \fBswapon\fP 4
 This parameter enables usage of local swap partitions.
 .IP \fBpersistent\fP 4
-live\-boot will probe filesystems for persistent media. These can either be
-the filesystems themselves, if labeled correctly, or image/archive files, if
-named correctly. Overlays are labeled/named either "live\-rw" or "home\-rw"
-and will be mounted on / or /home, respectively; snapshots are labeled/named
+live\-boot will probe devices for persistent media. These can be partitions
+(with the correct GPT name), filesystems (with the correct label) or
+image/archive files (with the correct file name). Overlays are labeled/named
+either "full\-ov", which will be mounted on /, or "custom\-ov", which can be
+completely customized (see \fIlive.persist\fP(5)); snapshots are labeled/named
 either "live\-sn" or "home\-sn" and will be extracted into / or /home,
-respectively (see live\-snapshot(1) for more information). Overlays are
-mounted before snapshots are extracted, and for both overlays and snapshots,
-"live\-*" are handled before "home\-*". Overlay image files and snapshot
-archive files have extensions which determines their filesystem or archive
-type, e.g. "live\-rw.ext3" and "\home\-sn.squashfs".
+respectively (see \fIlive\-snapshot\fP(1) for more information). The order these
+are handled are: full\-ov, custom\-ov, live\-sn, home\-sn. Overlay image files
+and snapshot archive files have extensions which determines their filesystem
+or archive type, e.g. "custom\-ov.ext3" and "\home\-sn.squashfs".
 .IP "\fBpersistent\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 This option determines which types of encryption that we allow to be used
 when probing devices for persistent media. If "none" is in the list, we
@@ -278,14 +278,17 @@ as web caches and temporary files (like e.g. /tmp and .mozilla) which are
 regenerated each time. This is achieved by bind mounting each listed
 directory with a tmpfs on the original path.
 
-.SH DATEIEN
+.SH FILES
 .IP \fB/etc/live/boot.conf\fP 4
 .IP \fB/etc/live/boot.d/\fP 4
 .IP \fBlive/boot.conf\fP 4
 .IP \fBlive/boot.d/\fP 4
+.IP \fBlive.persist\fP 4
 
-.SH "SIEHE AUCH"
+.SH "SEE ALSO"
 \fIlive\-snapshot\fP(1)
+.PP
+\fIlive.persist\fP(5)
 .PP
 \fIlive\-build\fP(7)
 .PP
@@ -294,17 +297,16 @@ directory with a tmpfs on the original path.
 \fIlive\-tools\fP(7)
 
 .SH HOMEPAGE
-Weitere Informationen ueber live\-boot und das Debian Live Projekt koennen
-auf der Homepage unter <\fIhttp://live.debian.net/\fP> und im Handbuch
-unter <\fIhttp://live.debian.net/manual/\fP> gefunden werden.
+More information about live\-boot and the Debian Live project can be found on
+the homepage at <\fIhttp://live.debian.net/\fP> and in the manual at
+<\fIhttp://live.debian.net/manual/\fP>.
 
-.SH FEHLER
-Fehler koennen durch Einreichen eines Fehlerberichtes fuer das live\-boot
-Paket im Debian Bug Tracking System unter
-<\fIhttp://bugs.debian.org/\fP> oder durch Senden einer E\-Mail an die
-Debian Live Mailing Liste unter <\fIdebian\-live@lists.debian.org\fP>
-(englischsprachig) mitgeteilt werden.
+.SH BUGS
+Bugs can be reported by submitting a bugreport for the live\-boot package in
+the Debian Bug Tracking System at <\fIhttp://bugs.debian.org/\fP> or by
+writing a mail to the Debian Live mailing list at
+<\fIdebian\-live@lists.debian.org\fP>.
 
-.SH AUTOR
-live\-boot wurde von Daniel Baumann <\fIdaniel@debian.org\fP> fuer das
-Debian Projekt geschrieben.
+.SH AUTHOR
+live\-boot was written by Daniel Baumann <\fIdaniel@debian.org\fP> for
+the Debian project.
