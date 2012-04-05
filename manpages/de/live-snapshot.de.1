@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 1 05.04.2012 3.0~a25\-1 "Debian Live Projekt"
+.TH LIVE\-BOOT 1 2012\-04\-05 3.0~a26\-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-snapshot\fP \- simple script to ease persistence usage
 
-.SH SYNTAX
+.SH SYNOPSIS
 \fBlive\-snapshot\fP [\-c|\-\-cow \fIDIRECTORY] [\-d|\-\-device DEVICE\fP]
 [\-e|\-\-exclude\-list \fIFILE\fP] [\-o|\-\-output \fIFILE\fP] [\-t|\-\-type \fITYPE\fP]
 .br
@@ -20,12 +20,12 @@
 .br
 \fBlive\-snapshot\fP [\-v|\-\-version]
 
-.SH BESCHREIBUNG
+.SH DESCRIPTION
 live\-snapshot is a script which can be used to build the right types of
 persistent image files supported by \fIlive\-boot\fP(7). It is also used on exit
 by the live\-boot init script to resync the boot\-found snapshots devices.
 
-.SH OPTIONEN
+.SH OPTIONS
 .IP "\-c, \-\-cow \fIDIRECTORY\fP" 4
 specifies the input directory to be cloned in the image file. Its default
 value "/live/cow" should be right for most uses. However it could be handy
@@ -60,7 +60,7 @@ show usage and exit.
 .IP "\-v, \-\-version" 4
 output version information and exit.
 
-.SH DATEIEN
+.SH FILES
 .IP \fB/etc/live.conf\fP 4
 Some variables can be configured via this config file (inside the live
 system).
@@ -89,7 +89,7 @@ files and directories listed there are included (integrally) in the
 snapshot. Beware, it is an experimental feature that only works for cpio
 targets now.
 
-.SH "SIEHE AUCH"
+.SH "SEE ALSO"
 \fIlive\-boot\fP(1)
 .PP
 \fIlive\-build\fP(7)
@@ -99,17 +99,16 @@ targets now.
 \fIlive\-tools\fP(7)
 
 .SH HOMEPAGE
-Weitere Informationen ueber live\-boot und das Debian Live Projekt koennen
-auf der Homepage unter <\fIhttp://live.debian.net/\fP> und im Handbuch
-unter <\fIhttp://live.debian.net/manual/\fP> gefunden werden.
+More information about live\-boot and the Debian Live project can be found on
+the homepage at <\fIhttp://live.debian.net/\fP> and in the manual at
+<\fIhttp://live.debian.net/manual/\fP>.
 
-.SH FEHLER
-Fehler koennen durch Einreichen eines Fehlerberichtes fuer das live\-boot
-Paket im Debian Bug Tracking System unter
-<\fIhttp://bugs.debian.org/\fP> oder durch Senden einer E\-Mail an die
-Debian Live Mailing Liste unter <\fIdebian\-live@lists.debian.org\fP>
-(englischsprachig) mitgeteilt werden.
+.SH BUGS
+Bugs can be reported by submitting a bugreport for the live\-boot package in
+the Debian Bug Tracking System at <\fIhttp://bugs.debian.org/\fP> or by
+writing a mail to the Debian Live mailing list at
+<\fIdebian\-live@lists.debian.org\fP>.
 
-.SH AUTOR
-live\-boot wurde von Daniel Baumann <\fIdaniel@debian.org\fP> fuer das
-Debian Projekt geschrieben.
+.SH AUTHOR
+live\-boot was written by Daniel Baumann <\fIdaniel@debian.org\fP> for
+the Debian project.

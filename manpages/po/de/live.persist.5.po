@@ -1,13 +1,12 @@
 # German translations for live-boot package
-# Copyright (C) 2012 Free Software Foundation, Inc.
+# 2010-2012 Daniel Baumann <daniel@debian.org>
 # This file is distributed under the same license as the live-boot package.
-# Automatically generated, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2012-04-05 07:58+0300\n"
-"PO-Revision-Date: 2012-04-05 07:55+0300\n"
+"Project-Id-Version: live-boot 3.0~a26-1\n"
+"POT-Creation-Date: 2012-04-05 08:11+0300\n"
+"PO-Revision-Date: 2012-04-05 08:11+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: de\n"
@@ -20,70 +19,70 @@ msgstr ""
 #: en/live-boot.7:1 en/live-snapshot.1:1 en/live.persist.5:1
 #, no-wrap
 msgid "LIVE-BOOT"
-msgstr "LIVE-BOOT"
+msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1 en/live.persist.5:1
 #, no-wrap
 msgid "2012-04-05"
-msgstr "05.04.2012"
+msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1 en/live.persist.5:1
 #, no-wrap
-msgid "3.0~a25-1"
-msgstr "3.0~a25-1"
+msgid "3.0~a26-1"
+msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1 en/live.persist.5:1
 #, no-wrap
 msgid "Debian Live Project"
-msgstr "Debian Live Projekt"
+msgstr ""
 
 #. type: SH
 #: en/live-boot.7:3 en/live-snapshot.1:3 en/live.persist.5:3
 #, no-wrap
 msgid "NAME"
-msgstr "NAME"
+msgstr ""
 
 #. type: SH
 #: en/live-boot.7:6 en/live-snapshot.1:17 en/live.persist.5:7
 #, no-wrap
 msgid "DESCRIPTION"
-msgstr "BESCHREIBUNG"
+msgstr ""
 
 #. type: SH
 #: en/live-boot.7:28 en/live-snapshot.1:20 en/live.persist.5:57
 #, no-wrap
 msgid "OPTIONS"
-msgstr "OPTIONEN"
+msgstr ""
 
 #. type: SH
 #: en/live-boot.7:162 en/live-snapshot.1:54 en/live.persist.5:191
 #, no-wrap
 msgid "SEE ALSO"
-msgstr "SIEHE AUCH"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:168 en/live-snapshot.1:58 en/live.persist.5:195
 msgid "I<live-build>(7)"
-msgstr "I<live-build>(7)"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:170 en/live-snapshot.1:60 en/live.persist.5:197
 msgid "I<live-config>(7)"
-msgstr "I<live-config>(7)"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:172 en/live-snapshot.1:62 en/live.persist.5:199
 msgid "I<live-tools>(7)"
-msgstr "I<live-tools>(7)"
+msgstr ""
 
 #. type: SH
 #: en/live-boot.7:173 en/live-snapshot.1:63 en/live.persist.5:200
 #, no-wrap
 msgid "HOMEPAGE"
-msgstr "HOMEPAGE"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:175 en/live-snapshot.1:65 en/live.persist.5:204
@@ -92,15 +91,12 @@ msgid ""
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
 "E<lt>I<http://live.debian.net/manual/>E<gt>."
 msgstr ""
-"Weitere Informationen ueber live-boot und das Debian Live Projekt koennen "
-"auf der Homepage unter E<lt>I<http://live.debian.net/>E<gt> und im Handbuch "
-"unter E<lt>I<http://live.debian.net/manual/>E<gt> gefunden werden."
 
 #. type: SH
 #: en/live-boot.7:176 en/live-snapshot.1:66 en/live.persist.5:205
 #, no-wrap
 msgid "BUGS"
-msgstr "FEHLER"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:178 en/live-snapshot.1:68 en/live.persist.5:210
@@ -110,17 +106,12 @@ msgid ""
 "writing a mail to the Debian Live mailing list at E<lt>I<debian-live@lists."
 "debian.org>E<gt>."
 msgstr ""
-"Fehler koennen durch Einreichen eines Fehlerberichtes fuer das live-boot "
-"Paket im Debian Bug Tracking System unter E<lt>I<http://bugs.debian.org/"
-">E<gt> oder durch Senden einer E-Mail an die Debian Live Mailing Liste unter "
-"E<lt>I<debian-live@lists.debian.org>E<gt> (englischsprachig) mitgeteilt "
-"werden."
 
 #. type: SH
 #: en/live-boot.7:179 en/live-snapshot.1:69 en/live.persist.5:211
 #, no-wrap
 msgid "AUTHOR"
-msgstr "AUTOR"
+msgstr ""
 
 #. type: Plain text
 #: en/live.persist.5:6
@@ -510,7 +501,7 @@ msgstr ""
 #. type: Plain text
 #: en/live.persist.5:193
 msgid "I<live-boot>(7)"
-msgstr "I<live-boot>(7)"
+msgstr ""
 
 #. type: Plain text
 #: en/live.persist.5:213

@@ -1,13 +1,13 @@
 # German translations for live-boot package
-# Copyright (C) 2006-2010 Daniel Baumann <daniel@debian.org>
+# 2010-2012 Daniel Baumann <daniel@debian.org>
 # This file is distributed under the same license as the live-boot package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 3.0~a22-1\n"
-"POT-Creation-Date: 2012-04-05 07:55+0300\n"
-"PO-Revision-Date: 2010-05-24 12:34+0300\n"
-"Last-Translator: Daniel Baumann <daniel@debian.org>\n"
+"Project-Id-Version: live-boot 3.0~a26\n"
+"POT-Creation-Date: 2012-04-05 08:11+0300\n"
+"PO-Revision-Date: 2012-04-05 08:11+0300\n"
+"Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -19,42 +19,42 @@ msgstr ""
 #: en/live-boot.7:1 en/live-snapshot.1:1 en/live.persist.5:1
 #, no-wrap
 msgid "LIVE-BOOT"
-msgstr "LIVE-BOOT"
+msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1 en/live.persist.5:1
 #, no-wrap
 msgid "2012-04-05"
-msgstr "05.04.2012"
+msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1 en/live.persist.5:1
 #, no-wrap
-msgid "3.0~a25-1"
-msgstr "3.0~a25-1"
+msgid "3.0~a26-1"
+msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/live-snapshot.1:1 en/live.persist.5:1
 #, no-wrap
 msgid "Debian Live Project"
-msgstr "Debian Live Projekt"
+msgstr ""
 
 #. type: SH
 #: en/live-boot.7:3 en/live-snapshot.1:3 en/live.persist.5:3
 #, no-wrap
 msgid "NAME"
-msgstr "NAME"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:5
 msgid "B<live-boot> - System Boot Scripts"
-msgstr "B<live-boot> - System Boot Skripte"
+msgstr ""
 
 #. type: SH
 #: en/live-boot.7:6 en/live-snapshot.1:17 en/live.persist.5:7
 #, no-wrap
 msgid "DESCRIPTION"
-msgstr "BESCHREIBUNG"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:8
@@ -62,8 +62,6 @@ msgid ""
 "B<live-boot> contains the scripts that configure a Debian Live system during "
 "the boot process (early userspace)."
 msgstr ""
-"B<live-config> enthaelt die Skripte welche ein Debian Live System waehrend "
-"des Startvorganes (early userspace) konfigurieren."
 
 #.  FIXME
 #. type: Plain text
@@ -88,7 +86,7 @@ msgstr ""
 #: en/live-boot.7:15
 #, no-wrap
 msgid "CONFIGURATION"
-msgstr "KONFIGURATION"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:17
@@ -96,8 +94,6 @@ msgid ""
 "B<live-boot> can be configured through a boot parameter or a configuration "
 "file."
 msgstr ""
-"B<live-boot> kann durch Boot Parameter oder durch Konfigurationsdateien "
-"konfiguriert werden."
 
 #. type: Plain text
 #: en/live-boot.7:19
@@ -110,15 +106,13 @@ msgstr ""
 #: en/live-boot.7:20
 #, no-wrap
 msgid "Kernel Parameters"
-msgstr "Kernel Parameter"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:22
 msgid ""
 "B<live-boot> is only activated if 'boot=live' was used as a kernel parameter."
 msgstr ""
-"B<live-boot> ist nur dann aktiv, wenn 'boot=live' als Kernel Parameter "
-"benutzt wird."
 
 #. type: Plain text
 #: en/live-boot.7:24
@@ -131,7 +125,7 @@ msgstr ""
 #: en/live-boot.7:25
 #, no-wrap
 msgid "Configuration Files"
-msgstr "Konfigurationsdateien"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:27
@@ -146,7 +140,7 @@ msgstr ""
 #: en/live-boot.7:28 en/live-snapshot.1:20 en/live.persist.5:57
 #, no-wrap
 msgid "OPTIONS"
-msgstr "OPTIONEN"
+msgstr ""
 
 #.  FIXME
 #. type: Plain text
@@ -158,7 +152,7 @@ msgstr ""
 #: en/live-boot.7:31
 #, no-wrap
 msgid "B<access>=I<ACCESS>"
-msgstr "B<access>=I<ACCESS>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:33
@@ -173,7 +167,7 @@ msgstr ""
 #: en/live-boot.7:33
 #, no-wrap
 msgid "B<console>=I<TTY,SPEED>"
-msgstr "B<console>=I<TTY,SPEED>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:35
@@ -186,7 +180,7 @@ msgstr ""
 #: en/live-boot.7:35
 #, no-wrap
 msgid "B<debug>"
-msgstr "B<debug>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:37
@@ -207,13 +201,13 @@ msgstr ""
 #: en/live-boot.7:41
 #, no-wrap
 msgid "B<fetch>=I<URL>"
-msgstr "B<fetch>=I<URL>"
+msgstr ""
 
 #. type: IP
 #: en/live-boot.7:42
 #, no-wrap
 msgid "B<httpfs>=I<URL>"
-msgstr "B<httpfs>=I<URL>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:50
@@ -304,7 +298,7 @@ msgstr ""
 #: en/live-boot.7:71
 #, no-wrap
 msgid "B<ignore_uuid>"
-msgstr "B<ignore_uuid>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:73
@@ -318,7 +312,7 @@ msgstr ""
 #: en/live-boot.7:73
 #, no-wrap
 msgid "B<integrity-check>"
-msgstr "B<integrity-check>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:75
@@ -348,7 +342,7 @@ msgstr ""
 #: en/live-boot.7:77
 #, no-wrap
 msgid "B<ip>=[I<frommedia>]"
-msgstr "B<ip>=[I<frommedia>]"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:79
@@ -362,7 +356,7 @@ msgstr ""
 #: en/live-boot.7:79
 #, no-wrap
 msgid "{B<live-media>|B<bootfrom>}=I<DEVICE>"
-msgstr "{B<live-media>|B<bootfrom>}=I<DEVICE>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:81
@@ -386,7 +380,7 @@ msgstr ""
 #: en/live-boot.7:83
 #, no-wrap
 msgid "{B<live-media-encryption>|B<encryption>}=I<TYPE>"
-msgstr "{B<live-media-encryption>|B<encryption>}=I<TYPE>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:85
@@ -400,7 +394,7 @@ msgstr ""
 #: en/live-boot.7:85
 #, no-wrap
 msgid "B<live-media-offset>=I<BYTES>"
-msgstr "B<live-media-offset>=I<BYTES>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:87
@@ -415,7 +409,7 @@ msgstr ""
 #: en/live-boot.7:87
 #, no-wrap
 msgid "B<live-media-path>=I<PATH>"
-msgstr "B<live-media-path>=I<PATH>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:89
@@ -429,7 +423,7 @@ msgstr ""
 #: en/live-boot.7:89
 #, no-wrap
 msgid "B<live-media-timeout>=I<SECONDS>"
-msgstr "B<live-media-timeout>=I<SECONDS>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:91
@@ -442,7 +436,7 @@ msgstr ""
 #: en/live-boot.7:91
 #, no-wrap
 msgid "B<module>=I<NAME>"
-msgstr "B<module>=I<NAME>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:93
@@ -456,7 +450,7 @@ msgstr ""
 #: en/live-boot.7:93
 #, no-wrap
 msgid "B<netboot>[=nfs|cifs]"
-msgstr "B<netboot>[=nfs|cifs]"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:95
@@ -470,7 +464,7 @@ msgstr ""
 #: en/live-boot.7:95
 #, no-wrap
 msgid "B<nfsopts>="
-msgstr "B<nfsopts>="
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:97
@@ -481,7 +475,7 @@ msgstr ""
 #: en/live-boot.7:97
 #, no-wrap
 msgid "B<nofastboot>"
-msgstr "B<nofastboot>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:99
@@ -495,7 +489,7 @@ msgstr ""
 #: en/live-boot.7:99
 #, no-wrap
 msgid "B<nopersistent>"
-msgstr "B<nopersistent>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:101
@@ -508,7 +502,7 @@ msgstr ""
 #: en/live-boot.7:101
 #, no-wrap
 msgid "B<noprompt>"
-msgstr "B<noprompt>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:103
@@ -519,7 +513,7 @@ msgstr ""
 #: en/live-boot.7:103
 #, no-wrap
 msgid "B<noprompt>=I<TYPE>"
-msgstr "B<noprompt>=I<TYPE>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:105
@@ -547,7 +541,7 @@ msgstr ""
 #: en/live-boot.7:107
 #, no-wrap
 msgid "B<swapon>"
-msgstr "B<swapon>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:109
@@ -558,7 +552,7 @@ msgstr ""
 #: en/live-boot.7:109
 #, no-wrap
 msgid "B<persistent>"
-msgstr "B<persistent>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:111
@@ -626,7 +620,7 @@ msgstr ""
 #: en/live-boot.7:117
 #, no-wrap
 msgid "B<persistent-path>=I<PATH>"
-msgstr "B<persistent-path>=I<PATH>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:119
@@ -640,7 +634,7 @@ msgstr ""
 #: en/live-boot.7:119
 #, no-wrap
 msgid "B<persistent-read-only>"
-msgstr "B<persistent-read-only>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:121
@@ -670,7 +664,7 @@ msgstr ""
 #: en/live-boot.7:123
 #, no-wrap
 msgid "B<persistent-subtext>=I<SUFFIX>"
-msgstr "B<persistent-subtext>=I<SUFFIX>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:125
@@ -686,7 +680,7 @@ msgstr ""
 #: en/live-boot.7:125
 #, no-wrap
 msgid "{B<preseed/file>|B<file>}=I<FILE>"
-msgstr "{B<preseed/file>|B<file>}=I<FILE>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:127
@@ -699,7 +693,7 @@ msgstr ""
 #: en/live-boot.7:127
 #, no-wrap
 msgid "B<package/question>=I<VALUE>"
-msgstr "B<package/question>=I<VALUE>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:129
@@ -713,7 +707,7 @@ msgstr ""
 #: en/live-boot.7:129
 #, no-wrap
 msgid "B<quickreboot>"
-msgstr "B<quickreboot>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:131
@@ -726,7 +720,7 @@ msgstr ""
 #: en/live-boot.7:131
 #, no-wrap
 msgid "B<showmounts>"
-msgstr "B<showmounts>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:133
@@ -741,7 +735,7 @@ msgstr ""
 #: en/live-boot.7:133
 #, no-wrap
 msgid "B<silent>"
-msgstr "B<silent>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:135
@@ -754,7 +748,7 @@ msgstr ""
 #: en/live-boot.7:135
 #, no-wrap
 msgid "B<todisk>=I<DEVICE>"
-msgstr "B<todisk>=I<DEVICE>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:137
@@ -770,7 +764,7 @@ msgstr ""
 #: en/live-boot.7:137
 #, no-wrap
 msgid "B<toram>"
-msgstr "B<toram>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:139
@@ -784,7 +778,7 @@ msgstr ""
 #: en/live-boot.7:139
 #, no-wrap
 msgid "B<union>=aufs|unionfs"
-msgstr "B<union>=aufs|unionfs"
+msgstr ""
 
 #.  FIXME
 #. type: Plain text
@@ -805,7 +799,7 @@ msgstr ""
 #: en/live-boot.7:145 en/live-snapshot.1:43
 #, no-wrap
 msgid "B</etc/live.conf>"
-msgstr "B</etc/live.conf>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:147 en/live-snapshot.1:45
@@ -818,7 +812,7 @@ msgstr ""
 #: en/live-boot.7:147 en/live-snapshot.1:45
 #, no-wrap
 msgid "B<live/filesystem.module>"
-msgstr "B<live/filesystem.module>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:149 en/live-snapshot.1:47
@@ -837,7 +831,7 @@ msgstr ""
 #: en/live-boot.7:149 en/live-snapshot.1:47
 #, no-wrap
 msgid "B</etc/live-persistence.binds>"
-msgstr "B</etc/live-persistence.binds>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:151 en/live-snapshot.1:49
@@ -861,74 +855,74 @@ msgstr ""
 #: en/live-boot.7:155 en/live-snapshot.1:42
 #, no-wrap
 msgid "FILES"
-msgstr "DATEIEN"
+msgstr ""
 
 #. type: IP
 #: en/live-boot.7:156
 #, no-wrap
 msgid "B</etc/live/boot.conf>"
-msgstr "B</etc/live/boot.conf>"
+msgstr ""
 
 #. type: IP
 #: en/live-boot.7:157
 #, no-wrap
 msgid "B</etc/live/boot.d/>"
-msgstr "B</etc/live/boot.d/>"
+msgstr ""
 
 #. type: IP
 #: en/live-boot.7:158
 #, no-wrap
 msgid "B<live/boot.conf>"
-msgstr "B<live/boot.conf>"
+msgstr ""
 
 #. type: IP
 #: en/live-boot.7:159
 #, no-wrap
 msgid "B<live/boot.d/>"
-msgstr "B<live/boot.d/>"
+msgstr ""
 
 #. type: IP
 #: en/live-boot.7:160
 #, no-wrap
 msgid "B<live.persist>"
-msgstr "B<live.persistent>"
+msgstr ""
 
 #. type: SH
 #: en/live-boot.7:162 en/live-snapshot.1:54 en/live.persist.5:191
 #, no-wrap
 msgid "SEE ALSO"
-msgstr "SIEHE AUCH"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:164
 msgid "I<live-snapshot>(1)"
-msgstr "I<live-snapshot>(1)"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:166
 msgid "I<live.persist>(5)"
-msgstr "I<live.persist>(1)"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:168 en/live-snapshot.1:58 en/live.persist.5:195
 msgid "I<live-build>(7)"
-msgstr "I<live-build>(7)"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:170 en/live-snapshot.1:60 en/live.persist.5:197
 msgid "I<live-config>(7)"
-msgstr "I<live-config>(7)"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:172 en/live-snapshot.1:62 en/live.persist.5:199
 msgid "I<live-tools>(7)"
-msgstr "I<live-tools>(7)"
+msgstr ""
 
 #. type: SH
 #: en/live-boot.7:173 en/live-snapshot.1:63 en/live.persist.5:200
 #, no-wrap
 msgid "HOMEPAGE"
-msgstr "HOMEPAGE"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:175 en/live-snapshot.1:65 en/live.persist.5:204
@@ -937,15 +931,12 @@ msgid ""
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
 "E<lt>I<http://live.debian.net/manual/>E<gt>."
 msgstr ""
-"Weitere Informationen ueber live-boot und das Debian Live Projekt koennen "
-"auf der Homepage unter E<lt>I<http://live.debian.net/>E<gt> und im Handbuch "
-"unter E<lt>I<http://live.debian.net/manual/>E<gt> gefunden werden."
 
 #. type: SH
 #: en/live-boot.7:176 en/live-snapshot.1:66 en/live.persist.5:205
 #, no-wrap
 msgid "BUGS"
-msgstr "FEHLER"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:178 en/live-snapshot.1:68 en/live.persist.5:210
@@ -955,17 +946,12 @@ msgid ""
 "writing a mail to the Debian Live mailing list at E<lt>I<debian-live@lists."
 "debian.org>E<gt>."
 msgstr ""
-"Fehler koennen durch Einreichen eines Fehlerberichtes fuer das live-boot "
-"Paket im Debian Bug Tracking System unter E<lt>I<http://bugs.debian.org/"
-">E<gt> oder durch Senden einer E-Mail an die Debian Live Mailing Liste unter "
-"E<lt>I<debian-live@lists.debian.org>E<gt> (englischsprachig) mitgeteilt "
-"werden."
 
 #. type: SH
 #: en/live-boot.7:179 en/live-snapshot.1:69 en/live.persist.5:211
 #, no-wrap
 msgid "AUTHOR"
-msgstr "AUTOR"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:180 en/live-snapshot.1:70
@@ -973,5 +959,3 @@ msgid ""
 "live-boot was written by Daniel Baumann E<lt>I<daniel@debian.org>E<gt> for "
 "the Debian project."
 msgstr ""
-"live-boot wurde von Daniel Baumann E<lt>I<daniel@debian.org>E<gt> fuer das "
-"Debian Projekt geschrieben."

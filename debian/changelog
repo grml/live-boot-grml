@@ -1,3 +1,118 @@
+live-boot (3.0~a26-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating year in copyright.
+  * Updating copyright file machine-readable format version 1.0.
+  * Updating to standards version 3.9.3.
+  * Quoting noprompt variable in initscript to avoid syntax errors,
+    thanks to Philip Newborough <corenominal@corenominal.org>.
+  * Correcting log_end_msg usages in connection with verbosity checks in
+    live-boot initscript, thanks to Pablo Barbachano
+    <pablobarbachano@yahoo.es> (Closes: #665689).
+  * Replacing live-boot initscript with a stub and moving the actual
+    code to /lib/live/boot.sh to allow different initsystem support in
+    future.
+  * Removing some of the now useless sysvinit specifics from
+    bin/boot.sh.
+
+  [ Tails developers ]
+  * Adding initial work on a custom mounts system.
+
+  [ Daniel Baumann ]
+  * Correcting indenting initial work on a custom mounts system to
+    ensure consistency.
+  * Avoid calling rm without -f in initial work on a custom mounts
+    system to ensure non-interactivity.
+  * Avoid '==' bashism in initial work on a custom mounts system to
+    ensure posix compatiblity.
+
+  [ Tails developers ]
+  * Prevent custom mounting in /live.
+  * Optionally symlink files from persistent source instead of mount it.
+  * Separate overlay labels for full and custom persistence.
+  * Remove some temporary custom mount related files after they're used.
+
+  [ Daniel Baumann ]
+  * Calling rm without -f when removing some temporary custom mount
+    related files to ensure non-interactivity.
+
+  [ Tails developers ]
+  * Handle custom mounts options a bit more beautifully.
+  * Continue the correct for-loop so incorrect custom mount is skipped.
+  * Refactor union mounting into its own function.
+  * Workaround busybox's inability to detect symlinks with [ -e ].
+  * Make union mounting more sensible and robust.
+  * Ignore empty lines in live.persist.
+  * Remove the correct file.
+  * Optionally mount custom mounts as unions.
+  * Fix mask usage in links_files().
+
+  [ Daniel Baumann ]
+  * Correcting syntax when using if constructs in links_files().
+
+  [ Tails developers ]
+  * Refactor persistent custom mounting from live into live-helpers.
+  * Accept using several persistent media with custom-ov label.
+  * Use same device backing path as used in other places.
+  * Close unused LUKS devices in all cases.
+
+  [ Daniel Baumann ]
+  * Adjusting mount calls when using nfs options (Closes: #667435).
+
+  [ Tails developers ]
+  * Refactor live-boot argument parser from live into live-helpers.
+  * Refactor some global variables from live into live-helpers.
+  * Refactor find_persistent_media().
+  * Add support for probing partitions' GPT name just like filesystem
+    labels.
+  * Some minor cleanups.
+  * Handle already mounted devices and closing of unused luks devices
+    better.
+  * Add backwards compatibility for old labels: live-{rw,sn} and home-
+    rw.
+  * We don't black list storage devices any more.
+  * Check if luks device is already open before trying to open it.
+  * Fixup some style issues.
+  * Refactor mounting of persistent storage media.
+  * Cleanup.
+  * Remove two FIXME:s that are not really relevant.
+  * Don't allow . or .. in live.persist paths.
+  * Use trim_path when we compare paths.
+  * Make handling of LUKS encrypted GPT partitions more sane.
+  * Handle list arguments better in get_custom_mounts().
+  * Copy ownership/perms from source to rw-branch in read-only mode.
+  * Change live.persist syntax to "SOURCE [DEST [OPTIONS...]]".
+  * Refactor closing of persistent devices upon failure.
+  * Create the source dir for custom mounts using the 'linkfiles'
+    option.
+  * Fix ownership/perms for created union/linkfiles source dirs.
+  * Do not allow mutually exclusive custom mount options.
+  * Add a note about a potential, future code simplification.
+  * Greatly simplify live.persist syntax to "DIR [OPTIONS...]".
+  * Make trim_path() handle "/", and arbitrarily many consecutive /:es.
+  * Make two custom mounts with nested source directories illegal.
+  * Improve error message.
+  * Remove cow dir contents that are in the way for custom mounts.
+  * Also create parents when creating union/linkfiles source
+    directories.
+  * Update live-boot(7) man page and add new one for live.persist(5).
+  * Delete existing files in the destination's path when creating it.
+  * Adding functions equivalent to chmod/chown --reference.
+  * Fix ownership for links created for linkfiles custom mounts.
+  * Add 'bind' option for the default behaviour of custom mounts (bind-
+    mount).
+  * Use trim_path() instead of custom sed stanza to trim /:es from
+    paths.
+  * Copy perms/ownership from source when creating linkfiles dest dirs.
+  * Make cases for all different custom mounting situations more
+    explicit.
+
+  [ Daniel Baumann ]
+  * Correcting left-over in author section of live.persist manpage.
+  * Moving initscript to live-config.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 05 Apr 2012 08:14:51 +0200
+
 live-boot (3.0~a25-1) unstable; urgency=low
 
   [ Daniel Baumann ]

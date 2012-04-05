@@ -3,12 +3,12 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT persist 05.04.2012 3.0~a25\-1 "Debian Live Projekt"
+.TH LIVE\-BOOT persist 2012\-04\-05 3.0~a26\-1 "Debian Live Project"
 
 .SH NAME
 \fBlive.persist\fP \- Configuration file for persistent media in live\-boot
 
-.SH BESCHREIBUNG
+.SH DESCRIPTION
 If live\-boot probes a persistent volume with the label (or GPT name, or file
 name, but from now on we will just say "label") "custom\-ov", that volume's
 persistence is fully customizable through the \fBlive.persist\fP file stored on
@@ -55,7 +55,7 @@ bootstrapped by copying the contents of the \fIDIR\fP into its source directory
 on the persistent media. The bootstrapping will not happen when the
 \fBlinkfiles\fP or \fBunion\fP options are used (see below).
 
-.SH OPTIONEN
+.SH OPTIONS
 Custom mounts defined in \fBlive.persist\fP accept the following options in a
 coma\-separated list:
 .IP \fBsource\fP=\fIPATH\fP 4
@@ -184,7 +184,7 @@ system. Hence packages could be installed into /usr with great space\-wise
 efficiency compared to bind\-mounts, since in the latter case all of /usr
 would have to be copied into \fIVOL\fP/usr during the initial bootstrap.
 
-.SH "SIEHE AUCH"
+.SH "SEE ALSO"
 \fIlive\-boot\fP(7)
 .PP
 \fIlive\-build\fP(7)
@@ -194,17 +194,16 @@ would have to be copied into \fIVOL\fP/usr during the initial bootstrap.
 \fIlive\-tools\fP(7)
 
 .SH HOMEPAGE
-Weitere Informationen ueber live\-boot und das Debian Live Projekt koennen
-auf der Homepage unter <\fIhttp://live.debian.net/\fP> und im Handbuch
-unter <\fIhttp://live.debian.net/manual/\fP> gefunden werden.
+More information about live\-boot and the Debian Live project can be found on
+the homepage at <\fIhttp://live.debian.net/\fP> and in the manual at
+<\fIhttp://live.debian.net/manual/\fP>.
 
-.SH FEHLER
-Fehler koennen durch Einreichen eines Fehlerberichtes fuer das live\-boot
-Paket im Debian Bug Tracking System unter
-<\fIhttp://bugs.debian.org/\fP> oder durch Senden einer E\-Mail an die
-Debian Live Mailing Liste unter <\fIdebian\-live@lists.debian.org\fP>
-(englischsprachig) mitgeteilt werden.
+.SH BUGS
+Bugs can be reported by submitting a bugreport for the live\-boot package in
+the Debian Bug Tracking System at <\fIhttp://bugs.debian.org/\fP> or by
+writing a mail to the Debian Live mailing list at
+<\fIdebian\-live@lists.debian.org\fP>.
 
-.SH AUTOR
+.SH AUTHOR
 live.persist was written by anonym <\fIanonym@lavabit.com\fP> for the
 Debian project.
