@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 2012\-04\-05 3.0~a26\-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 2012\-04\-06 3.0~a26\-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Scripts
@@ -41,8 +41,8 @@ see below.
 .SS "Configuration Files"
 \fBlive\-boot\fP can be configured (but not activated) through configuration
 files. Those files can be placed either in the root filesystem itself
-(/etc/live/boot.conf, /etc/live/boot.d/), or on the live media
-(live/boot.conf, live/boot.d/).
+(/etc/live/boot.conf, /etc/live/boot.d/*.conf), or on the live media
+(live/boot.conf, live/boot.d/*.conf).
 
 .SH OPTIONS
 .\" FIXME
@@ -280,9 +280,9 @@ directory with a tmpfs on the original path.
 
 .SH FILES
 .IP \fB/etc/live/boot.conf\fP 4
-.IP \fB/etc/live/boot.d/\fP 4
+.IP \fB/etc/live/boot.d/*.conf\fP 4
 .IP \fBlive/boot.conf\fP 4
-.IP \fBlive/boot.d/\fP 4
+.IP \fBlive/boot.d/*.conf\fP 4
 .IP \fBlive.persist\fP 4
 
 .SH "SEE ALSO"
