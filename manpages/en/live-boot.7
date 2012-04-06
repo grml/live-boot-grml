@@ -122,10 +122,6 @@ Filesystem changes are not saved back to persistent media. In particular, overla
 This option determines which types of persistent storage to consider when probing for persistent media. If "filesystem" is in the list, filesystems with matching labels will be used; if "file" is in the list, all filesystems will be probed for archives and image files with matching filenames. The default is "file,filesystem".
 .IP "\fBpersistent\-subtext\fR=\fISUFFIX\fR" 4
 Add a suffix when searching for the image filenames or partition labels to use for the above mentioned persistent feature, the SUFFIX will be added after a dash (e.g.: "live-sn" would transform to "live-sn-SUFFIX"). This is handy to test multiple live-boot based live-systems with different persistent storage choices.
-.IP "{\fBpreseed/file\fR|\fBfile\fR}=\fIFILE\fR" 4
-A path to a file present on the rootfs could be used to preseed debconf database.
-.IP "\fBpackage/question\fR=\fIVALUE\fR" 4
-All debian installed packages could be preseeded from command\-line that way, beware of blanks spaces, they will interfere with parsing, use a preseed file in this case.
 .IP "\fBquickreboot\fR" 4
 This option causes live\-boot to reboot without attempting to eject the media and without asking the user to remove the boot media.
 .IP "\fBshowmounts\fR" 4
