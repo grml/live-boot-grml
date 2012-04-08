@@ -1355,6 +1355,21 @@ check_dev ()
 		mount -t ${fstype} -o ro,noatime "${devname}" ${mountpoint} || continue
 		[ -n "$devuid" ] && echo "$devuid" >> $tried
 
+		if [ -n "${FINDISO}" ]
+		then
+			if [ -f ${mountpoint}/${FINDISO} ]
+			then
+				umount ${mountpoint}
+				mkdir -p /live/findiso
+				mount -t ${fstype} -o ro,noatime "${devname}" /live/findiso
+				loopdevname=$(setup_loop "/live/findiso/${FINDISO}" "loop" "/sys/block/loop*" 0 "")
+				devname="${loopdevname}"
+				mount -t iso9660 -o ro,noatime "${devname}" ${mountpoint}
+			else
+				umount ${mountpoint}
+			fi
+		fi
+
 		if is_live_path ${mountpoint} && \
 			([ "${skip_uuid_check}" ] || matches_uuid ${mountpoint})
 		then
@@ -1640,6 +1655,26 @@ mountroot ()
 	# causing a failure for example when accessing /var/lib/fai
 	# when booting FAI, this simple workaround solves it
 	ls /root/* >/dev/null 2>&1
+
+	# Move findiso directory to the new root filesystem so that programs there can get at it.
+	if [ -d /live/findiso ] && [ ! -d /root/live/findiso ]
+	then
+		mkdir -p /root/live/findiso
+		mount -n --move /live/findiso /root/live/findiso
+	fi
+
+	# if we do not unmount the ISO we can't run "fsck /dev/ice" later on
+	# because the mountpoint is left behind in /proc/mounts, so let's get
+	# rid of it when running from RAM
+	if [ -n "$FINDISO" ] && [ "${TORAM}" ]
+	then
+		losetup -d /dev/loop0
+
+		if is_mountpoint /live/findiso
+		then
+			umount /root/live/findiso
+		fi
+	fi
 
 	# copy snapshot configuration if exists
 	if [ -f snapshot.conf ]

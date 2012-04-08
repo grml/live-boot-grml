@@ -143,6 +143,11 @@ Arguments ()
 				export STATICIP
 				;;
 
+			findiso=*)
+				FINDISO="${ARGUMENT#findiso=}"
+				export FINDISO
+				;;
+
 			live-getty)
 				LIVE_GETTY="1"
 				export LIVE_GETTY
@@ -1577,5 +1582,17 @@ fix_home_rw_compatibility ()
 	then
 		echo "# home-rw backwards compatibility:
 /home source=." > "${include_list}"
+	fi
+}
+
+is_mountpoint () {
+
+	directory="$1"
+
+	if [ $(stat -fc%d:%D "${directory}") != $(stat -fc%d:%D "${directory}/..") ]
+	then
+		return 0
+	else
+		return 1
 	fi
 }
