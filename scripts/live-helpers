@@ -1589,10 +1589,5 @@ is_mountpoint () {
 
 	directory="$1"
 
-	if [ $(stat -fc%d:%D "${directory}") != $(stat -fc%d:%D "${directory}/..") ]
-	then
-		return 0
-	else
-		return 1
-	fi
+	[ $(stat -fc%d:%D "${directory}") != $(stat -fc%d:%D "${directory}/..") ]
 }
