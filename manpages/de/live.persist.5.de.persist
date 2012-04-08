@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT persist 2012\-04\-06 3.0~a26\-1 "Debian Live Project"
+.TH LIVE\-BOOT persist 2012\-04\-08 3.0~a26\-1 "Debian Live Project"
 
 .SH NAME
 \fBlive.persist\fP \- Configuration file for persistent media in live\-boot
@@ -139,7 +139,7 @@ The corresponding source directories are:
 \fIVOL\fP/usr
 .PP
 It was necessary to set the \fBsource\fP options for 1 and 2, since they
-otherwise would become nested with 3's source, which is illegal.
+otherwise would become nested with 3's source, which is invalid.
 .PP
 Line 3 will be taken care of before line 1 and 2 in order to prevent custom
 mounts 1 and 2 from being hidden by 3. When line 3 is handled, \fIVOL\fP/home
