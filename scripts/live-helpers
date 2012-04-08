@@ -188,8 +188,8 @@ Arguments ()
 				export NFSOPTS
 				;;
 
-			nfscow=*)
-				NFS_COW="${ARGUMENT#nfscow=}"
+			nfsoverlay=*)
+				NFS_COW="${ARGUMENT#nfsoverlay=}"
 				export NFS_COW
 				;;
 
@@ -1502,11 +1502,11 @@ activate_custom_mounts ()
 			# be linked, causing breakage.
 			if [ -n "${rootmnt}" ]
 			then
-				local cow_dir="/cow/live/persistent/$(basename ${links_source})"
+				local cow_dir="/overlay/live/persistent/$(basename ${links_source})"
 			else
 				# This is happens if persistence is activated
 				# post boot
-				local cow_dir="/live/cow/live/persistent/$(basename ${links_source})"
+				local cow_dir="/live/overlay/live/persistent/$(basename ${links_source})"
 			fi
 			mkdir -p ${cow_dir}
 			chown_ref "${source}" "${cow_dir}"
@@ -1526,11 +1526,11 @@ activate_custom_mounts ()
 			# is non-empty (and necessary) only for unions
 			if [ -n "${rootmnt}" ]
 			then
-				local cow_dir="$(echo ${dest} | sed -e "s|^${rootmnt}|/cow/|")"
+				local cow_dir="$(echo ${dest} | sed -e "s|^${rootmnt}|/overlay/|")"
 			else
 				# This is happens if persistence is activated
 				# post boot
-				local cow_dir="/live/cow/${dest}"
+				local cow_dir="/live/overlay/${dest}"
 			fi
 			if [ -e "${cow_dir}" ] && [ -z "${opt_linkfiles}" ]
 			then

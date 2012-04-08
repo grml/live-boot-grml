@@ -952,7 +952,7 @@ setup_unionfs ()
 		log_end_msg
 	fi
 
-	mkdir -p /cow
+	mkdir -p /overlay
 
 	# Looking for persistent devices or files
 	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
@@ -1106,11 +1106,11 @@ setup_unionfs ()
 	then
 		if [ -n "${PERSISTENT_READONLY}" ]
 		then
-			mount -t tmpfs -o rw,noatime,mode=755 tmpfs "/cow"
+			mount -t tmpfs -o rw,noatime,mode=755 tmpfs "/overlay"
 			root_backing="${rootmnt}/live/persistent/$(basename ${cowdevice})-root"
 			mkdir -p ${root_backing}
 		else
-			root_backing="/cow"
+			root_backing="/overlay"
 		fi
 
 		if [ "${cow_fstype}" = "nfs" ]
@@ -1164,7 +1164,7 @@ setup_unionfs ()
 			unionmountopts="-t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice}"
 			mount_full $unionmountopts "${unionmountpoint}"
 		else
-			cow_dir="/cow${dir}"
+			cow_dir="/overlay${dir}"
 			rofs_dir="${rofs}${dir}"
 			mkdir -p ${cow_dir}
 			if [ -n "${PERSISTENT_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
@@ -1245,9 +1245,9 @@ setup_unionfs ()
 		try_snap "${home_snapdata}" "${rootmnt}" "HOME" "/home"
 	fi
 
-	# shows cow fs on /cow for use by live-snapshot
-	mkdir -p "${rootmnt}/live/cow"
-	mount -o move /cow "${rootmnt}/live/cow" >/dev/null 2>&1 || mount -o bind /cow "${rootmnt}/live/cow" || log_warning_msg "Unable to move or bind /cow to ${rootmnt}/live/cow"
+	# shows cow fs on /overlay for use by live-snapshot
+	mkdir -p "${rootmnt}/live/overlay"
+	mount -o move /overlay "${rootmnt}/live/overlay" >/dev/null 2>&1 || mount -o bind /overlay "${rootmnt}/live/overlay" || log_warning_msg "Unable to move or bind /overlay to ${rootmnt}/live/overlay"
 }
 
 check_dev ()

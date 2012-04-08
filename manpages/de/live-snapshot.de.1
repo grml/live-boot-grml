@@ -28,8 +28,8 @@ by the live\-boot init script to resync the boot\-found snapshots devices.
 .SH OPTIONS
 .IP "\-c, \-\-cow \fIDIRECTORY\fP" 4
 specifies the input directory to be cloned in the image file. Its default
-value "/live/cow" should be right for most uses. However it could be handy
-to specify "/home" and type ext4 for the type to prepare an image file
+value "/live/overlay" should be right for most uses. However it could be
+handy to specify "/home" and type ext4 for the type to prepare an image file
 suited to be directly mounted by live\-boot as home.
 .IP "\-d, \-\-device \fIDEVICE\fP" 4
 sets the device where the media which the snapshot/persistence
@@ -71,7 +71,7 @@ carriage\-return\-separated file names corresponding to disk images in the
 merged into the root aufs, and they will be loaded in the order listed
 here. The first entry in this file will be the "lowest" point in the aufs,
 and the last file in this list will be on the "top" of the aufs, directly
-below /cow.  Without this file, any images in the "/live" directory are
+below /overlay.  Without this file, any images in the "/live" directory are
 loaded in alphanumeric order.
 .IP \fB/etc/live\-persistence.binds\fP 4
 This optional file (which resides in the rootfs system, not in the live
