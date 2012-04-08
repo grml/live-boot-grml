@@ -1585,8 +1585,8 @@ fix_home_rw_compatibility ()
 	fi
 }
 
-is_mountpoint () {
-
+is_mountpoint ()
+{
 	directory="$1"
 
 	[ $(stat -fc%d:%D "${directory}") != $(stat -fc%d:%D "${directory}/..") ]
