@@ -53,7 +53,7 @@ install:
 
 	# Installing docs
 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
-	cp -r COPYING docs/* $(DESTDIR)/usr/share/doc/live-boot
+	cp -r COPYING $(DESTDIR)/usr/share/doc/live-boot
 
 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot/examples
 	cp -r etc/* $(DESTDIR)/usr/share/doc/live-boot/examples
