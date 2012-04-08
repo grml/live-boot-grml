@@ -29,13 +29,13 @@ by the live\-boot init script to resync the boot\-found snapshots devices.
 .IP "\-c, \-\-cow \fIDIRECTORY\fP" 4
 specifies the input directory to be cloned in the image file. Its default
 value "/live/cow" should be right for most uses. However it could be handy
-to specify "/home" and type ext2 for the type to prepare an image file
+to specify "/home" and type ext4 for the type to prepare an image file
 suited to be directly mounted by live\-boot as home.
 .IP "\-d, \-\-device \fIDEVICE\fP" 4
 sets the device where the media which the snapshot/persistence
 file/partition will be put. If it is not specified, a tmpfs will be used and
 linked to the user's desktop to move it where it is needed. If the device
-has no filesystem, an ext2 fs will be automatically created and labelled
+has no filesystem, an ext4 fs will be automatically created and labelled
 according to the values specified after the "\-\-output" value or with a sane
 default.
 .IP "\-e, \-\-exclude\-list \fIFILE\fP" 4

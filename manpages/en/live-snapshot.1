@@ -19,9 +19,9 @@ live\-snapshot is a script which can be used to build the right types of persist
 
 .SH OPTIONS
 .IP "\-c, \-\-cow \fIDIRECTORY\fR" 4
-specifies the input directory to be cloned in the image file. Its default value "/live/cow" should be right for most uses. However it could be handy to specify "/home" and type ext2 for the type to prepare an image file suited to be directly mounted by live\-boot as home.
+specifies the input directory to be cloned in the image file. Its default value "/live/cow" should be right for most uses. However it could be handy to specify "/home" and type ext4 for the type to prepare an image file suited to be directly mounted by live\-boot as home.
 .IP "\-d, \-\-device \fIDEVICE\fR" 4
-sets the device where the media which the snapshot/persistence file/partition will be put. If it is not specified, a tmpfs will be used and linked to the user's desktop to move it where it is needed. If the device has no filesystem, an ext2 fs will be automatically created and labelled according to the values specified after the "\-\-output" value or with a sane default.
+sets the device where the media which the snapshot/persistence file/partition will be put. If it is not specified, a tmpfs will be used and linked to the user's desktop to move it where it is needed. If the device has no filesystem, an ext4 fs will be automatically created and labelled according to the values specified after the "\-\-output" value or with a sane default.
 .IP "\-e, \-\-exclude\-list \fIFILE\fR" 4
 a file containing a list of filenames/paths that should not be saved. This exclude list will be remebered on the target snapshot media for reuse.
 .IP "\-o, \-\-output \fIFILE\fR" 4
