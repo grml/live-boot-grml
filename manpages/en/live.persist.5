@@ -1,11 +1,11 @@
 .TH LIVE\-BOOT persist 2012\-04\-08 3.0~a26-1 "Debian Live Project"
 
 .SH NAME
-\fBlive.persist\fR \- Configuration file for persistent media in
+\fBlive.persist\fR \- Configuration file for persistence media in
 live\-boot
 
 .SH DESCRIPTION
-If live-boot probes a persistent volume with the label (or GPT name,
+If live-boot probes a persistence volume with the label (or GPT name,
 or file name, but from now on we will just say "label") "custom\-ov",
 that volume's persistence is fully customizable through the
 \fBlive.persist\fR file stored on the root of its file system. Any such
@@ -19,7 +19,7 @@ called "custom mount" has the format:
 \fIDIR\fR [\fIOPTION\fR]...
 .RE
 .PP
-which roughly translates to "make \fIDIR\fR persistent in the way
+which roughly translates to "make \fIDIR\fR persistence in the way
 described by the list of \fIOPTION\fRs".
 .PP
 For each custom mount \fIDIR\fR must be an absolute path that cannot
@@ -28,7 +28,7 @@ cannot be /live (or any of its sub-directories), or / (for the latter,
 use "full-ov" persistence instead). Once activated all changes (file
 deletion, creation and modification) to \fIDIR\fR on the live file
 system are stored persistently into a path equivalent to \fIDIR\fR on
-the persistent media, called the source directory. The default way to
+the persistence media, called the source directory. The default way to
 achieve persistence is to simply bind-mount the corresponding source
 directory to \fIDIR\fR, but this can be changed through the use of
 \fIOPTION\fRs.
@@ -38,7 +38,7 @@ mounts can "hide" each other. For instance, if we have the two
 \fIDIR\fR:s /a and /a/b it would always be the case that /a is mounted
 first, then /a/b. This remains true no matter how the lines in
 \fBlive.persist\fR are ordered, or if several \fBlive.persist\fR files
-on different persistent media are used at the same time. However, it
+on different persistence media are used at the same time. However, it
 is forbidden for custom mounts to have their source directory inside
 the source directory of another custom mount, so the source
 directories that are auto-created by live-boot does not support
@@ -46,11 +46,11 @@ directories that are auto-created by live-boot does not support
 must use the \fBsource\fR option (see below) to make sure that they
 are stored in different source directories.
 .PP
-When a source directory doesn't exist on the persistent media for a
+When a source directory doesn't exist on the persistence media for a
 certain custom mount, it will be created automatically, and
 permissions and ownership will be optimistically set according to
 \fIDIR\fR. It will also be bootstrapped by copying the contents of the
-\fIDIR\fR into its source directory on the persistent media. The
+\fIDIR\fR into its source directory on the persistence media. The
 bootstrapping will not happen when the \fBlinkfiles\fR or \fBunion\fR
 options are used (see below).
 
@@ -58,11 +58,11 @@ options are used (see below).
 Custom mounts defined in \fBlive.persist\fR accept the following
 options in a coma-separated list:
 .IP "\fBsource\fR=\fIPATH\fR" 4
-When given, store the persistent changes into \fIPATH\fR on the
-persistent media. \fIPATH\fR must be a relative path (w.r.t. the
-persistent media root) that cannot contain white spaces or the
+When given, store the persistence changes into \fIPATH\fR on the
+persistence media. \fIPATH\fR must be a relative path (w.r.t. the
+persistence media root) that cannot contain white spaces or the
 special . or .. path components, with the exception that it can be
-just . which means the persistent media root. This option is mostly
+just . which means the persistence media root. This option is mostly
 relevant if you want to nest custom mounts, which otherwise would
 cause errors, or if you want to make the whole media root available
 (similar to the now deprecated \fBhome-rw\fR type of persistence).
@@ -73,7 +73,7 @@ will be in effect):
 Bind-mount the source directory to \fIDIR\fR. This is the default.
 .IP "\fBlinkfiles\fR" 4
 Create the directory structure of the source directory on the
-persistent media in \fIDIR\fR and create symbolic links from the
+persistence media in \fIDIR\fR and create symbolic links from the
 corresponding place in \fIDIR\fR to each file in the source directory.
 Existing files or directories with the same name as any link will be
 overwritten. Note that deleting the links in \fIDIR\fR will only
@@ -89,7 +89,7 @@ there. This option is useful when only certain files need to be
 persistent, not the whole directory they're in, e.g. some
 configuration files in a user's home directory.
 .IP "\fBunion\fR" 4
-Save the rw branch of a union on the persistent media, so only the
+Save the rw branch of a union on the persistence media, so only the
 changes are stored persistently. This can potentially reduce disk
 usage compared to bind-mounts, and will not hide files added to the
 read-only media. One caveat is that the union will use \fIDIR\fR from
@@ -100,8 +100,8 @@ live-boot's \fBunion\fR boot parameter, but is not supported with
 \fBunion=unionmount\fR.
 
 .SH DIRECTORIES
-.IP "\fB/live/persistent\fR" 4
-All persistent volumes will be mounted here (in a directory
+.IP "\fB/live/persistence\fR" 4
+All persistence volumes will be mounted here (in a directory
 corresponding to the device name). The \fBlive.persist\fR file can
 easily be edited through this mount, as well as any source directories
 (which is especially practical for custom mounts using the
@@ -109,7 +109,7 @@ easily be edited through this mount, as well as any source directories
 
 .SH EXAMPLES
 
-Let's say we have a persistent volume \fIVOL\fR with the a
+Let's say we have a persistence volume \fIVOL\fR with the a
 \fBlive.persist\fR file containing the following four lines (numbered
 for ease of reference):
 .TP 7

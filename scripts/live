@@ -799,7 +799,7 @@ try_snap ()
 		return 1
 	fi
 
-	if [ -z ${PERSISTENT_READONLY} ]
+	if [ -z ${PERSISTENCE_READONLY} ]
 	then
 		echo "export ${snap_type}SNAP=${snap_relpath}:${snapdev}:${snapfile}" >> snapshot.conf # for resync on reboot/halt
 	fi
@@ -954,8 +954,8 @@ setup_unionfs ()
 
 	mkdir -p /overlay
 
-	# Looking for persistent devices or files
-	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
+	# Looking for persistence devices or files
+	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
 	then
 
 		if [ -z "${QUICKUSBMODULES}" ]
@@ -985,7 +985,7 @@ setup_unionfs ()
 			done
 		fi
 
-		case "${PERSISTENT_MEDIA}" in
+		case "${PERSISTENCE_MEDIA}" in
 			removable)
 				whitelistdev="$(removable_dev)"
 				;;
@@ -997,12 +997,12 @@ setup_unionfs ()
 				;;
 		esac
 
-		if echo ${PERSISTENT_METHOD} | grep -qe "\<overlay\>"
+		if echo ${PERSISTENCE_METHOD} | grep -qe "\<overlay\>"
 		then
 			overlays="${root_overlay_label} ${old_root_overlay_label} ${old_home_overlay_label} ${custom_overlay_label}"
 		fi
 
-		if echo ${PERSISTENT_METHOD} | grep -qe "\<snapshot\>"
+		if echo ${PERSISTENCE_METHOD} | grep -qe "\<snapshot\>"
 		then
 			snapshots="${root_snapshot_label} ${home_snapshot_label}"
 		fi
@@ -1011,7 +1011,7 @@ setup_unionfs ()
 		local home_snapshot_label=""
 		local root_overlay_label=""
 		local overlay_devices=""
-		for media in $(find_persistent_media "${overlays}" "${snapshots}" "${whitelistdev}")
+		for media in $(find_persistence_media "${overlays}" "${snapshots}" "${whitelistdev}")
 		do
 			media="$(echo ${media} | tr ":" " ")"
 			case ${media} in
@@ -1056,19 +1056,19 @@ setup_unionfs ()
 
 			cowdevice=${root_overlay_device}
 			cow_fstype=$(get_fstype "${root_overlay_device}")
-			if [ -z "${PERSISTENT_READONLY}" ]
+			if [ -z "${PERSISTENCE_READONLY}" ]
 			then
 				cow_mountopt="rw,noatime"
 			else
 				cow_mountopt="ro,noatime"
 			fi
 
-			if [ "${FORCEPERSISTENTFSCK}" = "Yes" ]
+			if [ "${FORCEPERSISTENCEFSCK}" = "Yes" ]
 			then
 				fsck -y ${cowdevice}
 			fi
 		fi
-	elif [ -n "${NFS_COW}" ] && [ -z "${NOPERSISTENT}" ]
+	elif [ -n "${NFS_COW}" ] && [ -z "${NOPERSISTENCE}" ]
 	then
 		# check if there are any nfs options
 		if echo ${NFS_COW}|grep -q ','
@@ -1080,7 +1080,7 @@ setup_unionfs ()
 			nfs_cow=${NFS_COW}
 		fi
 
-		if [ -n "${PERSISTENT_READONLY}" ]
+		if [ -n "${PERSISTENCE_READONLY}" ]
 		then
 			nfs_cow_opts="${nfs_cow_opts},nocto,ro"
 		fi
@@ -1104,10 +1104,10 @@ setup_unionfs ()
 
 	if [ "${UNIONTYPE}" != "unionmount" ]
 	then
-		if [ -n "${PERSISTENT_READONLY}" ]
+		if [ -n "${PERSISTENCE_READONLY}" ]
 		then
 			mount -t tmpfs -o rw,noatime,mode=755 tmpfs "/overlay"
-			root_backing="${rootmnt}/live/persistent/$(basename ${cowdevice})-root"
+			root_backing="${rootmnt}/live/persistence/$(basename ${cowdevice})-root"
 			mkdir -p ${root_backing}
 		else
 			root_backing="/overlay"
@@ -1160,14 +1160,14 @@ setup_unionfs ()
 		mkdir -p ${unionmountpoint}
 		if [ "${UNIONTYPE}" = "unionmount" ]
 		then
-			# FIXME: handle PERSISTENT_READONLY
+			# FIXME: handle PERSISTENCE_READONLY
 			unionmountopts="-t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice}"
 			mount_full $unionmountopts "${unionmountpoint}"
 		else
 			cow_dir="/overlay${dir}"
 			rofs_dir="${rofs}${dir}"
 			mkdir -p ${cow_dir}
-			if [ -n "${PERSISTENT_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
+			if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
 			then
 				#mount -t tmpfs -o rw,noatime,mode=755 tmpfs "${cow_dir}"
 				do_union ${unionmountpoint} ${cow_dir} ${root_backing} ${rofs_dir}
@@ -1188,7 +1188,7 @@ setup_unionfs ()
 	live_rofs_list=""
 	# SHOWMOUNTS is necessary for custom mounts with the union option
 	# Since we may want to do custom mounts in user-space it's best to always enable SHOWMOUNTS
-	if true #[ -n "${SHOWMOUNTS}" ] || ( [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ] 1)
+	if true #[ -n "${SHOWMOUNTS}" ] || ( [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ] 1)
 	then
 		# XXX: is the for loop really necessary? rofslist can only contain one item (see above XXX about EXPOSEDROOT) and this is also assumed elsewhere above (see use of $rofs above).
 		for d in ${rofslist}
@@ -1214,8 +1214,8 @@ setup_unionfs ()
 		done
 	fi
 
-	# Adding custom persistent
-	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
+	# Adding custom persistence
+	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
 	then
 		local custom_mounts="/tmp/custom_mounts.list"
 		rm -rf ${custom_mounts} 2> /dev/null
@@ -1223,7 +1223,7 @@ setup_unionfs ()
 		# Gather information about custom mounts from devies detected as overlays
 		get_custom_mounts ${custom_mounts} ${overlay_devices}
 
-		[ -n "${DEBUG}" ] && cp ${custom_mounts} "${rootmnt}/live/persistent"
+		[ -n "${DEBUG}" ] && cp ${custom_mounts} "${rootmnt}/live/persistence"
 
 		# Now we do the actual mounting (and symlinking)
 		local used_overlays=""
@@ -1235,7 +1235,7 @@ setup_unionfs ()
 		do
 			if echo ${used_overlays} | grep -qve "^\(.* \)\?${device}\( .*\)\?$"
 			then
-				close_persistent_media ${overlay}
+				close_persistence_media ${overlay}
 			fi
 		done
 

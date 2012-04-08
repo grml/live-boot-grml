@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 3.0~a26\n"
-"POT-Creation-Date: 2012-04-08 18:00+0300\n"
+"POT-Creation-Date: 2012-04-08 18:23+0300\n"
 "PO-Revision-Date: 2012-04-05 08:11+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -488,14 +488,14 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:99
 #, no-wrap
-msgid "B<nopersistent>"
+msgid "B<nopersistence>"
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:101
 msgid ""
-"disables the \"persistent\" feature, useful if the bootloader (like "
-"syslinux) has been installed with persistent enabled."
+"disables the \"persistence\" feature, useful if the bootloader (like "
+"syslinux) has been installed with persistence enabled."
 msgstr ""
 
 #. type: IP
@@ -551,13 +551,13 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:109
 #, no-wrap
-msgid "B<persistent>"
+msgid "B<persistence>"
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:111
 msgid ""
-"live-boot will probe devices for persistent media. These can be partitions "
+"live-boot will probe devices for persistence media. These can be partitions "
 "(with the correct GPT name), filesystems (with the correct label) or image/"
 "archive files (with the correct file name). Overlays are labeled/named "
 "either \"full-ov\", which will be mounted on /, or \"custom-ov\", which can "
@@ -573,14 +573,14 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:111
 #, no-wrap
-msgid "B<persistent-encryption>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
+msgid "B<persistence-encryption>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:113
 msgid ""
 "This option determines which types of encryption that we allow to be used "
-"when probing devices for persistent media. If \"none\" is in the list, we "
+"when probing devices for persistence media. If \"none\" is in the list, we "
 "allow unencrypted media; if \"luks\" is in the list, we allow LUKS-encrypted "
 "media. Whenever a device containing encrypted media is probed the user will "
 "be prompted for the passphrase. The default value is \"none\"."
@@ -589,37 +589,37 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:113
 #, no-wrap
-msgid "B<persistent-media>={I<removable>|I<removable-usb>}"
+msgid "B<persistence-media>={I<removable>|I<removable-usb>}"
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:115
 msgid ""
 "If you specify the keyword 'removable', live-boot will try to find "
-"persistent and snapshot partitions on removable media only. Note that if you "
-"want to further restrict the media to usb mass storage only, you can use the "
-"'removable-usb' keyword."
+"persistence and snapshot partitions on removable media only. Note that if "
+"you want to further restrict the media to usb mass storage only, you can use "
+"the 'removable-usb' keyword."
 msgstr ""
 
 #. type: IP
 #: en/live-boot.7:115
 #, no-wrap
-msgid "B<persistent-method>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
+msgid "B<persistence-method>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:117
 msgid ""
-"This option determines which types of persistent media we allow. If \"overlay"
-"\" is in the list, we consider overlays (i.e. \"live-rw\" and \"home-rw\"); "
-"if \"snapshot\" is in the list, we consider snapshots (i.e. \"live-sn\" and "
-"\"home-sn\"). The default is \"overlay,snapshot\"."
+"This option determines which types of persistence media we allow. If "
+"\"overlay\" is in the list, we consider overlays (i.e. \"live-rw\" and "
+"\"home-rw\"); if \"snapshot\" is in the list, we consider snapshots (i.e. "
+"\"live-sn\" and \"home-sn\"). The default is \"overlay,snapshot\"."
 msgstr ""
 
 #. type: IP
 #: en/live-boot.7:117
 #, no-wrap
-msgid "B<persistent-path>=I<PATH>"
+msgid "B<persistence-path>=I<PATH>"
 msgstr ""
 
 #. type: Plain text
@@ -633,13 +633,13 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:119
 #, no-wrap
-msgid "B<persistent-read-only>"
+msgid "B<persistence-read-only>"
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:121
 msgid ""
-"Filesystem changes are not saved back to persistent media. In particular, "
+"Filesystem changes are not saved back to persistence media. In particular, "
 "overlays and netboot NFS mounts are mounted read-only, and snapshots are not "
 "resynced on shutdown."
 msgstr ""
@@ -647,14 +647,14 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:121
 #, no-wrap
-msgid "B<persistent-storage>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
+msgid "B<persistence-storage>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:123
 msgid ""
-"This option determines which types of persistent storage to consider when "
-"probing for persistent media. If \"filesystem\" is in the list, filesystems "
+"This option determines which types of persistence storage to consider when "
+"probing for persistence media. If \"filesystem\" is in the list, filesystems "
 "with matching labels will be used; if \"file\" is in the list, all "
 "filesystems will be probed for archives and image files with matching "
 "filenames. The default is \"file,filesystem\"."
@@ -663,17 +663,17 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:123
 #, no-wrap
-msgid "B<persistent-subtext>=I<SUFFIX>"
+msgid "B<persistence-subtext>=I<SUFFIX>"
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:125
 msgid ""
 "Add a suffix when searching for the image filenames or partition labels to "
-"use for the above mentioned persistent feature, the SUFFIX will be added "
+"use for the above mentioned persistence feature, the SUFFIX will be added "
 "after a dash (e.g.: \"live-sn\" would transform to \"live-sn-SUFFIX\"). This "
 "is handy to test multiple live-boot based live-systems with different "
-"persistent storage choices."
+"persistence storage choices."
 msgstr ""
 
 #. type: IP

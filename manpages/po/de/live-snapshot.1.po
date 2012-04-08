@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 3.0~a26-1\n"
-"POT-Creation-Date: 2012-04-08 18:00+0300\n"
+"POT-Creation-Date: 2012-04-08 18:23+0300\n"
 "PO-Revision-Date: 2012-04-05 08:11+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -224,8 +224,8 @@ msgstr ""
 #: en/live-snapshot.1:19
 msgid ""
 "live-snapshot is a script which can be used to build the right types of "
-"persistent image files supported by I<live-boot>(7). It is also used on exit "
-"by the live-boot init script to resync the boot-found snapshots devices."
+"persistence image files supported by I<live-boot>(7). It is also used on "
+"exit by the live-boot init script to resync the boot-found snapshots devices."
 msgstr ""
 
 #. type: IP

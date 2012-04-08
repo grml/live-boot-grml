@@ -157,9 +157,9 @@ This parameter disables the default disabling of filesystem checks in
 /etc/fstab. If you have static filesystems on your harddisk and you want
 them to be checked at boot time, use this parameter, otherwise they are
 skipped.
-.IP \fBnopersistent\fP 4
-disables the "persistent" feature, useful if the bootloader (like syslinux)
-has been installed with persistent enabled.
+.IP \fBnopersistence\fP 4
+disables the "persistence" feature, useful if the bootloader (like syslinux)
+has been installed with persistence enabled.
 .IP \fBnoprompt\fP 4
 Do not prompt to eject the CD or remove the USB flash drive on reboot.
 .IP \fBnoprompt\fP=\fITYPE\fP 4
@@ -172,8 +172,8 @@ default of mount applies (currently 50% of available RAM). Note that this
 option has no currently no effect when booting with toram.
 .IP \fBswapon\fP 4
 This parameter enables usage of local swap partitions.
-.IP \fBpersistent\fP 4
-live\-boot will probe devices for persistent media. These can be partitions
+.IP \fBpersistence\fP 4
+live\-boot will probe devices for persistence media. These can be partitions
 (with the correct GPT name), filesystems (with the correct label) or
 image/archive files (with the correct file name). Overlays are labeled/named
 either "full\-ov", which will be mounted on /, or "custom\-ov", which can be
@@ -183,42 +183,42 @@ respectively (see \fIlive\-snapshot\fP(1) for more information). The order these
 are handled are: full\-ov, custom\-ov, live\-sn, home\-sn. Overlay image files
 and snapshot archive files have extensions which determines their filesystem
 or archive type, e.g. "custom\-ov.ext4" and "\home\-sn.squashfs".
-.IP "\fBpersistent\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
+.IP "\fBpersistence\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 This option determines which types of encryption that we allow to be used
-when probing devices for persistent media. If "none" is in the list, we
+when probing devices for persistence media. If "none" is in the list, we
 allow unencrypted media; if "luks" is in the list, we allow LUKS\-encrypted
 media. Whenever a device containing encrypted media is probed the user will
 be prompted for the passphrase. The default value is "none".
-.IP \fBpersistent\-media\fP={\fIremovable\fP|\fIremovable\-usb\fP} 4
+.IP \fBpersistence\-media\fP={\fIremovable\fP|\fIremovable\-usb\fP} 4
 If you specify the keyword 'removable', live\-boot will try to find
-persistent and snapshot partitions on removable media only. Note that if you
-want to further restrict the media to usb mass storage only, you can use the
-\&'removable\-usb' keyword.
-.IP "\fBpersistent\-method\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
-This option determines which types of persistent media we allow. If
+persistence and snapshot partitions on removable media only. Note that if
+you want to further restrict the media to usb mass storage only, you can use
+the 'removable\-usb' keyword.
+.IP "\fBpersistence\-method\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
+This option determines which types of persistence media we allow. If
 "overlay" is in the list, we consider overlays (i.e. "live\-rw" and
 "home\-rw"); if "snapshot" is in the list, we consider snapshots
 (i.e. "live\-sn" and "home\-sn"). The default is "overlay,snapshot".
-.IP \fBpersistent\-path\fP=\fIPATH\fP 4
+.IP \fBpersistence\-path\fP=\fIPATH\fP 4
 live\-boot will look for persistency files in the root directory of a
 partition, with this parameter, the path can be configured so that you can
 have multiple directories on the same partition to store persistency files.
-.IP \fBpersistent\-read\-only\fP 4
-Filesystem changes are not saved back to persistent media. In particular,
+.IP \fBpersistence\-read\-only\fP 4
+Filesystem changes are not saved back to persistence media. In particular,
 overlays and netboot NFS mounts are mounted read\-only, and snapshots are not
 resynced on shutdown.
-.IP "\fBpersistent\-storage\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
-This option determines which types of persistent storage to consider when
-probing for persistent media. If "filesystem" is in the list, filesystems
+.IP "\fBpersistence\-storage\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
+This option determines which types of persistence storage to consider when
+probing for persistence media. If "filesystem" is in the list, filesystems
 with matching labels will be used; if "file" is in the list, all filesystems
 will be probed for archives and image files with matching filenames. The
 default is "file,filesystem".
-.IP \fBpersistent\-subtext\fP=\fISUFFIX\fP 4
+.IP \fBpersistence\-subtext\fP=\fISUFFIX\fP 4
 Add a suffix when searching for the image filenames or partition labels to
-use for the above mentioned persistent feature, the SUFFIX will be added
+use for the above mentioned persistence feature, the SUFFIX will be added
 after a dash (e.g.: "live\-sn" would transform to "live\-sn\-SUFFIX"). This is
 handy to test multiple live\-boot based live\-systems with different
-persistent storage choices.
+persistence storage choices.
 .IP \fBquickreboot\fP 4
 This option causes live\-boot to reboot without attempting to eject the media
 and without asking the user to remove the boot media.

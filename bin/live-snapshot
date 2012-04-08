@@ -517,9 +517,9 @@ Warn_user ()
 				;;
 		esac
 
-		if grep -qv persistent /proc/cmdline
+		if grep -qv persistence /proc/cmdline
 		then
-			echo "Remember to boot this live system with \"persistent\" specified at boot prompt." > /dev/null 1>&2
+			echo "Remember to boot this live system with \"persistence\" specified at boot prompt." > /dev/null 1>&2
 		fi
 	fi
 }

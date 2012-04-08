@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2012-04-08 11:41+0300\n"
+"POT-Creation-Date: 2012-04-08 18:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -116,14 +116,14 @@ msgstr ""
 
 #. type: Plain text
 #: en/live.persist.5:6
-msgid "B<live.persist> - Configuration file for persistent media in live-boot"
+msgid "B<live.persist> - Configuration file for persistence media in live-boot"
 msgstr ""
 
 #. type: Plain text
 #: en/live.persist.5:13
 msgid ""
-"If live-boot probes a persistent volume with the label (or GPT name, or file "
-"name, but from now on we will just say \"label\") \"custom-ov\", that "
+"If live-boot probes a persistence volume with the label (or GPT name, or "
+"file name, but from now on we will just say \"label\") \"custom-ov\", that "
 "volume's persistence is fully customizable through the B<live.persist> file "
 "stored on the root of its file system. Any such labeled volume must have "
 "such a file, or it will be ignored."
@@ -145,8 +145,8 @@ msgstr ""
 #. type: Plain text
 #: en/live.persist.5:24
 msgid ""
-"which roughly translates to \"make I<DIR> persistent in the way described by "
-"the list of I<OPTION>s\"."
+"which roughly translates to \"make I<DIR> persistence in the way described "
+"by the list of I<OPTION>s\"."
 msgstr ""
 
 #. type: Plain text
@@ -157,7 +157,7 @@ msgid ""
 "(or any of its sub-directories), or / (for the latter, use \"full-ov\" "
 "persistence instead). Once activated all changes (file deletion, creation "
 "and modification) to I<DIR> on the live file system are stored persistently "
-"into a path equivalent to I<DIR> on the persistent media, called the source "
+"into a path equivalent to I<DIR> on the persistence media, called the source "
 "directory. The default way to achieve persistence is to simply bind-mount "
 "the corresponding source directory to I<DIR>, but this can be changed "
 "through the use of I<OPTION>s."
@@ -170,7 +170,7 @@ msgid ""
 "\"hide\" each other. For instance, if we have the two I<DIR>:s /a and /a/b "
 "it would always be the case that /a is mounted first, then /a/b. This "
 "remains true no matter how the lines in B<live.persist> are ordered, or if "
-"several B<live.persist> files on different persistent media are used at the "
+"several B<live.persist> files on different persistence media are used at the "
 "same time. However, it is forbidden for custom mounts to have their source "
 "directory inside the source directory of another custom mount, so the source "
 "directories that are auto-created by live-boot does not support \"nested\" "
@@ -182,11 +182,11 @@ msgstr ""
 #. type: Plain text
 #: en/live.persist.5:56
 msgid ""
-"When a source directory doesn't exist on the persistent media for a certain "
+"When a source directory doesn't exist on the persistence media for a certain "
 "custom mount, it will be created automatically, and permissions and "
 "ownership will be optimistically set according to I<DIR>. It will also be "
 "bootstrapped by copying the contents of the I<DIR> into its source directory "
-"on the persistent media. The bootstrapping will not happen when the "
+"on the persistence media. The bootstrapping will not happen when the "
 "B<linkfiles> or B<union> options are used (see below)."
 msgstr ""
 
@@ -206,10 +206,10 @@ msgstr ""
 #. type: Plain text
 #: en/live.persist.5:69
 msgid ""
-"When given, store the persistent changes into I<PATH> on the persistent "
-"media. I<PATH> must be a relative path (w.r.t. the persistent media root) "
+"When given, store the persistence changes into I<PATH> on the persistence "
+"media. I<PATH> must be a relative path (w.r.t. the persistence media root) "
 "that cannot contain white spaces or the special . or .. path components, "
-"with the exception that it can be just . which means the persistent media "
+"with the exception that it can be just . which means the persistence media "
 "root. This option is mostly relevant if you want to nest custom mounts, "
 "which otherwise would cause errors, or if you want to make the whole media "
 "root available (similar to the now deprecated B<home-rw> type of "
@@ -243,7 +243,7 @@ msgstr ""
 #. type: Plain text
 #: en/live.persist.5:83
 msgid ""
-"Create the directory structure of the source directory on the persistent "
+"Create the directory structure of the source directory on the persistence "
 "media in I<DIR> and create symbolic links from the corresponding place in "
 "I<DIR> to each file in the source directory.  Existing files or directories "
 "with the same name as any link will be overwritten. Note that deleting the "
@@ -273,7 +273,7 @@ msgstr ""
 #. type: Plain text
 #: en/live.persist.5:101
 msgid ""
-"Save the rw branch of a union on the persistent media, so only the changes "
+"Save the rw branch of a union on the persistence media, so only the changes "
 "are stored persistently. This can potentially reduce disk usage compared to "
 "bind-mounts, and will not hide files added to the read-only media. One "
 "caveat is that the union will use I<DIR> from the image's read-only file "
@@ -292,16 +292,16 @@ msgstr ""
 #. type: IP
 #: en/live.persist.5:103
 #, no-wrap
-msgid "B</live/persistent>"
+msgid "B</live/persistence>"
 msgstr ""
 
 #. type: Plain text
 #: en/live.persist.5:109
 msgid ""
-"All persistent volumes will be mounted here (in a directory corresponding to "
-"the device name). The B<live.persist> file can easily be edited through this "
-"mount, as well as any source directories (which is especially practical for "
-"custom mounts using the B<linkfiles> option)."
+"All persistence volumes will be mounted here (in a directory corresponding "
+"to the device name). The B<live.persist> file can easily be edited through "
+"this mount, as well as any source directories (which is especially practical "
+"for custom mounts using the B<linkfiles> option)."
 msgstr ""
 
 #. type: SH
@@ -313,8 +313,8 @@ msgstr ""
 #. type: Plain text
 #: en/live.persist.5:115
 msgid ""
-"Let's say we have a persistent volume I<VOL> with the a B<live.persist> file "
-"containing the following four lines (numbered for ease of reference):"
+"Let's say we have a persistence volume I<VOL> with the a B<live.persist> "
+"file containing the following four lines (numbered for ease of reference):"
 msgstr ""
 
 #. type: TP
