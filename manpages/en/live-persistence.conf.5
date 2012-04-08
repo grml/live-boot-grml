@@ -1,17 +1,17 @@
-.TH LIVE\-BOOT persist 2012\-04\-08 3.0~a26-1 "Debian Live Project"
+.TH LIVE\-BOOT conf 2012\-04\-08 3.0~a26-1 "Debian Live Project"
 
 .SH NAME
-\fBlive.persist\fR \- Configuration file for persistence media in
+\fBlive-persistence.conf\fR \- Configuration file for persistence media in
 live\-boot
 
 .SH DESCRIPTION
 If live-boot probes a persistence volume with the label (or GPT name,
 or file name, but from now on we will just say "label") "custom\-ov",
 that volume's persistence is fully customizable through the
-\fBlive.persist\fR file stored on the root of its file system. Any such
+\fBlive-persistence.conf\fR file stored on the root of its file system. Any such
 labeled volume must have such a file, or it will be ignored.
 .PP
-The format of \fBlive.persist\fR allow empty lines and lines starting
+The format of \fBlive-persistence.conf\fR allow empty lines and lines starting
 with a "#" (used for comments), both which will be ignored. A so
 called "custom mount" has the format:
 .PP
@@ -37,7 +37,7 @@ All custom mounts will be done in an order so that no two custom
 mounts can "hide" each other. For instance, if we have the two
 \fIDIR\fR:s /a and /a/b it would always be the case that /a is mounted
 first, then /a/b. This remains true no matter how the lines in
-\fBlive.persist\fR are ordered, or if several \fBlive.persist\fR files
+\fBlive-persistence.conf\fR are ordered, or if several \fBlive-persistence.conf\fR files
 on different persistence media are used at the same time. However, it
 is forbidden for custom mounts to have their source directory inside
 the source directory of another custom mount, so the source
@@ -55,7 +55,7 @@ bootstrapping will not happen when the \fBlinkfiles\fR or \fBunion\fR
 options are used (see below).
 
 .SH OPTIONS
-Custom mounts defined in \fBlive.persist\fR accept the following
+Custom mounts defined in \fBlive-persistence.conf\fR accept the following
 options in a coma-separated list:
 .IP "\fBsource\fR=\fIPATH\fR" 4
 When given, store the persistence changes into \fIPATH\fR on the
@@ -102,7 +102,7 @@ live-boot's \fBunion\fR boot parameter, but is not supported with
 .SH DIRECTORIES
 .IP "\fB/live/persistence\fR" 4
 All persistence volumes will be mounted here (in a directory
-corresponding to the device name). The \fBlive.persist\fR file can
+corresponding to the device name). The \fBlive-persistence.conf\fR file can
 easily be edited through this mount, as well as any source directories
 (which is especially practical for custom mounts using the
 \fBlinkfiles\fR option).
@@ -110,7 +110,7 @@ easily be edited through this mount, as well as any source directories
 .SH EXAMPLES
 
 Let's say we have a persistence volume \fIVOL\fR with the a
-\fBlive.persist\fR file containing the following four lines (numbered
+\fBlive-persistence.conf\fR file containing the following four lines (numbered
 for ease of reference):
 .TP 7
 1.
@@ -174,7 +174,7 @@ Link:
 (from c)
 .PP
 One could argue, though, that lines 1 and 2 in the example
-\fBlive.persist\fR file above are unnecessary since line 3 already
+\fBlive-persistence.conf\fR file above are unnecessary since line 3 already
 would make all of /home persistent. The \fBlinkfiles\fR option is
 intended for situations where you don't want a complete directory to
 be persistent, only certain files in it or its sub-directories.

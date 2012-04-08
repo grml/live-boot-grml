@@ -3,21 +3,22 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT persist 2012\-04\-08 3.0~a26\-1 "Debian Live Project"
+.TH LIVE\-BOOT conf 2012\-04\-08 3.0~a26\-1 "Debian Live Project"
 
 .SH NAME
-\fBlive.persist\fP \- Configuration file for persistence media in live\-boot
+\fBlive\-persistence.conf\fP \- Configuration file for persistence media in
+live\-boot
 
 .SH DESCRIPTION
 If live\-boot probes a persistence volume with the label (or GPT name, or
 file name, but from now on we will just say "label") "custom\-ov", that
-volume's persistence is fully customizable through the \fBlive.persist\fP file
-stored on the root of its file system. Any such labeled volume must have
-such a file, or it will be ignored.
+volume's persistence is fully customizable through the
+\fBlive\-persistence.conf\fP file stored on the root of its file system. Any
+such labeled volume must have such a file, or it will be ignored.
 .PP
-The format of \fBlive.persist\fP allow empty lines and lines starting with a
-"#" (used for comments), both which will be ignored. A so called "custom
-mount" has the format:
+The format of \fBlive\-persistence.conf\fP allow empty lines and lines starting
+with a "#" (used for comments), both which will be ignored. A so called
+"custom mount" has the format:
 .PP
 .RS
 \fIDIR\fP [\fIOPTION\fP]...
@@ -39,14 +40,14 @@ through the use of \fIOPTION\fPs.
 All custom mounts will be done in an order so that no two custom mounts can
 "hide" each other. For instance, if we have the two \fIDIR\fP:s /a and /a/b it
 would always be the case that /a is mounted first, then /a/b. This remains
-true no matter how the lines in \fBlive.persist\fP are ordered, or if several
-\fBlive.persist\fP files on different persistence media are used at the same
-time. However, it is forbidden for custom mounts to have their source
-directory inside the source directory of another custom mount, so the source
-directories that are auto\-created by live\-boot does not support "nested"
-mounts like /a and /a/b on the same media. In this case you must use the
-\fBsource\fP option (see below) to make sure that they are stored in different
-source directories.
+true no matter how the lines in \fBlive\-persistence.conf\fP are ordered, or if
+several \fBlive\-persistence.conf\fP files on different persistence media are
+used at the same time. However, it is forbidden for custom mounts to have
+their source directory inside the source directory of another custom mount,
+so the source directories that are auto\-created by live\-boot does not
+support "nested" mounts like /a and /a/b on the same media. In this case you
+must use the \fBsource\fP option (see below) to make sure that they are stored
+in different source directories.
 .PP
 When a source directory doesn't exist on the persistence media for a certain
 custom mount, it will be created automatically, and permissions and
@@ -56,8 +57,8 @@ on the persistence media. The bootstrapping will not happen when the
 \fBlinkfiles\fP or \fBunion\fP options are used (see below).
 
 .SH OPTIONS
-Custom mounts defined in \fBlive.persist\fP accept the following options in a
-coma\-separated list:
+Custom mounts defined in \fBlive\-persistence.conf\fP accept the following
+options in a coma\-separated list:
 .IP \fBsource\fP=\fIPATH\fP 4
 When given, store the persistence changes into \fIPATH\fP on the persistence
 media. \fIPATH\fP must be a relative path (w.r.t. the persistence media root)
@@ -101,14 +102,15 @@ supported with \fBunion=unionmount\fP.
 .SH DIRECTORIES
 .IP \fB/live/persistence\fP 4
 All persistence volumes will be mounted here (in a directory corresponding
-to the device name). The \fBlive.persist\fP file can easily be edited through
-this mount, as well as any source directories (which is especially practical
-for custom mounts using the \fBlinkfiles\fP option).
+to the device name). The \fBlive\-persistence.conf\fP file can easily be edited
+through this mount, as well as any source directories (which is especially
+practical for custom mounts using the \fBlinkfiles\fP option).
 
 .SH EXAMPLES
 
-Let's say we have a persistence volume \fIVOL\fP with the a \fBlive.persist\fP
-file containing the following four lines (numbered for ease of reference):
+Let's say we have a persistence volume \fIVOL\fP with the a
+\fBlive\-persistence.conf\fP file containing the following four lines (numbered
+for ease of reference):
 .TP  7
 1.
 /home/user1 linkfiles,source=config\-files/user1
@@ -170,11 +172,11 @@ Link:
 /home/user2/.ssh/config \-> \fIVOL\fP/config\-files/user2/.ssh/config (from
 c)
 .PP
-One could argue, though, that lines 1 and 2 in the example \fBlive.persist\fP
-file above are unnecessary since line 3 already would make all of /home
-persistent. The \fBlinkfiles\fP option is intended for situations where you
-don't want a complete directory to be persistent, only certain files in it
-or its sub\-directories.
+One could argue, though, that lines 1 and 2 in the example
+\fBlive\-persistence.conf\fP file above are unnecessary since line 3 already
+would make all of /home persistent. The \fBlinkfiles\fP option is intended for
+situations where you don't want a complete directory to be persistent, only
+certain files in it or its sub\-directories.
 .PP
 Line 4 can be mounted at any time since its \fIDIR\fP (and source directory) is
 completely disjoint from all the other custom mounts. When mounted,

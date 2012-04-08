@@ -95,6 +95,10 @@ Target <target\-name>
   Lun 0 Path=<path\-to\-your\-live\-image.iso>,Type=fileio,IOMode=ro
   # If you want to boot multiple machines you might want to look at tuning some parameters like
   # Wthreads or MaxConnections
+.IP \fBfindiso\fP=\fI/PATH/TO/IMAGE\fP 4
+Look for the specified ISO file on all disks where it usually looks for the
+\&.squashfs file (so you don't have to know the device name as in
+fromiso=....).
 .IP \fBfromiso\fP=\fI/PATH/TO/IMAGE\fP 4
 Allows to use a filesystem from within an iso image that's available on
 live\-media.
@@ -177,12 +181,13 @@ live\-boot will probe devices for persistence media. These can be partitions
 (with the correct GPT name), filesystems (with the correct label) or
 image/archive files (with the correct file name). Overlays are labeled/named
 either "full\-ov", which will be mounted on /, or "custom\-ov", which can be
-completely customized (see \fIlive.persist\fP(5)); snapshots are labeled/named
-either "live\-sn" or "home\-sn" and will be extracted into / or /home,
-respectively (see \fIlive\-snapshot\fP(1) for more information). The order these
-are handled are: full\-ov, custom\-ov, live\-sn, home\-sn. Overlay image files
-and snapshot archive files have extensions which determines their filesystem
-or archive type, e.g. "custom\-ov.ext4" and "\home\-sn.squashfs".
+completely customized (see \fIlive\-persistence.conf\fP(5)); snapshots are
+labeled/named either "live\-sn" or "home\-sn" and will be extracted into / or
+/home, respectively (see \fIlive\-snapshot\fP(1) for more information). The
+order these are handled are: full\-ov, custom\-ov, live\-sn, home\-sn. Overlay
+image files and snapshot archive files have extensions which determines
+their filesystem or archive type, e.g. "custom\-ov.ext4" and
+"\home\-sn.squashfs".
 .IP "\fBpersistence\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 This option determines which types of encryption that we allow to be used
 when probing devices for persistence media. If "none" is in the list, we
@@ -276,12 +281,12 @@ directory with a tmpfs on the original path.
 .IP \fB/etc/live/boot.d/*.conf\fP 4
 .IP \fBlive/boot.conf\fP 4
 .IP \fBlive/boot.d/*.conf\fP 4
-.IP \fBlive.persist\fP 4
+.IP \fBlive\-persistence.conf\fP 4
 
 .SH "SEE ALSO"
 \fIlive\-snapshot\fP(1)
 .PP
-\fIlive.persist\fP(5)
+\fIlive\-persistence.conf\fP(5)
 .PP
 \fIlive\-build\fP(7)
 .PP
