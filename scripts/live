@@ -11,8 +11,6 @@ mountpoint="/live/image"
 alt_mountpoint="/media"
 LIVE_MEDIA_PATH="live"
 
-USERNAME="user"
-USERFULLNAME="Live user"
 HOSTNAME="host"
 
 mkdir -p "${mountpoint}"
