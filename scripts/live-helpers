@@ -15,7 +15,6 @@ else
 	udevinfo='udevinfo'
 fi
 
-root_overlay_label="full-ov"
 old_root_overlay_label="live-rw"
 old_home_overlay_label="home-rw"
 custom_overlay_label="custom-ov"
@@ -261,7 +260,6 @@ Arguments ()
 				;;
 
 			persistence-subtext=*)
-				root_overlay_label="${root_overlay_label}-${ARGUMENT#persistence-subtext=}"
 				old_root_overlay_label="${old_root_overlay_label}-${ARGUMENT#persistence-subtext=}"
 				old_home_overlay_label="${old_home_overlay_label}-${ARGUMENT#persistence-subtext=}"
 				custom_overlay_label="${custom_overlay_label}-${ARGUMENT#persistence-subtext=}"
@@ -745,16 +743,7 @@ try_mount ()
 mount_persistence_media ()
 {
 	local device=${1}
-	local backing=""
-
-	# We can't mount into ${rootmnt}/live before ${rootmnt} has been
-	# mounted since that would cover our mountpoint.
-	if [ -n "${rootmnt}" ] && [ -z "$(what_is_mounted_on ${rootmnt})" ]
-	then
-		backing="/$(basename ${device})-backing"
-	else
-		backing="${rootmnt}/live/persistence/$(basename ${device})"
-	fi
+	local backing="/live/persistence/$(basename ${device})"
 
 	mkdir -p "${backing}"
 	local old_backing="$(where_is_mounted ${device})"
@@ -1266,7 +1255,7 @@ do_union ()
 
 get_custom_mounts ()
 {
-	# Side-effect: leaves $devices with live-persistence.conf mounted in ${rootmnt}/live/persistence
+	# Side-effect: leaves $devices with live-persistence.conf mounted in /live/persistence
 	# Side-effect: prints info to file $custom_mounts
 
 	local custom_mounts=${1}
@@ -1299,7 +1288,7 @@ get_custom_mounts ()
 
 		if [ -n "${DEBUG}" ] && [ -e "${include_list}" ]
 		then
-			cp ${include_list} ${rootmnt}/live/persistence/${persistence_list}.${device_name}
+			cp ${include_list} /live/persistence/${persistence_list}.${device_name}
 		fi
 
 		while read dir options # < ${include_list}
@@ -1310,9 +1299,9 @@ get_custom_mounts ()
 				continue
 			fi
 
-			if trim_path ${dir} | grep -q -e "^[^/]" -e "^/$" -e "^/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
+			if trim_path ${dir} | grep -q -e "^[^/]" -e "^/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
 			then
-				log_warning_msg "Skipping unsafe custom mount ${dir}: must be an absolute path containing neither the \".\" nor \"..\" special dirs, and cannot be \"/live\" (or any sub-directory therein) or \"/\" (for the latter, use ${root_overlay_label}-type persistence)"
+				log_warning_msg "Skipping unsafe custom mount ${dir}: must be an absolute path containing neither the \".\" nor \"..\" special dirs, and cannot be \"/live\" or any sub-directory therein."
 				continue
 			fi
 
@@ -1416,8 +1405,13 @@ activate_custom_mounts ()
 
 		if [ -n "$(what_is_mounted_on "${dest}")" ]
 		then
-			log_warning_msg "Skipping custom mount ${dest}: $(what_is_mounted_on "${dest}") is already mounted there"
-			continue
+			if [ "${dest}" = "${rootmnt}" ]
+			then
+				umount "${dest}"
+			else
+				log_warning_msg "Skipping custom mount ${dest}: $(what_is_mounted_on "${dest}") is already mounted there"
+				continue
+			fi
 		fi
 
 		if [ ! -d "${dest}" ]
@@ -1474,7 +1468,7 @@ activate_custom_mounts ()
 		local rofs_dest_backing=""
 		if [ -n "${opt_link}"]
 		then
-			for d in ${rootmnt}/live/rofs/*
+			for d in /live/rofs/*
 			do
 				if [ -n "${rootmnt}" ]
 				then
@@ -1496,8 +1490,8 @@ activate_custom_mounts ()
 			link_files ${source} ${dest} ${rootmnt}
 		elif [ -n "${opt_link}" ] && [ -n "${PERSISTENCE_READONLY}" ]
 		then
-			mkdir -p ${rootmnt}/live/persistence
-			local links_source=$(mktemp -d ${rootmnt}/live/persistence/links-source-XXXXXX)
+			mkdir -p /live/persistence
+			local links_source=$(mktemp -d /live/persistence/links-source-XXXXXX)
 			chown_ref ${source} ${links_source}
 			chmod_ref ${source} ${links_source}
 			# We put the cow dir in the below strange place to
@@ -1505,14 +1499,7 @@ activate_custom_mounts ()
 			# has its own directory and isn't nested with some
 			# other custom mount (if so that mount's files would
 			# be linked, causing breakage.
-			if [ -n "${rootmnt}" ]
-			then
-				local cow_dir="/overlay/live/persistence/$(basename ${links_source})"
-			else
-				# This is happens if persistence is activated
-				# post boot
-				local cow_dir="/live/overlay/live/persistence/$(basename ${links_source})"
-			fi
+			local cow_dir="/live/overlay/live/persistence/$(basename ${links_source})"
 			mkdir -p ${cow_dir}
 			chown_ref "${source}" "${cow_dir}"
 			chmod_ref "${source}" "${cow_dir}"
@@ -1531,7 +1518,7 @@ activate_custom_mounts ()
 			# is non-empty (and necessary) only for unions
 			if [ -n "${rootmnt}" ]
 			then
-				local cow_dir="$(echo ${dest} | sed -e "s|^${rootmnt}|/overlay/|")"
+				local cow_dir="$(echo ${dest} | sed -e "s|^${rootmnt}|/live/overlay/|")"
 			else
 				# This is happens if persistence is activated
 				# post boot
@@ -1562,9 +1549,11 @@ activate_custom_mounts ()
 	echo ${used_devices}
 }
 
-fix_home_rw_compatibility ()
+fix_backwards_compatibility ()
 {
 	local device=${1}
+	local dir=${2}
+	local opt=${3}
 
 	if [ -n "${PERSISTENCE_READONLY}" ]
 	then
@@ -1580,8 +1569,8 @@ fix_home_rw_compatibility ()
 	local include_list="${backing}/${persistence_list}"
 	if [ ! -r "${include_list}" ]
 	then
-		echo "# home-rw backwards compatibility:
-/home source=." > "${include_list}"
+		echo "# persistence backwards compatibility:
+${dir} ${opt},source=." > "${include_list}"
 	fi
 }
 
