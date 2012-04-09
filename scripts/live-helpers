@@ -973,7 +973,9 @@ find_persistence_media ()
 	local white_listed_devices="${3}"
 	local ret=""
 
-	for dev in $(storage_devices "" "${white_listed_devices}")
+	local black_listed_devices="$(what_is_mounted_on /live/image)"
+
+	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
 		local result=""
 
