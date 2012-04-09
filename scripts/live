@@ -1649,7 +1649,7 @@ mountroot ()
 	then
 		losetup -d /dev/loop0
 
-		if is_mountpoint /live/findiso
+		if is_mountpoint /root/live/findiso
 		then
 			umount /root/live/findiso
 			rmdir --ignore-fail-on-non-empty /root/live/findiso \
