@@ -1012,7 +1012,7 @@ setup_unionfs ()
 		fi
 
 		local root_snapdata=""
-		local home_snapshot_label=""
+		local home_snapdata=""
 		local overlay_devices=""
 		for media in $(find_persistence_media "${overlays}" "${snapshots}" "${whitelistdev}")
 		do
