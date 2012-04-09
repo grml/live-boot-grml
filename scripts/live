@@ -1215,9 +1215,9 @@ setup_unionfs ()
 		done
 
 		# Look for other snapshots to copy in
-		try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
+		[ -n "${root_snapdata}" ] && try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
 		# This second type should be removed when snapshot grow smarter
-		try_snap "${home_snapdata}" "${rootmnt}" "HOME" "/home"
+		[ -n "${home_snapdata}" ] && try_snap "${home_snapdata}" "${rootmnt}" "HOME" "/home"
 	fi
 
 	mkdir -p "${rootmnt}/live"
