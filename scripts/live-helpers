@@ -15,14 +15,13 @@ else
 	udevinfo='udevinfo'
 fi
 
-root_overlay_label="full-ov"
 old_root_overlay_label="live-rw"
 old_home_overlay_label="home-rw"
 custom_overlay_label="custom-ov"
 root_snapshot_label="live-sn"
 old_root_snapshot_label="live-sn"
 home_snapshot_label="home-sn"
-persistence_list="live.persist"
+persistence_list="live-persistence.conf"
 
 Arguments ()
 {
@@ -89,9 +88,14 @@ Arguments ()
 				export FETCH
 				;;
 
-			forcepersistentfsck)
-				FORCEPERSISTENTFSCK="Yes"
-				export FORCEPERSISTENTFSCK
+			findiso=*)
+				FINDISO="${ARGUMENT#findiso=}"
+				export FINDISO
+				;;
+
+			forcepersistencefsck)
+				FORCEPERSISTENCEFSCK="Yes"
+				export FORCEPERSISTENCEFSCK
 				;;
 
 			ftpfs=*)
@@ -188,8 +192,8 @@ Arguments ()
 				export NFSOPTS
 				;;
 
-			nfscow=*)
-				NFS_COW="${ARGUMENT#nfscow=}"
+			nfsoverlay=*)
+				NFS_COW="${ARGUMENT#nfsoverlay=}"
 				export NFS_COW
 				;;
 
@@ -222,52 +226,51 @@ Arguments ()
 				export SWAPON
 				;;
 
-			persistent)
-				PERSISTENT="Yes"
-				export PERSISTENT
+			persistence)
+				PERSISTENCE="Yes"
+				export PERSISTENCE
 				;;
 
-			persistent-encryption=*)
-				PERSISTENT_ENCRYPTION="${ARGUMENT#*=}"
-				export PERSISTENT_ENCRYPTION
+			persistence-encryption=*)
+				PERSISTENCE_ENCRYPTION="${ARGUMENT#*=}"
+				export PERSISTENCE_ENCRYPTION
 				;;
 
-			persistent-media=*)
-				PERSISTENT_MEDIA="${ARGUMENT#*=}"
-				export PERSISTENT_MEDIA
+			persistence-media=*)
+				PERSISTENCE_MEDIA="${ARGUMENT#*=}"
+				export PERSISTENCE_MEDIA
 				;;
-			persistent-method=*)
-				PERSISTENT_METHOD="${ARGUMENT#*=}"
-				export PERSISTENT_METHOD
-				;;
-
-			persistent-path=*)
-				PERSISTENT_PATH="${ARGUMENT#persistent-path=}"
-				export PERSISTENT_PATH
-				;;
-			persistent-read-only)
-				PERSISTENT_READONLY="Yes"
-				export PERSISTENT_READONLY
+			persistence-method=*)
+				PERSISTENCE_METHOD="${ARGUMENT#*=}"
+				export PERSISTENCE_METHOD
 				;;
 
-			persistent-storage=*)
-				PERSISTENT_STORAGE="${ARGUMENT#persistent-storage=}"
-				export PERSISTENT_STORAGE
+			persistence-path=*)
+				PERSISTENCE_PATH="${ARGUMENT#persistence-path=}"
+				export PERSISTENCE_PATH
+				;;
+			persistence-read-only)
+				PERSISTENCE_READONLY="Yes"
+				export PERSISTENCE_READONLY
 				;;
 
-			persistent-subtext=*)
-				root_overlay_label="${root_overlay_label}-${ARGUMENT#persistent-subtext=}"
-				old_root_overlay_label="${old_root_overlay_label}-${ARGUMENT#persistent-subtext=}"
-				old_home_overlay_label="${old_home_overlay_label}-${ARGUMENT#persistent-subtext=}"
-				custom_overlay_label="${custom_overlay_label}-${ARGUMENT#persistent-subtext=}"
-				root_snapshot_label="${root_snapshot_label}-${ARGUMENT#persistent-subtext=}"
-				old_root_snapshot_label="${root_snapshot_label}-${ARGUMENT#persistent-subtext=}"
-				home_snapshot_label="${home_snapshot_label}-${ARGUMENT#persistent-subtext=}"
+			persistence-storage=*)
+				PERSISTENCE_STORAGE="${ARGUMENT#persistence-storage=}"
+				export PERSISTENCE_STORAGE
 				;;
 
-			nopersistent)
-				NOPERSISTENT="Yes"
-				export NOPERSISTENT
+			persistence-subtext=*)
+				old_root_overlay_label="${old_root_overlay_label}-${ARGUMENT#persistence-subtext=}"
+				old_home_overlay_label="${old_home_overlay_label}-${ARGUMENT#persistence-subtext=}"
+				custom_overlay_label="${custom_overlay_label}-${ARGUMENT#persistence-subtext=}"
+				root_snapshot_label="${root_snapshot_label}-${ARGUMENT#persistence-subtext=}"
+				old_root_snapshot_label="${root_snapshot_label}-${ARGUMENT#persistence-subtext=}"
+				home_snapshot_label="${home_snapshot_label}-${ARGUMENT#persistence-subtext=}"
+				;;
+
+			nopersistence)
+				NOPERSISTENCE="Yes"
+				export NOPERSISTENCE
 				;;
 
 			noprompt)
@@ -381,37 +384,37 @@ Arguments ()
 		export UNIONTYPE
 	fi
 
-	if [ -z "${PERSISTENT_ENCRYPTION}" ]
+	if [ -z "${PERSISTENCE_ENCRYPTION}" ]
 	then
-		PERSISTENT_ENCRYPTION="none"
-		export PERSISTENT_ENCRYPTION
-	elif echo ${PERSISTENT_ENCRYPTION} | grep -qe "\<luks\>"
+		PERSISTENCE_ENCRYPTION="none"
+		export PERSISTENCE_ENCRYPTION
+	elif echo ${PERSISTENCE_ENCRYPTION} | grep -qe "\<luks\>"
 	then
 		if ! modprobe dm-crypt
 		then
 			log_warning_msg "Unable to load module dm-crypt"
-			PERSISTENT_ENCRYPTION=$(echo ${PERSISTENT_ENCRYPTION} | sed -e 's/\<luks,\|,\?luks$//g')
-			export PERSISTENT_ENCRYPTION
+			PERSISTENCE_ENCRYPTION=$(echo ${PERSISTENCE_ENCRYPTION} | sed -e 's/\<luks,\|,\?luks$//g')
+			export PERSISTENCE_ENCRYPTION
 		fi
 
 		if [ ! -x /lib/cryptsetup/askpass ] || [ ! -x /sbin/cryptsetup ]
 		then
 			log_warning_msg "cryptsetup in unavailable"
-			PERSISTENT_ENCRYPTION=$(echo ${PERSISTENT_ENCRYPTION} | sed -e 's/\<luks,\|,\?luks$//g')
-			export PERSISTENT_ENCRYPTION
+			PERSISTENCE_ENCRYPTION=$(echo ${PERSISTENCE_ENCRYPTION} | sed -e 's/\<luks,\|,\?luks$//g')
+			export PERSISTENCE_ENCRYPTION
 		fi
 	fi
 
-	if [ -z "${PERSISTENT_METHOD}" ]
+	if [ -z "${PERSISTENCE_METHOD}" ]
 	then
-		PERSISTENT_METHOD="snapshot,overlay"
-		export PERSISTENT_METHOD
+		PERSISTENCE_METHOD="snapshot,overlay"
+		export PERSISTENCE_METHOD
 	fi
 
-	if [ -z "${PERSISTENT_STORAGE}" ]
+	if [ -z "${PERSISTENCE_STORAGE}" ]
 	then
-		PERSISTENT_STORAGE="filesystem,file"
-		export PERSISTENT_STORAGE
+		PERSISTENCE_STORAGE="filesystem,file"
+		export PERSISTENCE_STORAGE
 	fi
 }
 
@@ -737,19 +740,12 @@ try_mount ()
 	fi
 }
 
-mount_persistent_media ()
+mount_persistence_media ()
 {
 	local device=${1}
-	local backing=""
+	local probe=${2}
 
-	# We can't mount into ${rootmnt}/live before ${rootmnt} has been
-	# mounted since that would cover our mountpoint.
-	if [ -n "${rootmnt}" ] && [ -z "$(what_is_mounted_on ${rootmnt})" ]
-	then
-		backing="/$(basename ${device})-backing"
-	else
-		backing="${rootmnt}/live/persistent/$(basename ${device})"
-	fi
+	local backing="/live/persistence/$(basename ${device})"
 
 	mkdir -p "${backing}"
 	local old_backing="$(where_is_mounted ${device})"
@@ -757,7 +753,7 @@ mount_persistent_media ()
 	then
 		local fstype="$(get_fstype ${device})"
 		local mount_opts="rw,noatime"
-		if [ -n "${PERSISTENT_READONLY}" ]
+		if [ -n "${PERSISTENCE_READONLY}" ]
 		then
 			mount_opts="ro,noatime"
 		fi
@@ -766,7 +762,8 @@ mount_persistent_media ()
 			echo ${backing}
 			return 0
 		else
-			log_warning_msg "Failed to mount persistent media ${device}"
+			[ -z "${probe}" ] && log_warning_msg "Failed to mount persistence media ${device}"
+			rmdir "${backing}"
 			return 1
 		fi
 	elif [ "${backing}" != "${old_backing}" ]
@@ -776,14 +773,15 @@ mount_persistent_media ()
 			echo ${backing}
 			return 0
 		else
-			log_warning_msg "Failed to move persistent media ${device}"
+			[ -z "${probe}" ] && log_warning_msg "Failed to move persistence media ${device}"
+			rmdir "${backing}"
 			return 1
 		fi
 	fi
 	return 0
 }
 
-close_persistent_media () {
+close_persistence_media () {
 	local device=${1}
 	local backing="$(where_is_mounted ${device})"
 
@@ -804,7 +802,7 @@ open_luks_device ()
 	dev="${1}"
 	name="$(basename ${dev})"
 	opts="--key-file=-"
-	if [ -n "${PERSISTENT_READONLY}" ]
+	if [ -n "${PERSISTENCE_READONLY}" ]
 	then
 		opts="${opts} --readonly"
 	fi
@@ -912,7 +910,7 @@ probe_for_file_name ()
 	local dev="${3}"
 
 	local ret=""
-	local backing="$(mount_persistent_media ${dev})"
+	local backing="$(mount_persistence_media ${dev} probe)"
 	if [ -z "${backing}" ]
 	then
 	    return
@@ -920,7 +918,7 @@ probe_for_file_name ()
 
 	for label in ${overlays}
 	do
-		path=${backing}/${PERSISTENT_PATH}${label}
+		path=${backing}/${PERSISTENCE_PATH}${label}
 		if [ -f "${path}" ]
 		then
 			local loopdev=$(setup_loop "${path}" "loop" "/sys/block/loop*")
@@ -931,7 +929,7 @@ probe_for_file_name ()
 	do
 		for ext in squashfs cpio.gz ext2 ext3 ext4 jffs2
 		do
-			path="${PERSISTENT_PATH}${label}.${ext}"
+			path="${PERSISTENCE_PATH}${label}.${ext}"
 			if [ -f "${backing}/${path}" ]
 			then
 				ret="${ret} ${label}=${dev}:${backing}:${path}"
@@ -947,7 +945,7 @@ probe_for_file_name ()
 	fi
 }
 
-find_persistent_media ()
+find_persistence_media ()
 {
 	# Scans devices for overlays and snapshots, and returns a whitespace
 	# separated list of how to use them. Only overlays with a partition
@@ -955,7 +953,7 @@ find_persistent_media ()
 	# snapshots with labels in ${snapshots}.
 	#
 	# When scanning a LUKS device, the user will be asked to enter the
-	# passphrase; on failure to enter it, or if no persistent partitions
+	# passphrase; on failure to enter it, or if no persistence partitions
 	# or files were found, the LUKS device is closed.
 	#
 	# For a snapshot file the return value is ${label}=${snapdata}", where
@@ -975,7 +973,9 @@ find_persistent_media ()
 	local white_listed_devices="${3}"
 	local ret=""
 
-	for dev in $(storage_devices "" "${white_listed_devices}")
+	local black_listed_devices="$(what_is_mounted_on /live/image)"
+
+	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
 		local result=""
 
@@ -984,7 +984,7 @@ find_persistent_media ()
 		# in order to probe any filesystem it contains, like we do
 		# below. activate_custom_mounts() also depends on that any luks
 		# device already has been opened.
-		if echo ${PERSISTENT_ENCRYPTION} | grep -qe "\<luks\>" && \
+		if echo ${PERSISTENCE_ENCRYPTION} | grep -qe "\<luks\>" && \
 		   is_luks_partition ${dev}
 		then
 			if luks_device=$(open_luks_device "${dev}")
@@ -994,14 +994,14 @@ find_persistent_media ()
 				# skip $dev since we failed/chose not to open it
 				continue
 			fi
-		elif echo ${PERSISTENT_ENCRYPTION} | grep -qve "\<none\>"
+		elif echo ${PERSISTENCE_ENCRYPTION} | grep -qve "\<none\>"
 		then
 			# skip $dev since we don't allow unencrypted storage
 			continue
 		fi
 
 		# Probe for matching GPT partition names or filesystem labels
-		if echo ${PERSISTENT_STORAGE} | grep -qe "\<filesystem\>"
+		if echo ${PERSISTENCE_STORAGE} | grep -qe "\<filesystem\>"
 		then
 			result=$(probe_for_gpt_name "${overlays}" "${snapshots}" ${dev})
 			if [ -n "${result}" ]
@@ -1019,7 +1019,7 @@ find_persistent_media ()
 		fi
 
 		# Probe for files with matching name on mounted partition
-		if echo ${PERSISTENT_STORAGE} | grep -qe "\<file\>"
+		if echo ${PERSISTENCE_STORAGE} | grep -qe "\<file\>"
 		then
 			result=$(probe_for_file_name "${overlays}" "${snapshots}" ${dev})
 			if [ -n "${result}" ]
@@ -1261,7 +1261,7 @@ do_union ()
 
 get_custom_mounts ()
 {
-	# Side-effect: leaves $devices with live.persist mounted in ${rootmnt}/live/persistent
+	# Side-effect: leaves $devices with live-persistence.conf mounted in /live/persistence
 	# Side-effect: prints info to file $custom_mounts
 
 	local custom_mounts=${1}
@@ -1280,7 +1280,7 @@ get_custom_mounts ()
 		fi
 
 		local device_name="$(basename ${device})"
-		local backing=$(mount_persistent_media ${device})
+		local backing=$(mount_persistence_media ${device})
 		if [ -z "${backing}" ]
 		then
 			continue
@@ -1294,7 +1294,7 @@ get_custom_mounts ()
 
 		if [ -n "${DEBUG}" ] && [ -e "${include_list}" ]
 		then
-			cp ${include_list} ${rootmnt}/live/persistent/${persistence_list}.${device_name}
+			cp ${include_list} /live/persistence/${persistence_list}.${device_name}
 		fi
 
 		while read dir options # < ${include_list}
@@ -1305,22 +1305,22 @@ get_custom_mounts ()
 				continue
 			fi
 
-			if trim_path ${dir} | grep -q -e "^[^/]" -e "^/$" -e "^/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
+			if trim_path ${dir} | grep -q -e "^[^/]" -e "^/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
 			then
-				log_warning_msg "Skipping unsafe custom mount ${dir}: must be an absolute path containing neither the \".\" nor \"..\" special dirs, and cannot be \"/live\" (or any sub-directory therein) or \"/\" (for the latter, use ${root_overlay_label}-type persistence)"
+				log_warning_msg "Skipping unsafe custom mount ${dir}: must be an absolute path containing neither the \".\" nor \"..\" special dirs, and cannot be \"/live\" or any sub-directory therein."
 				continue
 			fi
 
 			local opt_source=""
-			local opt_linkfiles=""
+			local opt_link=""
 			for opt in $(echo ${options} | tr ',' ' ');
 			do
 				case "${opt}" in
 					source=*)
 						opt_source=${opt#source=}
 						;;
-					linkfiles)
-						opt_linkfiles="yes"
+					link)
+						opt_link="yes"
 						;;
 					union|bind)
 						;;
@@ -1345,7 +1345,7 @@ get_custom_mounts ()
 
 			local full_source="$(trim_path ${backing}/${source})"
 			local full_dest="$(trim_path ${rootmnt}/${dir})"
-			if [ -n "${opt_linkfiles}" ]
+			if [ -n "${opt_link}" ]
 			then
 				echo "${device} ${full_source} ${full_dest} ${options}" >> ${links}
 			else
@@ -1374,7 +1374,7 @@ get_custom_mounts ()
 	do
 		if echo ${source} | grep -qe "^${prev_source}\(/.*\)\?$"
 		then
-			panic "Two persistent mounts have the same or nested sources: ${source} on ${dest}, and ${prev_source} on ${prev_dest}"
+			panic "Two persistence mounts have the same or nested sources: ${source} on ${dest}, and ${prev_source} on ${prev_dest}"
 		fi
 		prev_source=${source}
 		prev_dest=${dest}
@@ -1389,30 +1389,35 @@ activate_custom_mounts ()
 	while read device source dest options # < ${custom_mounts}
 	do
 		local opt_bind="yes"
-		local opt_linkfiles=""
+		local opt_link=""
 		local opt_union=""
 		for opt in $(echo ${options} | tr ',' ' ');
 		do
 			case "${opt}" in
 				bind)
 					opt_bind="yes"
-					unset opt_linkfiles opt_union
+					unset opt_link opt_union
 					;;
-				linkfiles)
-					opt_linkfiles="yes"
+				link)
+					opt_link="yes"
 					unset opt_bind opt_union
 					;;
 				union)
 					opt_union="yes"
-					unset opt_bind opt_linkfiles
+					unset opt_bind opt_link
 					;;
 			esac
 		done
 
 		if [ -n "$(what_is_mounted_on "${dest}")" ]
 		then
-			log_warning_msg "Skipping custom mount ${dest}: $(what_is_mounted_on "${dest}") is already mounted there"
-			continue
+			if [ "${dest}" = "${rootmnt}" ]
+			then
+				umount "${dest}"
+			else
+				log_warning_msg "Skipping custom mount ${dest}: $(what_is_mounted_on "${dest}") is already mounted there"
+				continue
+			fi
 		fi
 
 		if [ ! -d "${dest}" ]
@@ -1440,19 +1445,19 @@ activate_custom_mounts ()
 			done
 		fi
 
-		# if ${source} doesn't exist on our persistent media
+		# if ${source} doesn't exist on our persistence media
 		# we bootstrap it with $dest from the live filesystem.
 		# this both makes sense and is critical if we're
 		# dealing with /etc or other system dir.
 		if [ ! -d "${source}" ]
 		then
-			if [ -n "${PERSISTENT_READONLY}" ]
+			if [ -n "${PERSISTENCE_READONLY}" ]
 			then
 				continue
-			elif [ -n "${opt_union}" ] || [ -n "${opt_linkfiles}" ]
+			elif [ -n "${opt_union}" ] || [ -n "${opt_link}" ]
 			then
 				# unions and don't need to be bootstrapped
-				# linkfiles dirs can't be bootstrapped in a sensible way
+				# link dirs can't be bootstrapped in a sensible way
 				mkdir -p "${source}"
 				chown_ref "${dest}" "${source}"
 				chmod_ref "${dest}" "${source}"
@@ -1467,9 +1472,9 @@ activate_custom_mounts ()
 		# XXX: If CONFIG_AUFS_ROBR is added to the Debian kernel we can
 		# ignore the loop below and set rofs_dest_backing=$dest
 		local rofs_dest_backing=""
-		if [ -n "${opt_linkfiles}"]
+		if [ -n "${opt_link}"]
 		then
-			for d in ${rootmnt}/live/rofs/*
+			for d in /live/rofs/*
 			do
 				if [ -n "${rootmnt}" ]
 				then
@@ -1486,13 +1491,13 @@ activate_custom_mounts ()
 			done
 		fi
 
-		if [ -n "${opt_linkfiles}" ] && [ -z "${PERSISTENT_READONLY}" ]
+		if [ -n "${opt_link}" ] && [ -z "${PERSISTENCE_READONLY}" ]
 		then
 			link_files ${source} ${dest} ${rootmnt}
-		elif [ -n "${opt_linkfiles}" ] && [ -n "${PERSISTENT_READONLY}" ]
+		elif [ -n "${opt_link}" ] && [ -n "${PERSISTENCE_READONLY}" ]
 		then
-			mkdir -p ${rootmnt}/live/persistent
-			local links_source=$(mktemp -d ${rootmnt}/live/persistent/links-source-XXXXXX)
+			mkdir -p /live/persistence
+			local links_source=$(mktemp -d /live/persistence/links-source-XXXXXX)
 			chown_ref ${source} ${links_source}
 			chmod_ref ${source} ${links_source}
 			# We put the cow dir in the below strange place to
@@ -1500,39 +1505,32 @@ activate_custom_mounts ()
 			# has its own directory and isn't nested with some
 			# other custom mount (if so that mount's files would
 			# be linked, causing breakage.
-			if [ -n "${rootmnt}" ]
-			then
-				local cow_dir="/cow/live/persistent/$(basename ${links_source})"
-			else
-				# This is happens if persistence is activated
-				# post boot
-				local cow_dir="/live/cow/live/persistent/$(basename ${links_source})"
-			fi
+			local cow_dir="/live/overlay/live/persistence/$(basename ${links_source})"
 			mkdir -p ${cow_dir}
 			chown_ref "${source}" "${cow_dir}"
 			chmod_ref "${source}" "${cow_dir}"
 			do_union ${links_source} ${cow_dir} ${source} ${rofs_dest_backing}
 			link_files ${links_source} ${dest} ${rootmnt}
-		elif [ -n "${opt_union}" ] && [ -z "${PERSISTENT_READONLY}" ]
+		elif [ -n "${opt_union}" ] && [ -z "${PERSISTENCE_READONLY}" ]
 		then
 			do_union ${dest} ${source} ${rofs_dest_backing}
-		elif [ -n "${opt_bind}" ] && [ -z "${PERSISTENT_READONLY}" ]
+		elif [ -n "${opt_bind}" ] && [ -z "${PERSISTENCE_READONLY}" ]
 		then
 			mount --bind "${source}" "${dest}"
-		elif [ -n "${opt_bind}" -o -n "${opt_union}" ] && [ -n "${PERSISTENT_READONLY}" ]
+		elif [ -n "${opt_bind}" -o -n "${opt_union}" ] && [ -n "${PERSISTENCE_READONLY}" ]
 		then
 			# bind-mount and union mount are handled the same
 			# in read-only mode, but note that rofs_dest_backing
 			# is non-empty (and necessary) only for unions
 			if [ -n "${rootmnt}" ]
 			then
-				local cow_dir="$(echo ${dest} | sed -e "s|^${rootmnt}|/cow/|")"
+				local cow_dir="$(echo ${dest} | sed -e "s|^${rootmnt}|/live/overlay/|")"
 			else
 				# This is happens if persistence is activated
 				# post boot
-				local cow_dir="/live/cow/${dest}"
+				local cow_dir="/live/overlay/${dest}"
 			fi
-			if [ -e "${cow_dir}" ] && [ -z "${opt_linkfiles}" ]
+			if [ -e "${cow_dir}" ] && [ -z "${opt_link}" ]
 			then
 				# If an earlier custom mount has files here
 				# it will "block" the current mount's files
@@ -1557,16 +1555,18 @@ activate_custom_mounts ()
 	echo ${used_devices}
 }
 
-fix_home_rw_compatibility ()
+fix_backwards_compatibility ()
 {
 	local device=${1}
+	local dir=${2}
+	local opt=${3}
 
-	if [ -n "${PERSISTENT_READONLY}" ]
+	if [ -n "${PERSISTENCE_READONLY}" ]
 	then
 		return
 	fi
 
-	local backing="$(mount_persistent_media ${device})"
+	local backing="$(mount_persistence_media ${device})"
 	if [ -z "${backing}" ]
 	then
 		return
@@ -1575,7 +1575,14 @@ fix_home_rw_compatibility ()
 	local include_list="${backing}/${persistence_list}"
 	if [ ! -r "${include_list}" ]
 	then
-		echo "# home-rw backwards compatibility:
-/home source=." > "${include_list}"
+		echo "# persistence backwards compatibility:
+${dir} ${opt},source=." > "${include_list}"
 	fi
+}
+
+is_mountpoint ()
+{
+	directory="$1"
+
+	[ $(stat -fc%d:%D "${directory}") != $(stat -fc%d:%D "${directory}/..") ]
 }

@@ -3,7 +3,7 @@
 # live-snapshot - utility to manage Debian Live systems snapshots
 #
 #   This program mounts a device (fallback to /tmpfs under $MOUNTP
-#   and saves the /live/cow (or a different directory) filesystem in it
+#   and saves the /live/overlway (or a different directory) filesystem in it
 #   for reuse in another live-boot session.
 #   Look at the manpage for more informations.
 #
@@ -57,7 +57,7 @@ SAFE_TMPDIR="/live"
 # Permits multiple runs
 MOUNTP="$(mktemp -d -p ${SAFE_TMPDIR} live-snapshot-mnt.XXXXXX)"
 DEST="${MOUNTP}/live-sn.cpio.gz"
-DEF_SNAP_COW="/live/cow"
+DEF_SNAP_COW="/live/overlay"
 TMP_FILELIST="${PROGRAM}.list"
 
 # Command line defaults and declarations
@@ -365,7 +365,7 @@ Do_filelist ()
 
 	if [ -f "${SNAP_LIST}" ]
 	then
-		# if SNAP_COW == /live/cow/home, SNAP_RW = /home
+		# if SNAP_COW == /live/overlay/home, SNAP_RW = /home
 		SNAP_RW=$(echo "${SNAP_COW}" | sed -e "s|${DEF_SNAP_COW}||g")
 		if [ -z "${SNAP_RW}" ]
 		then
@@ -517,9 +517,9 @@ Warn_user ()
 				;;
 		esac
 
-		if grep -qv persistent /proc/cmdline
+		if grep -qv persistence /proc/cmdline
 		then
-			echo "Remember to boot this live system with \"persistent\" specified at boot prompt." > /dev/null 1>&2
+			echo "Remember to boot this live system with \"persistence\" specified at boot prompt." > /dev/null 1>&2
 		fi
 	fi
 }
