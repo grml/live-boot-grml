@@ -743,6 +743,8 @@ try_mount ()
 mount_persistence_media ()
 {
 	local device=${1}
+	local probe=${2}
+
 	local backing="/live/persistence/$(basename ${device})"
 
 	mkdir -p "${backing}"
@@ -760,7 +762,8 @@ mount_persistence_media ()
 			echo ${backing}
 			return 0
 		else
-			log_warning_msg "Failed to mount persistence media ${device}"
+			[ -z "${probe}" ] && log_warning_msg "Failed to mount persistence media ${device}"
+			rmdir "${backing}"
 			return 1
 		fi
 	elif [ "${backing}" != "${old_backing}" ]
@@ -770,7 +773,8 @@ mount_persistence_media ()
 			echo ${backing}
 			return 0
 		else
-			log_warning_msg "Failed to move persistence media ${device}"
+			[ -z "${probe}" ] && log_warning_msg "Failed to move persistence media ${device}"
+			rmdir "${backing}"
 			return 1
 		fi
 	fi
@@ -906,7 +910,7 @@ probe_for_file_name ()
 	local dev="${3}"
 
 	local ret=""
-	local backing="$(mount_persistence_media ${dev})"
+	local backing="$(mount_persistence_media ${dev} probe)"
 	if [ -z "${backing}" ]
 	then
 	    return
