@@ -1,3 +1,51 @@
+live-boot (3.0~a27-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Only looking at boot.d files if they have the .conf suffix to allow
+    putting other files into these places that do not necessarily need
+    to be used by live-boot (e.g. documentation).
+  * Removing preseed bottom-script, a newly written one is now in live-
+    config where this sort of things belong.
+  * Removing header in fstab, not required.
+  * Removing outdated and broken accessibility script, this will be
+    redone in live-config properly.
+  * Replacing 'illegal' with better fitting 'invalid' for wrongly
+    crafted input examples in live.persist manpage.
+  * Consistently using ext4 in all examples, not a mix of ext2 and ext3.
+  * Removing user and userfullname variables in scripts/live, they are
+    not used here sind live-config anymore.
+  * Renaming /live/cow to /live/overlay in anticipation of overlayfs.
+  * Using 'persistence' (noun) rather than 'persistent'
+    (adjective/adverb) everywhere.
+  * Making extraction of the manpage section in manpages/Makefile work
+    with multiple dots in the filename.
+  * Renaming live.persist to live-persistence.conf.
+
+  [ Tails developers ]
+  * Adding support for the findiso boot parameter (Closes: #656135).
+  * Fixing findiso argument parsing place to match the existing
+    ordering.
+  * Removing overkill double-checking of return code in is_mountpoint
+    predicate.
+  * Fixing brace alignment to follow common code style.
+  * Removing leftover directory after unmounting.
+
+  [ Daniel Baumann ]
+  * Removing old docs.
+  * Merging old changelog into current changelog.
+  * Updating toplevel Makefile to work with manpages having multiple
+    dots in its filename.
+  * Renamling linkfiles option when using persistence to simply link.
+
+  [ Tails developers ]
+  * Allow using / as destination in custom mounts.
+  * Supress warnings when probing media for persistence.
+  * Do not probe the device mounted on /live/image for persistence.
+  * Fix typo to make home-sn snapshots work again.
+  * Only try copying snapshots if we actually found any.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 09 Apr 2012 18:58:06 +0200
+
 live-boot (3.0~a26-1) experimental; urgency=low
 
   [ Daniel Baumann ]
