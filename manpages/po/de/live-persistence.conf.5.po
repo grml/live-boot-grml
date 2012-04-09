@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2012-04-08 22:48+0300\n"
+"POT-Creation-Date: 2012-04-09 15:13+0300\n"
 "PO-Revision-Date: 2012-04-08 22:48+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "2012-04-08"
+msgid "2012-04-09"
 msgstr ""
 
 #. type: TH
@@ -188,8 +188,8 @@ msgid ""
 "custom mount, it will be created automatically, and permissions and "
 "ownership will be optimistically set according to I<DIR>. It will also be "
 "bootstrapped by copying the contents of the I<DIR> into its source directory "
-"on the persistence media. The bootstrapping will not happen when the "
-"B<linkfiles> or B<union> options are used (see below)."
+"on the persistence media. The bootstrapping will not happen when the B<link> "
+"or B<union> options are used (see below)."
 msgstr ""
 
 #. type: Plain text
@@ -239,7 +239,7 @@ msgstr ""
 #. type: IP
 #: en/live-persistence.conf.5:74
 #, no-wrap
-msgid "B<linkfiles>"
+msgid "B<link>"
 msgstr ""
 
 #. type: Plain text
@@ -257,13 +257,12 @@ msgstr ""
 #. type: Plain text
 #: en/live-persistence.conf.5:91
 msgid ""
-"Effectively B<linkfiles> will make only files already in the source "
-"directory persistent, not any other files in I<DIR>. These files must be "
-"manually added to the source directory to make use of this option, and they "
-"will appear in I<DIR> in addition to files already there. This option is "
-"useful when only certain files need to be persistent, not the whole "
-"directory they're in, e.g. some configuration files in a user's home "
-"directory."
+"Effectively B<link> will make only files already in the source directory "
+"persistent, not any other files in I<DIR>. These files must be manually "
+"added to the source directory to make use of this option, and they will "
+"appear in I<DIR> in addition to files already there. This option is useful "
+"when only certain files need to be persistent, not the whole directory "
+"they're in, e.g. some configuration files in a user's home directory."
 msgstr ""
 
 #. type: IP
@@ -303,7 +302,7 @@ msgid ""
 "All persistence volumes will be mounted here (in a directory corresponding "
 "to the device name). The B<live-persistence.conf> file can easily be edited "
 "through this mount, as well as any source directories (which is especially "
-"practical for custom mounts using the B<linkfiles> option)."
+"practical for custom mounts using the B<link> option)."
 msgstr ""
 
 #. type: SH
@@ -328,7 +327,7 @@ msgstr ""
 
 #. type: Plain text
 #: en/live-persistence.conf.5:118
-msgid "/home/user1 linkfiles,source=config-files/user1"
+msgid "/home/user1 link,source=config-files/user1"
 msgstr ""
 
 #. type: TP
@@ -339,7 +338,7 @@ msgstr ""
 
 #. type: Plain text
 #: en/live-persistence.conf.5:121
-msgid "/home/user2 linkfiles,source=config-files/user2"
+msgid "/home/user2 link,source=config-files/user2"
 msgstr ""
 
 #. type: TP
@@ -486,9 +485,9 @@ msgstr ""
 msgid ""
 "One could argue, though, that lines 1 and 2 in the example B<live-"
 "persistence.conf> file above are unnecessary since line 3 already would make "
-"all of /home persistent. The B<linkfiles> option is intended for situations "
-"where you don't want a complete directory to be persistent, only certain "
-"files in it or its sub-directories."
+"all of /home persistent. The B<link> option is intended for situations where "
+"you don't want a complete directory to be persistent, only certain files in "
+"it or its sub-directories."
 msgstr ""
 
 #. type: Plain text

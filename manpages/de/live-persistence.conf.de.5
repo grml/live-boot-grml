@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT conf 2012\-04\-08 3.0~a26\-1 "Debian Live Project"
+.TH LIVE\-BOOT conf 2012\-04\-09 3.0~a26\-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-persistence.conf\fP \- Configuration file for persistence media in
@@ -53,8 +53,8 @@ When a source directory doesn't exist on the persistence media for a certain
 custom mount, it will be created automatically, and permissions and
 ownership will be optimistically set according to \fIDIR\fP. It will also be
 bootstrapped by copying the contents of the \fIDIR\fP into its source directory
-on the persistence media. The bootstrapping will not happen when the
-\fBlinkfiles\fP or \fBunion\fP options are used (see below).
+on the persistence media. The bootstrapping will not happen when the \fBlink\fP
+or \fBunion\fP options are used (see below).
 
 .SH OPTIONS
 Custom mounts defined in \fBlive\-persistence.conf\fP accept the following
@@ -73,7 +73,7 @@ The following options are mutually exclusive (only the last given one will
 be in effect):
 .IP \fBbind\fP 4
 Bind\-mount the source directory to \fIDIR\fP. This is the default.
-.IP \fBlinkfiles\fP 4
+.IP \fBlink\fP 4
 Create the directory structure of the source directory on the persistence
 media in \fIDIR\fP and create symbolic links from the corresponding place in
 \fIDIR\fP to each file in the source directory.  Existing files or directories
@@ -82,13 +82,12 @@ links in \fIDIR\fP will only remove the link, not the corresponding file in the
 source; removed links will reappear after a reboot. To permanently add or
 delete a file one must do so directly in the source directory.
 .IP
-Effectively \fBlinkfiles\fP will make only files already in the source
-directory persistent, not any other files in \fIDIR\fP. These files must be
-manually added to the source directory to make use of this option, and they
-will appear in \fIDIR\fP in addition to files already there. This option is
-useful when only certain files need to be persistent, not the whole
-directory they're in, e.g. some configuration files in a user's home
-directory.
+Effectively \fBlink\fP will make only files already in the source directory
+persistent, not any other files in \fIDIR\fP. These files must be manually
+added to the source directory to make use of this option, and they will
+appear in \fIDIR\fP in addition to files already there. This option is useful
+when only certain files need to be persistent, not the whole directory
+they're in, e.g. some configuration files in a user's home directory.
 .IP \fBunion\fP 4
 Save the rw branch of a union on the persistence media, so only the changes
 are stored persistently. This can potentially reduce disk usage compared to
@@ -104,7 +103,7 @@ supported with \fBunion=unionmount\fP.
 All persistence volumes will be mounted here (in a directory corresponding
 to the device name). The \fBlive\-persistence.conf\fP file can easily be edited
 through this mount, as well as any source directories (which is especially
-practical for custom mounts using the \fBlinkfiles\fP option).
+practical for custom mounts using the \fBlink\fP option).
 
 .SH EXAMPLES
 
@@ -113,10 +112,10 @@ Let's say we have a persistence volume \fIVOL\fP with the a
 for ease of reference):
 .TP  7
 1.
-/home/user1 linkfiles,source=config\-files/user1
+/home/user1 link,source=config\-files/user1
 .TP 
 2.
-/home/user2 linkfiles,source=config\-files/user2
+/home/user2 link,source=config\-files/user2
 .TP 
 3.
 /home
@@ -174,7 +173,7 @@ c)
 .PP
 One could argue, though, that lines 1 and 2 in the example
 \fBlive\-persistence.conf\fP file above are unnecessary since line 3 already
-would make all of /home persistent. The \fBlinkfiles\fP option is intended for
+would make all of /home persistent. The \fBlink\fP option is intended for
 situations where you don't want a complete directory to be persistent, only
 certain files in it or its sub\-directories.
 .PP

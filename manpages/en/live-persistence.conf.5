@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT conf 2012\-04\-08 3.0~a26-1 "Debian Live Project"
+.TH LIVE\-BOOT conf 2012\-04\-09 3.0~a26-1 "Debian Live Project"
 
 .SH NAME
 \fBlive-persistence.conf\fR \- Configuration file for persistence media in
@@ -51,7 +51,7 @@ certain custom mount, it will be created automatically, and
 permissions and ownership will be optimistically set according to
 \fIDIR\fR. It will also be bootstrapped by copying the contents of the
 \fIDIR\fR into its source directory on the persistence media. The
-bootstrapping will not happen when the \fBlinkfiles\fR or \fBunion\fR
+bootstrapping will not happen when the \fBlink\fR or \fBunion\fR
 options are used (see below).
 
 .SH OPTIONS
@@ -71,7 +71,7 @@ The following options are mutually exclusive (only the last given one
 will be in effect):
 .IP "\fBbind\fR" 4
 Bind-mount the source directory to \fIDIR\fR. This is the default.
-.IP "\fBlinkfiles\fR" 4
+.IP "\fBlink\fR" 4
 Create the directory structure of the source directory on the
 persistence media in \fIDIR\fR and create symbolic links from the
 corresponding place in \fIDIR\fR to each file in the source directory.
@@ -81,7 +81,7 @@ remove the link, not the corresponding file in the source; removed
 links will reappear after a reboot. To permanently add or delete a
 file one must do so directly in the source directory.
 .IP
-Effectively \fBlinkfiles\fR will make only files already in the source
+Effectively \fBlink\fR will make only files already in the source
 directory persistent, not any other files in \fIDIR\fR. These files
 must be manually added to the source directory to make use of this
 option, and they will appear in \fIDIR\fR in addition to files already
@@ -105,7 +105,7 @@ All persistence volumes will be mounted here (in a directory
 corresponding to the device name). The \fBlive-persistence.conf\fR file can
 easily be edited through this mount, as well as any source directories
 (which is especially practical for custom mounts using the
-\fBlinkfiles\fR option).
+\fBlink\fR option).
 
 .SH EXAMPLES
 
@@ -114,10 +114,10 @@ Let's say we have a persistence volume \fIVOL\fR with the a
 for ease of reference):
 .TP 7
 1.
-/home/user1 linkfiles,source=config-files/user1
+/home/user1 link,source=config-files/user1
 .TP
 2.
-/home/user2 linkfiles,source=config-files/user2
+/home/user2 link,source=config-files/user2
 .TP
 3.
 /home
@@ -175,7 +175,7 @@ Link:
 .PP
 One could argue, though, that lines 1 and 2 in the example
 \fBlive-persistence.conf\fR file above are unnecessary since line 3 already
-would make all of /home persistent. The \fBlinkfiles\fR option is
+would make all of /home persistent. The \fBlink\fR option is
 intended for situations where you don't want a complete directory to
 be persistent, only certain files in it or its sub-directories.
 .PP
