@@ -1595,8 +1595,14 @@ mountroot ()
 	# rid of it when running from RAM
 	if [ -n "$FROMISO" ] && [ "${TORAM}" ]
 	then
-	  losetup -d /dev/loop0
-	  grep -q /live/fromiso /proc/mounts && umount /live/fromiso
+		losetup -d /dev/loop0
+
+		if is_mountpoint /live/fromiso
+		then
+			umount /live/fromiso
+			rmdir --ignore-fail-on-non-empty /live/fromiso \
+				>/dev/null 2>&1 || true
+		fi
 	fi
 
 	if [ -n "${MODULETORAMFILE}" ] || [ -n "${PLAIN_ROOT}" ]
