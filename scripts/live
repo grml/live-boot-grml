@@ -1255,15 +1255,15 @@ check_dev ()
 
 		if [ "$ISO_DEVICE" = "/" ]
 		then
-			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live-boot.log
+			echo "Warning: device for bootoption fromiso= ($FROMISO) not found.">>/live-boot.log
 		else
 			fs_type=$(get_fstype "${ISO_DEVICE}")
 			if is_supported_fs ${fs_type}
 			then
-				mkdir /isofrom
-				mount -t $fs_type "$ISO_DEVICE" /isofrom
+				mkdir /fromiso
+				mount -t $fs_type "$ISO_DEVICE" /fromiso
 				ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
-				loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
+				loopdevname=$(setup_loop "/fromiso/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
 				devname="${loopdevname}"
 			else
 				echo "Warning: unable to mount $ISO_DEVICE." >>/live-boot.log
@@ -1596,7 +1596,7 @@ mountroot ()
 	if [ -n "$FROMISO" ] && [ "${TORAM}" ]
 	then
 	  losetup -d /dev/loop0
-	  grep -q /isofrom /proc/mounts && umount /isofrom
+	  grep -q /fromiso /proc/mounts && umount /fromiso
 	fi
 
 	if [ -n "${MODULETORAMFILE}" ] || [ -n "${PLAIN_ROOT}" ]
