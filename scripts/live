@@ -1255,7 +1255,7 @@ check_dev ()
 
 		if [ "$ISO_DEVICE" = "/" ]
 		then
-			echo "Warning: device for bootoption fromiso= ($FROMISO) not found.">>/live-boot.log
+			echo "Warning: device for bootoption fromiso= ($FROMISO) not found.">>/boot.log
 		else
 			fs_type=$(get_fstype "${ISO_DEVICE}")
 			if is_supported_fs ${fs_type}
@@ -1266,7 +1266,7 @@ check_dev ()
 				loopdevname=$(setup_loop "/live/fromiso/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
 				devname="${loopdevname}"
 			else
-				echo "Warning: unable to mount $ISO_DEVICE." >>/live-boot.log
+				echo "Warning: unable to mount $ISO_DEVICE." >>/boot.log
 			fi
 		fi
 	fi
@@ -1499,9 +1499,9 @@ mountroot ()
 
 	exec 6>&1
 	exec 7>&2
-	exec > live-boot.log
+	exec > boot.log
 	exec 2>&1
-	tail -f live-boot.log >&7 &
+	tail -f boot.log >&7 &
 	tailpid="${!}"
 
 	# Ensure 'panic' function is overridden
@@ -1696,5 +1696,5 @@ mountroot ()
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-
 	kill ${tailpid}
-	[ -w "${rootmnt}/var/log/" ] && cp live-boot.log "${rootmnt}/var/log/" 2>/dev/null
+	[ -w "${rootmnt}/var/log/" ] && mkdir -p /var/log/live && cp boot.log "${rootmnt}/var/log/live" 2>/dev/null
 }
