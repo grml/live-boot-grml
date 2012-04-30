@@ -1108,15 +1108,15 @@ setup_unionfs ()
 
 	rofscount=$(echo ${rofslist} |wc -w)
 
-	# XXX: we now ensure that there can only be one read-only filesystem. Should this be inside the EXPOSED_ROOT if?
-	if [ ${rofscount} -ne 1 ]
-	then
-		panic "only one RO file system supported with exposedroot: ${rofslist}"
-	fi
 	rofs=${rofslist%% }
 
 	if [ -n "${EXPOSED_ROOT}" ]
 	then
+		if [ ${rofscount} -ne 1 ]
+		then
+			panic "only one RO file system supported with exposedroot: ${rofslist}"
+		fi
+
 		mount --bind ${rofs} ${rootmnt} || \
 			panic "bind mount of ${rofs} failed"
 
