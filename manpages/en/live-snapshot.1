@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 1 2011\-12\-04 3.0~a24-1 "Debian Live Project"
+.TH LIVE\-BOOT 1 2012\-04\-09 3.0~a27-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-snapshot\fR \- simple script to ease persistence usage
@@ -15,13 +15,13 @@
 \fBlive\-snapshot\fR [\-v|\-\-version]
 
 .SH DESCRIPTION
-live\-snapshot is a script which can be used to build the right types of persistent image files supported by \fIlive\-boot\fR(7). It is also used on exit by the live\-boot init script to resync the boot\-found snapshots devices.
+live\-snapshot is a script which can be used to build the right types of persistence image files supported by \fIlive\-boot\fR(7). It is also used on exit by the live\-boot init script to resync the boot\-found snapshots devices.
 
 .SH OPTIONS
 .IP "\-c, \-\-cow \fIDIRECTORY\fR" 4
-specifies the input directory to be cloned in the image file. Its default value "/live/cow" should be right for most uses. However it could be handy to specify "/home" and type ext2 for the type to prepare an image file suited to be directly mounted by live\-boot as home.
+specifies the input directory to be cloned in the image file. Its default value "/live/overlay" should be right for most uses. However it could be handy to specify "/home" and type ext4 for the type to prepare an image file suited to be directly mounted by live\-boot as home.
 .IP "\-d, \-\-device \fIDEVICE\fR" 4
-sets the device where the media which the snapshot/persistence file/partition will be put. If it is not specified, a tmpfs will be used and linked to the user's desktop to move it where it is needed. If the device has no filesystem, an ext2 fs will be automatically created and labelled according to the values specified after the "\-\-output" value or with a sane default.
+sets the device where the media which the snapshot/persistence file/partition will be put. If it is not specified, a tmpfs will be used and linked to the user's desktop to move it where it is needed. If the device has no filesystem, an ext4 fs will be automatically created and labelled according to the values specified after the "\-\-output" value or with a sane default.
 .IP "\-e, \-\-exclude\-list \fIFILE\fR" 4
 a file containing a list of filenames/paths that should not be saved. This exclude list will be remebered on the target snapshot media for reuse.
 .IP "\-o, \-\-output \fIFILE\fR" 4
@@ -43,7 +43,7 @@ output version information and exit.
 .IP "\fB/etc/live.conf\fR" 4
 Some variables can be configured via this config file (inside the live system).
 .IP "\fBlive/filesystem.module\fR" 4
-This optional file (inside the live media) contains a list of white\-space or carriage\-return\-separated file names corresponding to disk images in the "/live" directory. If this file exists, only images listed here will be merged into the root aufs, and they will be loaded in the order listed here. The first entry in this file will be the "lowest" point in the aufs, and the last file in this list will be on the "top" of the aufs, directly below /cow.  Without this file, any images in the "/live" directory are loaded in alphanumeric order.
+This optional file (inside the live media) contains a list of white\-space or carriage\-return\-separated file names corresponding to disk images in the "/live" directory. If this file exists, only images listed here will be merged into the root aufs, and they will be loaded in the order listed here. The first entry in this file will be the "lowest" point in the aufs, and the last file in this list will be on the "top" of the aufs, directly below /overlay.  Without this file, any images in the "/live" directory are loaded in alphanumeric order.
 .IP "\fB/etc/live\-persistence.binds\fR" 4
 This optional file (which resides in the rootfs system, not in the live media) is used as a list of directories which not need be persistent: ie. their content does not need to survive reboots when using the persistence features.
 .br

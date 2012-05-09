@@ -11,13 +11,6 @@ mountpoint="/live/image"
 alt_mountpoint="/media"
 LIVE_MEDIA_PATH="live"
 
-root_persistence="live-rw"
-home_persistence="home-rw"
-root_snapshot_label="live-sn"
-home_snapshot_label="home-sn"
-
-USERNAME="user"
-USERFULLNAME="Live user"
 HOSTNAME="host"
 
 mkdir -p "${mountpoint}"
@@ -40,394 +33,6 @@ if [ ! -f /live.vars ]
 then
 	touch /live.vars
 fi
-
-Arguments ()
-{
-	PRESEEDS=""
-	LOCATIONS=""
-
-	for ARGUMENT in $(cat /proc/cmdline)
-	do
-		case "${ARGUMENT}" in
-			skipconfig)
-				NOACCESSIBILITY="Yes"
-				NOFASTBOOT="Yes"
-				NOFSTAB="Yes"
-				NONETWORKING="Yes"
-
-				export NOACCESSIBILITY NOFASTBOOT NOFSTAB NONETWORKING
-				;;
-
-			access=*)
-				ACCESS="${ARGUMENT#access=}"
-				export ACCESS
-				;;
-
-			console=*)
-				DEFCONSOLE="${ARGUMENT#*=}"
-				export DEFCONSOLE
-				;;
-
-			BOOTIF=*)
-				BOOTIF="${x#BOOTIF=}"
-				;;
-
-			debug)
-				DEBUG="Yes"
-				export DEBUG
-
-				set -x
-				;;
-
-			dhcp)
-				# Force dhcp even while netbooting
-				# Use for debugging in case somebody works on fixing dhclient
-				DHCP="Force";
-				export DHCP
-				;;
-
-			nodhcp)
-				unset DHCP
-				;;
-
-			ethdevice=*)
-				DEVICE="${ARGUMENT#ethdevice=}"
-				ETHDEVICE="${DEVICE}"
-				export DEVICE ETHDEVICE
-				;;
-
-			ethdevice-timeout=*)
-				ETHDEV_TIMEOUT="${ARGUMENT#ethdevice-timeout=}"
-				export ETHDEV_TIMEOUT
-				;;
-
-			fetch=*)
-				FETCH="${ARGUMENT#fetch=}"
-				export FETCH
-				;;
-
-			forcepersistentfsck)
-				FORCEPERSISTENTFSCK="Yes"
-				export FORCEPERSISTENTFSCK
-				;;
-
-			ftpfs=*)
-				FTPFS="${ARGUMENT#ftpfs=}"
-				export FTPFS
-				;;
-
-			httpfs=*)
-				HTTPFS="${ARGUMENT#httpfs=}"
-				export HTTPFS
-				;;
-
-			iscsi=*)
-				ISCSI="${ARGUMENT#iscsi=}"
-				#ip:port - separated by ;
-				ISCSI_PORTAL="${ISCSI%;*}"
-				if echo "${ISCSI_PORTAL}" | grep -q , ; then
-					ISCSI_SERVER="${ISCSI_PORTAL%,*}"
-					ISCSI_PORT="${ISCSI_PORTAL#*,}"
-				fi
-				#target name
-				ISCSI_TARGET="${ISCSI#*;}"
-				export ISCSI ISCSI_PORTAL ISCSI_TARGET ISCSI_SERVER ISCSI_PORT
-				;;
-
-			isofrom=*|fromiso=*)
-				FROMISO="${ARGUMENT#*=}"
-				export FROMISO
-				;;
-
-			ignore_uuid)
-				IGNORE_UUID="Yes"
-				export IGNORE_UUID
-				;;
-
-			integrity-check)
-				INTEGRITY_CHECK="Yes"
-				export INTEGRITY_CHECK
-				;;
-
-			ip=*)
-				STATICIP="${ARGUMENT#ip=}"
-
-				if [ -z "${STATICIP}" ]
-				then
-					STATICIP="frommedia"
-				fi
-
-				export STATICIP
-				;;
-
-			live-getty)
-				LIVE_GETTY="1"
-				export LIVE_GETTY
-				;;
-
-			live-media=*|bootfrom=*)
-				LIVE_MEDIA="${ARGUMENT#*=}"
-				export LIVE_MEDIA
-				;;
-
-			live-media-encryption=*|encryption=*)
-				LIVE_MEDIA_ENCRYPTION="${ARGUMENT#*=}"
-				export LIVE_MEDIA_ENCRYPTION
-				;;
-
-			live-media-offset=*)
-				LIVE_MEDIA_OFFSET="${ARGUMENT#live-media-offset=}"
-				export LIVE_MEDIA_OFFSET
-				;;
-
-			live-media-path=*)
-				LIVE_MEDIA_PATH="${ARGUMENT#live-media-path=}"
-				export LIVE_MEDIA_PATH
-				;;
-
-			live-media-timeout=*)
-				LIVE_MEDIA_TIMEOUT="${ARGUMENT#live-media-timeout=}"
-				export LIVE_MEDIA_TIMEOUT
-				;;
-
-			module=*)
-				MODULE="${ARGUMENT#module=}"
-				export MODULE
-				;;
-
-			netboot=*)
-				NETBOOT="${ARGUMENT#netboot=}"
-				export NETBOOT
-				;;
-
-			nfsopts=*)
-				NFSOPTS="${ARGUMENT#nfsopts=}"
-				export NFSOPTS
-				;;
-
-			nfscow=*)
-				NFS_COW="${ARGUMENT#nfscow=}"
-				export NFS_COW
-				;;
-
-			noaccessibility)
-				NOACCESSIBILITY="Yes"
-				export NOACCESSIBILITY
-				;;
-
-			nofastboot)
-				NOFASTBOOT="Yes"
-				export NOFASTBOOT
-				;;
-
-			nofstab)
-				NOFSTAB="Yes"
-				export NOFSTAB
-				;;
-
-			nonetworking)
-				NONETWORKING="Yes"
-				export NONETWORKING
-				;;
-
-			ramdisk-size=*)
-				ramdisk_size="${ARGUMENT#ramdisk-size=}"
-				;;
-
-			swapon)
-				SWAPON="Yes"
-				export SWAPON
-				;;
-
-			persistent)
-				PERSISTENT="Yes"
-				export PERSISTENT
-				;;
-
-			persistent-encryption=*)
-				PERSISTENT_ENCRYPTION="${ARGUMENT#*=}"
-				export PERSISTENT_ENCRYPTION
-				;;
-
-			persistent-media=*)
-				PERSISTENT_MEDIA="${ARGUMENT#*=}"
-				export PERSISTENT_MEDIA
-				;;
-			persistent-method=*)
-				PERSISTENT_METHOD="${ARGUMENT#*=}"
-				export PERSISTENT_METHOD
-				;;
-
-			persistent-path=*)
-				PERSISTENT_PATH="${ARGUMENT#persistent-path=}"
-				export PERSISTENT_PATH
-				;;
-			persistent-read-only)
-				PERSISTENT_READONLY="Yes"
-				export PERSISTENT_READONLY
-				;;
-
-			persistent-storage=*)
-				PERSISTENT_STORAGE="${ARGUMENT#persistent-storage=}"
-				export PERSISTENT_STORAGE
-				;;
-
-			persistent-subtext=*)
-				root_persistence="${root_persistence}-${ARGUMENT#persistent-subtext=}"
-				home_persistence="${home_persistence}-${ARGUMENT#persistent-subtext=}"
-				root_snapshot_label="${root_snapshot_label}-${ARGUMENT#persistent-subtext=}"
-				home_snapshot_label="${home_snapshot_label}-${ARGUMENT#persistent-subtext=}"
-				;;
-
-			nopersistent)
-				NOPERSISTENT="Yes"
-				export NOPERSISTENT
-				;;
-
-			noprompt)
-				NOPROMPT="Yes"
-				export NOPROMPT
-				;;
-
-			noprompt=*)
-				NOPROMPT="${ARGUMENT#noprompt=}"
-				export NOPROMPT
-				;;
-
-			quickusbmodules)
-				QUICKUSBMODULES="Yes"
-				export QUICKUSBMODULES
-				;;
-
-			preseed/file=*|file=*)
-				LOCATIONS="${ARGUMENT#*=} ${LOCATIONS}"
-				export LOCATIONS
-				;;
-
-			nopreseed)
-				NOPRESEED="Yes"
-				export NOPRESEED
-				;;
-
-			*/*=*)
-				question="${ARGUMENT%%=*}"
-				value="${ARGUMENT#*=}"
-				PRESEEDS="${PRESEEDS}\"${question}=${value}\" "
-				export PRESEEDS
-				;;
-
-			showmounts)
-				SHOWMOUNTS="Yes"
-				export SHOWMOUNTS
-				;;
-
-			silent)
-				SILENT="Yes"
-				export SILENT
-				;;
-
-			todisk=*)
-				TODISK="${ARGUMENT#todisk=}"
-				export TODISK
-				;;
-
-			toram)
-				TORAM="Yes"
-				export TORAM
-				;;
-
-			toram=*)
-				TORAM="Yes"
-				MODULETORAM="${ARGUMENT#toram=}"
-				export TORAM MODULETORAM
-				;;
-
-			exposedroot)
-				EXPOSED_ROOT="Yes"
-				export EXPOSED_ROOT
-				;;
-
-			plainroot)
-				PLAIN_ROOT="Yes"
-				export PLAIN_ROOT
-				;;
-
-			skipunion)
-				SKIP_UNION_MOUNTS="Yes"
-				export SKIP_UNION_MOUNTS
-				;;
-
-			root=*)
-				ROOT="${ARGUMENT#root=}"
-				export ROOT
-				;;
-
-			union=*)
-				UNIONTYPE="${ARGUMENT#union=}"
-				export UNIONTYPE
-				;;
-		esac
-	done
-
-	# sort of compatibility with netboot.h from linux docs
-	if [ -z "${NETBOOT}" ]
-	then
-		if [ "${ROOT}" = "/dev/nfs" ]
-		then
-			NETBOOT="nfs"
-			export NETBOOT
-		elif [ "${ROOT}" = "/dev/cifs" ]
-		then
-			NETBOOT="cifs"
-			export NETBOOT
-		fi
-	fi
-
-	if [ -z "${MODULE}" ]
-	then
-		MODULE="filesystem"
-		export MODULE
-	fi
-
-	if [ -z "${UNIONTYPE}" ]
-	then
-		UNIONTYPE="aufs"
-		export UNIONTYPE
-	fi
-
-	if [ -z "${PERSISTENT_ENCRYPTION}" ]
-	then
-		PERSISTENT_ENCRYPTION="none"
-		export PERSISTENT_ENCRYPTION
-	elif echo ${PERSISTENT_ENCRYPTION} | grep -qe "\<luks\>"
-	then
-		if ! modprobe dm-crypt
-		then
-			log_warning_msg "Unable to load module dm-crypt"
-			PERSISTENT_ENCRYPTION=$(echo ${PERSISTENT_ENCRYPTION} | sed -e 's/\<luks,\|,\?luks$//g')
-			export PERSISTENT_ENCRYPTION
-		fi
-
-		if [ ! -x /lib/cryptsetup/askpass ] || [ ! -x /sbin/cryptsetup ]
-		then
-			log_warning_msg "cryptsetup in unavailable"
-			PERSISTENT_ENCRYPTION=$(echo ${PERSISTENT_ENCRYPTION} | sed -e 's/\<luks,\|,\?luks$//g')
-			export PERSISTENT_ENCRYPTION
-		fi
-	fi
-
-	if [ -n "${PERSISTENT}" ] && [ -z "${PERSISTENT_METHOD}" ]
-	then
-		PERSISTENT_METHOD="snapshot,overlay"
-		export PERSISTENT_METHOD
-	fi
-
-	if [ -n "${PERSISTENT}" ] && [ -z "${PERSISTENT_STORAGE}" ]
-	then
-		PERSISTENT_STORAGE="filesystem,file"
-		export PERSISTENT_STORAGE
-	fi
-}
 
 is_live_path ()
 {
@@ -854,7 +459,7 @@ do_iscsi()
 	#modprobe ib_iser
 	modprobe iscsi_tcp
 	local debugopt=""
-	[ "${DEBUG}" == "Yes" ] && debugopt="-d 8"
+	[ "${DEBUG}" = "Yes" ] && debugopt="-d 8"
 	#FIXME this name is supposed to be unique - some date + ifconfig hash?
 	ISCSI_INITIATORNAME="iqn.1993-08.org.debian.live:01:$(echo "${HWADDR}" | sed -e s/://g)"
 	export ISCSI_INITIATORNAME
@@ -987,9 +592,9 @@ do_nfsmount ()
 
 	modprobe -q nfs
 
-	if [ -z "${NFSOPTS}" ]
+	if [ -n "${NFSOPTS}" ]
 	then
-		NFSOPTS=""
+		NFSOPTS="-o ${NFSOPTS}"
 	fi
 
 	log_begin_msg "Trying nfsmount -o nolock -o ro ${NFSOPTS} ${NFSROOT} ${mountpoint}"
@@ -1016,7 +621,7 @@ do_cifsmount ()
 		then
 			CIFSOPTS="-ouser=root,password="
 		else
-			CIFSOPTS="${NFSOPTS}"
+			CIFSOPTS="-o ${NFSOPTS}"
 		fi
 
 		log_begin_msg "Trying mount.cifs ${NFSROOT} ${mountpoint} ${CIFSOPTS}"
@@ -1194,7 +799,7 @@ try_snap ()
 		return 1
 	fi
 
-	if [ -z ${PERSISTENT_READONLY} ]
+	if [ -z ${PERSISTENCE_READONLY} ]
 	then
 		echo "export ${snap_type}SNAP=${snap_relpath}:${snapdev}:${snapfile}" >> snapshot.conf # for resync on reboot/halt
 	fi
@@ -1208,7 +813,7 @@ setup_unionfs ()
 	addimage_directory="${3}"
 
 	case ${UNIONTYPE} in
-		aufs|unionfs)
+		aufs|unionfs|overlayfs)
 			modprobe -q -b ${UNIONTYPE}
 
 			if ! cut -f2 /proc/filesystems | grep -q "^${UNIONTYPE}\$" && [ -x /bin/unionfs-fuse ]
@@ -1235,17 +840,6 @@ setup_unionfs ()
 
 	# Let's just mount the read-only file systems first
 	rofslist=""
-
-	if [ "${UNIONTYPE}" = "aufs" ]
-	then
-		roopt="rr+wh"
-		noxino_opt="noxino,"
-	elif [ "${UNIONTYPE}" = "unionfs-fuse" ]
-	then
-		roopt="RO"
-	else
-		roopt="ro"
-	fi
 
 	if [ -z "${PLAIN_ROOT}" ]
 	then
@@ -1358,10 +952,14 @@ setup_unionfs ()
 		log_end_msg
 	fi
 
-	mkdir -p /cow
+	# tmpfs file systems
+	touch /etc/fstab
+	mkdir -p /live
+	mount -t tmpfs tmpfs /live
+	mkdir -p /live/overlay
 
-	# Looking for "${root_persistence}" device or file
-	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
+	# Looking for persistence devices or files
+	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
 	then
 
 		if [ -z "${QUICKUSBMODULES}" ]
@@ -1391,7 +989,7 @@ setup_unionfs ()
 			done
 		fi
 
-		case "${PERSISTENT_MEDIA}" in
+		case "${PERSISTENCE_MEDIA}" in
 			removable)
 				whitelistdev="$(removable_dev)"
 				;;
@@ -1403,64 +1001,55 @@ setup_unionfs ()
 				;;
 		esac
 
-		if echo ${PERSISTENT_METHOD} | grep -qe "\<overlay\>"
+		if echo ${PERSISTENCE_METHOD} | grep -qe "\<overlay\>"
 		then
-			overlays="${root_persistence} ${home_persistence}"
+			overlays="${old_root_overlay_label} ${old_home_overlay_label} ${custom_overlay_label}"
 		fi
 
-		if echo ${PERSISTENT_METHOD} | grep -qe "\<snapshot\>"
+		if echo ${PERSISTENCE_METHOD} | grep -qe "\<snapshot\>"
 		then
 			snapshots="${root_snapshot_label} ${home_snapshot_label}"
 		fi
 
-
-		for media in $(find_persistent_media "${overlays}" "${snapshots}" "${blacklistdev}" "${whitelistdev}")
+		local root_snapdata=""
+		local home_snapdata=""
+		local overlay_devices=""
+		for media in $(find_persistence_media "${overlays}" "${snapshots}" "${whitelistdev}")
 		do
 			media="$(echo ${media} | tr ":" " ")"
 			case ${media} in
-				${root_persistence}=*)
-					cowprobe="${media#*=}"
-					;;
-				${home_persistence}=*)
-					homecow="${media#*=}"
-					;;
-				${root_snapshot_label}=*)
-					root_snapdata="${media#*=}"
+				${root_snapshot_label}=*|${old_root_snapshot_label}=*)
+					if [ -z "${root_snapdata}" ]
+					then
+						root_snapdata="${media#*=}"
+					fi
 					;;
 				${home_snapshot_label}=*)
 					# This second type should be removed when snapshot will get smarter,
 					# hence when "/etc/live-snapshot*list" will be supported also by
 					# ext2|ext3|ext4|jffs2 snapshot types.
-					home_snapdata="${media#*=}"
+					if [ -z "${home_snapdata}" ]
+					then
+						home_snapdata="${media#*=}"
+					fi
 					;;
-				*)
+				${old_root_overlay_label}=*)
+					device="${media#*=}"
+					fix_backwards_compatibility ${device} / union
+					overlay_devices="${overlay_devices} ${device}"
+					;;
+				${old_home_overlay_label}=*)
+					device="${media#*=}"
+					fix_backwards_compatibility ${device} /home bind
+					overlay_devices="${overlay_devices} ${device}"
+					;;
+				${custom_overlay_label}=*)
+					device="${media#*=}"
+					overlay_devices="${overlay_devices} ${device}"
 					;;
 			 esac
 		done
-
-		if [ -b "${cowprobe}" ] || [ -b "${homecow}" ]
-		then
-			PERSISTENCE_IS_ON="1"
-			export PERSISTENCE_IS_ON
-		fi
-
-		if [ -b "${cowprobe}" ]
-		then
-			cowdevice=${cowprobe}
-			cow_fstype=$(get_fstype "${cowprobe}")
-			if [ -z "${PERSISTENT_READONLY}" ]
-			then
-				cow_mountopt="rw,noatime"
-			else
-				cow_mountopt="ro,noatime"
-			fi
-
-			if [ "${FORCEPERSISTENTFSCK}" = "Yes" ]
-			then
-				fsck -y ${cowdevice}
-			fi
-		fi
-	elif [ -n "${NFS_COW}" ] && [ -z "${NOPERSISTENT}" ]
+	elif [ -n "${NFS_COW}" ] && [ -z "${NOPERSISTENCE}" ]
 	then
 		# check if there are any nfs options
 		if echo ${NFS_COW}|grep -q ','
@@ -1472,7 +1061,7 @@ setup_unionfs ()
 			nfs_cow=${NFS_COW}
 		fi
 
-		if [ -n "${PERSISTENT_READONLY}" ]
+		if [ -n "${PERSISTENCE_READONLY}" ]
 		then
 			nfs_cow_opts="${nfs_cow_opts},nocto,ro"
 		fi
@@ -1496,28 +1085,30 @@ setup_unionfs ()
 
 	if [ "${UNIONTYPE}" != "unionmount" ]
 	then
-		if [ -n "${PERSISTENT_READONLY}" ]
+		if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
 		then
-			persistent_root="/$(basename ${cowdevice})-backing"
-			mkdir -p ${persistent_root}
+			mount -t tmpfs -o rw,noatime,mode=755 tmpfs "/live/overlay"
+			root_backing="/live/persistence/$(basename ${cowdevice})-root"
+			mkdir -p ${root_backing}
 		else
-			persistent_root="/cow"
+			root_backing="/live/overlay"
 		fi
 
 		if [ "${cow_fstype}" = "nfs" ]
 		then
 			log_begin_msg \
-				"Trying nfsmount ${nfs_cow_opts} ${cowdevice} ${persistent_root}"
-			nfsmount ${nfs_cow_opts} ${cowdevice} ${persistent_root} || \
-				panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on ${persistent_root}"
+				"Trying nfsmount ${nfs_cow_opts} ${cowdevice} ${root_backing}"
+			nfsmount ${nfs_cow_opts} ${cowdevice} ${root_backing} || \
+				panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on ${root_backing}"
 		else
-			mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} ${persistent_root} || \
-				panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on ${persistent_root}"
+			mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} ${root_backing} || \
+				panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on ${root_backing}"
 		fi
 	fi
 
 	rofscount=$(echo ${rofslist} |wc -w)
 
+	# XXX: we now ensure that there can only be one read-only filesystem. Should this be inside the EXPOSED_ROOT if?
 	if [ ${rofscount} -ne 1 ]
 	then
 		panic "only one RO file system supported with exposedroot: ${rofslist}"
@@ -1545,103 +1136,52 @@ setup_unionfs ()
 		#panic "unionmount does not support subunions (${cow_dirs})."
 	fi
 
-	unionmountopts=""
-	unionmountpoint=""
-
 	for dir in ${cow_dirs}; do
-		mkdir -p /cow${dir}
-
 		unionmountpoint="${rootmnt}${dir}"
-		unionrw="/cow${dir}"
-		unionro="${rofs}${dir}"
-		# We don't handle spaces and other junk gracefully here, hopefully not needed.
-		case "${UNIONTYPE}" in
-			unionfs-fuse)
-				unionmountopts="-o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid"
-				unionmountopts="${unionmountopts} ${unionrw}=RW:${unionro}=RO"
-				( sysctl -w fs.file-max=391524 ; ulimit -HSn 16384
-				unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
-				( mkdir -p /run/sendsigs.omit.d
-				pidof unionfs-fuse >> /run/sendsigs.omit.d/unionfs-fuse || true )
-				;;
-
-			unionmount)
-				unionmountopts="-t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice}"
-				mount_full $unionmountopts "${unionmountpoint}"
-				;;
-
-
-			*)
-				if [ -n "${PERSISTENT_READONLY}" ]
-				then
-					mount -t tmpfs -o rw,noatime,mode=755 tmpfs "${unionrw}"
-					unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=rw:${persistent_root}=${roopt}:${unionro}=${roopt}"
-				else
-					unionmountopts="-o noatime,${noxino_opt}dirs=${unionrw}=rw:${unionro}=${roopt}"
-				fi
-				mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
-				;;
-		esac || \
-			panic "mount ${UNIONTYPE} on ${unionmountpoint} failed with option ${unionmountopts}"
+		mkdir -p ${unionmountpoint}
+		if [ "${UNIONTYPE}" = "unionmount" ]
+		then
+			# FIXME: handle PERSISTENCE_READONLY
+			unionmountopts="-t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice}"
+			mount_full $unionmountopts "${unionmountpoint}"
+		else
+			cow_dir="/live/overlay${dir}"
+			rofs_dir="${rofs}${dir}"
+			mkdir -p ${cow_dir}
+			if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
+			then
+				do_union ${unionmountpoint} ${cow_dir} ${root_backing} ${rofs_dir}
+			else
+				do_union ${unionmountpoint} ${cow_dir} ${rofs_dir}
+			fi
+		fi || panic "mount ${UNIONTYPE} on ${unionmountpoint} failed with option ${unionmountopts}"
 	done
 
 	# Correct the permissions of /:
 	chmod 0755 "${rootmnt}"
 
-	# tmpfs file systems
-	touch /etc/fstab
-	mkdir -p "${rootmnt}/live"
-	mount -t tmpfs tmpfs ${rootmnt}/live
-
-	# Adding other custom mounts
-	if [ -n "${PERSISTENT}" ] && [ -z "${NOPERSISTENT}" ]
+	live_rofs_list=""
+	# SHOWMOUNTS is necessary for custom mounts with the union option
+	# Since we may want to do custom mounts in user-space it's best to always enable SHOWMOUNTS
+	if true #[ -n "${SHOWMOUNTS}" ] || ( [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ] 1)
 	then
-		# directly mount /home
-		# FIXME: add a custom mounts configurable system
-
-		if [ -b "${homecow}" ]
-		then
-			if [ -z "${PERSISTENT_READONLY}" ]
-			then
-				mount -t $(get_fstype "${homecow}") -o rw,noatime "${homecow}" "${rootmnt}/home"
-			else
-				homerw="/cow/home"
-			        homero="/$(basename ${homecow})-backing"
-				homemountpoint="${rootmnt}/home"
-				mkdir -p ${homerw} ${homero} ${homemountpoint}
-				mount -t $(get_fstype "${homecow}") -o ro "${homecow}" "${homero}"
-				mount -t "${UNIONTYPE}" -o "noatime,${noxino_opt}dirs=${homerw}=rw:${homero}=${roopt}" "${UNIONTYPE}" "${homemountpoint}"
-			fi
-			export HOMEMOUNTED=1 # used to proper calculate free space in do_snap_copy()
-		else
-			log_warning_msg "Unable to find the persistent home medium"
-		fi
-
-		# Look for other snapshots to copy in
-		try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
-		# This second type should be removed when snapshot grow smarter
-		try_snap "${home_snapdata}" "${rootmnt}" "HOME" "/home"
-	fi
-
-	if [ -n "${SHOWMOUNTS}" ]
-	then
+		# XXX: is the for loop really necessary? rofslist can only contain one item (see above XXX about EXPOSEDROOT) and this is also assumed elsewhere above (see use of $rofs above).
 		for d in ${rofslist}
 		do
-			mkdir -p "${rootmnt}/live/${d##*/}"
-
+			live_rofs="/live/rofs/${d##*/}"
+			live_rofs_list="${live_rofs_list} ${live_rofs}"
+			mkdir -p "${live_rofs}"
 			case d in
 				*.dir)
-					# do nothing # mount -o bind "${d}" "${rootmnt}/live/${d##*/}"
+					# do nothing # mount -o bind "${d}" "${live_rofs}"
 					;;
-
 				*)
 					case "${UNIONTYPE}" in
 						unionfs-fuse)
-							mount -o bind "${d}" "${rootmnt}/live/${d##*/}"
+							mount -o bind "${d}" "${live_rofs}"
 							;;
-
 						*)
-							mount -o move "${d}" "${rootmnt}/live/${d##*/}"
+							mount -o move "${d}" "${live_rofs}"
 							;;
 					esac
 					;;
@@ -1649,9 +1189,44 @@ setup_unionfs ()
 		done
 	fi
 
-	# shows cow fs on /cow for use by live-snapshot
-	mkdir -p "${rootmnt}/live/cow"
-	mount -o move /cow "${rootmnt}/live/cow" >/dev/null 2>&1 || mount -o bind /cow "${rootmnt}/live/cow" || log_warning_msg "Unable to move or bind /cow to ${rootmnt}/live/cow"
+	# Adding custom persistence
+	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
+	then
+		local custom_mounts="/tmp/custom_mounts.list"
+		rm -rf ${custom_mounts} 2> /dev/null
+
+		# Gather information about custom mounts from devies detected as overlays
+		get_custom_mounts ${custom_mounts} ${overlay_devices}
+
+		[ -n "${DEBUG}" ] && cp ${custom_mounts} "/live/persistence"
+
+		# Now we do the actual mounting (and symlinking)
+		local used_overlays=""
+		used_overlays=$(activate_custom_mounts ${custom_mounts})
+		rm ${custom_mounts}
+
+		# Close unused overlays (e.g. due to missing $persistence_list)
+		for overlay in ${overlay_devices}
+		do
+			if echo ${used_overlays} | grep -qve "^\(.* \)\?${device}\( .*\)\?$"
+			then
+				close_persistence_media ${overlay}
+			fi
+		done
+
+		# Look for other snapshots to copy in
+		[ -n "${root_snapdata}" ] && try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
+		# This second type should be removed when snapshot grow smarter
+		[ -n "${home_snapdata}" ] && try_snap "${home_snapdata}" "${rootmnt}" "HOME" "/home"
+	fi
+
+	mkdir -p "${rootmnt}/live"
+	mount -o move /live "${rootmnt}/live" >/dev/null 2>&1 || mount -o bind /live "${rootmnt}/live" || log_warning_msg "Unable to move or bind /live to ${rootmnt}/live"
+
+	# shows cow fs on /overlay for use by live-snapshot
+	mkdir -p "${rootmnt}/live/overlay"
+	mount -o move /live/overlay "${rootmnt}/live/overlay" >/dev/null 2>&1 || mount -o bind /overlay "${rootmnt}/live/overlay" || log_warning_msg "Unable to move or bind /overlay to ${rootmnt}/live/overlay"
+
 }
 
 check_dev ()
@@ -1758,6 +1333,21 @@ check_dev ()
 		[ -n "$devuid" ] && grep -qs "\<$devuid\>" $tried && continue
 		mount -t ${fstype} -o ro,noatime "${devname}" ${mountpoint} || continue
 		[ -n "$devuid" ] && echo "$devuid" >> $tried
+
+		if [ -n "${FINDISO}" ]
+		then
+			if [ -f ${mountpoint}/${FINDISO} ]
+			then
+				umount ${mountpoint}
+				mkdir -p /live/findiso
+				mount -t ${fstype} -o ro,noatime "${devname}" /live/findiso
+				loopdevname=$(setup_loop "/live/findiso/${FINDISO}" "loop" "/sys/block/loop*" 0 "")
+				devname="${loopdevname}"
+				mount -t iso9660 -o ro,noatime "${devname}" ${mountpoint}
+			else
+				umount ${mountpoint}
+			fi
+		fi
 
 		if is_live_path ${mountpoint} && \
 			([ "${skip_uuid_check}" ] || matches_uuid ${mountpoint})
@@ -2044,6 +1634,28 @@ mountroot ()
 	# causing a failure for example when accessing /var/lib/fai
 	# when booting FAI, this simple workaround solves it
 	ls /root/* >/dev/null 2>&1
+
+	# Move findiso directory to the new root filesystem so that programs there can get at it.
+	if [ -d /live/findiso ] && [ ! -d /root/live/findiso ]
+	then
+		mkdir -p /root/live/findiso
+		mount -n --move /live/findiso /root/live/findiso
+	fi
+
+	# if we do not unmount the ISO we can't run "fsck /dev/ice" later on
+	# because the mountpoint is left behind in /proc/mounts, so let's get
+	# rid of it when running from RAM
+	if [ -n "$FINDISO" ] && [ "${TORAM}" ]
+	then
+		losetup -d /dev/loop0
+
+		if is_mountpoint /live/findiso
+		then
+			umount /root/live/findiso
+			rmdir --ignore-fail-on-non-empty /root/live/findiso \
+				>/dev/null 2>&1 || true
+		fi
+	fi
 
 	# copy snapshot configuration if exists
 	if [ -f snapshot.conf ]

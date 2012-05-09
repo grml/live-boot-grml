@@ -26,7 +26,7 @@ esac
 
 # live-boot header
 
-if [ -z "${PERSISTENT}" ] || [ -n "${NOPERSISTENT}" ] || [ -z "${PERSISTENCE_IS_ON}" ] || [ ! -f /root/etc/live-persistence.binds ]
+if [ -z "${PERSISTENCE}" ] || [ -n "${NOPERSISTENCE}" ] || [ -z "${PERSISTENCE_IS_ON}" ] || [ ! -f /root/etc/live-persistence.binds ]
 then
 	exit 0
 fi
