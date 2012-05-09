@@ -1,3 +1,17 @@
+live-boot (3.0~a27-1+grml.1) grml-testing; urgency=low
+
+  * [3039c63] Sync with Debian's upstream/3.0_a27 (new log file name,
+    persistency reworked,...)
+  * [06185b3] Bump Standards-Version, raise Build-Depends from dh 8 to dh
+    9 + raise compat version to 9
+  * [2998c28] Drop debian/patches/07_support_findiso.patch which is in
+    upstream nowadays
+  * [3967979] Drop deprecated debian/patches/14_no_blkid_on_lenny.patch
+  * [91460b9] Refresh debian/patches/ against new upstream code
+  * [7116647] Drop deprecated debian/patches/28_remove_localized_manpages.patch
+
+ -- Michael Prokop <mika@grml.org>  Wed, 09 May 2012 14:10:37 +0200
+
 live-boot (3.0~a24-1+grml.2) grml-testing; urgency=low
 
   [ Ulrich Dangel ]
