@@ -1,6 +1,5 @@
 03_grml_version_file_hook.patch
 05_boot_failure_message_grml.patch
-07_support_findiso.patch
 08_grml_defaults.patch
 11_dhcphostname.patch
 12_uuid_support.patch
