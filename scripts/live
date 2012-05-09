@@ -1001,12 +1001,12 @@ setup_unionfs ()
 				;;
 		esac
 
-		if echo ${PERSISTENCE_METHOD} | grep -qe "\<overlay\>"
+		if is_in_comma_sep_list overlay ${PERSISTENCE_METHOD}
 		then
 			overlays="${old_root_overlay_label} ${old_home_overlay_label} ${custom_overlay_label}"
 		fi
 
-		if echo ${PERSISTENCE_METHOD} | grep -qe "\<snapshot\>"
+		if is_in_comma_sep_list snapshot ${PERSISTENCE_METHOD}
 		then
 			snapshots="${root_snapshot_label} ${home_snapshot_label}"
 		fi
