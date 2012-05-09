@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2011\-12\-04 3.0~a24-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 2012\-04\-09 3.0~a27-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -23,7 +23,7 @@ To configure the live\-boot parameters used by default in a live image, see the 
 In addition, there are some more boot parameters to influence the behaviour, see below.
 
 .SS Configuration Files
-\fBlive\-boot\fR can be configured (but not activated) through configuration files. Those files can be placed either in the root filesystem itself (/etc/live/boot.conf, /etc/live/boot.d/), or on the live media (live/boot.conf, live/boot.d/).
+\fBlive\-boot\fR can be configured (but not activated) through configuration files. Those files can be placed either in the root filesystem itself (/etc/live/boot.conf, /etc/live/boot.d/*.conf), or on the live media (live/boot.conf, live/boot.d/*.conf).
 
 .SH OPTIONS
 \fBlive\-boot\fR currently features the following parameters.
@@ -66,6 +66,8 @@ Target <target-name>
   Lun 0 Path=<path-to-your-live-image.iso>,Type=fileio,IOMode=ro
   # If you want to boot multiple machines you might want to look at tuning some parameters like
   # Wthreads or MaxConnections
+.IP "\fBfindiso\fR=\fI/PATH/TO/IMAGE\fI" 4
+Look for the specified ISO file on all disks where it usually looks for the .squashfs file (so you don't have to know the device name as in fromiso=....).
 .IP "\fBfromiso\fR=\fI/PATH/TO/IMAGE\fI" 4
 Allows to use a filesystem from within an iso image that's available on live-media.
 .IP "\fBignore_uuid\fR" 4
@@ -96,8 +98,8 @@ This tells live\-boot to perform a network mount. The parameter "nfsroot=" (with
 This lets you specify custom nfs options.
 .IP "\fBnofastboot\fR" 4
 This parameter disables the default disabling of filesystem checks in /etc/fstab. If you have static filesystems on your harddisk and you want them to be checked at boot time, use this parameter, otherwise they are skipped.
-.IP "\fBnopersistent\fR" 4
-disables the "persistent" feature, useful if the bootloader (like syslinux) has been installed with persistent enabled.
+.IP "\fBnopersistence\fR" 4
+disables the "persistence" feature, useful if the bootloader (like syslinux) has been installed with persistence enabled.
 .IP "\fBnoprompt\fR" 4
 Do not prompt to eject the CD or remove the USB flash drive on reboot.
 .IP "\fBnoprompt\fR=\fITYPE\fR" 4
@@ -106,26 +108,22 @@ This tells live-boot not to prompt to eject the CD (when noprompt=cd) or remove 
 This parameters allows to set a custom ramdisk size (it's the '\-o size' option of tmpfs mount). By default, there is no ramdisk size set, so the default of mount applies (currently 50% of available RAM). Note that this option has no currently no effect when booting with toram.
 .IP "\fBswapon\fR" 4
 This parameter enables usage of local swap partitions.
-.IP "\fBpersistent\fR" 4
-live\-boot will probe filesystems for persistent media. These can either be the filesystems themselves, if labeled correctly, or image/archive files, if named correctly. Overlays are labeled/named either "live\-rw" or "home\-rw" and will be mounted on / or /home, respectively; snapshots are labeled/named either "live\-sn" or "home\-sn" and will be extracted into / or /home, respectively (see live\-snapshot(1) for more information). Overlays are mounted before snapshots are extracted, and for both overlays and snapshots, "live\-*" are handled before "home\-*". Overlay image files and snapshot archive files have extensions which determines their filesystem or archive type, e.g. "live\-rw.ext3" and "\home\-sn.squashfs".
-.IP "\fBpersistent\-encryption\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
-This option determines which types of encryption that we allow to be used when probing devices for persistent media. If "none" is in the list, we allow unencrypted media; if "luks" is in the list, we allow LUKS\-encrypted media. Whenever a device containing encrypted media is probed the user will be prompted for the passphrase. The default value is "none".
-.IP "\fBpersistent\-media\fR={\fIremovable\fR|\fIremovable\-usb\fR}" 4
-If you specify the keyword 'removable', live\-boot will try to find persistent and snapshot partitions on removable media only. Note that if you want to further restrict the media to usb mass storage only, you can use the 'removable\-usb' keyword.
-.IP "\fBpersistent\-method\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
-This option determines which types of persistent media we allow. If "overlay" is in the list, we consider overlays (i.e. "live\-rw" and "home\-rw"); if "snapshot" is in the list, we consider snapshots (i.e. "live\-sn" and "home\-sn"). The default is "overlay,snapshot".
-.IP "\fBpersistent\-path\fR=\fIPATH\fR" 4
+.IP "\fBpersistence\fR" 4
+live\-boot will probe devices for persistence media. These can be partitions (with the correct GPT name), filesystems (with the correct label) or image/archive files (with the correct file name). Overlays are labeled/named either "full\-ov", which will be mounted on /, or "custom\-ov", which can be completely customized (see \fIlive-persistence.conf\fR(5)); snapshots are labeled/named either "live\-sn" or "home\-sn" and will be extracted into / or /home, respectively (see \fIlive\-snapshot\fR(1) for more information). The order these are handled are: full\-ov, custom\-ov, live-sn, home-sn. Overlay image files and snapshot archive files have extensions which determines their filesystem or archive type, e.g. "custom\-ov.ext4" and "\home\-sn.squashfs".
+.IP "\fBpersistence\-encryption\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
+This option determines which types of encryption that we allow to be used when probing devices for persistence media. If "none" is in the list, we allow unencrypted media; if "luks" is in the list, we allow LUKS\-encrypted media. Whenever a device containing encrypted media is probed the user will be prompted for the passphrase. The default value is "none".
+.IP "\fBpersistence\-media\fR={\fIremovable\fR|\fIremovable\-usb\fR}" 4
+If you specify the keyword 'removable', live\-boot will try to find persistence and snapshot partitions on removable media only. Note that if you want to further restrict the media to usb mass storage only, you can use the 'removable\-usb' keyword.
+.IP "\fBpersistence\-method\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
+This option determines which types of persistence media we allow. If "overlay" is in the list, we consider overlays (i.e. "live\-rw" and "home\-rw"); if "snapshot" is in the list, we consider snapshots (i.e. "live\-sn" and "home\-sn"). The default is "overlay,snapshot".
+.IP "\fBpersistence\-path\fR=\fIPATH\fR" 4
 live\-boot will look for persistency files in the root directory of a partition, with this parameter, the path can be configured so that you can have multiple directories on the same partition to store persistency files.
-.IP "\fBpersistent\-read\-only\fR" 4
-Filesystem changes are not saved back to persistent media. In particular, overlays and netboot NFS mounts are mounted read-only, and snapshots are not resynced on shutdown.
-.IP "\fBpersistent\-storage\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
-This option determines which types of persistent storage to consider when probing for persistent media. If "filesystem" is in the list, filesystems with matching labels will be used; if "file" is in the list, all filesystems will be probed for archives and image files with matching filenames. The default is "file,filesystem".
-.IP "\fBpersistent\-subtext\fR=\fISUFFIX\fR" 4
-Add a suffix when searching for the image filenames or partition labels to use for the above mentioned persistent feature, the SUFFIX will be added after a dash (e.g.: "live-sn" would transform to "live-sn-SUFFIX"). This is handy to test multiple live-boot based live-systems with different persistent storage choices.
-.IP "{\fBpreseed/file\fR|\fBfile\fR}=\fIFILE\fR" 4
-A path to a file present on the rootfs could be used to preseed debconf database.
-.IP "\fBpackage/question\fR=\fIVALUE\fR" 4
-All debian installed packages could be preseeded from command\-line that way, beware of blanks spaces, they will interfere with parsing, use a preseed file in this case.
+.IP "\fBpersistence\-read\-only\fR" 4
+Filesystem changes are not saved back to persistence media. In particular, overlays and netboot NFS mounts are mounted read-only, and snapshots are not resynced on shutdown.
+.IP "\fBpersistence\-storage\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
+This option determines which types of persistence storage to consider when probing for persistence media. If "filesystem" is in the list, filesystems with matching labels will be used; if "file" is in the list, all filesystems will be probed for archives and image files with matching filenames. The default is "file,filesystem".
+.IP "\fBpersistence\-subtext\fR=\fISUFFIX\fR" 4
+Add a suffix when searching for the image filenames or partition labels to use for the above mentioned persistence feature, the SUFFIX will be added after a dash (e.g.: "live-sn" would transform to "live-sn-SUFFIX"). This is handy to test multiple live-boot based live-systems with different persistence storage choices.
 .IP "\fBquickreboot\fR" 4
 This option causes live\-boot to reboot without attempting to eject the media and without asking the user to remove the boot media.
 .IP "\fBshowmounts\fR" 4
@@ -145,7 +143,7 @@ By default, live\-boot uses aufs. With this parameter, you can switch to unionfs
 .IP "\fB/etc/live.conf\fR" 4
 Some variables can be configured via this config file (inside the live system).
 .IP "\fBlive/filesystem.module\fR" 4
-This optional file (inside the live media) contains a list of white\-space or carriage\-return\-separated file names corresponding to disk images in the "/live" directory. If this file exists, only images listed here will be merged into the root aufs, and they will be loaded in the order listed here. The first entry in this file will be the "lowest" point in the aufs, and the last file in this list will be on the "top" of the aufs, directly below /cow.  Without this file, any images in the "/live" directory are loaded in alphanumeric order.
+This optional file (inside the live media) contains a list of white\-space or carriage\-return\-separated file names corresponding to disk images in the "/live" directory. If this file exists, only images listed here will be merged into the root aufs, and they will be loaded in the order listed here. The first entry in this file will be the "lowest" point in the aufs, and the last file in this list will be on the "top" of the aufs, directly below /overlay.  Without this file, any images in the "/live" directory are loaded in alphanumeric order.
 .IP "\fB/etc/live\-persistence.binds\fR" 4
 This optional file (which resides in the rootfs system, not in the live media) is used as a list of directories which not need be persistent: ie. their content does not need to survive reboots when using the persistence features.
 .br
@@ -154,12 +152,15 @@ This saves expensive writes and speeds up operations on volatile data such as we
 
 .SH FILES
 .IP "\fB/etc/live/boot.conf\fR" 4
-.IP "\fB/etc/live/boot.d/\fR" 4
+.IP "\fB/etc/live/boot.d/*.conf\fR" 4
 .IP "\fBlive/boot.conf\fR" 4
-.IP "\fBlive/boot.d/\fR" 4
+.IP "\fBlive/boot.d/*.conf\fR" 4
+.IP "\fBlive-persistence.conf\fR" 4
 
 .SH SEE ALSO
 \fIlive\-snapshot\fR(1)
+.PP
+\fIlive-persistence.conf\fR(5)
 .PP
 \fIlive\-build\fR(7)
 .PP

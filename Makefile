@@ -53,7 +53,7 @@ install:
 
 	# Installing docs
 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
-	cp -r COPYING docs/* $(DESTDIR)/usr/share/doc/live-boot
+	cp -r COPYING $(DESTDIR)/usr/share/doc/live-boot
 
 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot/examples
 	cp -r etc/* $(DESTDIR)/usr/share/doc/live-boot/examples
@@ -62,7 +62,7 @@ install:
 	# Installing manpages
 	for MANPAGE in manpages/en/*; \
 	do \
-		SECTION="$$(basename $${MANPAGE} | awk -F. '{ print $$2 }')"; \
+		SECTION="$$(basename $${MANPAGE} | sed -e 's|\.|\n|g' | tail -n1)"; \
 		install -D -m 0644 $${MANPAGE} $(DESTDIR)/usr/share/man/man$${SECTION}/$$(basename $${MANPAGE}); \
 	done
 
@@ -70,7 +70,7 @@ install:
 	do \
 		for MANPAGE in manpages/$${LANGUAGE}/*; \
 		do \
-			SECTION="$$(basename $${MANPAGE} | awk -F. '{ print $$3 }')"; \
+			SECTION="$$(basename $${MANPAGE} | sed -e 's|\.|\n|g' | tail -n1)"; \
 			install -D -m 0644 $${MANPAGE} $(DESTDIR)/usr/share/man/$${LANGUAGE}/man$${SECTION}/$$(basename $${MANPAGE} .$${LANGUAGE}.$${SECTION}).$${SECTION}; \
 		done; \
 	done
@@ -102,7 +102,7 @@ uninstall:
 	# Uninstalling manpages
 	for MANPAGE in manpages/en/*; \
 	do \
-		SECTION="$$(basename $${MANPAGE} | awk -F. '{ print $$2 }')"; \
+		SECTION="$$(basename $${MANPAGE} | sed -e 's|\.|\n|g' | tail -n1)"; \
 		rm -f $(DESTDIR)/usr/share/man/man$${SECTION}/$$(basename $${MANPAGE} .en.$${SECTION}).$${SECTION}; \
 	done
 
@@ -110,12 +110,12 @@ uninstall:
 	do \
 		for MANPAGE in manpages/$${LANGUAGE}/*; \
 		do \
-			SECTION="$$(basename $${MANPAGE} | awk -F. '{ print $$3 }')"; \
+			SECTION="$$(basename $${MANPAGE} | sed -e 's|\.|\n|g' | tail -n1)"; \
 			rm -f $(DESTDIR)/usr/share/man/$${LANGUAGE}/man$${SECTION}/$$(basename $${MANPAGE} .$${LANGUAGE}.$${SECTION}).$${SECTION}; \
 		done; \
 	done
 
-	for SECTION in $(ls manpages/en/* | awk -F. '{ print $2 }'); \
+	for SECTION in $(for MANPAGE in $(ls manpages/en/*); do basename $${MANPAGE} | sed -e 's|\.|\n|g' | tail -n1; done | sort -u); \
 	do \
 		rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man/man$${SECTION} > /dev/null 2>&1 || true; \
 		rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/man/*/man$${SECTION} > /dev/null 2>&1 || true; \
