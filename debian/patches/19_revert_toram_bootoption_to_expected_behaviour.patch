@@ -27,11 +27,9 @@
 @DPATCH@
 
 index d79beed..1b6926e 100755
-Index: live-boot-grml/scripts/live
-===================================================================
---- live-boot-grml.orig/scripts/live	2011-12-06 22:10:34.000000000 +0100
-+++ live-boot-grml/scripts/live	2011-12-06 22:10:34.000000000 +0100
-@@ -619,7 +619,7 @@
+--- a/scripts/live
++++ b/scripts/live
+@@ -202,7 +202,7 @@
  
  	if [ -z "${MODULETORAM}" ]
  	then
@@ -40,7 +38,7 @@ Index: live-boot-grml/scripts/live
  	else
  		MODULETORAMFILE="${copyfrom}/${LIVE_MEDIA_PATH}/${MODULETORAM}"
  
-@@ -695,8 +695,7 @@
+@@ -278,8 +278,7 @@
  				echo " * Copying whole medium to RAM" 1>/dev/console
  				rsync -a --progress ${copyfrom}/* ${copyto} 1>/dev/console  # "cp -a" from busybox also copies hidden files
  			else

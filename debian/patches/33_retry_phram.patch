@@ -7,11 +7,9 @@ Date:   Mon Jul 11 12:42:24 2011 +0200
     phram doesn't work on first modprobe, when loading once again it seems
     to work. So let's try it this way.
 
-diff --git a/scripts/live b/scripts/live
-index 23d0bbc..e5d3186 100755
 --- a/scripts/live
 +++ b/scripts/live
-@@ -1840,6 +1840,7 @@ mountroot ()
+@@ -1576,6 +1576,7 @@
  				then
  					# We found a memdisk, set up phram
  					modprobe phram phram=memdisk,${MEMDISK}

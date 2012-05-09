@@ -7,26 +7,7 @@
 @DPATCH@
 --- a/scripts/live
 +++ b/scripts/live
-@@ -77,6 +77,18 @@
- 				BOOTIF="${x#BOOTIF=}"
- 				;;
- 
-+			dns=*)
-+			  	DNSSERVER="${ARGUMENT#*=}"
-+				if echo "${DNSSERVER}" | grep -q , ; then
-+					DNSSERVER1="${DNSSERVER%,*}"
-+					DNSSERVER2="${DNSSERVER#*,}"
-+					export DNSSERVER1 DNSSERVER2
-+				else
-+					DNSSERVER1="$DNSSERVER"
-+					export DNSSERVER1
-+				fi
-+				unset DNSSERVER
-+				;;
- 			debug)
- 				DEBUG="Yes"
- 				export DEBUG
-@@ -846,7 +858,7 @@
+@@ -429,7 +429,7 @@
  				echo "search ${DNSDOMAIN}" >> /etc/resolv.conf
  			fi
  
@@ -69,3 +50,25 @@
 +		echo "nameserver $i" >> $RESOLVCONF
 +	done
 +fi
+--- a/scripts/live-helpers
++++ b/scripts/live-helpers
+@@ -59,6 +59,19 @@
+ 				BOOTIF="${x#BOOTIF=}"
+ 				;;
+ 
++			dns=*)
++			  	DNSSERVER="${ARGUMENT#*=}"
++				if echo "${DNSSERVER}" | grep -q , ; then
++					DNSSERVER1="${DNSSERVER%,*}"
++					DNSSERVER2="${DNSSERVER#*,}"
++					export DNSSERVER1 DNSSERVER2
++				else
++					DNSSERVER1="$DNSSERVER"
++					export DNSSERVER1
++				fi
++				unset DNSSERVER
++				;;
++
+ 			debug)
+ 				DEBUG="Yes"
+ 				export DEBUG

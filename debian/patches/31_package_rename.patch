@@ -1,15 +1,13 @@
-Index: live-boot-grml/Makefile
-===================================================================
---- live-boot-grml.orig/Makefile	2011-12-06 22:08:57.000000000 +0100
-+++ live-boot-grml/Makefile	2011-12-06 22:09:19.000000000 +0100
+--- a/Makefile
++++ b/Makefile
 @@ -52,11 +52,11 @@
  	cp -r hooks scripts $(DESTDIR)/usr/share/initramfs-tools
  
  	# Installing docs
 -	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
--	cp -r COPYING docs/* $(DESTDIR)/usr/share/doc/live-boot
+-	cp -r COPYING $(DESTDIR)/usr/share/doc/live-boot
 +	mkdir -p $(DESTDIR)/usr/share/doc/live-boot-grml
-+	cp -r COPYING docs/* $(DESTDIR)/usr/share/doc/live-boot-grml
++	cp -r COPYING $(DESTDIR)/usr/share/doc/live-boot-grml
  
 -	mkdir -p $(DESTDIR)/usr/share/doc/live-boot/examples
 -	cp -r etc/* $(DESTDIR)/usr/share/doc/live-boot/examples
@@ -18,7 +16,7 @@ Index: live-boot-grml/Makefile
  	# (FIXME)
  
  	# Installing manpages
-@@ -85,7 +85,7 @@
+@@ -94,7 +94,7 @@
  	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr > /dev/null 2>&1 || true
  
  	# Uninstalling docs

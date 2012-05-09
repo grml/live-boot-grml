@@ -9,7 +9,7 @@
 19_revert_toram_bootoption_to_expected_behaviour.patch
 26_support_dns_bootoption.patch
 27_support_static_ip.patch
-28_remove_localized_manpages.patch
+# 28_remove_localized_manpages.patch
 29_support_dns_in_initramfs.patch
 30_support_multiarch_dns.patch
 31_package_rename.patch

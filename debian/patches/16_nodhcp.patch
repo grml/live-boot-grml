@@ -6,11 +6,9 @@
 
 @DPATCH@
 
-Index: b/scripts/live
-===================================================================
---- a/scripts/live	2011-07-24 22:08:06.000000000 +0200
-+++ b/scripts/live	2011-07-24 22:08:09.000000000 +0200
-@@ -93,6 +93,8 @@
+--- a/scripts/live-helpers
++++ b/scripts/live-helpers
+@@ -75,6 +75,8 @@
  
  			nodhcp)
  				unset DHCP

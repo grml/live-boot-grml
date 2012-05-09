@@ -5,19 +5,13 @@
 ## DP: Pseudo-brand as grml
 
 @DPATCH@
-Index: b/scripts/live
-===================================================================
---- a/scripts/live	2011-07-24 22:07:58.000000000 +0200
-+++ b/scripts/live	2011-07-24 22:07:59.000000000 +0200
-@@ -16,9 +16,9 @@
- root_snapshot_label="live-sn"
- home_snapshot_label="home-sn"
+--- a/scripts/live
++++ b/scripts/live
+@@ -11,7 +11,7 @@
+ alt_mountpoint="/media"
+ LIVE_MEDIA_PATH="live"
  
--USERNAME="user"
--USERFULLNAME="Live user"
 -HOSTNAME="host"
-+USERNAME="grml"
-+USERFULLNAME="grml user"
 +HOSTNAME="grml"
  
  mkdir -p "${mountpoint}"

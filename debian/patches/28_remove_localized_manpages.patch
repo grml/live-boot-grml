@@ -11,11 +11,9 @@ Date:   Wed Jun 8 10:19:29 2011 +0200
     
     So lets drop the localized manpages and just install the english ones.
 
-Index: b/Makefile
-===================================================================
---- a/Makefile	2011-07-24 22:07:22.000000000 +0200
-+++ b/Makefile	2011-07-24 22:08:15.000000000 +0200
-@@ -66,15 +66,6 @@
+--- a/Makefile
++++ b/Makefile
+@@ -66,14 +66,6 @@
  		install -D -m 0644 $${MANPAGE} $(DESTDIR)/usr/share/man/man$${SECTION}/$$(basename $${MANPAGE}); \
  	done
  
@@ -23,11 +21,10 @@ Index: b/Makefile
 -	do \
 -		for MANPAGE in manpages/$${LANGUAGE}/*; \
 -		do \
--			SECTION="$$(basename $${MANPAGE} | awk -F. '{ print $$3 }')"; \
+-			SECTION="$$(basename $${MANPAGE} | sed -e 's|\.|\n|g' | tail -n1)"; \
 -			install -D -m 0644 $${MANPAGE} $(DESTDIR)/usr/share/man/$${LANGUAGE}/man$${SECTION}/$$(basename $${MANPAGE} .$${LANGUAGE}.$${SECTION}).$${SECTION}; \
 -		done; \
 -	done
--
+ 
  uninstall:
  	# Uninstalling executables
- 	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile

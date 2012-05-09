@@ -12,35 +12,9 @@
 ## DP: * no bootid.txt + ignore_bootid=...                => boots
 
 @DPATCH@
-Index: live-boot-grml/scripts/live
-===================================================================
---- live-boot-grml.orig/scripts/live	2011-12-06 22:10:24.000000000 +0100
-+++ live-boot-grml/scripts/live	2011-12-06 22:10:25.000000000 +0100
-@@ -63,6 +63,11 @@
- 				export ACCESS
- 				;;
- 
-+			bootid=*)
-+				BOOTID="${ARGUMENT#bootid=}"
-+				export BOOTID
-+				;;
-+
- 			console=*)
- 				DEFCONSOLE="${ARGUMENT#*=}"
- 				export DEFCONSOLE
-@@ -144,6 +149,11 @@
- 				export FROMISO
- 				;;
- 
-+			ignore_bootid)
-+				IGNORE_BOOTID="Yes"
-+				export IGNORE_BOOTID
-+				;;
-+
- 			ignore_uuid)
- 				IGNORE_UUID="Yes"
- 				export IGNORE_UUID
-@@ -457,6 +467,42 @@
+--- a/scripts/live
++++ b/scripts/live
+@@ -52,6 +52,42 @@
  	return 1
  }
  
@@ -83,7 +57,7 @@ Index: live-boot-grml/scripts/live
  matches_uuid ()
  {
  	if [ "${IGNORE_UUID}" ] || [ ! -e /conf/uuid.conf ]
-@@ -1785,7 +1831,7 @@
+@@ -1350,7 +1386,7 @@
  		fi
  
  		if is_live_path ${mountpoint} && \
@@ -92,7 +66,7 @@ Index: live-boot-grml/scripts/live
  		then
  			echo ${mountpoint}
  			return 0
-@@ -1881,19 +1927,6 @@
+@@ -1446,19 +1482,6 @@
  					return 0
  				fi
  			done
@@ -112,3 +86,29 @@ Index: live-boot-grml/scripts/live
  		fi
  	done
  
+--- a/scripts/live-helpers
++++ b/scripts/live-helpers
+@@ -45,6 +45,11 @@
+ 				export ACCESS
+ 				;;
+ 
++			bootid=*)
++				BOOTID="${ARGUMENT#bootid=}"
++				export BOOTID
++				;;
++
+ 			console=*)
+ 				DEFCONSOLE="${ARGUMENT#*=}"
+ 				export DEFCONSOLE
+@@ -126,6 +131,11 @@
+ 				export FROMISO
+ 				;;
+ 
++			ignore_bootid)
++				IGNORE_BOOTID="Yes"
++				export IGNORE_BOOTID
++				;;
++
+ 			ignore_uuid)
+ 				IGNORE_UUID="Yes"
+ 				export IGNORE_UUID
