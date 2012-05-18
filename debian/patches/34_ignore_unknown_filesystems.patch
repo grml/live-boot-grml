@@ -1,0 +1,15 @@
+--- a/scripts/live-helpers
++++ b/scripts/live-helpers
+@@ -507,6 +507,12 @@
+ 		return 1
+ 	fi
+ 
++	# get_fstype might report "unknown", ignore it as no such kernel module exists
++	if [ "${fstype}" = "unknown" ]
++	then
++		return 1
++	fi
++
+ 	# Try to look if it is already supported by the kernel
+ 	if grep -q ${fstype} /proc/filesystems
+ 	then

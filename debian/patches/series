@@ -14,3 +14,4 @@
 31_package_rename.patch
 32_add_kms.patch
 33_retry_phram.patch
+34_ignore_unknown_filesystems.patch
