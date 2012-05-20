@@ -1,3 +1,10 @@
+live-boot (3.0~a27-1+grml.2) grml-testing; urgency=low
+
+  * [e161c2c] New patch to ignore "unknown" filesystems in
+    is_supported_fs() [Testing: issue1170]
+
+ -- Michael Prokop <mika@grml.org>  Sun, 20 May 2012 18:54:58 +0200
+
 live-boot (3.0~a27-1+grml.1) grml-testing; urgency=low
 
   * [3039c63] Sync with Debian's upstream/3.0_a27 (new log file name,
