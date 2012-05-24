@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT conf 2012\-04\-09 3.0~a27-1 "Debian Live Project"
+.TH LIVE\-BOOT conf 2012\-05\-24 3.0~a27-1 "Debian Live Project"
 
 .SH NAME
 \fBlive-persistence.conf\fR \- Configuration file for persistence media in
@@ -11,7 +11,7 @@ that volume's persistence is fully customizable through the
 \fBlive-persistence.conf\fR file stored on the root of its file system. Any such
 labeled volume must have such a file, or it will be ignored.
 .PP
-The format of \fBlive-persistence.conf\fR allow empty lines and lines starting
+The format of \fBlive-persistence.conf\fR allows empty lines and lines starting
 with a "#" (used for comments), both which will be ignored. A so
 called "custom mount" has the format:
 .PP
@@ -59,7 +59,7 @@ Custom mounts defined in \fBlive-persistence.conf\fR accept the following
 options in a coma-separated list:
 .IP "\fBsource\fR=\fIPATH\fR" 4
 When given, store the persistence changes into \fIPATH\fR on the
-persistence media. \fIPATH\fR must be a relative path (w.r.t. the
+persistence media. \fIPATH\fR must be a relative path (with respect to the
 persistence media root) that cannot contain white spaces or the
 special . or .. path components, with the exception that it can be
 just . which means the persistence media root. This option is mostly
@@ -209,5 +209,5 @@ package in the Debian Bug Tracking System at
 Live mailing list at <\fIdebian-live@lists.debian.org\fR>.
 
 .SH AUTHOR
-live\.persist was written by anonym <\fIanonym@lavabit.com\fR> for the
+live\-persistence.conf was written by anonym <\fIanonym@lavabit.com\fR> for the
 Debian project.

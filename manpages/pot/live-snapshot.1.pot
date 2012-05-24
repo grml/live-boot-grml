@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2012-04-09 18:57+0300\n"
+"POT-Creation-Date: 2012-05-24 14:35+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "2012-04-09"
+msgid "2012-05-24"
 msgstr ""
 
 #. type: TH
@@ -94,15 +94,6 @@ msgstr ""
 #: en/live-boot.7:147 en/live-snapshot.1:47
 #, no-wrap
 msgid "B</etc/live-persistence.binds>"
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:149 en/live-snapshot.1:49
-msgid ""
-"This optional file (which resides in the rootfs system, not in the live "
-"media) is used as a list of directories which not need be persistent: ie. "
-"their content does not need to survive reboots when using the persistence "
-"features."
 msgstr ""
 
 #. type: Plain text
@@ -253,12 +244,11 @@ msgstr ""
 #. type: Plain text
 #: en/live-snapshot.1:25
 msgid ""
-"sets the device where the media which the snapshot/persistence file/"
-"partition will be put. If it is not specified, a tmpfs will be used and "
-"linked to the user's desktop to move it where it is needed. If the device "
-"has no filesystem, an ext4 fs will be automatically created and labelled "
-"according to the values specified after the \"--output\" value or with a "
-"sane default."
+"sets the device where the media with the snapshot/persistence file/partition "
+"will be put. If it is not specified, a tmpfs will be used and linked to the "
+"user's desktop to move it where it is needed. If the device has no "
+"filesystem, an ext4 fs will be automatically created and labelled according "
+"to the values specified after the \"--output\" value or with a sane default."
 msgstr ""
 
 #. type: IP
@@ -357,6 +347,15 @@ msgstr ""
 #. type: Plain text
 #: en/live-snapshot.1:41
 msgid "output version information and exit."
+msgstr ""
+
+#. type: Plain text
+#: en/live-snapshot.1:49
+msgid ""
+"This optional file (which resides in the rootfs system, not in the live "
+"media) is used as a list of directories which not need be persistent: i.e. "
+"their content does not need to survive reboots when using the persistence "
+"features."
 msgstr ""
 
 #. type: IP

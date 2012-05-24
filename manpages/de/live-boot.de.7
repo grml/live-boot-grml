@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 2012\-04\-09 3.0~a27\-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 2012\-05\-24 3.0~a27\-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Scripts
@@ -48,10 +48,10 @@ files. Those files can be placed either in the root filesystem itself
 .\" FIXME
 \fBlive\-boot\fP currently features the following parameters.
 .IP \fBaccess\fP=\fIACCESS\fP 4
-Set the accessibility level for physically or visually impared users. ACCESS
-must be one of v1, v2, v3, m1, or m2. v1=lesser visual impairment,
-v2=moderate visual impairment, v3=blindness, m1=minor motor difficulties,
-m2=moderate motor difficulties.
+Set the accessibility level for physically or visually impaired
+users. ACCESS must be one of v1, v2, v3, m1, or m2. v1=lesser visual
+impairment, v2=moderate visual impairment, v3=blindness, m1=minor motor
+difficulties, m2=moderate motor difficulties.
 .IP \fBconsole\fP=\fITTY,SPEED\fP 4
 Set the default console to be used with the "live\-getty" option. Example:
 "console=ttyS0,115200"
@@ -71,7 +71,7 @@ correctly because it does not require networking afterwards and the system
 operates faster once booted because it does not require to contact the
 server anymore.
 .br
-Due to current limitations in busyboxs wget and DNS resolution, an URL can
+Due to current limitations in busybox's wget and DNS resolution, an URL can
 not contain a hostname but an IP only.
 .br
 Not working: http://example.com/path/to/your_filesystem.squashfs
@@ -187,7 +187,7 @@ labeled/named either "live\-sn" or "home\-sn" and will be extracted into / or
 order these are handled are: full\-ov, custom\-ov, live\-sn, home\-sn. Overlay
 image files and snapshot archive files have extensions which determines
 their filesystem or archive type, e.g. "custom\-ov.ext4" and
-"\home\-sn.squashfs".
+"home\-sn.squashfs".
 .IP "\fBpersistence\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 This option determines which types of encryption that we allow to be used
 when probing devices for persistence media. If "none" is in the list, we

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2012-04-09 18:57+0300\n"
+"POT-Creation-Date: 2012-05-24 14:35+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "2012-04-09"
+msgid "2012-05-24"
 msgstr ""
 
 #. type: TH
@@ -134,7 +134,7 @@ msgstr ""
 #. type: Plain text
 #: en/live-persistence.conf.5:17
 msgid ""
-"The format of B<live-persistence.conf> allow empty lines and lines starting "
+"The format of B<live-persistence.conf> allows empty lines and lines starting "
 "with a \"#\" (used for comments), both which will be ignored. A so called "
 "\"custom mount\" has the format:"
 msgstr ""
@@ -209,13 +209,13 @@ msgstr ""
 #: en/live-persistence.conf.5:69
 msgid ""
 "When given, store the persistence changes into I<PATH> on the persistence "
-"media. I<PATH> must be a relative path (w.r.t. the persistence media root) "
-"that cannot contain white spaces or the special . or .. path components, "
-"with the exception that it can be just . which means the persistence media "
-"root. This option is mostly relevant if you want to nest custom mounts, "
-"which otherwise would cause errors, or if you want to make the whole media "
-"root available (similar to the now deprecated B<home-rw> type of "
-"persistence)."
+"media. I<PATH> must be a relative path (with respect to the persistence "
+"media root) that cannot contain white spaces or the special . or .. path "
+"components, with the exception that it can be just . which means the "
+"persistence media root. This option is mostly relevant if you want to nest "
+"custom mounts, which otherwise would cause errors, or if you want to make "
+"the whole media root available (similar to the now deprecated B<home-rw> "
+"type of persistence)."
 msgstr ""
 
 #. type: Plain text
@@ -510,6 +510,6 @@ msgstr ""
 #. type: Plain text
 #: en/live-persistence.conf.5:213
 msgid ""
-"live.persist was written by anonym E<lt>I<anonym@lavabit.com>E<gt> for the "
-"Debian project."
+"live-persistence.conf was written by anonym E<lt>I<anonym@lavabit.com>E<gt> "
+"for the Debian project."
 msgstr ""
