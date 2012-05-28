@@ -1,3 +1,12 @@
+live-boot (3.0~a27-1+grml.3) grml-testing; urgency=low
+
+  * [d978027] 35_fix_findiso_umount.patch: make sure ISO gets unmounted
+    correctly when using findiso/toram. Thanks to Christoph Biedl for the
+    bugreport and the patch
+  * [d621ee2] 34_ignore_unknown_filesystems.patch: also ignore fstype swap
+
+ -- Michael Prokop <mika@grml.org>  Mon, 28 May 2012 12:27:08 +0200
+
 live-boot (3.0~a27-1+grml.2) grml-testing; urgency=low
 
   * [e161c2c] New patch to ignore "unknown" filesystems in
