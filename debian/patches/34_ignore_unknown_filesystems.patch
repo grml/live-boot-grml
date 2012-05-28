@@ -4,8 +4,8 @@
  		return 1
  	fi
  
-+	# get_fstype might report "unknown", ignore it as no such kernel module exists
-+	if [ "${fstype}" = "unknown" ]
++	# get_fstype might report "unknown" or "swap", ignore it as no such kernel module exists
++	if [ "${fstype}" = "unknown" ] || [ "${fstype}" = "swap" ]
 +	then
 +		return 1
 +	fi
