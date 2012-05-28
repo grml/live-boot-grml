@@ -340,7 +340,7 @@ do_netsetup ()
 	done
 
 	# this is tricky (and ugly) because ipconfig sometimes just hangs/runs into
-	# an endless loop; iff execution fails give it two further tries, that's
+	# an endless loop; if execution fails give it two further tries, that's
 	# why we use '$devlist $devlist $devlist' for the other for loop
 	for dev in $devlist $devlist $devlist ; do
 		echo "Executing ipconfig -t $ETHDEV_TIMEOUT $dev"
@@ -353,7 +353,7 @@ do_netsetup ()
 		fi
 
 		# if configuration of device worked we should have an assigned
-		# IP address, iff so let's use the according as $DEVICE for later usage
+		# IP address, if so let's use the device as $DEVICE for later usage.
 		# simple and primitive approach which seems to work fine
 		if ifconfig $dev | grep -q 'inet.*addr:' ; then
 			export DEVICE="$dev"
