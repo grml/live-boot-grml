@@ -1,3 +1,33 @@
+live-boot (3.0~a28-1) experimental; urgency=low
+
+  [ Tails developers ]
+  * Improving robustness of findiso cleanup process.
+  * Using fromiso in most places where isofrom was used, thanks to
+    adrian15 <adrian15sgd@gmail.com>.
+  * Mounting fromiso filesystem on /live/fromiso instead of /fromiso,
+    thanks to adrian15 <adrian15sgd@gmail.com>.
+  * Improving robustness of fromiso cleanup process with is_mountpoint
+    (Closes: #668100).
+
+  [ Daniel Baumann ]
+  * Using boot.log and /var/log/live/boot.log respectively for overall
+    consistency within all debian-live tools.
+
+  [ Ian Reinhart Geiser ]
+  * Fix to allow for multiple rof when exposed roots is disabled.
+
+  [ Tails developers ]
+  * Implement and make use of robust list functions.
+
+  [ chals ]
+  * Fixing several typos in man pages.
+  * Adding initial Spanish translation of man pages.
+
+  [ Evgeni Golov ]
+  * Fixing two typos and a wrong word in comments.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 04 Jun 2012 17:31:32 +0200
+
 live-boot (3.0~a27-1) experimental; urgency=low
 
   [ Daniel Baumann ]
