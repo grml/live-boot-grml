@@ -1,0 +1,119 @@
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH LIVE\-BOOT 1 04.06.2012 3.0~a28\-1 "Proyecto Debian Live"
+
+.SH NOMBRE
+\fBlive\-snapshot\fP \- sencillo script para facilitar el uso de la persistencia
+
+.SH SINOPSIS
+\fBlive\-snapshot\fP [\-c|\-\-cow \fIDIRECTORY] [\-d|\-\-device DEVICE\fP]
+[\-e|\-\-exclude\-list \fIFILE\fP] [\-o|\-\-output \fIFILE\fP] [\-t|\-\-type \fITYPE\fP]
+.br
+\fBlive\-snapshot\fP [\-r|\-\-resync\-string STRING]
+.br
+\fBlive\-snapshot\fP [\-h|\-\-help]
+.br
+\fBlive\-snapshot\fP [\-u|\-\-usage]
+.br
+\fBlive\-snapshot\fP [\-v|\-\-version]
+
+.SH DESCRIPCIÓN
+live\-snapshot es un script que puede ser usado para crear ficheros imagen
+adecuados para la persistencia y con soporte en \fIlive\-boot\fP(7). También es
+usado por el script init de live\-boot al salir para resincronizar las
+instantáneas encontradas en los dispositivos durante el arranque.
+
+.SH OPCIONES
+.IP "\-c, \-\-cow \fIDIRECTORY\fP" 4
+especifica qué directorio debe ser clonado en el fichero imagen. Su valor
+por defecto "/live/overlay" debería ser adecuado para la mayoria de
+usos. Sin embargo puede ser práctico especificar "/home" y \-\-type ext4 para
+preparar un fichero imagen adecuado para ser directamente montado por
+live\-boot como home.
+.IP "\-d, \-\-device \fIDEVICE\fP" 4
+sets the device where the media with the snapshot/persistence file/partition
+will be put. If it is not specified, a tmpfs will be used and linked to the
+user's desktop to move it where it is needed. If the device has no
+filesystem, an ext4 fs will be automatically created and labelled according
+to the values specified after the "\-\-output" value or with a sane default.
+.IP "\-e, \-\-exclude\-list \fIFILE\fP" 4
+un fichero que contiene una lista de nombres de ficheros/rutas que no deben
+guardarse. Esta lista de exclusión será recordada en el medio de la
+instantánea objetivo para ser reutilizada.
+.IP "\-o, \-\-output \fIFILE\fP" 4
+el nombre del fichero/etiqueta utilizado para el fichero/partición
+resultante. Si se deja en blanco, live\-snapshot buscará el fichero adecuado
+en el dispositivo o utilizará la partición entera.
+.IP "\-r, \-\-resync\-string \fISTRING\fP" 4
+se usa internamente en las resincronizaciones
+.IP "\-f, \-\-refresh" 4
+intenta hacer la misma operación que se debería hacer al reiniciar o parar,
+resincronizando las instantáneas encontradas automáticamente durante el
+arranque. Es práctico para prevenir una averia o una subida de tensión.
+.IP "\-t, \-\-type \fITYPE\fP" 4
+El tipo puede ser uno de los siguientes: "cpio", "squashfs", "ext2", "ext3",
+"ext4", or "jffs2".
+.IP "\-h, \-\-help" 4
+muestra el menú de ayuda y sale.
+.IP "\-u, \-\-usage" 4
+muestra el menú de uso y sale.
+.IP "\-v, \-\-version" 4
+muestra información de la versión y sale.
+
+.SH FICHEROS
+.IP \fB/etc/live.conf\fP 4
+Some variables can be configured via this config file (inside the live
+system).
+.IP \fBlive/filesystem.module\fP 4
+This optional file (inside the live media) contains a list of white\-space or
+carriage\-return\-separated file names corresponding to disk images in the
+"/live" directory. If this file exists, only images listed here will be
+merged into the root aufs, and they will be loaded in the order listed
+here. The first entry in this file will be the "lowest" point in the aufs,
+and the last file in this list will be on the "top" of the aufs, directly
+below /overlay.  Without this file, any images in the "/live" directory are
+loaded in alphanumeric order.
+.IP \fB/etc/live\-persistence.binds\fP 4
+This optional file (which resides in the rootfs system, not in the live
+media) is used as a list of directories which not need be persistent:
+i.e. their content does not need to survive reboots when using the
+persistence features.
+.br
+Esto ahorra costosas escrituras y acelera las operaciones sobre los datos
+volátiles, tales como las caches web y los archivos temporales (como por
+ejemplo, /tmp y .mozilla) que se regeneran cada vez. Esto se logra mediante
+un montaje enlazado de cada directorio de la lista con un tmpfs en la ruta
+original.
+.IP \fB/etc/live\-snapshot.list\fP 4
+Este fichero opcional, si existe, cambia el comportamiento de live\-snapshot:
+únicamente se incluyen (integramente) en la instantánea los ficheros y los
+directorios listados allí. Tener cuidado, ésta es una funcionalidad
+experimental que sólo funciona con objetivos cpio en este momento.
+
+.SH "VER ADEMÁS"
+\fIlive\-boot\fP(1)
+.PP
+\fIlive\-build\fP(7)
+.PP
+\fIlive\-config\fP(7)
+.PP
+\fIlive\-tools\fP(7)
+
+.SH "PÁGINA WEB"
+More information about live\-boot and the Debian Live project can be found on
+the homepage at <\fIhttp://live.debian.net/\fP> and in the manual at
+<\fIhttp://live.debian.net/manual/\fP>.
+
+.SH ERRORES
+Se puede notificar los fallos enviando un informe de errores sobre el
+paquete live\-boot en el Debian Bug Tracking System en
+<\fIhttp://bugs.debian.org/\fP> o escribiendo un mensaje a la lista de
+correo de Debian Live a la dirección
+<\fIdebian\-live@lists.debian.org\fP>.
+
+.SH AUTOR
+live\-boot fue escrito por Daniel Baumann <\fIdaniel@debian.org\fP> para
+el proyecto Debian.

@@ -1,14 +1,13 @@
 # German translations for live-boot package
-# Copyright (C) 2012 Free Software Foundation, Inc.
+# (C) 2006-2012 Daniel Baumann <daniel@debian.org>
 # This file is distributed under the same license as the live-boot package.
-# Automatically generated, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2012-04-09 18:57+0300\n"
+"Project-Id-Version: live-boot 3.0~a28-1\n"
+"POT-Creation-Date: 2012-06-04 17:31+0300\n"
 "PO-Revision-Date: 2012-04-08 22:48+0300\n"
-"Last-Translator: Automatically generated\n"
+"Last-Translator: Daniel Baumann <daniel@debian.org>\n"
 "Language-Team: none\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -25,13 +24,13 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "2012-04-09"
+msgid "2012-06-04"
 msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "3.0~a27-1"
+msgid "3.0~a28-1"
 msgstr ""
 
 #. type: TH
@@ -158,8 +157,8 @@ msgstr ""
 #. type: Plain text
 #: en/live-boot.7:33
 msgid ""
-"Set the accessibility level for physically or visually impared users. ACCESS "
-"must be one of v1, v2, v3, m1, or m2. v1=lesser visual impairment, "
+"Set the accessibility level for physically or visually impaired users. "
+"ACCESS must be one of v1, v2, v3, m1, or m2. v1=lesser visual impairment, "
 "v2=moderate visual impairment, v3=blindness, m1=minor motor difficulties, "
 "m2=moderate motor difficulties."
 msgstr ""
@@ -225,7 +224,7 @@ msgstr ""
 #. type: Plain text
 #: en/live-boot.7:52
 msgid ""
-"Due to current limitations in busyboxs wget and DNS resolution, an URL can "
+"Due to current limitations in busybox's wget and DNS resolution, an URL can "
 "not contain a hostname but an IP only."
 msgstr ""
 
@@ -580,7 +579,7 @@ msgid ""
 "or /home, respectively (see I<live-snapshot>(1) for more information). The "
 "order these are handled are: full-ov, custom-ov, live-sn, home-sn. Overlay "
 "image files and snapshot archive files have extensions which determines "
-"their filesystem or archive type, e.g. \"custom-ov.ext4\" and \"\\home-sn."
+"their filesystem or archive type, e.g. \"custom-ov.ext4\" and \"home-sn."
 "squashfs\"."
 msgstr ""
 
@@ -821,7 +820,7 @@ msgid "B</etc/live-persistence.binds>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:149 en/live-snapshot.1:49
+#: en/live-boot.7:149
 msgid ""
 "This optional file (which resides in the rootfs system, not in the live "
 "media) is used as a list of directories which not need be persistent: ie. "

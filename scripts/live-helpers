@@ -388,7 +388,7 @@ Arguments ()
 	then
 		PERSISTENCE_ENCRYPTION="none"
 		export PERSISTENCE_ENCRYPTION
-	elif echo ${PERSISTENCE_ENCRYPTION} | grep -qe "\<luks\>"
+	elif is_in_comma_sep_list luks ${PERSISTENCE_ENCRYPTION}
 	then
 		if ! modprobe dm-crypt
 		then
@@ -416,6 +416,27 @@ Arguments ()
 		PERSISTENCE_STORAGE="filesystem,file"
 		export PERSISTENCE_STORAGE
 	fi
+}
+
+is_in_list_separator_helper () {
+	local sep=${1}
+	shift
+	local element=${1}
+	shift
+	local list=${*}
+	echo ${list} | grep -qe "^\(.*${sep}\)\?${element}\(${sep}.*\)\?$"
+}
+
+is_in_space_sep_list () {
+	local element=${1}
+	shift
+	is_in_list_separator_helper "[[:space:]]" "${element}" "${*}"
+}
+
+is_in_comma_sep_list () {
+	local element=${1}
+	shift
+	is_in_list_separator_helper "," "${element}" "${*}"
 }
 
 sys2dev ()
@@ -449,9 +470,9 @@ storage_devices()
 	do
 		fulldevname=$(sys2dev "${sysblock}")
 
-		if echo "${black_listed_devices}" | grep -qe "\<${fulldevname}\>" || \
+		if is_in_space_sep_list ${fulldevname} ${black_listed_devices} || \
 			[ -n "${white_listed_devices}" ] && \
-			echo "${white_listed_devices}" | grep -qve "\<${fulldevname}\>"
+			! is_in_space_sep_list ${fulldevname} ${white_listed_devices}
 		then
 			# skip this device entirely
 			continue
@@ -461,7 +482,7 @@ storage_devices()
 		do
 			devname=$(sys2dev "${dev}")
 
-			if echo "${black_listed_devices}" | grep -qe "\<${devname}\>"
+			if is_in_space_sep_list ${devname} ${black_listed_devices}
 			then
 				# skip this subdevice
 				continue
@@ -736,7 +757,7 @@ try_mount ()
 			fstype=$(get_fstype "${dev}")
 		fi
 		mount -t "${fstype}" -o "${opts}" "${dev}" "${mountp}" || \
-		( echo "SKIPPING: Cannot mount ${dev} on ${mountp}, fstype=${fstype}, options=${opts}" > live-boot.log && return 0 )
+		( echo "SKIPPING: Cannot mount ${dev} on ${mountp}, fstype=${fstype}, options=${opts}" > boot.log && return 0 )
 	fi
 }
 
@@ -984,7 +1005,7 @@ find_persistence_media ()
 		# in order to probe any filesystem it contains, like we do
 		# below. activate_custom_mounts() also depends on that any luks
 		# device already has been opened.
-		if echo ${PERSISTENCE_ENCRYPTION} | grep -qe "\<luks\>" && \
+		if is_in_comma_sep_list luks ${PERSISTENCE_ENCRYPTION} && \
 		   is_luks_partition ${dev}
 		then
 			if luks_device=$(open_luks_device "${dev}")
@@ -994,14 +1015,14 @@ find_persistence_media ()
 				# skip $dev since we failed/chose not to open it
 				continue
 			fi
-		elif echo ${PERSISTENCE_ENCRYPTION} | grep -qve "\<none\>"
+		elif ! is_in_comma_sep_list none ${PERSISTENCE_ENCRYPTION}
 		then
 			# skip $dev since we don't allow unencrypted storage
 			continue
 		fi
 
 		# Probe for matching GPT partition names or filesystem labels
-		if echo ${PERSISTENCE_STORAGE} | grep -qe "\<filesystem\>"
+		if is_in_comma_sep_list filesystem ${PERSISTENCE_STORAGE}
 		then
 			result=$(probe_for_gpt_name "${overlays}" "${snapshots}" ${dev})
 			if [ -n "${result}" ]
@@ -1019,7 +1040,7 @@ find_persistence_media ()
 		fi
 
 		# Probe for files with matching name on mounted partition
-		if echo ${PERSISTENCE_STORAGE} | grep -qe "\<file\>"
+		if is_in_comma_sep_list file ${PERSISTENCE_STORAGE}
 		then
 			result=$(probe_for_file_name "${overlays}" "${snapshots}" ${dev})
 			if [ -n "${result}" ]

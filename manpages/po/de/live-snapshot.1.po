@@ -1,14 +1,13 @@
 # German translations for live-boot package
-# Copyright (C) 2012 Free Software Foundation, Inc.
+# (C) 2006-2012 Daniel Baumann <daniel@debian.org>
 # This file is distributed under the same license as the live-boot package.
-# Automatically generated, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2012-04-09 18:57+0300\n"
+"Project-Id-Version: live-boot 3.0~a28-1\n"
+"POT-Creation-Date: 2012-06-04 17:31+0300\n"
 "PO-Revision-Date: 2012-04-08 22:48+0300\n"
-"Last-Translator: Automatically generated\n"
+"Last-Translator: Daniel Baumann <daniel@debian.org>\n"
 "Language-Team: none\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -25,13 +24,13 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "2012-04-09"
+msgid "2012-06-04"
 msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
 #, no-wrap
-msgid "3.0~a27-1"
+msgid "3.0~a28-1"
 msgstr ""
 
 #. type: TH
@@ -94,15 +93,6 @@ msgstr ""
 #: en/live-boot.7:147 en/live-snapshot.1:47
 #, no-wrap
 msgid "B</etc/live-persistence.binds>"
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:149 en/live-snapshot.1:49
-msgid ""
-"This optional file (which resides in the rootfs system, not in the live "
-"media) is used as a list of directories which not need be persistent: ie. "
-"their content does not need to survive reboots when using the persistence "
-"features."
 msgstr ""
 
 #. type: Plain text
@@ -253,12 +243,11 @@ msgstr ""
 #. type: Plain text
 #: en/live-snapshot.1:25
 msgid ""
-"sets the device where the media which the snapshot/persistence file/"
-"partition will be put. If it is not specified, a tmpfs will be used and "
-"linked to the user's desktop to move it where it is needed. If the device "
-"has no filesystem, an ext4 fs will be automatically created and labelled "
-"according to the values specified after the \"--output\" value or with a "
-"sane default."
+"sets the device where the media with the snapshot/persistence file/partition "
+"will be put. If it is not specified, a tmpfs will be used and linked to the "
+"user's desktop to move it where it is needed. If the device has no "
+"filesystem, an ext4 fs will be automatically created and labelled according "
+"to the values specified after the \"--output\" value or with a sane default."
 msgstr ""
 
 #. type: IP
@@ -357,6 +346,15 @@ msgstr ""
 #. type: Plain text
 #: en/live-snapshot.1:41
 msgid "output version information and exit."
+msgstr ""
+
+#. type: Plain text
+#: en/live-snapshot.1:49
+msgid ""
+"This optional file (which resides in the rootfs system, not in the live "
+"media) is used as a list of directories which not need be persistent: i.e. "
+"their content does not need to survive reboots when using the persistence "
+"features."
 msgstr ""
 
 #. type: IP

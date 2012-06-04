@@ -340,7 +340,7 @@ do_netsetup ()
 	done
 
 	# this is tricky (and ugly) because ipconfig sometimes just hangs/runs into
-	# an endless loop; iff execution fails give it two further tries, that's
+	# an endless loop; if execution fails give it two further tries, that's
 	# why we use '$devlist $devlist $devlist' for the other for loop
 	for dev in $devlist $devlist $devlist ; do
 		echo "Executing ipconfig -t $ETHDEV_TIMEOUT $dev"
@@ -353,7 +353,7 @@ do_netsetup ()
 		fi
 
 		# if configuration of device worked we should have an assigned
-		# IP address, iff so let's use the according as $DEVICE for later usage
+		# IP address, if so let's use the device as $DEVICE for later usage.
 		# simple and primitive approach which seems to work fine
 		if ifconfig $dev | grep -q 'inet.*addr:' ; then
 			export DEVICE="$dev"
@@ -1001,12 +1001,12 @@ setup_unionfs ()
 				;;
 		esac
 
-		if echo ${PERSISTENCE_METHOD} | grep -qe "\<overlay\>"
+		if is_in_comma_sep_list overlay ${PERSISTENCE_METHOD}
 		then
 			overlays="${old_root_overlay_label} ${old_home_overlay_label} ${custom_overlay_label}"
 		fi
 
-		if echo ${PERSISTENCE_METHOD} | grep -qe "\<snapshot\>"
+		if is_in_comma_sep_list snapshot ${PERSISTENCE_METHOD}
 		then
 			snapshots="${root_snapshot_label} ${home_snapshot_label}"
 		fi
@@ -1108,15 +1108,15 @@ setup_unionfs ()
 
 	rofscount=$(echo ${rofslist} |wc -w)
 
-	# XXX: we now ensure that there can only be one read-only filesystem. Should this be inside the EXPOSED_ROOT if?
-	if [ ${rofscount} -ne 1 ]
-	then
-		panic "only one RO file system supported with exposedroot: ${rofslist}"
-	fi
 	rofs=${rofslist%% }
 
 	if [ -n "${EXPOSED_ROOT}" ]
 	then
+		if [ ${rofscount} -ne 1 ]
+		then
+			panic "only one RO file system supported with exposedroot: ${rofslist}"
+		fi
+
 		mount --bind ${rofs} ${rootmnt} || \
 			panic "bind mount of ${rofs} failed"
 
@@ -1255,18 +1255,18 @@ check_dev ()
 
 		if [ "$ISO_DEVICE" = "/" ]
 		then
-			echo "Warning: device for bootoption isofrom= ($FROMISO) not found.">>/live-boot.log
+			echo "Warning: device for bootoption fromiso= ($FROMISO) not found.">>/boot.log
 		else
 			fs_type=$(get_fstype "${ISO_DEVICE}")
 			if is_supported_fs ${fs_type}
 			then
-				mkdir /isofrom
-				mount -t $fs_type "$ISO_DEVICE" /isofrom
+				mkdir /live/fromiso
+				mount -t $fs_type "$ISO_DEVICE" /live/fromiso
 				ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
-				loopdevname=$(setup_loop "/isofrom/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
+				loopdevname=$(setup_loop "/live/fromiso/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
 				devname="${loopdevname}"
 			else
-				echo "Warning: unable to mount $ISO_DEVICE." >>/live-boot.log
+				echo "Warning: unable to mount $ISO_DEVICE." >>/boot.log
 			fi
 		fi
 	fi
@@ -1499,9 +1499,9 @@ mountroot ()
 
 	exec 6>&1
 	exec 7>&2
-	exec > live-boot.log
+	exec > boot.log
 	exec 2>&1
-	tail -f live-boot.log >&7 &
+	tail -f boot.log >&7 &
 	tailpid="${!}"
 
 	# Ensure 'panic' function is overridden
@@ -1595,8 +1595,14 @@ mountroot ()
 	# rid of it when running from RAM
 	if [ -n "$FROMISO" ] && [ "${TORAM}" ]
 	then
-	  losetup -d /dev/loop0
-	  grep -q /isofrom /proc/mounts && umount /isofrom
+		losetup -d /dev/loop0
+
+		if is_mountpoint /live/fromiso
+		then
+			umount /live/fromiso
+			rmdir --ignore-fail-on-non-empty /live/fromiso \
+				>/dev/null 2>&1 || true
+		fi
 	fi
 
 	if [ -n "${MODULETORAMFILE}" ] || [ -n "${PLAIN_ROOT}" ]
@@ -1649,7 +1655,7 @@ mountroot ()
 	then
 		losetup -d /dev/loop0
 
-		if is_mountpoint /live/findiso
+		if is_mountpoint /root/live/findiso
 		then
 			umount /root/live/findiso
 			rmdir --ignore-fail-on-non-empty /root/live/findiso \
@@ -1690,5 +1696,5 @@ mountroot ()
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-
 	kill ${tailpid}
-	[ -w "${rootmnt}/var/log/" ] && cp live-boot.log "${rootmnt}/var/log/" 2>/dev/null
+	[ -w "${rootmnt}/var/log/" ] && mkdir -p /var/log/live && cp boot.log "${rootmnt}/var/log/live" 2>/dev/null
 }

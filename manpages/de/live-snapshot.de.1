@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 1 2012\-04\-09 3.0~a27\-1 "Debian Live Project"
+.TH LIVE\-BOOT 1 2012\-06\-04 3.0~a28\-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-snapshot\fP \- simple script to ease persistence usage
@@ -33,12 +33,11 @@ value "/live/overlay" should be right for most uses. However it could be
 handy to specify "/home" and type ext4 for the type to prepare an image file
 suited to be directly mounted by live\-boot as home.
 .IP "\-d, \-\-device \fIDEVICE\fP" 4
-sets the device where the media which the snapshot/persistence
-file/partition will be put. If it is not specified, a tmpfs will be used and
-linked to the user's desktop to move it where it is needed. If the device
-has no filesystem, an ext4 fs will be automatically created and labelled
-according to the values specified after the "\-\-output" value or with a sane
-default.
+sets the device where the media with the snapshot/persistence file/partition
+will be put. If it is not specified, a tmpfs will be used and linked to the
+user's desktop to move it where it is needed. If the device has no
+filesystem, an ext4 fs will be automatically created and labelled according
+to the values specified after the "\-\-output" value or with a sane default.
 .IP "\-e, \-\-exclude\-list \fIFILE\fP" 4
 a file containing a list of filenames/paths that should not be saved. This
 exclude list will be remebered on the target snapshot media for reuse.
@@ -77,7 +76,7 @@ loaded in alphanumeric order.
 .IP \fB/etc/live\-persistence.binds\fP 4
 This optional file (which resides in the rootfs system, not in the live
 media) is used as a list of directories which not need be persistent:
-ie. their content does not need to survive reboots when using the
+i.e. their content does not need to survive reboots when using the
 persistence features.
 .br
 This saves expensive writes and speeds up operations on volatile data such

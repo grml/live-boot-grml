@@ -76,7 +76,7 @@ panic() {
 	DEB_3="\033[1;31m\`. \`'\`  \033[0m"
 	DEB_4="\033[1;31m  \`-    \033[0m"
 
-	LIVELOG="\033[1;37m/live-boot.log\033[0m"
+	LIVELOG="\033[1;37m/boot.log\033[0m"
 	DEBUG="\033[1;37mdebug\033[0m"
 
 	# Reset redirections to avoid buffering
