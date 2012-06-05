@@ -2,6 +2,12 @@
 
 # set -e
 
+if [ -e /scripts/functions ]
+then
+	# initramfs-tools specific (FIXME)
+	. /scripts/functions
+fi
+
 for _SCRIPT in /lib/live/boot/*
 do
 	if [ -e "${_SCRIPT}" ]
@@ -462,8 +468,7 @@ mountroot ()
 	tail -f boot.log >&7 &
 	tailpid="${!}"
 
-	# Ensure 'panic' function is overridden
-	. /scripts/live-functions
+	. /live.vars
 
 	Arguments
 

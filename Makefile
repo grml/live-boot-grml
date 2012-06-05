@@ -4,7 +4,7 @@ SHELL := sh -e
 
 LANGUAGES = $(shell cd manpages/po && ls)
 
-SCRIPTS = bin/* initramfs-tools/hooks/* initramfs-tools/scripts/live initramfs-tools/scripts/live-functions initramfs-tools/scripts/*/* scripts/*.sh scripts/*/*
+SCRIPTS = bin/* initramfs-tools/hooks/* initramfs-tools/scripts/live initramfs-tools/scripts/*/* scripts/*.sh scripts/*/*
 
 all: build
 

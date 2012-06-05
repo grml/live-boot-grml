@@ -68,9 +68,6 @@ mkdir -p "${DESTDIR}"/lib/live-boot
 copy_exec /usr/share/live-boot/live-reconfigure /bin
 copy_exec /usr/share/live-boot/live-preseed /bin
 
-# Scripts
-cp /usr/share/initramfs-tools/scripts/live-functions "${DESTDIR}"/scripts
-
 # klibc dependencies
 for FILE in /lib/libacl* /lib/libblkid* /lib/libuuid* /lib/libdevmapper* /lib/libattr*
 do

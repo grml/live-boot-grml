@@ -21,7 +21,9 @@ esac
 
 # live-boot header
 
-. /scripts/live-functions
+# FIXME: stop hardcoding overloading of initramfs-tools functions
+. /scripts/functions
+. /lib/live/boot/initramfs-tools.sh
 
 if [ -n "${NOFSTAB}" ]
 then

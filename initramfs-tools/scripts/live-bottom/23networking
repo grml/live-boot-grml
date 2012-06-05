@@ -25,7 +25,9 @@ then
 	exit 0
 fi
 
-. /scripts/live-functions
+# FIXME: stop hardcoding overloading of initramfs-tools functions
+. /scripts/functions
+. /lib/live/boot/initramfs-tools.sh
 
 log_begin_msg "Preconfiguring networking"
 

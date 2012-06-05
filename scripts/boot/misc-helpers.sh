@@ -2,6 +2,50 @@
 
 #set -e
 
+really_export ()
+{
+	STRING="${1}"
+	VALUE="$(eval echo -n \${$STRING})"
+
+	if [ -f /live.vars ] && grep -sq "export ${STRING}" /live.vars
+	then
+		sed -i -e 's/\('${STRING}'=\).*$/\1'${VALUE}'/' /live.vars
+	else
+		echo "export ${STRING}=\"${VALUE}\"" >> /live.vars
+	fi
+
+	eval export "${STRING}"="${VALUE}"
+}
+
+lang2locale() {
+	langpart="${1%%_*}"
+	if [ "$1" != "C" ]; then
+		# Match the language code with 3rd field in languagelist
+		line=$(grep -v "^#" /usr/share/live-boot/languagelist | cut -f1,3,6 -d\; | grep -v ';C$' | grep "^$langpart;")
+		if [ -n "$line" ]; then
+			if [ "$(echo "$line" | grep -c '')" -gt 1 ]; then
+				# More than one match; try matching the
+				# country as well.
+				countrypart="${1#*_}"
+				if [ "$countrypart" = "$1" ]; then
+					countryline="$(echo "$line" | head -n1)"
+					echo "${countryline##*;}"
+					return
+				fi
+				countrypart="${countrypart%%[@.]*}"
+				countryline="$(echo "$line" | grep ";$countrypart;" | head -n1 || true)"
+				if [ "$countryline" ]; then
+					echo "${countryline##*;}"
+					return
+				fi
+			fi
+			echo "${line##*;}"
+		fi
+	else
+		echo "C"
+	fi
+}
+
 is_in_list_separator_helper () {
 	local sep=${1}
 	shift

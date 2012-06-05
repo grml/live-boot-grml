@@ -20,7 +20,9 @@ case "${1}" in
 		;;
 esac
 
-. /scripts/live-functions
+# FIXME: stop hardcoding overloading of initramfs-tools functions
+. /scripts/functions
+. /lib/live/boot/initramfs-tools.sh
 
 if ! [ -d "/root/usr/share/live-boot" ]
 then
