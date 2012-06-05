@@ -636,6 +636,12 @@ mountroot ()
 	run_scripts /scripts/live-bottom
 	log_end_msg
 
+	case "${LIVE_SWAPON}" in
+		true)
+			Swapon
+			;;
+	esac
+
 	if [ "${UNIONFS}" = unionfs-fuse ]
 	then
 		umount "${rootmnt}/dev"
