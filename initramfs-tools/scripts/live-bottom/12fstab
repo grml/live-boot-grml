@@ -44,9 +44,4 @@ then
 	echo "tmpfs /tmp tmpfs nosuid,nodev 0 0" >> "${FSTAB}"
 fi
 
-if [ "${NOFASTBOOT}" != "true" ]
-then
-	touch root/fastboot
-fi
-
 log_end_msg

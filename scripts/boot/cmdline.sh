@@ -27,11 +27,10 @@ Cmdline ()
 
 			# parameters below need review (FIXME)
 			skipconfig)
-				NOFASTBOOT="true"
 				NOFSTAB="true"
 				NONETWORKING="true"
 
-				export NOFASTBOOT NOFSTAB NONETWORKING
+				export NOFSTAB NONETWORKING
 				;;
 
 			BOOTIF=*)
@@ -158,11 +157,6 @@ Cmdline ()
 			nfsoverlay=*)
 				NFS_COW="${ARGUMENT#nfsoverlay=}"
 				export NFS_COW
-				;;
-
-			nofastboot)
-				NOFASTBOOT="true"
-				export NOFASTBOOT
 				;;
 
 			nofstab)
