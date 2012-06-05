@@ -4,7 +4,7 @@ SHELL := sh -e
 
 LANGUAGES = $(shell cd manpages/po && ls)
 
-SCRIPTS = bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*
+SCRIPTS = bin/* initramfs-tools/hooks/* initramfs-tools/scripts/live initramfs-tools/scripts/live-functions initramfs-tools/scripts/live-helpers initramfs-tools/scripts/*/*
 
 all: build
 
@@ -49,7 +49,7 @@ install:
 	cp bin/live-preseed bin/live-reconfigure local/languagelist $(DESTDIR)/usr/share/live-boot
 
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools
-	cp -r hooks scripts $(DESTDIR)/usr/share/initramfs-tools
+	cp -r initramfs-tools/* $(DESTDIR)/usr/share/initramfs-tools
 
 	# Installing docs
 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
