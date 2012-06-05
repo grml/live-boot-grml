@@ -83,7 +83,7 @@ fi
 # disabled for now
 #rm -f /root/etc/rcS.d/S*checkroot.sh
 
-if [ "${NOFASTBOOT}" != "Yes" ]
+if [ "${NOFASTBOOT}" != "true" ]
 then
 	touch root/fastboot
 fi

@@ -15,10 +15,10 @@ Arguments ()
 				;;
 
 			skipconfig)
-				NOACCESSIBILITY="Yes"
-				NOFASTBOOT="Yes"
-				NOFSTAB="Yes"
-				NONETWORKING="Yes"
+				NOACCESSIBILITY="true"
+				NOFASTBOOT="true"
+				NOFSTAB="true"
+				NONETWORKING="true"
 
 				export NOACCESSIBILITY NOFASTBOOT NOFSTAB NONETWORKING
 				;;
@@ -38,7 +38,7 @@ Arguments ()
 				;;
 
 			debug)
-				DEBUG="Yes"
+				DEBUG="true"
 				export DEBUG
 
 				set -x
@@ -77,7 +77,7 @@ Arguments ()
 				;;
 
 			forcepersistencefsck)
-				FORCEPERSISTENCEFSCK="Yes"
+				FORCEPERSISTENCEFSCK="true"
 				export FORCEPERSISTENCEFSCK
 				;;
 
@@ -110,12 +110,12 @@ Arguments ()
 				;;
 
 			ignore_uuid)
-				IGNORE_UUID="Yes"
+				IGNORE_UUID="true"
 				export IGNORE_UUID
 				;;
 
 			integrity-check)
-				INTEGRITY_CHECK="Yes"
+				INTEGRITY_CHECK="true"
 				export INTEGRITY_CHECK
 				;;
 
@@ -181,22 +181,22 @@ Arguments ()
 				;;
 
 			noaccessibility)
-				NOACCESSIBILITY="Yes"
+				NOACCESSIBILITY="true"
 				export NOACCESSIBILITY
 				;;
 
 			nofastboot)
-				NOFASTBOOT="Yes"
+				NOFASTBOOT="true"
 				export NOFASTBOOT
 				;;
 
 			nofstab)
-				NOFSTAB="Yes"
+				NOFSTAB="true"
 				export NOFSTAB
 				;;
 
 			nonetworking)
-				NONETWORKING="Yes"
+				NONETWORKING="true"
 				export NONETWORKING
 				;;
 
@@ -205,12 +205,12 @@ Arguments ()
 				;;
 
 			swapon)
-				SWAPON="Yes"
+				SWAPON="true"
 				export SWAPON
 				;;
 
 			persistence)
-				PERSISTENCE="Yes"
+				PERSISTENCE="true"
 				export PERSISTENCE
 				;;
 
@@ -233,7 +233,7 @@ Arguments ()
 				export PERSISTENCE_PATH
 				;;
 			persistence-read-only)
-				PERSISTENCE_READONLY="Yes"
+				PERSISTENCE_READONLY="true"
 				export PERSISTENCE_READONLY
 				;;
 
@@ -252,12 +252,12 @@ Arguments ()
 				;;
 
 			nopersistence)
-				NOPERSISTENCE="Yes"
+				NOPERSISTENCE="true"
 				export NOPERSISTENCE
 				;;
 
 			noprompt)
-				NOPROMPT="Yes"
+				NOPROMPT="true"
 				export NOPROMPT
 				;;
 
@@ -267,7 +267,7 @@ Arguments ()
 				;;
 
 			quickusbmodules)
-				QUICKUSBMODULES="Yes"
+				QUICKUSBMODULES="true"
 				export QUICKUSBMODULES
 				;;
 
@@ -277,7 +277,7 @@ Arguments ()
 				;;
 
 			nopreseed)
-				NOPRESEED="Yes"
+				NOPRESEED="true"
 				export NOPRESEED
 				;;
 
@@ -289,12 +289,12 @@ Arguments ()
 				;;
 
 			showmounts)
-				SHOWMOUNTS="Yes"
+				SHOWMOUNTS="true"
 				export SHOWMOUNTS
 				;;
 
 			silent)
-				SILENT="Yes"
+				SILENT="true"
 				export SILENT
 				;;
 
@@ -304,28 +304,28 @@ Arguments ()
 				;;
 
 			toram)
-				TORAM="Yes"
+				TORAM="true"
 				export TORAM
 				;;
 
 			toram=*)
-				TORAM="Yes"
+				TORAM="true"
 				MODULETORAM="${ARGUMENT#toram=}"
 				export TORAM MODULETORAM
 				;;
 
 			exposedroot)
-				EXPOSED_ROOT="Yes"
+				EXPOSED_ROOT="true"
 				export EXPOSED_ROOT
 				;;
 
 			plainroot)
-				PLAIN_ROOT="Yes"
+				PLAIN_ROOT="true"
 				export PLAIN_ROOT
 				;;
 
 			skipunion)
-				SKIP_UNION_MOUNTS="Yes"
+				SKIP_UNION_MOUNTS="true"
 				export SKIP_UNION_MOUNTS
 				;;
 
