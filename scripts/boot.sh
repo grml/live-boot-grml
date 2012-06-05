@@ -480,10 +480,7 @@ mountroot ()
 			;;
 	esac
 
-	maybe_break live-premount
-	log_begin_msg "Running /scripts/live-premount"
-	run_scripts /scripts/live-premount
-	log_end_msg
+	Select_eth_device
 
 	# Needed here too because some things (*cough* udev *cough*)
 	# changes the timeout
