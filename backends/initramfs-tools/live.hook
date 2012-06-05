@@ -58,7 +58,6 @@ cp -a /lib/live/boot.sh /lib/live/boot "${DESTDIR}/lib/live"
 mkdir -p "${DESTDIR}"/lib/live-boot
 
 # Executables
-copy_exec /usr/share/live-boot/live-reconfigure /bin
 copy_exec /usr/share/live-boot/live-preseed /bin
 
 # klibc dependencies
