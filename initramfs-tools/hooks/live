@@ -70,7 +70,6 @@ copy_exec /usr/share/live-boot/live-preseed /bin
 
 # Scripts
 cp /usr/share/initramfs-tools/scripts/live-functions "${DESTDIR}"/scripts
-cp /usr/share/initramfs-tools/scripts/live-helpers "${DESTDIR}"/scripts
 
 # klibc dependencies
 for FILE in /lib/libacl* /lib/libblkid* /lib/libuuid* /lib/libdevmapper* /lib/libattr*

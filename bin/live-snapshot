@@ -37,7 +37,39 @@ else
 	set -e
 fi
 
-. /usr/share/initramfs-tools/scripts/live-helpers
+## Begin FIXME: this is an embedded copy of the old 'live-helpers' initramfs script
+if [ ! -x "/bin/fstype" ]
+then
+	# klibc not in path -> not in initramfs
+	export PATH="${PATH}:/usr/lib/klibc/bin"
+fi
+
+# handle upgrade path from old udev (using udevinfo) to
+# recent versions of udev (using udevadm info)
+if [ -x /sbin/udevadm ]
+then
+	udevinfo='/sbin/udevadm info'
+else
+	udevinfo='udevinfo'
+fi
+
+old_root_overlay_label="live-rw"
+old_home_overlay_label="home-rw"
+custom_overlay_label="custom-ov"
+root_snapshot_label="live-sn"
+old_root_snapshot_label="live-sn"
+home_snapshot_label="home-sn"
+persistence_list="live-persistence.conf"
+
+# include all scripts for the time being until snapshots are either dropped or cleaned up
+for _SCRIPT in /lib/live/boot/*
+do
+	if [ -e "${_SCRIPT}" ]
+	then
+		. ${_SCRIPT}
+	fi
+done
+## End FIXME: this is an embedded copy of the old 'live-helpers' initramfs script
 
 LIVE_CONF="/etc/live/boot.d/snapshot.conf"
 

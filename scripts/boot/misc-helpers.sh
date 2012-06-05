@@ -1,27 +1,4 @@
-# live-boot helper functions, used by live-boot on boot and by live-snapshot
-
-if [ ! -x "/bin/fstype" ]
-then
-	# klibc not in path -> not in initramfs
-	export PATH="${PATH}:/usr/lib/klibc/bin"
-fi
-
-# handle upgrade path from old udev (using udevinfo) to
-# recent versions of udev (using udevadm info)
-if [ -x /sbin/udevadm ]
-then
-	udevinfo='/sbin/udevadm info'
-else
-	udevinfo='udevinfo'
-fi
-
-old_root_overlay_label="live-rw"
-old_home_overlay_label="home-rw"
-custom_overlay_label="custom-ov"
-root_snapshot_label="live-sn"
-old_root_snapshot_label="live-sn"
-home_snapshot_label="home-sn"
-persistence_list="live-persistence.conf"
+#!/bin/sh
 
 is_in_list_separator_helper () {
 	local sep=${1}

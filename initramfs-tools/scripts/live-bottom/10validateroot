@@ -21,7 +21,6 @@ case "${1}" in
 esac
 
 . /scripts/live-functions
-. /scripts/live-helpers
 
 if ! [ -d "/root/usr/share/live-boot" ]
 then
