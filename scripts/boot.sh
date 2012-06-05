@@ -637,12 +637,7 @@ mountroot ()
 
 	persistence_exclude
 	fstab
-
-	maybe_break live-bottom
-	log_begin_msg "Running /scripts/live-bottom\n"
-
-	run_scripts /scripts/live-bottom
-	log_end_msg
+	Netbase
 
 	case "${LIVE_SWAPON}" in
 		true)
