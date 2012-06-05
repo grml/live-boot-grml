@@ -630,7 +630,7 @@ mountroot ()
 		log_end_msg
 	fi
 
-	if ! [ -d "/root/usr/share/live-boot" ]
+	if ! [ -d "/lib/live/boot" ]
 	then
 		panic "A wrong rootfs was mounted."
 	fi

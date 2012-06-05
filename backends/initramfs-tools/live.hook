@@ -57,9 +57,6 @@ cp -a /lib/live/boot.sh /lib/live/boot "${DESTDIR}/lib/live"
 # Directories
 mkdir -p "${DESTDIR}"/lib/live-boot
 
-# Executables
-copy_exec /usr/share/live-boot/live-preseed /bin
-
 # klibc dependencies
 for FILE in /lib/libacl* /lib/libblkid* /lib/libuuid* /lib/libdevmapper* /lib/libattr*
 do
