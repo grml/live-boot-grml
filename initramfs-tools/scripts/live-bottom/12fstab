@@ -44,7 +44,7 @@ then
 	echo "tmpfs /tmp tmpfs nosuid,nodev 0 0" >> "${FSTAB}"
 fi
 
-if [ -n "${SWAPON}" ]
+if [ -n "${LIVE_SWAPON}" ]
 then
 	devices=""
 

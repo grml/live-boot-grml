@@ -12,6 +12,11 @@ Cmdline ()
 				export LIVE_READ_ONLY
 				;;
 
+			live-boot.swapon)
+				LIVE_SWAPON="true"
+				export LIVE_SWAPON
+				;;
+
 			live-boot.verify-checksums|verify-checksums)
 				LIVE_VERIFY_CHECKSUMS="true"
 				export LIVE_VERIFY_CHECKSUMS
@@ -175,11 +180,6 @@ Cmdline ()
 
 			ramdisk-size=*)
 				ramdisk_size="${ARGUMENT#ramdisk-size=}"
-				;;
-
-			swapon)
-				SWAPON="true"
-				export SWAPON
 				;;
 
 			persistence)
