@@ -635,6 +635,8 @@ mountroot ()
 		panic "A wrong rootfs was mounted."
 	fi
 
+	persistence_exclude
+
 	maybe_break live-bottom
 	log_begin_msg "Running /scripts/live-bottom\n"
 
