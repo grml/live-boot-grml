@@ -630,6 +630,11 @@ mountroot ()
 		log_end_msg
 	fi
 
+	if ! [ -d "/root/usr/share/live-boot" ]
+	then
+		panic "A wrong rootfs was mounted."
+	fi
+
 	maybe_break live-bottom
 	log_begin_msg "Running /scripts/live-bottom\n"
 
