@@ -9,17 +9,14 @@ Cmdline ()
 		case "${_PARAMETER}" in
 			live-boot.read-only|read-only)
 				LIVE_READ_ONLY="true"
-				export LIVE_READ_ONLY
 				;;
 
 			live-boot.swapon)
 				LIVE_SWAPON="true"
-				export LIVE_SWAPON
 				;;
 
 			live-boot.verify-checksums|verify-checksums)
 				LIVE_VERIFY_CHECKSUMS="true"
-				export LIVE_VERIFY_CHECKSUMS
 				;;
 
 			# Special options
