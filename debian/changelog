@@ -1,3 +1,22 @@
+live-boot (3.0~a31-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Renaming etc directory to their actual name, examples, within source
+    tree.
+  * Simplyfing scripts declaration in Makefile.
+
+  [ chals ]
+  * Fixing fuzzy strings in Spanish translation of man pages.
+
+  [ Daniel Baumann ]
+  * Removing live-reconfigure, not used anymore.
+  * Removing live-preseed, not used anymore.
+  * Unbreaking cmdline parsing after variable rename.
+  * Moving off remaining functions from main boot script to subscript
+    for later cleanup.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 05 Jun 2012 21:44:44 +0200
+
 live-boot (3.0~a30-1) experimental; urgency=low
 
   * Removing dead lang2locale function and associated files, not used
