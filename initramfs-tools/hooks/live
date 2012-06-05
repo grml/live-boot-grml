@@ -175,7 +175,9 @@ then
 fi
 
 [ "${QUIET}" ] || echo -n " "utils
-# Program: md5sum
+
+# Feature: Verify Checksums
+copy_exec /usr/bin/sha256sum /bin
 copy_exec /usr/bin/md5sum /bin
 
 # Program: memdisk

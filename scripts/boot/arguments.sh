@@ -7,6 +7,12 @@ Arguments ()
 	for ARGUMENT in $(cat /proc/cmdline)
 	do
 		case "${ARGUMENT}" in
+			live-boot.verify-checksums|verify-checksums)
+				LIVE_VERIFY_CHECKSUMS="true"
+				export LIVE_VERIFY_CHECKSUMS
+				;;
+
+			# parameters below need review
 			read-only)
 				READ_ONLY="true"
 				;;
@@ -94,11 +100,6 @@ Arguments ()
 			ignore_uuid)
 				IGNORE_UUID="true"
 				export IGNORE_UUID
-				;;
-
-			integrity-check)
-				INTEGRITY_CHECK="true"
-				export INTEGRITY_CHECK
 				;;
 
 			ip=*)
