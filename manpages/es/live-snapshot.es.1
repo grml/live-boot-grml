@@ -34,11 +34,13 @@ usos. Sin embargo puede ser práctico especificar "/home" y \-\-type ext4 para
 preparar un fichero imagen adecuado para ser directamente montado por
 live\-boot como home.
 .IP "\-d, \-\-device \fIDEVICE\fP" 4
-sets the device where the media with the snapshot/persistence file/partition
-will be put. If it is not specified, a tmpfs will be used and linked to the
-user's desktop to move it where it is needed. If the device has no
-filesystem, an ext4 fs will be automatically created and labelled according
-to the values specified after the "\-\-output" value or with a sane default.
+establece el dispositivo donde los medios con la instantánea/persistencia
+fichero/partición será puesto. Si no se especifica, se usará un tmpfs y se
+hará un enlace al escritorio del usuario para que pueda moverlo donde sea
+necesario. Si el dispositivo no tiene sistema de ficheros, se creará
+automáticamente un ext4 fs con una etiqueta de acuerdo a los valores
+especificados después del valor "\-\-output" o con un valor por defecto
+adecuado.
 .IP "\-e, \-\-exclude\-list \fIFILE\fP" 4
 un fichero que contiene una lista de nombres de ficheros/rutas que no deben
 guardarse. Esta lista de exclusión será recordada en el medio de la
@@ -65,22 +67,38 @@ muestra información de la versión y sale.
 
 .SH FICHEROS
 .IP \fB/etc/live.conf\fP 4
-Some variables can be configured via this config file (inside the live
-system).
+#\-#\-#\-#\-#  live\-snapshot.1.po (live\-snapshot)  #\-#\-#\-#\-#
+Algunas variables pueden ser configuradas a través de este fichero de
+configuración (dentro del sistema en vivo).
+#\-#\-#\-#\-#  live\-boot.7.po (live\-boot)  #\-#\-#\-#\-#
+Algunas variables pueden ser configuradas a través de este fichero de
+configuración (dentro del sistema en vivo).
 .IP \fBlive/filesystem.module\fP 4
-This optional file (inside the live media) contains a list of white\-space or
-carriage\-return\-separated file names corresponding to disk images in the
-"/live" directory. If this file exists, only images listed here will be
-merged into the root aufs, and they will be loaded in the order listed
-here. The first entry in this file will be the "lowest" point in the aufs,
-and the last file in this list will be on the "top" of the aufs, directly
-below /overlay.  Without this file, any images in the "/live" directory are
-loaded in alphanumeric order.
+#\-#\-#\-#\-#  live\-snapshot.1.po (live\-snapshot)  #\-#\-#\-#\-#
+Este fichero opcional (dentro del medio en vivo) contiene una lista de
+nombres de ficheros separados por espacios en blanco o retornos de carro que
+corresponden a imágenes de disco en el directorio "/live". Si este fichero
+existe, sólo las imágenes que figuran en esta lista se fusionarán en la raíz
+aufs y se cargarán en el orden en que aparecen aquí. La primera entrada en
+este fichero será el punto "más bajo" en el aufs y el último fichero de esta
+lista estará en el punto "más alto" del aufs, justo debajo de /overlay. Sin
+este fichero, las imágenes en el directorio "/live" se cargan en orden
+alfanumérico.
+#\-#\-#\-#\-#  live\-boot.7.po (live\-boot)  #\-#\-#\-#\-#
+Este fichero opcional (dentro del medio en vivo) contiene una lista de
+nombres de ficheros separados por espacios en blanco o retornos de carro que
+corresponden a imágenes de disco en el directorio "/live". Si este fichero
+existe, sólo las imágenes que figuran en esta lista se fusionarán en la raíz
+aufs, y se cargarán en el orden en que aparecen aquí. La primera entrada en
+este fichero será el punto "más bajo" en el aufs y el último fichero de esta
+lista estará en el punto "más alto" del aufs, justo debajo de /overlay. Sin
+este fichero, las imágenes en el directorio  "/live" se cargan en orden
+alfanumérico.
 .IP \fB/etc/live\-persistence.binds\fP 4
-This optional file (which resides in the rootfs system, not in the live
-media) is used as a list of directories which not need be persistent:
-i.e. their content does not need to survive reboots when using the
-persistence features.
+Este fichero opcional (que reside en el sistema rootfs, no en los medios en
+vivo) se utiliza como una lista de directorios que no necesitan ser
+persistentes: es decir, su contenido no necesita sobrevivir tras reiniciar
+cuando se utiliza la persistencia.
 .br
 Esto ahorra costosas escrituras y acelera las operaciones sobre los datos
 volátiles, tales como las caches web y los archivos temporales (como por
@@ -103,8 +121,17 @@ experimental que sólo funciona con objetivos cpio en este momento.
 \fIlive\-tools\fP(7)
 
 .SH "PÁGINA WEB"
-More information about live\-boot and the Debian Live project can be found on
-the homepage at <\fIhttp://live.debian.net/\fP> and in the manual at
+#\-#\-#\-#\-#  live\-snapshot.1.po (live\-snapshot)  #\-#\-#\-#\-#
+Se puede encontrar más información acerca de live\-boot y el proyecto Debian
+Live en la página web <\fIhttp://live.debian.net/\fP> y en el manual
+<\fIhttp://live.debian.net/manual/\fP>.
+#\-#\-#\-#\-#  live\-boot.7.po (live\-boot)  #\-#\-#\-#\-#
+Se puede encontrar más información acerca de live\-boot y el proyecto Debian
+Live en la página web <\fIhttp://live.debian.net/\fP> y en el manual en
+<\fIhttp://live.debian.net/manual/\fP>.
+#\-#\-#\-#\-#  live\-persistence.conf.5.po (live\-persistence.conf)  #\-#\-#\-#\-#
+Se puede encontrar más información acerca de live\-boot y el proyecto Debian
+Live en la página web <\fIhttp://live.debian.net/\fP> y en el manual en
 <\fIhttp://live.debian.net/manual/\fP>.
 
 .SH ERRORES

@@ -28,9 +28,9 @@ msgstr "05.06.2012"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "3.0~a30-1"
-msgstr "3.0~a28-1"
+msgstr "3.0~a30-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
@@ -85,7 +85,6 @@ msgstr "PÁGINA WEB"
 
 #. type: Plain text
 #: en/live-boot.7:173 en/live-persistence.conf.5:204 en/live-snapshot.1:65
-#, fuzzy
 msgid ""
 "More information about live-boot and the Debian Live project can be found on "
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
@@ -97,8 +96,8 @@ msgstr ""
 "E<lt>I<http://live.debian.net/manual/>E<gt>.\n"
 "#-#-#-#-#  live-boot.7.po (live-boot)  #-#-#-#-#\n"
 "Se puede encontrar más información acerca de live-boot y el proyecto Debian "
-"Live en la página web E<lt>I<http://live.debian.net/>E<gt> y en el  manual "
-"en E<lt>I<http://live.debian.net/manual/>E<gt>.\n"
+"Live en la página web E<lt>I<http://live.debian.net/>E<gt> y en el manual en "
+"E<lt>I<http://live.debian.net/manual/>E<gt>.\n"
 "#-#-#-#-#  live-persistence.conf.5.po (live-persistence.conf)  #-#-#-#-#\n"
 "Se puede encontrar más información acerca de live-boot y el proyecto Debian "
 "Live en la página web E<lt>I<http://live.debian.net/>E<gt> y en el manual en "
@@ -156,11 +155,6 @@ msgstr ""
 
 #. type: Plain text
 #: en/live-persistence.conf.5:17
-#, fuzzy
-#| msgid ""
-#| "The format of B<live-persistence.conf> allow empty lines and lines "
-#| "starting with a \"#\" (used for comments), both which will be ignored. A "
-#| "so called \"custom mount\" has the format:"
 msgid ""
 "The format of B<live-persistence.conf> allows empty lines and lines starting "
 "with a \"#\" (used for comments), both which will be ignored. A so called "
@@ -273,16 +267,6 @@ msgstr "B<source>=I<PATH>"
 
 #. type: Plain text
 #: en/live-persistence.conf.5:69
-#, fuzzy
-#| msgid ""
-#| "When given, store the persistence changes into I<PATH> on the persistence "
-#| "media. I<PATH> must be a relative path (w.r.t. the persistence media "
-#| "root) that cannot contain white spaces or the special . or .. path "
-#| "components, with the exception that it can be just . which means the "
-#| "persistence media root. This option is mostly relevant if you want to "
-#| "nest custom mounts, which otherwise would cause errors, or if you want to "
-#| "make the whole media root available (similar to the now deprecated B<home-"
-#| "rw> type of persistence)."
 msgid ""
 "When given, store the persistence changes into I<PATH> on the persistence "
 "media. I<PATH> must be a relative path (with respect to the persistence "
@@ -602,7 +586,7 @@ msgstr "/home/user2/.bashrc -E<gt> I<VOL>/config-files/user2/.bashrc (de b)"
 #: en/live-persistence.conf.5:168
 #, no-wrap
 msgid "Dir:"
-msgstr "Directorios:"
+msgstr "Directorio:"
 
 #. type: Plain text
 #: en/live-persistence.conf.5:171
@@ -659,10 +643,6 @@ msgstr "I<live-boot>(7)"
 
 #. type: Plain text
 #: en/live-persistence.conf.5:213
-#, fuzzy
-#| msgid ""
-#| "live.persist was written by anonym E<lt>I<anonym@lavabit.com>E<gt> for "
-#| "the Debian project."
 msgid ""
 "live-persistence.conf was written by anonym E<lt>I<anonym@lavabit.com>E<gt> "
 "for the Debian project."

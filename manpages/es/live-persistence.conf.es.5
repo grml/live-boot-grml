@@ -17,9 +17,9 @@ completamente personalizable a través del fichero \fBlive\-persistence.conf\fP
 almacenado en la raíz de su sistema de ficheros. Cualquier volumen con una
 de esas etiquetas debe tener uno de esos ficheros, o si no será ignorado.
 .PP
-The format of \fBlive\-persistence.conf\fP allows empty lines and lines starting
-with a "#" (used for comments), both which will be ignored. A so called
-"custom mount" has the format:
+El formato de \fBlive\-persistence.conf\fP permite añadir líneas vacias o líneas
+que comiencen por "#" (usado para los comentarios), ambos serán
+ignorados. Un "montaje personalizado" tiene el formato:
 .PP
 .RS
 \fIDIR\fP [\fIOPTION\fP]...
@@ -65,14 +65,14 @@ opciones \fBlink\fP o \fBunion\fP (ver debajo).
 Los montajes personalizados definidos en \fBlive\-persistence.conf\fP aceptan
 las siguientes opciones en una lista separada por comas:
 .IP \fBsource\fP=\fIPATH\fP 4
-When given, store the persistence changes into \fIPATH\fP on the persistence
-media. \fIPATH\fP must be a relative path (with respect to the persistence
-media root) that cannot contain white spaces or the special . or .. path
-components, with the exception that it can be just . which means the
-persistence media root. This option is mostly relevant if you want to nest
-custom mounts, which otherwise would cause errors, or if you want to make
-the whole media root available (similar to the now deprecated \fBhome\-rw\fP
-type of persistence).
+Cuando se especifica, se guardan los cambios persistentes en \fIPATH\fP en los
+medios con persistencia. \fIPATH\fP debe ser una ruta relativa (respecto a la
+raíz del medio persistente) que no puede contener espacios en blanco o los
+componentes especiales . o .. con la excepción de que puede ser simplemente
+\&. lo que significa la raíz del medio persistente. Esta opción es relevante
+si se desea anidar montajes personalizados, lo que de otro modo produciría
+errores, o si se desea hacer que toda la raíz del medio esté disponible (de
+forma similar al ahora obsoleto tipo de persistencia \fBhome\-rw\fP)
 .PP
 Las siguientes opciones son mutuamente exclusivas (únicamente la última
 tendrá efecto):
@@ -178,7 +178,7 @@ Enlace:
 Enlace:
 /home/user2/.bashrc \-> \fIVOL\fP/config\-files/user2/.bashrc (de b)
 .TP 
-Directorios:
+Directorio:
 /homea/user2/.ssh (de c)
 .TP 
 Enlace:
@@ -210,8 +210,17 @@ tendría que ser copiado en \fIVOL\fP/usr durante la preinstalación inicial.
 \fIlive\-tools\fP(7)
 
 .SH "PÁGINA WEB"
-More information about live\-boot and the Debian Live project can be found on
-the homepage at <\fIhttp://live.debian.net/\fP> and in the manual at
+#\-#\-#\-#\-#  live\-snapshot.1.po (live\-snapshot)  #\-#\-#\-#\-#
+Se puede encontrar más información acerca de live\-boot y el proyecto Debian
+Live en la página web <\fIhttp://live.debian.net/\fP> y en el manual
+<\fIhttp://live.debian.net/manual/\fP>.
+#\-#\-#\-#\-#  live\-boot.7.po (live\-boot)  #\-#\-#\-#\-#
+Se puede encontrar más información acerca de live\-boot y el proyecto Debian
+Live en la página web <\fIhttp://live.debian.net/\fP> y en el manual en
+<\fIhttp://live.debian.net/manual/\fP>.
+#\-#\-#\-#\-#  live\-persistence.conf.5.po (live\-persistence.conf)  #\-#\-#\-#\-#
+Se puede encontrar más información acerca de live\-boot y el proyecto Debian
+Live en la página web <\fIhttp://live.debian.net/\fP> y en el manual en
 <\fIhttp://live.debian.net/manual/\fP>.
 
 .SH ERRORES
@@ -222,5 +231,5 @@ correo de Debian Live a la dirección
 <\fIdebian\-live@lists.debian.org\fP>.
 
 .SH AUTOR
-live\-persistence.conf was written by anonym <\fIanonym@lavabit.com\fP>
-for the Debian project.
+live\-persistence.conf fue escrito por anonym <\fIanonym@lavabit.com\fP>
+para el proyecto Debian.
