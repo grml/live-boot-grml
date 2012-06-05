@@ -62,7 +62,7 @@ install:
 	cp -r COPYING $(DESTDIR)/usr/share/doc/live-boot
 
 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot/examples
-	cp -r etc/* $(DESTDIR)/usr/share/doc/live-boot/examples
+	cp -r examples/* $(DESTDIR)/usr/share/doc/live-boot/examples
 	# (FIXME)
 
 	# Installing manpages
