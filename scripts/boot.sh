@@ -444,7 +444,14 @@ mountroot ()
 
 	. /live.vars
 
-	Arguments
+	_CMDLINE="$(cat /proc/cmdline)"
+	Cmdline
+
+	case "${LIVE_DEBUG}" in
+		true)
+			set -x
+			;;
+	esac
 
 	case "${LIVE_READ_ONLY}" in
 		true)

@@ -2,11 +2,11 @@
 
 #set -e
 
-Arguments ()
+Cmdline ()
 {
-	for ARGUMENT in $(cat /proc/cmdline)
+	for _PARAMETER in ${_CMDLINE}
 	do
-		case "${ARGUMENT}" in
+		case "${_PARAMETER}" in
 			live-boot.read-only|read-only)
 				LIVE_READ_ONLY="true"
 				export LIVE_READ_ONLY
@@ -17,7 +17,13 @@ Arguments ()
 				export LIVE_VERIFY_CHECKSUMS
 				;;
 
-			# parameters below need review
+			# Special options
+			live-boot.debug|debug)
+				LIVE_DEBUG="true"
+				;;
+
+
+			# parameters below need review (FIXME)
 			skipconfig)
 				NOFASTBOOT="true"
 				NOFSTAB="true"
@@ -28,13 +34,6 @@ Arguments ()
 
 			BOOTIF=*)
 				BOOTIF="${x#BOOTIF=}"
-				;;
-
-			debug)
-				DEBUG="true"
-				export DEBUG
-
-				set -x
 				;;
 
 			dhcp)
