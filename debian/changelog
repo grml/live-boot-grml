@@ -1,3 +1,23 @@
+live-boot (3.0~a29-1) experimental; urgency=low
+
+  * Automatically translate date formats in po files.
+  * Starting initramfs-tools specific subdirectory within the source-
+    tree.
+  * Replacing live initramfs-tools script with empty stub that calls the
+    real, in future being initramfs-tools independent, script from
+    /lib/live.
+  * Splitting out a first bunch of functions out to /live/live/boot/.
+  * Moving out live-helpers from initramfs-tools specifics.
+  * Adding commented 'set -e' explicitly in all subscripts to avoid
+    running it with 'set -e' until we've made sure it's properly
+    working.
+  * Moving out live-functions from initramfs-tools specifics.
+  * Removing live-premount modules script, not needed anymore.
+  * Converting read-only initramfs-tools pre-mount script into regular
+    live-boot script.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 05 Jun 2012 16:00:59 +0200
+
 live-boot (3.0~a28-1) experimental; urgency=low
 
   [ Tails developers ]
