@@ -54,13 +54,6 @@ fi
 mkdir -p "${DESTDIR}/lib/live"
 cp -a /lib/live/boot.sh /lib/live/boot "${DESTDIR}/lib/live"
 
-# Configuration
-if [ -e /usr/share/live-boot/languagelist ]
-then
-	mkdir -p "${DESTDIR}"/usr/share/live-boot
-	cp /usr/share/live-boot/languagelist "${DESTDIR}"/usr/share/live-boot
-fi
-
 # Directories
 mkdir -p "${DESTDIR}"/lib/live-boot
 
