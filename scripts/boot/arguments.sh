@@ -4,9 +4,6 @@
 
 Arguments ()
 {
-	PRESEEDS=""
-	LOCATIONS=""
-
 	for ARGUMENT in $(cat /proc/cmdline)
 	do
 		case "${ARGUMENT}" in
@@ -15,22 +12,11 @@ Arguments ()
 				;;
 
 			skipconfig)
-				NOACCESSIBILITY="true"
 				NOFASTBOOT="true"
 				NOFSTAB="true"
 				NONETWORKING="true"
 
-				export NOACCESSIBILITY NOFASTBOOT NOFSTAB NONETWORKING
-				;;
-
-			access=*)
-				ACCESS="${ARGUMENT#access=}"
-				export ACCESS
-				;;
-
-			console=*)
-				DEFCONSOLE="${ARGUMENT#*=}"
-				export DEFCONSOLE
+				export NOFASTBOOT NOFSTAB NONETWORKING
 				;;
 
 			BOOTIF=*)
@@ -47,12 +33,13 @@ Arguments ()
 			dhcp)
 				# Force dhcp even while netbooting
 				# Use for debugging in case somebody works on fixing dhclient
-				DHCP="Force";
+				DHCP="true";
 				export DHCP
 				;;
 
 			nodhcp)
-				unset DHCP
+				DHCP=""
+				export DHCP
 				;;
 
 			ethdevice=*)
@@ -74,11 +61,6 @@ Arguments ()
 			findiso=*)
 				FINDISO="${ARGUMENT#findiso=}"
 				export FINDISO
-				;;
-
-			forcepersistencefsck)
-				FORCEPERSISTENCEFSCK="true"
-				export FORCEPERSISTENCEFSCK
 				;;
 
 			ftpfs=*)
@@ -130,11 +112,6 @@ Arguments ()
 				export STATICIP
 				;;
 
-			live-getty)
-				LIVE_GETTY="1"
-				export LIVE_GETTY
-				;;
-
 			live-media=*|bootfrom=*)
 				LIVE_MEDIA="${ARGUMENT#*=}"
 				export LIVE_MEDIA
@@ -178,11 +155,6 @@ Arguments ()
 			nfsoverlay=*)
 				NFS_COW="${ARGUMENT#nfsoverlay=}"
 				export NFS_COW
-				;;
-
-			noaccessibility)
-				NOACCESSIBILITY="true"
-				export NOACCESSIBILITY
 				;;
 
 			nofastboot)
@@ -269,23 +241,6 @@ Arguments ()
 			quickusbmodules)
 				QUICKUSBMODULES="true"
 				export QUICKUSBMODULES
-				;;
-
-			preseed/file=*|file=*)
-				LOCATIONS="${ARGUMENT#*=} ${LOCATIONS}"
-				export LOCATIONS
-				;;
-
-			nopreseed)
-				NOPRESEED="true"
-				export NOPRESEED
-				;;
-
-			*/*=*)
-				question="${ARGUMENT%%=*}"
-				value="${ARGUMENT#*=}"
-				PRESEEDS="${PRESEEDS}\"${question}=${value}\" "
-				export PRESEEDS
 				;;
 
 			showmounts)
