@@ -48,7 +48,7 @@ if [ -n "${LIVE_SWAPON}" ]
 then
 	devices=""
 
-	for device in /dev/[hs]d[a-z][0-9]*
+	for device in /dev/[sv]d[a-z][0-9]*
 	do
 		if ! [ -b "${device}" ]
 		then
