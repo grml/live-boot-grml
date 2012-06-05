@@ -636,6 +636,7 @@ mountroot ()
 	fi
 
 	persistence_exclude
+	fstab
 
 	maybe_break live-bottom
 	log_begin_msg "Running /scripts/live-bottom\n"
