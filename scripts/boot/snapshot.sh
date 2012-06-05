@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#set -e
+
 do_snap_copy ()
 {
 	fromdev="${1}"

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#set -e
+
 copy_live_to ()
 {
 	copyfrom="${1}"

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#set -e
+
 do_netsetup ()
 {
 	modprobe -q af_packet # For DHCP

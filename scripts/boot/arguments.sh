@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#set -e
+
 Arguments ()
 {
 	PRESEEDS=""

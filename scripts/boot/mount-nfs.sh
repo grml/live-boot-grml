@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#set -e
+
 do_nfsmount ()
 {
 	rc=1

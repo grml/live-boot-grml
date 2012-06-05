@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#set -e
+
 do_cifsmount ()
 {
 	rc=1

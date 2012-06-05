@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#set -e
+
 is_in_list_separator_helper () {
 	local sep=${1}
 	shift

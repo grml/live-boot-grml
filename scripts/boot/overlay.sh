@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#set -e
+
 setup_unionfs ()
 {
 	image_directory="${1}"

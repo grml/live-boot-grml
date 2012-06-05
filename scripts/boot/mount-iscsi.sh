@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#set -e
+
 do_iscsi()
 {
 	do_netsetup
