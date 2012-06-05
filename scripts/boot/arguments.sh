@@ -10,6 +10,10 @@ Arguments ()
 	for ARGUMENT in $(cat /proc/cmdline)
 	do
 		case "${ARGUMENT}" in
+			read-only)
+				READ_ONLY="true"
+				;;
+
 			skipconfig)
 				NOACCESSIBILITY="Yes"
 				NOFASTBOOT="Yes"

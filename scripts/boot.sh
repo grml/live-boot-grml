@@ -472,6 +472,14 @@ mountroot ()
 
 	Arguments
 
+	# make sure all harddisk devices are read-only
+	# this is important for forensic investigations
+	case "${READ_ONLY}" in
+		true)
+			Read_only
+			;;
+	esac
+
 	maybe_break live-premount
 	log_begin_msg "Running /scripts/live-premount"
 	run_scripts /scripts/live-premount
