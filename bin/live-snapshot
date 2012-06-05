@@ -187,12 +187,12 @@ Try_refresh ()
 	FOUND=""
 	if [ -n "${ROOTSNAP}" ]; then
 		"${EXECUTABLE}" --resync-string="${ROOTSNAP}"
-		FOUND="Yes"
+		FOUND="true"
 	fi
 
 	if [ -n "${HOMESNAP}" ]; then
 		"${EXECUTABLE}" --resync-string="${HOMESNAP}"
-		FOUND="Yes"
+		FOUND="true"
 	fi
 
 	if [ -z "${FOUND}" ]

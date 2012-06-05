@@ -2,57 +2,51 @@
 
 #set -e
 
-Arguments ()
+Cmdline ()
 {
-	PRESEEDS=""
-	LOCATIONS=""
-
-	for ARGUMENT in $(cat /proc/cmdline)
+	for _PARAMETER in ${_CMDLINE}
 	do
-		case "${ARGUMENT}" in
-			read-only)
-				READ_ONLY="true"
+		case "${_PARAMETER}" in
+			live-boot.read-only|read-only)
+				LIVE_READ_ONLY="true"
 				;;
 
+			live-boot.swapon)
+				LIVE_SWAPON="true"
+				;;
+
+			live-boot.verify-checksums|verify-checksums)
+				LIVE_VERIFY_CHECKSUMS="true"
+				;;
+
+			# Special options
+			live-boot.debug|debug)
+				LIVE_DEBUG="true"
+				;;
+
+
+			# parameters below need review (FIXME)
 			skipconfig)
-				NOACCESSIBILITY="Yes"
-				NOFASTBOOT="Yes"
-				NOFSTAB="Yes"
-				NONETWORKING="Yes"
+				NOFSTAB="true"
+				NONETWORKING="true"
 
-				export NOACCESSIBILITY NOFASTBOOT NOFSTAB NONETWORKING
-				;;
-
-			access=*)
-				ACCESS="${ARGUMENT#access=}"
-				export ACCESS
-				;;
-
-			console=*)
-				DEFCONSOLE="${ARGUMENT#*=}"
-				export DEFCONSOLE
+				export NOFSTAB NONETWORKING
 				;;
 
 			BOOTIF=*)
 				BOOTIF="${x#BOOTIF=}"
 				;;
 
-			debug)
-				DEBUG="Yes"
-				export DEBUG
-
-				set -x
-				;;
-
 			dhcp)
 				# Force dhcp even while netbooting
 				# Use for debugging in case somebody works on fixing dhclient
-				DHCP="Force";
+				DHCP="true";
 				export DHCP
 				;;
 
 			nodhcp)
-				unset DHCP
+				DHCP=""
+				export DHCP
 				;;
 
 			ethdevice=*)
@@ -74,11 +68,6 @@ Arguments ()
 			findiso=*)
 				FINDISO="${ARGUMENT#findiso=}"
 				export FINDISO
-				;;
-
-			forcepersistencefsck)
-				FORCEPERSISTENCEFSCK="Yes"
-				export FORCEPERSISTENCEFSCK
 				;;
 
 			ftpfs=*)
@@ -110,13 +99,8 @@ Arguments ()
 				;;
 
 			ignore_uuid)
-				IGNORE_UUID="Yes"
+				IGNORE_UUID="true"
 				export IGNORE_UUID
-				;;
-
-			integrity-check)
-				INTEGRITY_CHECK="Yes"
-				export INTEGRITY_CHECK
 				;;
 
 			ip=*)
@@ -128,11 +112,6 @@ Arguments ()
 				fi
 
 				export STATICIP
-				;;
-
-			live-getty)
-				LIVE_GETTY="1"
-				export LIVE_GETTY
 				;;
 
 			live-media=*|bootfrom=*)
@@ -180,23 +159,13 @@ Arguments ()
 				export NFS_COW
 				;;
 
-			noaccessibility)
-				NOACCESSIBILITY="Yes"
-				export NOACCESSIBILITY
-				;;
-
-			nofastboot)
-				NOFASTBOOT="Yes"
-				export NOFASTBOOT
-				;;
-
 			nofstab)
-				NOFSTAB="Yes"
+				NOFSTAB="true"
 				export NOFSTAB
 				;;
 
 			nonetworking)
-				NONETWORKING="Yes"
+				NONETWORKING="true"
 				export NONETWORKING
 				;;
 
@@ -204,13 +173,8 @@ Arguments ()
 				ramdisk_size="${ARGUMENT#ramdisk-size=}"
 				;;
 
-			swapon)
-				SWAPON="Yes"
-				export SWAPON
-				;;
-
 			persistence)
-				PERSISTENCE="Yes"
+				PERSISTENCE="true"
 				export PERSISTENCE
 				;;
 
@@ -233,7 +197,7 @@ Arguments ()
 				export PERSISTENCE_PATH
 				;;
 			persistence-read-only)
-				PERSISTENCE_READONLY="Yes"
+				PERSISTENCE_READONLY="true"
 				export PERSISTENCE_READONLY
 				;;
 
@@ -252,12 +216,12 @@ Arguments ()
 				;;
 
 			nopersistence)
-				NOPERSISTENCE="Yes"
+				NOPERSISTENCE="true"
 				export NOPERSISTENCE
 				;;
 
 			noprompt)
-				NOPROMPT="Yes"
+				NOPROMPT="true"
 				export NOPROMPT
 				;;
 
@@ -267,34 +231,17 @@ Arguments ()
 				;;
 
 			quickusbmodules)
-				QUICKUSBMODULES="Yes"
+				QUICKUSBMODULES="true"
 				export QUICKUSBMODULES
 				;;
 
-			preseed/file=*|file=*)
-				LOCATIONS="${ARGUMENT#*=} ${LOCATIONS}"
-				export LOCATIONS
-				;;
-
-			nopreseed)
-				NOPRESEED="Yes"
-				export NOPRESEED
-				;;
-
-			*/*=*)
-				question="${ARGUMENT%%=*}"
-				value="${ARGUMENT#*=}"
-				PRESEEDS="${PRESEEDS}\"${question}=${value}\" "
-				export PRESEEDS
-				;;
-
 			showmounts)
-				SHOWMOUNTS="Yes"
+				SHOWMOUNTS="true"
 				export SHOWMOUNTS
 				;;
 
 			silent)
-				SILENT="Yes"
+				SILENT="true"
 				export SILENT
 				;;
 
@@ -304,28 +251,28 @@ Arguments ()
 				;;
 
 			toram)
-				TORAM="Yes"
+				TORAM="true"
 				export TORAM
 				;;
 
 			toram=*)
-				TORAM="Yes"
+				TORAM="true"
 				MODULETORAM="${ARGUMENT#toram=}"
 				export TORAM MODULETORAM
 				;;
 
 			exposedroot)
-				EXPOSED_ROOT="Yes"
+				EXPOSED_ROOT="true"
 				export EXPOSED_ROOT
 				;;
 
 			plainroot)
-				PLAIN_ROOT="Yes"
+				PLAIN_ROOT="true"
 				export PLAIN_ROOT
 				;;
 
 			skipunion)
-				SKIP_UNION_MOUNTS="Yes"
+				SKIP_UNION_MOUNTS="true"
 				export SKIP_UNION_MOUNTS
 				;;
 

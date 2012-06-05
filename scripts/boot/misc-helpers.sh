@@ -17,35 +17,6 @@ really_export ()
 	eval export "${STRING}"="${VALUE}"
 }
 
-lang2locale() {
-	langpart="${1%%_*}"
-	if [ "$1" != "C" ]; then
-		# Match the language code with 3rd field in languagelist
-		line=$(grep -v "^#" /usr/share/live-boot/languagelist | cut -f1,3,6 -d\; | grep -v ';C$' | grep "^$langpart;")
-		if [ -n "$line" ]; then
-			if [ "$(echo "$line" | grep -c '')" -gt 1 ]; then
-				# More than one match; try matching the
-				# country as well.
-				countrypart="${1#*_}"
-				if [ "$countrypart" = "$1" ]; then
-					countryline="$(echo "$line" | head -n1)"
-					echo "${countryline##*;}"
-					return
-				fi
-				countrypart="${countrypart%%[@.]*}"
-				countryline="$(echo "$line" | grep ";$countrypart;" | head -n1 || true)"
-				if [ "$countryline" ]; then
-					echo "${countryline##*;}"
-					return
-				fi
-			fi
-			echo "${line##*;}"
-		fi
-	else
-		echo "C"
-	fi
-}
-
 is_in_list_separator_helper () {
 	local sep=${1}
 	shift
@@ -741,16 +712,16 @@ removable_dev ()
 		then
 			if [ -z "${want_usb}" ]
 			then
-				dev_ok="yes"
+				dev_ok="true"
 			else
 				if readlink ${sysblock} | grep -q usb
 				then
-					dev_ok="yes"
+					dev_ok="true"
 				fi
 			fi
 		fi
 
-		if [ "${dev_ok}" = "yes" ]
+		if [ "${dev_ok}" = "true" ]
 		then
 			case "${output_format}" in
 				sys)
@@ -969,7 +940,7 @@ get_custom_mounts ()
 						opt_source=${opt#source=}
 						;;
 					link)
-						opt_link="yes"
+						opt_link="true"
 						;;
 					union|bind)
 						;;
@@ -1037,22 +1008,22 @@ activate_custom_mounts ()
 
 	while read device source dest options # < ${custom_mounts}
 	do
-		local opt_bind="yes"
+		local opt_bind="true"
 		local opt_link=""
 		local opt_union=""
 		for opt in $(echo ${options} | tr ',' ' ');
 		do
 			case "${opt}" in
 				bind)
-					opt_bind="yes"
+					opt_bind="true"
 					unset opt_link opt_union
 					;;
 				link)
-					opt_link="yes"
+					opt_link="true"
 					unset opt_bind opt_union
 					;;
 				union)
-					opt_union="yes"
+					opt_union="true"
 					unset opt_bind opt_link
 					;;
 			esac

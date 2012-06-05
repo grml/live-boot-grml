@@ -4,7 +4,7 @@ SHELL := sh -e
 
 LANGUAGES = $(shell cd manpages/po && ls)
 
-SCRIPTS = bin/* initramfs-tools/hooks/* initramfs-tools/scripts/live initramfs-tools/scripts/*/* scripts/*.sh scripts/*/*
+SCRIPTS = bin/* backends/initramfs-tools/* scripts/*.sh scripts/*/*
 
 all: build
 
@@ -50,10 +50,12 @@ install:
 	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin
 
 	mkdir -p $(DESTDIR)/usr/share/live-boot
-	cp bin/live-preseed bin/live-reconfigure local/languagelist $(DESTDIR)/usr/share/live-boot
+	cp bin/live-preseed bin/live-reconfigure $(DESTDIR)/usr/share/live-boot
 
-	mkdir -p $(DESTDIR)/usr/share/initramfs-tools
-	cp -r initramfs-tools/* $(DESTDIR)/usr/share/initramfs-tools
+	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/hooks
+	cp backends/initramfs-tools/live.hook $(DESTDIR)/usr/share/initramfs-tools/hooks/live
+	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/scripts
+	cp backends/initramfs-tools/live.script $(DESTDIR)/usr/share/initramfs-tools/scripts/live
 
 	# Installing docs
 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
@@ -87,11 +89,9 @@ uninstall:
 	rm -rf $(DESTDIR)/usr/share/live-boot
 
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/hooks/live
-	rm -rf $(DESTDIR)/usr/share/initramfs-tools/scripts/live*
-	rm -f $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top/live
+	rm -f $(DESTDIR)/usr/share/initramfs-tools/scripts/live
 
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/hooks > /dev/null 2>&1 || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top > /dev/null 2>&1 || true
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts > /dev/null 2>&1 || true
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools > /dev/null 2>&1 || true
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share > /dev/null 2>&1 || true

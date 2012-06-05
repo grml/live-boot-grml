@@ -429,32 +429,6 @@ find_livefs ()
 	return 1
 }
 
-integrity_check ()
-{
-	media_mountpoint="${1}"
-
-	log_begin_msg "Checking media integrity"
-
-	cd ${media_mountpoint}
-	/bin/md5sum -c md5sum.txt < /dev/tty8 > /dev/tty8
-	RC="${?}"
-
-	log_end_msg
-
-	if [ "${RC}" -eq 0 ]
-	then
-		log_success_msg "Everything ok, will reboot in 10 seconds."
-		sleep 10
-		cd /
-		umount ${media_mountpoint}
-		sync
-		echo u > /proc/sysrq-trigger
-		echo b > /proc/sysrq-trigger
-	else
-		panic "Not ok, a media defect is likely, switch to VT8 for details."
-	fi
-}
-
 mountroot ()
 {
 	if [ -x /scripts/local-top/cryptroot ]; then
@@ -470,20 +444,22 @@ mountroot ()
 
 	. /live.vars
 
-	Arguments
+	_CMDLINE="$(cat /proc/cmdline)"
+	Cmdline
 
-	# make sure all harddisk devices are read-only
-	# this is important for forensic investigations
-	case "${READ_ONLY}" in
+	case "${LIVE_DEBUG}" in
+		true)
+			set -x
+			;;
+	esac
+
+	case "${LIVE_READ_ONLY}" in
 		true)
 			Read_only
 			;;
 	esac
 
-	maybe_break live-premount
-	log_begin_msg "Running /scripts/live-premount"
-	run_scripts /scripts/live-premount
-	log_end_msg
+	Select_eth_device
 
 	# Needed here too because some things (*cough* udev *cough*)
 	# changes the timeout
@@ -541,10 +517,11 @@ mountroot ()
 		panic "Unable to find a medium containing a live file system"
 	fi
 
-	if [ "${INTEGRITY_CHECK}" ]
-	then
-		integrity_check "${livefs_root}"
-	fi
+	case "${LIVE_VERIFY_CHECKSUMS}" in
+		true)
+			Verify_checksums "${livefs_root}"
+			;;
+	esac
 
 	if [ "${TORAM}" ]
 	then
@@ -653,11 +630,20 @@ mountroot ()
 		log_end_msg
 	fi
 
-	maybe_break live-bottom
-	log_begin_msg "Running /scripts/live-bottom\n"
+	if ! [ -d "/root/usr/share/live-boot" ]
+	then
+		panic "A wrong rootfs was mounted."
+	fi
 
-	run_scripts /scripts/live-bottom
-	log_end_msg
+	persistence_exclude
+	fstab
+	Netbase
+
+	case "${LIVE_SWAPON}" in
+		true)
+			Swapon
+			;;
+	esac
 
 	if [ "${UNIONFS}" = unionfs-fuse ]
 	then

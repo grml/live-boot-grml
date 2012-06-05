@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2012\-06\-05 3.0~a29-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 2012\-06\-05 3.0~a30-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -72,7 +72,7 @@ Look for the specified ISO file on all disks where it usually looks for the .squ
 Allows to use a filesystem from within an iso image that's available on live-media.
 .IP "\fBignore_uuid\fR" 4
 Do not check that any UUID embedded in the initramfs matches the discovered medium. live\-boot may be told to generate a UUID by setting LIVE_GENERATE_UUID=1 when building the initramfs.
-.IP "\fBintegrity\-check\fR" 4
+.IP "\fBverify\-checksums\fR" 4
 If specified, an MD5 sum is calculated on the live media during boot and compared to the value found in md5sum.txt found in the root directory of the live media.
 .IP "\fBip\fR=[\fIDEVICE\fR]:[\fICLIENT_IP\fR]:[\fISERVER_IP\fR]:[\fIGATEWAY_IP\fR]:[\fINETMASK\fR]:[\fIHOSTNAME\fR]:[\fIAUTOCONF\fR] [,[\fIDEVICE\fR]:[\fICLIENT_IP\fR]:[\fISERVER_IP\fR]:[\fIGATEWAY_IP\fR]:[\fINETMASK\fR]:[\fIHOSTNAME\fR]:[\fIAUTOCONF\fR]]" 4
 Let you specify the name(s) and the options of the interface(s) that should be configured at boot time. Do not specify this if you want to use dhcp (default). It will be changed in a future release to mimick official kernel boot param specification (e.g. ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp).
