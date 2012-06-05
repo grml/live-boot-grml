@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 05.06.2012 3.0~a29\-1 "Proyecto Debian Live"
+.TH LIVE\-BOOT 7 05.06.2012 3.0~a30\-1 "Proyecto Debian Live"
 
 .SH NOMBRE
 \fBlive\-boot\fP \- Scripts de Arranque del Sistema
@@ -110,7 +110,7 @@ está disponible en los medios en vivo.
 No comprobar que cualquier UUID integrado en el initramfs coincida con el
 medio encontrado. Se puede especificar a live\-boot que genere un UUID
 configurando LIVE_GENERATE_UUID=1 en el momento de crear el initramfs.
-.IP \fBintegrity\-check\fP 4
+.IP \fBverify\-checksums\fP 4
 Si se especifica, se calcula una suma MD5 sobre los medios en vivo durante
 el arranque y se compara con el valor md5sum.txt que se encuentra en el
 directorio raíz de los medios en vivo.

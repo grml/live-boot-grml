@@ -1,3 +1,33 @@
+live-boot (3.0~a30-1) experimental; urgency=low
+
+  * Removing dead lang2locale function and associated files, not used
+    anywhere.
+  * Converting select_eth_device initramfs-tools pre-mount script into
+    regular live-boot script.
+  * Consistenly using 'true' instead of 'Yes' or 'yes' when using
+    booleans.
+  * Removing some dead boot parameters.
+  * Splitting out integrity-check function to subscript.
+  * Rewriting live-media checksum verification to work with any SHA and
+    MD5 digests.
+  * Updating read-only handling to new parameter handling.
+  * Updating internal cmdline handling.
+  * Updating swapon handling to new parameter handling.
+  * Also allowing /dev/vd* to be used as swap devices and drop /dev/hd*.
+  * Splitting out swap handling and rewriting to a live-boot subscript.
+  * Moving validateroot bottom script into main boot script itself.
+  * Removing exporting of variables for reviewed options in the cmdline
+    function, not required.
+  * Removing fastboot handling, the normal system handles this via
+    'fastboot' bootparameter already.
+  * Transforming persistence_excludes bottom script into normal live-
+    boot script.
+  * Transforming fstab bottom script into normal live-boot script.
+  * Transforming networking bottom script into normal live-boot script.
+  * Simplyfing initramfs-tools specific files within the source tree.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 05 Jun 2012 19:37:54 +0200
+
 live-boot (3.0~a29-1) experimental; urgency=low
 
   * Automatically translate date formats in po files.

@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 05.06.2012 3.0~a29\-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 05.06.2012 3.0~a30\-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Scripts
@@ -106,7 +106,7 @@ live\-media.
 Do not check that any UUID embedded in the initramfs matches the discovered
 medium. live\-boot may be told to generate a UUID by setting
 LIVE_GENERATE_UUID=1 when building the initramfs.
-.IP \fBintegrity\-check\fP 4
+.IP \fBverify\-checksums\fP 4
 If specified, an MD5 sum is calculated on the live media during boot and
 compared to the value found in md5sum.txt found in the root directory of the
 live media.
