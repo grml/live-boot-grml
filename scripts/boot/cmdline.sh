@@ -50,38 +50,38 @@ Cmdline ()
 				;;
 
 			ethdevice=*)
-				DEVICE="${ARGUMENT#ethdevice=}"
+				DEVICE="${_PARAMETER#ethdevice=}"
 				ETHDEVICE="${DEVICE}"
 				export DEVICE ETHDEVICE
 				;;
 
 			ethdevice-timeout=*)
-				ETHDEV_TIMEOUT="${ARGUMENT#ethdevice-timeout=}"
+				ETHDEV_TIMEOUT="${_PARAMETER#ethdevice-timeout=}"
 				export ETHDEV_TIMEOUT
 				;;
 
 			fetch=*)
-				FETCH="${ARGUMENT#fetch=}"
+				FETCH="${_PARAMETER#fetch=}"
 				export FETCH
 				;;
 
 			findiso=*)
-				FINDISO="${ARGUMENT#findiso=}"
+				FINDISO="${_PARAMETER#findiso=}"
 				export FINDISO
 				;;
 
 			ftpfs=*)
-				FTPFS="${ARGUMENT#ftpfs=}"
+				FTPFS="${_PARAMETER#ftpfs=}"
 				export FTPFS
 				;;
 
 			httpfs=*)
-				HTTPFS="${ARGUMENT#httpfs=}"
+				HTTPFS="${_PARAMETER#httpfs=}"
 				export HTTPFS
 				;;
 
 			iscsi=*)
-				ISCSI="${ARGUMENT#iscsi=}"
+				ISCSI="${_PARAMETER#iscsi=}"
 				#ip:port - separated by ;
 				ISCSI_PORTAL="${ISCSI%;*}"
 				if echo "${ISCSI_PORTAL}" | grep -q , ; then
@@ -94,7 +94,7 @@ Cmdline ()
 				;;
 
 			isofrom=*|fromiso=*)
-				FROMISO="${ARGUMENT#*=}"
+				FROMISO="${_PARAMETER#*=}"
 				export FROMISO
 				;;
 
@@ -104,7 +104,7 @@ Cmdline ()
 				;;
 
 			ip=*)
-				STATICIP="${ARGUMENT#ip=}"
+				STATICIP="${_PARAMETER#ip=}"
 
 				if [ -z "${STATICIP}" ]
 				then
@@ -115,47 +115,47 @@ Cmdline ()
 				;;
 
 			live-media=*|bootfrom=*)
-				LIVE_MEDIA="${ARGUMENT#*=}"
+				LIVE_MEDIA="${_PARAMETER#*=}"
 				export LIVE_MEDIA
 				;;
 
 			live-media-encryption=*|encryption=*)
-				LIVE_MEDIA_ENCRYPTION="${ARGUMENT#*=}"
+				LIVE_MEDIA_ENCRYPTION="${_PARAMETER#*=}"
 				export LIVE_MEDIA_ENCRYPTION
 				;;
 
 			live-media-offset=*)
-				LIVE_MEDIA_OFFSET="${ARGUMENT#live-media-offset=}"
+				LIVE_MEDIA_OFFSET="${_PARAMETER#live-media-offset=}"
 				export LIVE_MEDIA_OFFSET
 				;;
 
 			live-media-path=*)
-				LIVE_MEDIA_PATH="${ARGUMENT#live-media-path=}"
+				LIVE_MEDIA_PATH="${_PARAMETER#live-media-path=}"
 				export LIVE_MEDIA_PATH
 				;;
 
 			live-media-timeout=*)
-				LIVE_MEDIA_TIMEOUT="${ARGUMENT#live-media-timeout=}"
+				LIVE_MEDIA_TIMEOUT="${_PARAMETER#live-media-timeout=}"
 				export LIVE_MEDIA_TIMEOUT
 				;;
 
 			module=*)
-				MODULE="${ARGUMENT#module=}"
+				MODULE="${_PARAMETER#module=}"
 				export MODULE
 				;;
 
 			netboot=*)
-				NETBOOT="${ARGUMENT#netboot=}"
+				NETBOOT="${_PARAMETER#netboot=}"
 				export NETBOOT
 				;;
 
 			nfsopts=*)
-				NFSOPTS="${ARGUMENT#nfsopts=}"
+				NFSOPTS="${_PARAMETER#nfsopts=}"
 				export NFSOPTS
 				;;
 
 			nfsoverlay=*)
-				NFS_COW="${ARGUMENT#nfsoverlay=}"
+				NFS_COW="${_PARAMETER#nfsoverlay=}"
 				export NFS_COW
 				;;
 
@@ -170,7 +170,7 @@ Cmdline ()
 				;;
 
 			ramdisk-size=*)
-				ramdisk_size="${ARGUMENT#ramdisk-size=}"
+				ramdisk_size="${_PARAMETER#ramdisk-size=}"
 				;;
 
 			persistence)
@@ -179,21 +179,21 @@ Cmdline ()
 				;;
 
 			persistence-encryption=*)
-				PERSISTENCE_ENCRYPTION="${ARGUMENT#*=}"
+				PERSISTENCE_ENCRYPTION="${_PARAMETER#*=}"
 				export PERSISTENCE_ENCRYPTION
 				;;
 
 			persistence-media=*)
-				PERSISTENCE_MEDIA="${ARGUMENT#*=}"
+				PERSISTENCE_MEDIA="${_PARAMETER#*=}"
 				export PERSISTENCE_MEDIA
 				;;
 			persistence-method=*)
-				PERSISTENCE_METHOD="${ARGUMENT#*=}"
+				PERSISTENCE_METHOD="${_PARAMETER#*=}"
 				export PERSISTENCE_METHOD
 				;;
 
 			persistence-path=*)
-				PERSISTENCE_PATH="${ARGUMENT#persistence-path=}"
+				PERSISTENCE_PATH="${_PARAMETER#persistence-path=}"
 				export PERSISTENCE_PATH
 				;;
 			persistence-read-only)
@@ -202,17 +202,17 @@ Cmdline ()
 				;;
 
 			persistence-storage=*)
-				PERSISTENCE_STORAGE="${ARGUMENT#persistence-storage=}"
+				PERSISTENCE_STORAGE="${_PARAMETER#persistence-storage=}"
 				export PERSISTENCE_STORAGE
 				;;
 
 			persistence-subtext=*)
-				old_root_overlay_label="${old_root_overlay_label}-${ARGUMENT#persistence-subtext=}"
-				old_home_overlay_label="${old_home_overlay_label}-${ARGUMENT#persistence-subtext=}"
-				custom_overlay_label="${custom_overlay_label}-${ARGUMENT#persistence-subtext=}"
-				root_snapshot_label="${root_snapshot_label}-${ARGUMENT#persistence-subtext=}"
-				old_root_snapshot_label="${root_snapshot_label}-${ARGUMENT#persistence-subtext=}"
-				home_snapshot_label="${home_snapshot_label}-${ARGUMENT#persistence-subtext=}"
+				old_root_overlay_label="${old_root_overlay_label}-${_PARAMETER#persistence-subtext=}"
+				old_home_overlay_label="${old_home_overlay_label}-${_PARAMETER#persistence-subtext=}"
+				custom_overlay_label="${custom_overlay_label}-${_PARAMETER#persistence-subtext=}"
+				root_snapshot_label="${root_snapshot_label}-${_PARAMETER#persistence-subtext=}"
+				old_root_snapshot_label="${root_snapshot_label}-${_PARAMETER#persistence-subtext=}"
+				home_snapshot_label="${home_snapshot_label}-${_PARAMETER#persistence-subtext=}"
 				;;
 
 			nopersistence)
@@ -226,7 +226,7 @@ Cmdline ()
 				;;
 
 			noprompt=*)
-				NOPROMPT="${ARGUMENT#noprompt=}"
+				NOPROMPT="${_PARAMETER#noprompt=}"
 				export NOPROMPT
 				;;
 
@@ -246,7 +246,7 @@ Cmdline ()
 				;;
 
 			todisk=*)
-				TODISK="${ARGUMENT#todisk=}"
+				TODISK="${_PARAMETER#todisk=}"
 				export TODISK
 				;;
 
@@ -257,7 +257,7 @@ Cmdline ()
 
 			toram=*)
 				TORAM="true"
-				MODULETORAM="${ARGUMENT#toram=}"
+				MODULETORAM="${_PARAMETER#toram=}"
 				export TORAM MODULETORAM
 				;;
 
@@ -277,12 +277,12 @@ Cmdline ()
 				;;
 
 			root=*)
-				ROOT="${ARGUMENT#root=}"
+				ROOT="${_PARAMETER#root=}"
 				export ROOT
 				;;
 
 			union=*)
-				UNIONTYPE="${ARGUMENT#union=}"
+				UNIONTYPE="${_PARAMETER#union=}"
 				export UNIONTYPE
 				;;
 		esac
