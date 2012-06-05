@@ -4,8 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 3.0~a28-1\n"
-"POT-Creation-Date: 2012-06-05 19:38+0300\n"
+"Project-Id-Version: live-boot 3.0~a31-1\n"
+"POT-Creation-Date: 2012-06-05 21:45+0300\n"
 "PO-Revision-Date: 2012-05-13 18:30+0100\n"
 "Last-Translator: Carlos Zuferri «chals» <chals@altorricon.com>\n"
 "Language-Team:  none\n"
@@ -29,9 +29,9 @@ msgstr "05.06.2012"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
-#, fuzzy, no-wrap
-msgid "3.0~a30-1"
-msgstr "3.0~a28-1"
+#, no-wrap
+msgid "3.0~a31-1"
+msgstr "3.0~a31-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
@@ -180,12 +180,6 @@ msgstr "B<access>=I<ACCESS>"
 
 #. type: Plain text
 #: en/live-boot.7:33
-#, fuzzy
-#| msgid ""
-#| "Set the accessibility level for physically or visually impared users. "
-#| "ACCESS must be one of v1, v2, v3, m1, or m2. v1=lesser visual impairment, "
-#| "v2=moderate visual impairment, v3=blindness, m1=minor motor difficulties, "
-#| "m2=moderate motor difficulties."
 msgid ""
 "Set the accessibility level for physically or visually impaired users. "
 "ACCESS must be one of v1, v2, v3, m1, or m2. v1=lesser visual impairment, "
@@ -269,10 +263,6 @@ msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:52
-#, fuzzy
-#| msgid ""
-#| "Due to current limitations in busyboxs wget and DNS resolution, an URL "
-#| "can not contain a hostname but an IP only."
 msgid ""
 "Due to current limitations in busybox's wget and DNS resolution, an URL can "
 "not contain a hostname but an IP only."
@@ -398,10 +388,9 @@ msgstr ""
 
 #. type: IP
 #: en/live-boot.7:75
-#, fuzzy, no-wrap
-#| msgid "B<integrity-check>"
+#, no-wrap
 msgid "B<verify-checksums>"
-msgstr "B<integrity-check>"
+msgstr "B<verify-checksums>"
 
 #. type: Plain text
 #: en/live-boot.7:77
@@ -699,19 +688,6 @@ msgstr "B<persistence>"
 
 #. type: Plain text
 #: en/live-boot.7:113
-#, fuzzy
-#| msgid ""
-#| "live-boot will probe devices for persistence media. These can be "
-#| "partitions (with the correct GPT name), filesystems (with the correct "
-#| "label) or image/archive files (with the correct file name). Overlays are "
-#| "labeled/named either \"full-ov\", which will be mounted on /, or \"custom-"
-#| "ov\", which can be completely customized (see I<live-persistence.conf>"
-#| "(5)); snapshots are labeled/named either \"live-sn\" or \"home-sn\" and "
-#| "will be extracted into / or /home, respectively (see I<live-snapshot>(1) "
-#| "for more information). The order these are handled are: full-ov, custom-"
-#| "ov, live-sn, home-sn. Overlay image files and snapshot archive files have "
-#| "extensions which determines their filesystem or archive type, e.g. "
-#| "\"custom-ov.ext4\" and \"\\home-sn.squashfs\"."
 msgid ""
 "live-boot will probe devices for persistence media. These can be partitions "
 "(with the correct GPT name), filesystems (with the correct label) or image/"
@@ -999,7 +975,6 @@ msgstr "B</etc/live.conf>"
 
 #. type: Plain text
 #: en/live-boot.7:145 en/live-snapshot.1:45
-#, fuzzy
 msgid ""
 "Some variables can be configured via this config file (inside the live "
 "system)."
@@ -1009,7 +984,7 @@ msgstr ""
 "configuración (dentro del sistema en vivo).\n"
 "#-#-#-#-#  live-boot.7.po (live-boot)  #-#-#-#-#\n"
 "Algunas variables pueden ser configuradas a través de este fichero de "
-"configuración (en el interior del sistema en vivo)."
+"configuración (dentro del sistema en vivo)."
 
 #. type: IP
 #: en/live-boot.7:145 en/live-snapshot.1:45
@@ -1019,7 +994,6 @@ msgstr "B<live/filesystem.module>"
 
 #. type: Plain text
 #: en/live-boot.7:147 en/live-snapshot.1:47
-#, fuzzy
 msgid ""
 "This optional file (inside the live media) contains a list of white-space or "
 "carriage-return-separated file names corresponding to disk images in the \"/"
@@ -1031,24 +1005,24 @@ msgid ""
 "are loaded in alphanumeric order."
 msgstr ""
 "#-#-#-#-#  live-snapshot.1.po (live-snapshot)  #-#-#-#-#\n"
-"Este fichero opcional (en el interior del medio en vivo) contiene una lista "
-"de nombres de ficheros separados por espacios en blanco o retornos de carro "
-"que corresponden a imágenes de disco en el directorio \"/live\". Si este "
-"fichero existe, sólo las imágenes que figuran en esta lista se fusionarán en "
-"la raíz aufs y se cargarán en el orden en que aparecen aquí. La primera "
-"entrada en este fichero será el punto \"más bajo\" en el aufs y el último "
-"fichero de esta lista estará en el punto \"más alto\" del aufs, justo debajo "
-"de /overlay. Sin este fichero, las imágenes en el directorio \"/live\" se "
-"cargan en orden alfanumérico.\n"
+"Este fichero opcional (dentro del medio en vivo) contiene una lista de "
+"nombres de ficheros separados por espacios en blanco o retornos de carro que "
+"corresponden a imágenes de disco en el directorio \"/live\". Si este fichero "
+"existe, sólo las imágenes que figuran en esta lista se fusionarán en la raíz "
+"aufs y se cargarán en el orden en que aparecen aquí. La primera entrada en "
+"este fichero será el punto \"más bajo\" en el aufs y el último fichero de "
+"esta lista estará en el punto \"más alto\" del aufs, justo debajo de /"
+"overlay. Sin este fichero, las imágenes en el directorio \"/live\" se cargan "
+"en orden alfanumérico.\n"
 "#-#-#-#-#  live-boot.7.po (live-boot)  #-#-#-#-#\n"
-"Este fichero opcional (en el interior del medio en vivo) contiene una lista "
-"de nombres de ficheros separados por espacios en blanco o retornos de carro "
-"que corresponden a imágenes de disco en el directorio \"/live\". Si este "
-"fichero existe, sólo las imágenes que figuran en esta lista se fusionarán en "
-"la raíz aufs, y se cargarán en el orden en que aparecen aquí. La primera "
-"entrada en este fichero será el punto \"más bajo\" en el aufs y el último "
-"fichero de esta lista estará en el punto \"más alto\" del aufs, justo debajo "
-"de /overlay. Sin este fichero, las imágenes en el directorio  \"/live\" se "
+"Este fichero opcional (dentro del medio en vivo) contiene una lista de "
+"nombres de ficheros separados por espacios en blanco o retornos de carro que "
+"corresponden a imágenes de disco en el directorio \"/live\". Si este fichero "
+"existe, sólo las imágenes que figuran en esta lista se fusionarán en la raíz "
+"aufs, y se cargarán en el orden en que aparecen aquí. La primera entrada en "
+"este fichero será el punto \"más bajo\" en el aufs y el último fichero de "
+"esta lista estará en el punto \"más alto\" del aufs, justo debajo de /"
+"overlay. Sin este fichero, las imágenes en el directorio  \"/live\" se "
 "cargan en orden alfanumérico."
 
 #. type: IP
@@ -1159,7 +1133,6 @@ msgstr "PÁGINA WEB"
 
 #. type: Plain text
 #: en/live-boot.7:173 en/live-persistence.conf.5:204 en/live-snapshot.1:65
-#, fuzzy
 msgid ""
 "More information about live-boot and the Debian Live project can be found on "
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
@@ -1171,8 +1144,8 @@ msgstr ""
 "E<lt>I<http://live.debian.net/manual/>E<gt>.\n"
 "#-#-#-#-#  live-boot.7.po (live-boot)  #-#-#-#-#\n"
 "Se puede encontrar más información acerca de live-boot y el proyecto Debian "
-"Live en la página web E<lt>I<http://live.debian.net/>E<gt> y en el  manual "
-"en E<lt>I<http://live.debian.net/manual/>E<gt>.\n"
+"Live en la página web E<lt>I<http://live.debian.net/>E<gt> y en el manual en "
+"E<lt>I<http://live.debian.net/manual/>E<gt>.\n"
 "#-#-#-#-#  live-persistence.conf.5.po (live-persistence.conf)  #-#-#-#-#\n"
 "Se puede encontrar más información acerca de live-boot y el proyecto Debian "
 "Live en la página web E<lt>I<http://live.debian.net/>E<gt> y en el manual en "

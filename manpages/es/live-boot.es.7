@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 05.06.2012 3.0~a30\-1 "Proyecto Debian Live"
+.TH LIVE\-BOOT 7 05.06.2012 3.0~a31\-1 "Proyecto Debian Live"
 
 .SH NOMBRE
 \fBlive\-boot\fP \- Scripts de Arranque del Sistema
@@ -49,10 +49,11 @@ raíz (/etc/live/boot.conf, /etc/live/boot.d/*.conf), o en el medio en vivo
 .\" FIXME
 \fBlive\-boot\fP incluye los siguientes parámetros.
 .IP \fBaccess\fP=\fIACCESS\fP 4
-Set the accessibility level for physically or visually impaired
-users. ACCESS must be one of v1, v2, v3, m1, or m2. v1=lesser visual
-impairment, v2=moderate visual impairment, v3=blindness, m1=minor motor
-difficulties, m2=moderate motor difficulties.
+Establece el nivel de accesibilidad para usuarios con minusvalías físicas o
+con discapacidad visual. ACCESS debe ser uno de los siguientes, v1, v2, v3,
+m1 o m2. v1=menor deterioro visual, v2=discapacidad visual moderada,
+v3=ceguera, m1=dificultades motoras menores, m2=dificultades motoras
+moderadas.
 .IP \fBconsole\fP=\fITTY,SPEED\fP 4
 Establece la consola que se utilizará por defecto con la opción
 "live\-getty". Ejemplo: "console=ttyS0,115200"
@@ -73,8 +74,9 @@ funcione correctamente, ya que no requiere el uso de la red después y el
 sistema funciona más rápido una vez iniciado, debido a que ya no necesita
 más ponerse en contacto con el servidor.
 .br
-Due to current limitations in busybox's wget and DNS resolution, an URL can
-not contain a hostname but an IP only.
+Debido a las limitaciones actuales de busybox, wget y la resolución de DNS,
+una dirección URL no puede contener un nombre de anfitrión, sino sólo una
+dirección IP.
 .br
 No funciona: http://ejemplo.com/ruta/al/sistema_de_ficheros.squashfs
 .br
@@ -185,16 +187,17 @@ actualmente ningún efecto cuando se arranca con toram
 .IP \fBswapon\fP 4
 Este parámetro permite el uso de particiones swap locales.
 .IP \fBpersistence\fP 4
-live\-boot will probe devices for persistence media. These can be partitions
-(with the correct GPT name), filesystems (with the correct label) or
-image/archive files (with the correct file name). Overlays are labeled/named
-either "full\-ov", which will be mounted on /, or "custom\-ov", which can be
-completely customized (see \fIlive\-persistence.conf\fP(5)); snapshots are
-labeled/named either "live\-sn" or "home\-sn" and will be extracted into / or
-/home, respectively (see \fIlive\-snapshot\fP(1) for more information). The
-order these are handled are: full\-ov, custom\-ov, live\-sn, home\-sn. Overlay
-image files and snapshot archive files have extensions which determines
-their filesystem or archive type, e.g. "custom\-ov.ext4" and
+live\-boot buscará dispositivos con "persistence". Estos pueden ser
+particiones (con el nombre GPT correcto), sistemas de ficheros (con la
+etiqueta correcta) o ficheros imagen/archivo (con el nombre de fichero
+correcto). Overlays con la etiqueta/nombre "full\-ov", que se montará en / o
+"custom\-ov", que puede ser completamente personalizado (ver
+\fIlive\-persistence.conf\fP(5)); las instantáneas tienen la etiqueta/nombre
+"live\-sn" o "home\-sn" y se extraerán respectivamente en / o /home (ver
+\fIlive\-snapshot\fP(1) para más información). El orden en que se tratan son:
+full\-ov, custom\-ov, live\-sn, home\-sn. Los ficheros imagen overlay y los
+ficheros archivo instantáneas tienen extensiones que determinan el tipo de
+fichero o de sistema de ficheros, por ejemplo, "custom\-ov.ext4" y
 "home\-sn.squashfs".
 .IP "\fBpersistence\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 Esta opción determina qué tipo de cifrado se usa cuando se prueban los
@@ -269,17 +272,33 @@ unionfs.
 .\" FIXME
 .SH "FICHEROS (antiguos)"
 .IP \fB/etc/live.conf\fP 4
-Some variables can be configured via this config file (inside the live
-system).
+#\-#\-#\-#\-#  live\-snapshot.1.po (live\-snapshot)  #\-#\-#\-#\-#
+Algunas variables pueden ser configuradas a través de este fichero de
+configuración (dentro del sistema en vivo).
+#\-#\-#\-#\-#  live\-boot.7.po (live\-boot)  #\-#\-#\-#\-#
+Algunas variables pueden ser configuradas a través de este fichero de
+configuración (dentro del sistema en vivo).
 .IP \fBlive/filesystem.module\fP 4
-This optional file (inside the live media) contains a list of white\-space or
-carriage\-return\-separated file names corresponding to disk images in the
-"/live" directory. If this file exists, only images listed here will be
-merged into the root aufs, and they will be loaded in the order listed
-here. The first entry in this file will be the "lowest" point in the aufs,
-and the last file in this list will be on the "top" of the aufs, directly
-below /overlay.  Without this file, any images in the "/live" directory are
-loaded in alphanumeric order.
+#\-#\-#\-#\-#  live\-snapshot.1.po (live\-snapshot)  #\-#\-#\-#\-#
+Este fichero opcional (dentro del medio en vivo) contiene una lista de
+nombres de ficheros separados por espacios en blanco o retornos de carro que
+corresponden a imágenes de disco en el directorio "/live". Si este fichero
+existe, sólo las imágenes que figuran en esta lista se fusionarán en la raíz
+aufs y se cargarán en el orden en que aparecen aquí. La primera entrada en
+este fichero será el punto "más bajo" en el aufs y el último fichero de esta
+lista estará en el punto "más alto" del aufs, justo debajo de /overlay. Sin
+este fichero, las imágenes en el directorio "/live" se cargan en orden
+alfanumérico.
+#\-#\-#\-#\-#  live\-boot.7.po (live\-boot)  #\-#\-#\-#\-#
+Este fichero opcional (dentro del medio en vivo) contiene una lista de
+nombres de ficheros separados por espacios en blanco o retornos de carro que
+corresponden a imágenes de disco en el directorio "/live". Si este fichero
+existe, sólo las imágenes que figuran en esta lista se fusionarán en la raíz
+aufs, y se cargarán en el orden en que aparecen aquí. La primera entrada en
+este fichero será el punto "más bajo" en el aufs y el último fichero de esta
+lista estará en el punto "más alto" del aufs, justo debajo de /overlay. Sin
+este fichero, las imágenes en el directorio  "/live" se cargan en orden
+alfanumérico.
 .IP \fB/etc/live\-persistence.binds\fP 4
 Este fichero opcional (que reside en el sistema rootfs, no en los medios en
 vivo) se utiliza como una lista de directorios que no necesitan ser
@@ -312,8 +331,17 @@ original.
 \fIlive\-tools\fP(7)
 
 .SH "PÁGINA WEB"
-More information about live\-boot and the Debian Live project can be found on
-the homepage at <\fIhttp://live.debian.net/\fP> and in the manual at
+#\-#\-#\-#\-#  live\-snapshot.1.po (live\-snapshot)  #\-#\-#\-#\-#
+Se puede encontrar más información acerca de live\-boot y el proyecto Debian
+Live en la página web <\fIhttp://live.debian.net/\fP> y en el manual
+<\fIhttp://live.debian.net/manual/\fP>.
+#\-#\-#\-#\-#  live\-boot.7.po (live\-boot)  #\-#\-#\-#\-#
+Se puede encontrar más información acerca de live\-boot y el proyecto Debian
+Live en la página web <\fIhttp://live.debian.net/\fP> y en el manual en
+<\fIhttp://live.debian.net/manual/\fP>.
+#\-#\-#\-#\-#  live\-persistence.conf.5.po (live\-persistence.conf)  #\-#\-#\-#\-#
+Se puede encontrar más información acerca de live\-boot y el proyecto Debian
+Live en la página web <\fIhttp://live.debian.net/\fP> y en el manual en
 <\fIhttp://live.debian.net/manual/\fP>.
 
 .SH ERRORES

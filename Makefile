@@ -4,7 +4,7 @@ SHELL := sh -e
 
 LANGUAGES = $(shell cd manpages/po && ls)
 
-SCRIPTS = bin/* backends/initramfs-tools/* scripts/*.sh scripts/*/*
+SCRIPTS = backends/*/* bin/* scripts/*.sh scripts/*/*
 
 all: build
 
@@ -49,9 +49,6 @@ install:
 	mkdir -p $(DESTDIR)/sbin
 	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin
 
-	mkdir -p $(DESTDIR)/usr/share/live-boot
-	cp bin/live-preseed bin/live-reconfigure $(DESTDIR)/usr/share/live-boot
-
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/hooks
 	cp backends/initramfs-tools/live.hook $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/scripts
@@ -62,7 +59,7 @@ install:
 	cp -r COPYING $(DESTDIR)/usr/share/doc/live-boot
 
 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot/examples
-	cp -r etc/* $(DESTDIR)/usr/share/doc/live-boot/examples
+	cp -r examples/* $(DESTDIR)/usr/share/doc/live-boot/examples
 	# (FIXME)
 
 	# Installing manpages
@@ -85,8 +82,6 @@ uninstall:
 	# Uninstalling executables
 	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin > /dev/null 2>&1 || true
-
-	rm -rf $(DESTDIR)/usr/share/live-boot
 
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/scripts/live
