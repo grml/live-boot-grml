@@ -4,7 +4,7 @@ SHELL := sh -e
 
 LANGUAGES = $(shell cd manpages/po && ls)
 
-SCRIPTS = bin/* initramfs-tools/hooks/* initramfs-tools/scripts/live initramfs-tools/scripts/live-functions initramfs-tools/scripts/live-helpers initramfs-tools/scripts/*/*
+SCRIPTS = bin/* initramfs-tools/hooks/* initramfs-tools/scripts/live initramfs-tools/scripts/live-functions initramfs-tools/scripts/live-helpers initramfs-tools/scripts/*/* scripts/*
 
 all: build
 
@@ -41,6 +41,10 @@ build:
 	@echo "Nothing to build."
 
 install:
+	# Installing scripts
+	mkdir -p $(DESTDIR)/lib/live
+	cp -r scripts/boot.sh $(DESTDIR)/lib/live
+
 	# Installing executables
 	mkdir -p $(DESTDIR)/sbin
 	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin

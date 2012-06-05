@@ -50,6 +50,10 @@ then
 fi
 
 [ "${QUIET}" ] || echo -n " "core
+
+mkdir -p "${DESTDIR}/lib/live"
+cp -a /lib/live/boot.sh "${DESTDIR}/lib/live"
+
 # Configuration
 if [ -e /usr/share/live-boot/languagelist ]
 then
