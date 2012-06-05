@@ -2,6 +2,366 @@
 
 #set -e
 
+is_live_path ()
+{
+	DIRECTORY="${1}"
+
+	if [ -d "${DIRECTORY}"/"${LIVE_MEDIA_PATH}" ]
+	then
+		for FILESYSTEM in squashfs ext2 ext3 ext4 xfs dir jffs2
+		do
+			if [ "$(echo ${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM})" != "${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM}" ]
+			then
+				return 0
+			fi
+		done
+	fi
+
+	return 1
+}
+
+matches_uuid ()
+{
+	if [ "${IGNORE_UUID}" ] || [ ! -e /conf/uuid.conf ]
+	then
+		return 0
+	fi
+
+	path="${1}"
+	uuid="$(cat /conf/uuid.conf)"
+
+	for try_uuid_file in "${path}/.disk/live-uuid"*
+	do
+		[ -e "${try_uuid_file}" ] || continue
+
+		try_uuid="$(cat "${try_uuid_file}")"
+
+		if [ "${uuid}" = "${try_uuid}" ]
+		then
+			return 0
+		fi
+	done
+
+	return 1
+}
+
+get_backing_device ()
+{
+	case "${1}" in
+		*.squashfs|*.ext2|*.ext3|*.ext4|*.jffs2)
+			echo $(setup_loop "${1}" "loop" "/sys/block/loop*" '0' "${LIVE_MEDIA_ENCRYPTION}" "${2}")
+			;;
+
+		*.dir)
+			echo "directory"
+			;;
+
+		*)
+			panic "Unrecognized live filesystem: ${1}"
+			;;
+	esac
+}
+
+match_files_in_dir ()
+{
+	# Does any files match pattern ${1} ?
+	local pattern="${1}"
+
+	if [ "$(echo ${pattern})" != "${pattern}" ]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+mount_images_in_directory ()
+{
+	directory="${1}"
+	rootmnt="${2}"
+	mac="${3}"
+
+
+	if match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.squashfs" ||
+		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext2" ||
+		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext3" ||
+		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext4" ||
+		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.jffs2" ||
+		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.dir"
+	then
+		[ -n "${mac}" ] && adddirectory="${directory}/${LIVE_MEDIA_PATH}/${mac}"
+		setup_unionfs "${directory}/${LIVE_MEDIA_PATH}" "${rootmnt}" "${adddirectory}"
+	else
+		panic "No supported filesystem images found at /${LIVE_MEDIA_PATH}."
+	fi
+}
+
+is_nice_device ()
+{
+	sysfs_path="${1#/sys}"
+
+	if [ -e /lib/udev/path_id ]
+	then
+		# squeeze
+		PATH_ID="/lib/udev/path_id"
+	else
+		# wheezy/sid (udev >= 174)
+		PATH_ID="/sbin/udevadm test-builtin path_id"
+	fi
+
+	if ${PATH_ID} "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-[^-]*-(ide|sas|scsi|usb|virtio)|platform-sata_mv|platform-orion-ehci|platform-mmc|platform-mxsdhci)"
+	then
+		return 0
+	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
+	then
+		return 0
+	elif echo ${sysfs_path} | grep -q "^/block/dm-"
+	then
+		return 0
+	elif echo ${sysfs_path} | grep -q "^/block/mtdblock"
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+check_dev ()
+{
+	sysdev="${1}"
+	devname="${2}"
+	skip_uuid_check="${3}"
+
+	# support for fromiso=.../isofrom=....
+	if [ -n "$FROMISO" ]
+	then
+		ISO_DEVICE=$(dirname $FROMISO)
+		if ! [ -b $ISO_DEVICE ]
+		then
+			# to support unusual device names like /dev/cciss/c0d0p1
+			# as well we have to identify the block device name, let's
+			# do that for up to 15 levels
+			i=15
+			while [ -n "$ISO_DEVICE" ] && [ "$i" -gt 0 ]
+			do
+				ISO_DEVICE=$(dirname ${ISO_DEVICE})
+				[ -b "$ISO_DEVICE" ] && break
+				i=$(($i -1))
+		        done
+		fi
+
+		if [ "$ISO_DEVICE" = "/" ]
+		then
+			echo "Warning: device for bootoption fromiso= ($FROMISO) not found.">>/boot.log
+		else
+			fs_type=$(get_fstype "${ISO_DEVICE}")
+			if is_supported_fs ${fs_type}
+			then
+				mkdir /live/fromiso
+				mount -t $fs_type "$ISO_DEVICE" /live/fromiso
+				ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
+				loopdevname=$(setup_loop "/live/fromiso/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
+				devname="${loopdevname}"
+			else
+				echo "Warning: unable to mount $ISO_DEVICE." >>/boot.log
+			fi
+		fi
+	fi
+
+	if [ -z "${devname}" ]
+	then
+		devname=$(sys2dev "${sysdev}")
+	fi
+
+	if [ -d "${devname}" ]
+	then
+		mount -o bind "${devname}" $mountpoint || continue
+
+		if is_live_path $mountpoint
+		then
+			echo $mountpoint
+			return 0
+		else
+			umount $mountpoint
+		fi
+	fi
+
+	IFS=","
+	for device in ${devname}
+	do
+		case "$device" in
+			*mapper*)
+				# Adding lvm support
+				if [ -x /scripts/local-top/lvm2 ]
+				then
+					ROOT="$device" resume="" /scripts/local-top/lvm2
+				fi
+				;;
+
+			/dev/md*)
+				# Adding raid support
+				if [ -x /scripts/local-top/mdadm ]
+				then
+					cp /conf/conf.d/md /conf/conf.d/md.orig
+					echo "MD_DEVS=$device " >> /conf/conf.d/md
+					/scripts/local-top/mdadm
+					mv /conf/conf.d/md.orig /conf/conf.d/md
+				fi
+				;;
+		esac
+	done
+	unset IFS
+
+	[ -n "$device" ] && devname="$device"
+
+	[ -e "$devname" ] || continue
+
+	if [ -n "${LIVE_MEDIA_OFFSET}" ]
+	then
+		loopdevname=$(setup_loop "${devname}" "loop" "/sys/block/loop*" "${LIVE_MEDIA_OFFSET}" '')
+		devname="${loopdevname}"
+	fi
+
+	fstype=$(get_fstype "${devname}")
+
+	if is_supported_fs ${fstype}
+	then
+		devuid=$(blkid -o value -s UUID "$devname")
+		[ -n "$devuid" ] && grep -qs "\<$devuid\>" $tried && continue
+		mount -t ${fstype} -o ro,noatime "${devname}" ${mountpoint} || continue
+		[ -n "$devuid" ] && echo "$devuid" >> $tried
+
+		if [ -n "${FINDISO}" ]
+		then
+			if [ -f ${mountpoint}/${FINDISO} ]
+			then
+				umount ${mountpoint}
+				mkdir -p /live/findiso
+				mount -t ${fstype} -o ro,noatime "${devname}" /live/findiso
+				loopdevname=$(setup_loop "/live/findiso/${FINDISO}" "loop" "/sys/block/loop*" 0 "")
+				devname="${loopdevname}"
+				mount -t iso9660 -o ro,noatime "${devname}" ${mountpoint}
+			else
+				umount ${mountpoint}
+			fi
+		fi
+
+		if is_live_path ${mountpoint} && \
+			([ "${skip_uuid_check}" ] || matches_uuid ${mountpoint})
+		then
+			echo ${mountpoint}
+			return 0
+		else
+			umount ${mountpoint} 2>/dev/null
+		fi
+	fi
+
+	if [ -n "${LIVE_MEDIA_OFFSET}" ]
+	then
+		losetup -d "${loopdevname}"
+	fi
+
+	return 1
+}
+
+find_livefs ()
+{
+	timeout="${1}"
+
+	# don't start autodetection before timeout has expired
+	if [ -n "${LIVE_MEDIA_TIMEOUT}" ]
+	then
+		if [ "${timeout}" -lt "${LIVE_MEDIA_TIMEOUT}" ]
+		then
+			return 1
+		fi
+	fi
+
+	# first look at the one specified in the command line
+	case "${LIVE_MEDIA}" in
+		removable-usb)
+			for sysblock in $(removable_usb_dev "sys")
+			do
+				for dev in $(subdevices "${sysblock}")
+				do
+					if check_dev "${dev}"
+					then
+						return 0
+					fi
+				done
+			done
+			return 1
+			;;
+
+		removable)
+			for sysblock in $(removable_dev "sys")
+			do
+				for dev in $(subdevices "${sysblock}")
+				do
+					if check_dev "${dev}"
+					then
+						return 0
+					fi
+				done
+			done
+			return 1
+			;;
+
+		*)
+			if [ ! -z "${LIVE_MEDIA}" ]
+			then
+				if check_dev "null" "${LIVE_MEDIA}" "skip_uuid_check"
+				then
+					return 0
+				fi
+			fi
+			;;
+	esac
+
+	# or do the scan of block devices
+	# prefer removable devices over non-removable devices, so scan them first
+	devices_to_scan="$(removable_dev 'sys') $(non_removable_dev 'sys')"
+
+	for sysblock in $devices_to_scan
+	do
+		devname=$(sys2dev "${sysblock}")
+		[ -e "$devname" ] || continue
+		fstype=$(get_fstype "${devname}")
+
+		if /lib/udev/cdrom_id ${devname} > /dev/null
+		then
+			if check_dev "null" "${devname}"
+			then
+				return 0
+			fi
+		elif is_nice_device "${sysblock}"
+		then
+			for dev in $(subdevices "${sysblock}")
+			do
+				if check_dev "${dev}"
+				then
+					return 0
+				fi
+			done
+		elif [ "${fstype}" = "squashfs" -o \
+			"${fstype}" = "btrfs" -o \
+			"${fstype}" = "ext2" -o \
+			"${fstype}" = "ext3" -o \
+			"${fstype}" = "ext4" -o \
+			"${fstype}" = "jffs2" ]
+		then
+			# This is an ugly hack situation, the block device has
+			# an image directly on it.  It's hopefully
+			# live-boot, so take it and run with it.
+			ln -s "${devname}" "${devname}.${fstype}"
+			echo "${devname}.${fstype}"
+			return 0
+		fi
+	done
+
+	return 1
+}
+
 really_export ()
 {
 	STRING="${1}"
