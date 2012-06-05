@@ -446,9 +446,7 @@ mountroot ()
 
 	Arguments
 
-	# make sure all harddisk devices are read-only
-	# this is important for forensic investigations
-	case "${READ_ONLY}" in
+	case "${LIVE_READ_ONLY}" in
 		true)
 			Read_only
 			;;

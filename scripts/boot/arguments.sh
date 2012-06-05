@@ -7,16 +7,17 @@ Arguments ()
 	for ARGUMENT in $(cat /proc/cmdline)
 	do
 		case "${ARGUMENT}" in
+			live-boot.read-only|read-only)
+				LIVE_READ_ONLY="true"
+				export LIVE_READ_ONLY
+				;;
+
 			live-boot.verify-checksums|verify-checksums)
 				LIVE_VERIFY_CHECKSUMS="true"
 				export LIVE_VERIFY_CHECKSUMS
 				;;
 
 			# parameters below need review
-			read-only)
-				READ_ONLY="true"
-				;;
-
 			skipconfig)
 				NOFASTBOOT="true"
 				NOFSTAB="true"
