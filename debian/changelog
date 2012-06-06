@@ -1,3 +1,14 @@
+live-boot (3.0~a32-1) experimental; urgency=low
+
+  * Dropping snapshot functionality, superseeded by awesome custom mount
+    persistence.
+  * Setting persistence label for live-* 3.x persistency to
+    'persistence', we're not making any difference between full-ov and
+    custom-ov anymore on the filesystem and partition label (it's
+    determined by the contents of live-persistence.conf).
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 06 Jun 2012 19:04:01 +0200
+
 live-boot (3.0~a31-1) experimental; urgency=low
 
   [ Daniel Baumann ]
