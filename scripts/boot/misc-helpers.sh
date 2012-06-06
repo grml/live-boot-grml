@@ -842,8 +842,7 @@ is_gpt_device ()
 probe_for_gpt_name ()
 {
 	local overlays="${1}"
-	local snapshots="${2}"
-	local dev="${3}"
+	local dev="${2}"
 
 	local gpt_dev="${dev}"
 	if is_active_luks_mapping ${dev}
@@ -859,7 +858,7 @@ probe_for_gpt_name ()
 	fi
 
 	local gpt_name=$(get_gpt_name ${gpt_dev})
-	for label in ${overlays} ${snapshots}
+	for label in ${overlays}
 	do
 		if [ "${gpt_name}" = "${label}" ]
 		then
@@ -871,10 +870,9 @@ probe_for_gpt_name ()
 probe_for_fs_label ()
 {
 	local overlays="${1}"
-	local snapshots="${2}"
-	local dev="${3}"
+	local dev="${2}"
 
-	for label in ${overlays} ${snapshots}
+	for label in ${overlays}
 	do
 		if [ "$(/sbin/blkid -s LABEL -o value $dev 2>/dev/null)" = "${label}" ]
 		then
@@ -886,8 +884,7 @@ probe_for_fs_label ()
 probe_for_file_name ()
 {
 	local overlays="${1}"
-	local snapshots="${2}"
-	local dev="${3}"
+	local dev="${2}"
 
 	local ret=""
 	local backing="$(mount_persistence_media ${dev} probe)"
@@ -905,17 +902,6 @@ probe_for_file_name ()
 			ret="${ret} ${label}=${loopdev}"
 		fi
 	done
-	for label in ${snapshots}
-	do
-		for ext in squashfs cpio.gz ext2 ext3 ext4 jffs2
-		do
-			path="${PERSISTENCE_PATH}${label}.${ext}"
-			if [ -f "${backing}/${path}" ]
-			then
-				ret="${ret} ${label}=${dev}:${backing}:${path}"
-			fi
-		done
-	done
 
 	if [ -n "${ret}" ]
 	then
@@ -927,19 +913,15 @@ probe_for_file_name ()
 
 find_persistence_media ()
 {
-	# Scans devices for overlays and snapshots, and returns a whitespace
+	# Scans devices for overlays, and returns a whitespace
 	# separated list of how to use them. Only overlays with a partition
-	# label or file name in ${overlays} are returned, and ditto for
-	# snapshots with labels in ${snapshots}.
+	# label or file name in ${overlays} are returned.
 	#
 	# When scanning a LUKS device, the user will be asked to enter the
 	# passphrase; on failure to enter it, or if no persistence partitions
 	# or files were found, the LUKS device is closed.
 	#
-	# For a snapshot file the return value is ${label}=${snapdata}", where
-	# ${snapdata} is the parameter used for try_snap().
-	#
-	# For all other cases (overlay/snapshot partition and overlay file) the
+	# For all other cases (overlay partition and overlay file) the
 	# return value is "${label}=${device}", where ${device} a device that
 	# can mount the content. In the case of an overlay file, the device
 	# containing the file will remain mounted as a side-effect.
@@ -949,8 +931,7 @@ find_persistence_media ()
 	# scanned.
 
 	local overlays="${1}"
-	local snapshots="${2}"
-	local white_listed_devices="${3}"
+	local white_listed_devices="${2}"
 	local ret=""
 
 	local black_listed_devices="$(what_is_mounted_on /live/image)"
@@ -983,14 +964,14 @@ find_persistence_media ()
 		# Probe for matching GPT partition names or filesystem labels
 		if is_in_comma_sep_list filesystem ${PERSISTENCE_STORAGE}
 		then
-			result=$(probe_for_gpt_name "${overlays}" "${snapshots}" ${dev})
+			result=$(probe_for_gpt_name "${overlays}" ${dev})
 			if [ -n "${result}" ]
 			then
 				ret="${ret} ${result}"
 				continue
 			fi
 
-			result=$(probe_for_fs_label "${overlays}" "${snapshots}" ${dev})
+			result=$(probe_for_fs_label "${overlays}" ${dev})
 			if [ -n "${result}" ]
 			then
 				ret="${ret} ${result}"
@@ -1001,7 +982,7 @@ find_persistence_media ()
 		# Probe for files with matching name on mounted partition
 		if is_in_comma_sep_list file ${PERSISTENCE_STORAGE}
 		then
-			result=$(probe_for_file_name "${overlays}" "${snapshots}" ${dev})
+			result=$(probe_for_file_name "${overlays}" ${dev})
 			if [ -n "${result}" ]
 			then
 				ret="${ret} ${result}"

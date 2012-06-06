@@ -202,33 +202,11 @@ setup_unionfs ()
 			overlays="${old_root_overlay_label} ${old_home_overlay_label} ${custom_overlay_label}"
 		fi
 
-		if is_in_comma_sep_list snapshot ${PERSISTENCE_METHOD}
-		then
-			snapshots="${root_snapshot_label} ${home_snapshot_label}"
-		fi
-
-		local root_snapdata=""
-		local home_snapdata=""
 		local overlay_devices=""
-		for media in $(find_persistence_media "${overlays}" "${snapshots}" "${whitelistdev}")
+		for media in $(find_persistence_media "${overlays}" "${whitelistdev}")
 		do
 			media="$(echo ${media} | tr ":" " ")"
 			case ${media} in
-				${root_snapshot_label}=*|${old_root_snapshot_label}=*)
-					if [ -z "${root_snapdata}" ]
-					then
-						root_snapdata="${media#*=}"
-					fi
-					;;
-				${home_snapshot_label}=*)
-					# This second type should be removed when snapshot will get smarter,
-					# hence when "/etc/live-snapshot*list" will be supported also by
-					# ext2|ext3|ext4|jffs2 snapshot types.
-					if [ -z "${home_snapdata}" ]
-					then
-						home_snapdata="${media#*=}"
-					fi
-					;;
 				${old_root_overlay_label}=*)
 					device="${media#*=}"
 					fix_backwards_compatibility ${device} / union
@@ -409,17 +387,12 @@ setup_unionfs ()
 				close_persistence_media ${overlay}
 			fi
 		done
-
-		# Look for other snapshots to copy in
-		[ -n "${root_snapdata}" ] && try_snap "${root_snapdata}" "${rootmnt}" "ROOT"
-		# This second type should be removed when snapshot grow smarter
-		[ -n "${home_snapdata}" ] && try_snap "${home_snapdata}" "${rootmnt}" "HOME" "/home"
 	fi
 
 	mkdir -p "${rootmnt}/live"
 	mount -o move /live "${rootmnt}/live" >/dev/null 2>&1 || mount -o bind /live "${rootmnt}/live" || log_warning_msg "Unable to move or bind /live to ${rootmnt}/live"
 
-	# shows cow fs on /overlay for use by live-snapshot
+	# shows cow fs on /overlay (FIXME: do we still need/want this? probably yes)
 	mkdir -p "${rootmnt}/live/overlay"
 	mount -o move /live/overlay "${rootmnt}/live/overlay" >/dev/null 2>&1 || mount -o bind /overlay "${rootmnt}/live/overlay" || log_warning_msg "Unable to move or bind /overlay to ${rootmnt}/live/overlay"
 

@@ -210,9 +210,6 @@ Cmdline ()
 				old_root_overlay_label="${old_root_overlay_label}-${_PARAMETER#persistence-subtext=}"
 				old_home_overlay_label="${old_home_overlay_label}-${_PARAMETER#persistence-subtext=}"
 				custom_overlay_label="${custom_overlay_label}-${_PARAMETER#persistence-subtext=}"
-				root_snapshot_label="${root_snapshot_label}-${_PARAMETER#persistence-subtext=}"
-				old_root_snapshot_label="${root_snapshot_label}-${_PARAMETER#persistence-subtext=}"
-				home_snapshot_label="${home_snapshot_label}-${_PARAMETER#persistence-subtext=}"
 				;;
 
 			nopersistence)
@@ -337,7 +334,7 @@ Cmdline ()
 
 	if [ -z "${PERSISTENCE_METHOD}" ]
 	then
-		PERSISTENCE_METHOD="snapshot,overlay"
+		PERSISTENCE_METHOD="overlay"
 		export PERSISTENCE_METHOD
 	fi
 

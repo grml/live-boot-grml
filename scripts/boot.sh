@@ -59,9 +59,6 @@ fi
 old_root_overlay_label="live-rw"
 old_home_overlay_label="home-rw"
 custom_overlay_label="custom-ov"
-root_snapshot_label="live-sn"
-old_root_snapshot_label="live-sn"
-home_snapshot_label="home-sn"
 persistence_list="live-persistence.conf"
 
 if [ ! -f /live.vars ]
