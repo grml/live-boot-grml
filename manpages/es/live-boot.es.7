@@ -189,11 +189,9 @@ Este parámetro permite el uso de particiones swap locales.
 .IP \fBpersistence\fP 4
 live\-boot will probe devices for persistence media. These can be partitions
 (with the correct GPT name), filesystems (with the correct label) or image
-files (with the correct file name). Overlays are labeled/named either
-"full\-ov", which will be mounted on /, or "custom\-ov", which can be
-completely customized (see \fIlive\-persistence.conf\fP(5)). The order these are
-handled are: full\-ov, custom\-ov. Overlay image files have extensions which
-determines their filesystem, e.g. "custom\-ov.ext4".
+files (with the correct file name). Overlays are labeled/named "persistence"
+(see \fIlive\-persistence.conf\fP(5)). Overlay image files have extensions which
+determines their filesystem, e.g. "persistence.ext4".
 .IP "\fBpersistence\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 Esta opción determina qué tipo de cifrado se usa cuando se prueban los
 dispositivos de los medios con persistencia. Si se especifica "none" en la

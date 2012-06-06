@@ -11,7 +11,7 @@ live\-boot
 
 .SH DESCRIPTION
 If live\-boot probes a persistence volume with the label (or GPT name, or
-file name, but from now on we will just say "label") "custom\-ov", that
+file name, but from now on we will just say "label") "persistence", that
 volume's persistence is fully customizable through the
 \fBlive\-persistence.conf\fP file stored on the root of its file system. Any
 such labeled volume must have such a file, or it will be ignored.
@@ -29,13 +29,12 @@ the list of \fIOPTION\fPs".
 .PP
 For each custom mount \fIDIR\fP must be an absolute path that cannot contain
 white spaces or the special . and .. path components, and cannot be /live
-(or any of its sub\-directories), or / (for the latter, use "full\-ov"
-persistence instead). Once activated all changes (file deletion, creation
-and modification) to \fIDIR\fP on the live file system are stored persistently
-into a path equivalent to \fIDIR\fP on the persistence media, called the source
-directory. The default way to achieve persistence is to simply bind\-mount
-the corresponding source directory to \fIDIR\fP, but this can be changed
-through the use of \fIOPTION\fPs.
+(or any of its sub\-directories).  Once activated all changes (file deletion,
+creation and modification) to \fIDIR\fP on the live file system are stored
+persistently into a path equivalent to \fIDIR\fP on the persistence media,
+called the source directory. The default way to achieve persistence is to
+simply bind\-mount the corresponding source directory to \fIDIR\fP, but this can
+be changed through the use of \fIOPTION\fPs.
 .PP
 All custom mounts will be done in an order so that no two custom mounts can
 "hide" each other. For instance, if we have the two \fIDIR\fP:s /a and /a/b it

@@ -58,7 +58,7 @@ fi
 
 old_root_overlay_label="live-rw"
 old_home_overlay_label="home-rw"
-custom_overlay_label="custom-ov"
+custom_overlay_label="persistence"
 persistence_list="live-persistence.conf"
 
 if [ ! -f /live.vars ]
