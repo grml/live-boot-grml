@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 05.06.2012 3.0~a31\-1 "Proyecto Debian Live"
+.TH LIVE\-BOOT 7 06.06.2012 3.0~a32\-1 "Proyecto Debian Live"
 
 .SH NOMBRE
 \fBlive\-boot\fP \- Scripts de Arranque del Sistema
@@ -187,18 +187,11 @@ actualmente ningún efecto cuando se arranca con toram
 .IP \fBswapon\fP 4
 Este parámetro permite el uso de particiones swap locales.
 .IP \fBpersistence\fP 4
-live\-boot buscará dispositivos con "persistence". Estos pueden ser
-particiones (con el nombre GPT correcto), sistemas de ficheros (con la
-etiqueta correcta) o ficheros imagen/archivo (con el nombre de fichero
-correcto). Overlays con la etiqueta/nombre "full\-ov", que se montará en / o
-"custom\-ov", que puede ser completamente personalizado (ver
-\fIlive\-persistence.conf\fP(5)); las instantáneas tienen la etiqueta/nombre
-"live\-sn" o "home\-sn" y se extraerán respectivamente en / o /home (ver
-\fIlive\-snapshot\fP(1) para más información). El orden en que se tratan son:
-full\-ov, custom\-ov, live\-sn, home\-sn. Los ficheros imagen overlay y los
-ficheros archivo instantáneas tienen extensiones que determinan el tipo de
-fichero o de sistema de ficheros, por ejemplo, "custom\-ov.ext4" y
-"home\-sn.squashfs".
+live\-boot will probe devices for persistence media. These can be partitions
+(with the correct GPT name), filesystems (with the correct label) or image
+files (with the correct file name). Overlays are labeled/named "persistence"
+(see \fIlive\-persistence.conf\fP(5)). Overlay image files have extensions which
+determines their filesystem, e.g. "persistence.ext4".
 .IP "\fBpersistence\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 Esta opción determina qué tipo de cifrado se usa cuando se prueban los
 dispositivos de los medios con persistencia. Si se especifica "none" en la
@@ -207,26 +200,22 @@ se puede usar cifrado LUKS en los medios. Cada vez que se encuentra un
 dispositivo que contiene medios cifrados se pregunta al usuario una frase de
 contraseña. Por defecto es "none".
 .IP \fBpersistence\-media\fP={\fIremovable\fP|\fIremovable\-usb\fP} 4
-Si se especifica la palabra clave 'removable', live\-boot intentará encontrar
-particiones con persistencia e instantáneas únicamente en los medios
-extraíbles. Tener en cuenta que si se desea restringir aún más los medios a
-sistemas de almacenamiento masivo USB se puede utilizar la palabra clave
-\&'removable\-usb'
+If you specify the keyword 'removable', live\-boot will try to find
+persistence partitions on removable media only. Note that if you want to
+further restrict the media to usb mass storage only, you can use the
+\&'removable\-usb' keyword.
 .IP "\fBpersistence\-method\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
-Esta opción determina qué tipos de medios se permiten para la
-persistencia. Si se especifica "overlay" en la lista, se considera overlays
-(es decir "live\-rw" y "home\-rw"); si se especifica "snapshot" en la lista,
-se consideran instantáneas (es decir "live\-sn" y "home\-sn"). Por defecto es
-"overlay,snapshot".
+This option determines which types of persistence media we allow. If
+"overlay" is in the list, we consider overlays (i.e. "live\-rw" and
+"home\-rw"). The default is "overlay".
 .IP \fBpersistence\-path\fP=\fIPATH\fP 4
 live\-boot buscará ficheros con persistencia en el directorio raíz de una
 partición, con este parámetro, la ruta se puede configurar de modo que se
 pueda tener varios directorios en la misma partición para almacenar ficheros
 con persistencia.
 .IP \fBpersistence\-read\-only\fP 4
-Los cambios en el sistema de ficheros no se guardan de nuevo en los medios
-con persistencia. En particular, los overlays y los montajes NFS de red son
-montados en sólo lectura, y las instantáneas no se resincronizan al apagar.
+Filesystem changes are not saved back to persistence media. In particular,
+overlays and netboot NFS mounts are mounted read\-only.
 .IP "\fBpersistence\-storage\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 Esta opción determina qué tipos de almacenamiento persistente hay que tener
 en cuenta cuando se comprueban los medios con persistencia. Si "filesystem"
@@ -279,6 +268,7 @@ configuración (dentro del sistema en vivo).
 Algunas variables pueden ser configuradas a través de este fichero de
 configuración (dentro del sistema en vivo).
 .IP \fBlive/filesystem.module\fP 4
+.\" FIXME
 #\-#\-#\-#\-#  live\-snapshot.1.po (live\-snapshot)  #\-#\-#\-#\-#
 Este fichero opcional (dentro del medio en vivo) contiene una lista de
 nombres de ficheros separados por espacios en blanco o retornos de carro que
@@ -299,18 +289,6 @@ este fichero será el punto "más bajo" en el aufs y el último fichero de esta
 lista estará en el punto "más alto" del aufs, justo debajo de /overlay. Sin
 este fichero, las imágenes en el directorio  "/live" se cargan en orden
 alfanumérico.
-.IP \fB/etc/live\-persistence.binds\fP 4
-Este fichero opcional (que reside en el sistema rootfs, no en los medios en
-vivo) se utiliza como una lista de directorios que no necesitan ser
-persistentes: es decir, su contenido no necesita sobrevivir tras reiniciar
-cuando se utiliza la persistencia.
-.br
-.\" FIXME
-Esto ahorra costosas escrituras y acelera las operaciones sobre los datos
-volátiles, tales como las caches web y los archivos temporales (como por
-ejemplo, /tmp y .mozilla) que se regeneran cada vez. Esto se logra mediante
-un montaje enlazado de cada directorio de la lista con un tmpfs en la ruta
-original.
 
 .SH FICHEROS
 .IP \fB/etc/live/boot.conf\fP 4
@@ -320,8 +298,6 @@ original.
 .IP \fBlive\-persistence.conf\fP 4
 
 .SH "VER ADEMÁS"
-\fIlive\-snapshot\fP(1)
-.PP
 \fIlive\-persistence.conf\fP(5)
 .PP
 \fIlive\-build\fP(7)

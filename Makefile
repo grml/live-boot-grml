@@ -47,7 +47,7 @@ install:
 
 	# Installing executables
 	mkdir -p $(DESTDIR)/sbin
-	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin
+	cp bin/live-new-uuid bin/live-swapfile $(DESTDIR)/sbin
 
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/hooks
 	cp backends/initramfs-tools/live.hook $(DESTDIR)/usr/share/initramfs-tools/hooks/live
@@ -57,10 +57,6 @@ install:
 	# Installing docs
 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
 	cp -r COPYING $(DESTDIR)/usr/share/doc/live-boot
-
-	mkdir -p $(DESTDIR)/usr/share/doc/live-boot/examples
-	cp -r examples/* $(DESTDIR)/usr/share/doc/live-boot/examples
-	# (FIXME)
 
 	# Installing manpages
 	for MANPAGE in manpages/en/*; \
@@ -80,7 +76,7 @@ install:
 
 uninstall:
 	# Uninstalling executables
-	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
+	rm -f $(DESTDIR)/sbin/live-swapfile
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin > /dev/null 2>&1 || true
 
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/hooks/live

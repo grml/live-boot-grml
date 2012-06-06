@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT conf 2012\-06\-05 3.0~a31-1 "Debian Live Project"
+.TH LIVE\-BOOT conf 2012\-06\-06 3.0~a32-1 "Debian Live Project"
 
 .SH NAME
 \fBlive-persistence.conf\fR \- Configuration file for persistence media in
@@ -6,7 +6,7 @@ live\-boot
 
 .SH DESCRIPTION
 If live-boot probes a persistence volume with the label (or GPT name,
-or file name, but from now on we will just say "label") "custom\-ov",
+or file name, but from now on we will just say "label") "persistence",
 that volume's persistence is fully customizable through the
 \fBlive-persistence.conf\fR file stored on the root of its file system. Any such
 labeled volume must have such a file, or it will be ignored.
@@ -24,8 +24,8 @@ described by the list of \fIOPTION\fRs".
 .PP
 For each custom mount \fIDIR\fR must be an absolute path that cannot
 contain white spaces or the special . and .. path components, and
-cannot be /live (or any of its sub-directories), or / (for the latter,
-use "full-ov" persistence instead). Once activated all changes (file
+cannot be /live (or any of its sub-directories).
+Once activated all changes (file
 deletion, creation and modification) to \fIDIR\fR on the live file
 system are stored persistently into a path equivalent to \fIDIR\fR on
 the persistence media, called the source directory. The default way to

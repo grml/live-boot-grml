@@ -3,19 +3,18 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT conf 05.06.2012 3.0~a31\-1 "Proyecto Debian Live"
+.TH LIVE\-BOOT conf 06.06.2012 3.0~a32\-1 "Proyecto Debian Live"
 
 .SH NOMBRE
 \fBlive\-persistence.conf\fP \- Fichero para configurar medios de almacenamiento
 con persistencia en live\-boot
 
 .SH DESCRIPCIÓN
-Si live\-boot prueba un volumen persistente con la etiqueta (o nombre GPT, o
-nombre de fichero, aunque a partir de este momento nos referiremos a él como
-simplemente "etiqueta") "custom\-ov", la persistencia de ese volumen es
-completamente personalizable a través del fichero \fBlive\-persistence.conf\fP
-almacenado en la raíz de su sistema de ficheros. Cualquier volumen con una
-de esas etiquetas debe tener uno de esos ficheros, o si no será ignorado.
+If live\-boot probes a persistence volume with the label (or GPT name, or
+file name, but from now on we will just say "label") "persistence", that
+volume's persistence is fully customizable through the
+\fBlive\-persistence.conf\fP file stored on the root of its file system. Any
+such labeled volume must have such a file, or it will be ignored.
 .PP
 El formato de \fBlive\-persistence.conf\fP permite añadir líneas vacias o líneas
 que comiencen por "#" (usado para los comentarios), ambos serán
@@ -28,17 +27,14 @@ ignorados. Un "montaje personalizado" tiene el formato:
 lo que se traduce como "hacer \fIDIR\fP persistente en la forma descrita en la
 lista de \fIOPTION\fPs".
 .PP
-Para cada uno de los montajes personalizados \fIDIR\fP debe ser una ruta
-absoluta que no puede contener espacios en blanco ni los componentes
-especiales . y .. además no puede ser /live (o ninguno de sus
-sub\-directorios) ni / (para este último utilizar persistencia
-"full\-ov"). Una vez activados todos los cambios (creación, modificación y
-borrado de ficheros) en \fIDIR\fP en el sistema de ficheros en vivo, son
-guardados de forma persistente en una ruta equivalente a \fIDIR\fP en el medio
-persistente, llamado el directorio de origen. La manera de conseguir la
-persistencia por defecto es simplemente hacer un montaje enlazado
-(bind\-mount N.del T.) del directorio de origen al \fIDIR\fP, aunque esto se
-puede cambiar utilizando las opciones \fIOPTION\fPs.
+For each custom mount \fIDIR\fP must be an absolute path that cannot contain
+white spaces or the special . and .. path components, and cannot be /live
+(or any of its sub\-directories).  Once activated all changes (file deletion,
+creation and modification) to \fIDIR\fP on the live file system are stored
+persistently into a path equivalent to \fIDIR\fP on the persistence media,
+called the source directory. The default way to achieve persistence is to
+simply bind\-mount the corresponding source directory to \fIDIR\fP, but this can
+be changed through the use of \fIOPTION\fPs.
 .PP
 Todos los montajes personalizados serán montados en orden de tal manera que
 dos montajes personalizados no se "escondan" uno al otro. Por ejemplo, si

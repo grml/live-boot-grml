@@ -184,18 +184,6 @@ mountroot ()
 		fi
 	fi
 
-	# copy snapshot configuration if exists
-	if [ -f snapshot.conf ]
-	then
-		log_begin_msg "Copying snapshot.conf to ${rootmnt}/etc/live/boot.d"
-		if [ ! -d "${rootmnt}/etc/live/boot.d" ]
-		then
-			mkdir -p "${rootmnt}/etc/live/boot.d"
-		fi
-		cp snapshot.conf "${rootmnt}/etc/live/boot.d/"
-		log_end_msg
-	fi
-
 	if [ -f /etc/resolv.conf ] && [ ! -s ${rootmnt}/etc/resolv.conf ]
 	then
 		log_begin_msg "Copying /etc/resolv.conf to ${rootmnt}/etc/resolv.conf"
@@ -208,7 +196,6 @@ mountroot ()
 		panic "A wrong rootfs was mounted."
 	fi
 
-	persistence_exclude
 	fstab
 	Netbase
 

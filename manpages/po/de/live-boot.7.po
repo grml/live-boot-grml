@@ -4,8 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 3.0~a31-1\n"
-"POT-Creation-Date: 2012-06-05 21:45+0300\n"
+"Project-Id-Version: live-boot 3.0~a32-1\n"
+"POT-Creation-Date: 2012-06-06 19:02+0300\n"
 "PO-Revision-Date: 2012-04-08 22:48+0300\n"
 "Last-Translator: Daniel Baumann <daniel@debian.org>\n"
 "Language-Team: none\n"
@@ -16,31 +16,31 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. type: TH
-#: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
+#: en/live-boot.7:1 en/live-persistence.conf.5:1
 #, no-wrap
 msgid "LIVE-BOOT"
 msgstr ""
 
 #. type: TH
-#: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
+#: en/live-boot.7:1 en/live-persistence.conf.5:1
 #, no-wrap
-msgid "2012-06-05"
-msgstr "05.06.2012"
+msgid "2012-06-06"
+msgstr "06.06.2012"
 
 #. type: TH
-#: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
+#: en/live-boot.7:1 en/live-persistence.conf.5:1
 #, no-wrap
-msgid "3.0~a31-1"
+msgid "3.0~a32-1"
 msgstr ""
 
 #. type: TH
-#: en/live-boot.7:1 en/live-persistence.conf.5:1 en/live-snapshot.1:1
+#: en/live-boot.7:1 en/live-persistence.conf.5:1
 #, no-wrap
 msgid "Debian Live Project"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:3 en/live-persistence.conf.5:3 en/live-snapshot.1:3
+#: en/live-boot.7:3 en/live-persistence.conf.5:3
 #, no-wrap
 msgid "NAME"
 msgstr ""
@@ -51,7 +51,7 @@ msgid "B<live-boot> - System Boot Scripts"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:6 en/live-persistence.conf.5:7 en/live-snapshot.1:17
+#: en/live-boot.7:6 en/live-persistence.conf.5:7
 #, no-wrap
 msgid "DESCRIPTION"
 msgstr ""
@@ -137,7 +137,7 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:28 en/live-persistence.conf.5:57 en/live-snapshot.1:20
+#: en/live-boot.7:28 en/live-persistence.conf.5:57
 #, no-wrap
 msgid "OPTIONS"
 msgstr ""
@@ -571,16 +571,10 @@ msgstr ""
 #: en/live-boot.7:113
 msgid ""
 "live-boot will probe devices for persistence media. These can be partitions "
-"(with the correct GPT name), filesystems (with the correct label) or image/"
-"archive files (with the correct file name). Overlays are labeled/named "
-"either \"full-ov\", which will be mounted on /, or \"custom-ov\", which can "
-"be completely customized (see I<live-persistence.conf>(5)); snapshots are "
-"labeled/named either \"live-sn\" or \"home-sn\" and will be extracted into / "
-"or /home, respectively (see I<live-snapshot>(1) for more information). The "
-"order these are handled are: full-ov, custom-ov, live-sn, home-sn. Overlay "
-"image files and snapshot archive files have extensions which determines "
-"their filesystem or archive type, e.g. \"custom-ov.ext4\" and \"home-sn."
-"squashfs\"."
+"(with the correct GPT name), filesystems (with the correct label) or image "
+"files (with the correct file name). Overlays are labeled/named \"persistence"
+"\" (see I<live-persistence.conf>(5)). Overlay image files have extensions "
+"which determines their filesystem, e.g. \"persistence.ext4\"."
 msgstr ""
 
 #. type: IP
@@ -609,9 +603,9 @@ msgstr ""
 #: en/live-boot.7:117
 msgid ""
 "If you specify the keyword 'removable', live-boot will try to find "
-"persistence and snapshot partitions on removable media only. Note that if "
-"you want to further restrict the media to usb mass storage only, you can use "
-"the 'removable-usb' keyword."
+"persistence partitions on removable media only. Note that if you want to "
+"further restrict the media to usb mass storage only, you can use the "
+"'removable-usb' keyword."
 msgstr ""
 
 #. type: IP
@@ -625,8 +619,7 @@ msgstr ""
 msgid ""
 "This option determines which types of persistence media we allow. If "
 "\"overlay\" is in the list, we consider overlays (i.e. \"live-rw\" and "
-"\"home-rw\"); if \"snapshot\" is in the list, we consider snapshots (i.e. "
-"\"live-sn\" and \"home-sn\"). The default is \"overlay,snapshot\"."
+"\"home-rw\"). The default is \"overlay\"."
 msgstr ""
 
 #. type: IP
@@ -653,8 +646,7 @@ msgstr ""
 #: en/live-boot.7:123
 msgid ""
 "Filesystem changes are not saved back to persistence media. In particular, "
-"overlays and netboot NFS mounts are mounted read-only, and snapshots are not "
-"resynced on shutdown."
+"overlays and netboot NFS mounts are mounted read-only."
 msgstr ""
 
 #. type: IP
@@ -782,26 +774,27 @@ msgid "FILES (old)"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:143 en/live-snapshot.1:43
+#: en/live-boot.7:143
 #, no-wrap
 msgid "B</etc/live.conf>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:145 en/live-snapshot.1:45
+#: en/live-boot.7:145
 msgid ""
 "Some variables can be configured via this config file (inside the live "
 "system)."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:145 en/live-snapshot.1:45
+#: en/live-boot.7:145
 #, no-wrap
 msgid "B<live/filesystem.module>"
 msgstr ""
 
+#.  FIXME
 #. type: Plain text
-#: en/live-boot.7:147 en/live-snapshot.1:47
+#: en/live-boot.7:148
 msgid ""
 "This optional file (inside the live media) contains a list of white-space or "
 "carriage-return-separated file names corresponding to disk images in the \"/"
@@ -813,105 +806,76 @@ msgid ""
 "are loaded in alphanumeric order."
 msgstr ""
 
-#. type: IP
-#: en/live-boot.7:147 en/live-snapshot.1:47
-#, no-wrap
-msgid "B</etc/live-persistence.binds>"
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:149
-msgid ""
-"This optional file (which resides in the rootfs system, not in the live "
-"media) is used as a list of directories which not need be persistent: ie. "
-"their content does not need to survive reboots when using the persistence "
-"features."
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:152 en/live-snapshot.1:51
-msgid ""
-"This saves expensive writes and speeds up operations on volatile data such "
-"as web caches and temporary files (like e.g. /tmp and .mozilla) which are "
-"regenerated each time. This is achieved by bind mounting each listed "
-"directory with a tmpfs on the original path."
-msgstr ""
-
 #. type: SH
-#: en/live-boot.7:153 en/live-snapshot.1:42
+#: en/live-boot.7:149
 #, no-wrap
 msgid "FILES"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:154
+#: en/live-boot.7:150
 #, no-wrap
 msgid "B</etc/live/boot.conf>"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:155
+#: en/live-boot.7:151
 #, no-wrap
 msgid "B</etc/live/boot.d/*.conf>"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:156
+#: en/live-boot.7:152
 #, no-wrap
 msgid "B<live/boot.conf>"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:157
+#: en/live-boot.7:153
 #, no-wrap
 msgid "B<live/boot.d/*.conf>"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:158
+#: en/live-boot.7:154
 #, no-wrap
 msgid "B<live-persistence.conf>"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:160 en/live-persistence.conf.5:191 en/live-snapshot.1:54
+#: en/live-boot.7:156 en/live-persistence.conf.5:191
 #, no-wrap
 msgid "SEE ALSO"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:162
-msgid "I<live-snapshot>(1)"
-msgstr ""
-
-#. type: Plain text
-#: en/live-boot.7:164
+#: en/live-boot.7:158
 msgid "I<live-persistence.conf>(5)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:166 en/live-persistence.conf.5:195 en/live-snapshot.1:58
+#: en/live-boot.7:160 en/live-persistence.conf.5:195
 msgid "I<live-build>(7)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:168 en/live-persistence.conf.5:197 en/live-snapshot.1:60
+#: en/live-boot.7:162 en/live-persistence.conf.5:197
 msgid "I<live-config>(7)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:170 en/live-persistence.conf.5:199 en/live-snapshot.1:62
+#: en/live-boot.7:164 en/live-persistence.conf.5:199
 msgid "I<live-tools>(7)"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:171 en/live-persistence.conf.5:200 en/live-snapshot.1:63
+#: en/live-boot.7:165 en/live-persistence.conf.5:200
 #, no-wrap
 msgid "HOMEPAGE"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:173 en/live-persistence.conf.5:204 en/live-snapshot.1:65
+#: en/live-boot.7:167 en/live-persistence.conf.5:204
 msgid ""
 "More information about live-boot and the Debian Live project can be found on "
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
@@ -919,13 +883,13 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:174 en/live-persistence.conf.5:205 en/live-snapshot.1:66
+#: en/live-boot.7:168 en/live-persistence.conf.5:205
 #, no-wrap
 msgid "BUGS"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:176 en/live-persistence.conf.5:210 en/live-snapshot.1:68
+#: en/live-boot.7:170 en/live-persistence.conf.5:210
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
 "the Debian Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
@@ -934,13 +898,13 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:177 en/live-persistence.conf.5:211 en/live-snapshot.1:69
+#: en/live-boot.7:171 en/live-persistence.conf.5:211
 #, no-wrap
 msgid "AUTHOR"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:178 en/live-snapshot.1:70
+#: en/live-boot.7:172
 msgid ""
 "live-boot was written by Daniel Baumann E<lt>I<daniel@debian.org>E<gt> for "
 "the Debian project."

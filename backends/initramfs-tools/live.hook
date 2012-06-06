@@ -185,15 +185,6 @@ then
 	manual_add_modules mtdblock
 fi
 
-# Program: cpio
-# busybox and klibc lacks --no-absolute-filenames and --sparse, needed for snapshots
-if [ -e "${DESTDIR}/bin/cpio" ]
-then
-	# Override already present cpio's, mostly klibc's
-	rm "${DESTDIR}/bin/cpio"
-fi
-copy_exec /bin/cpio /bin
-
 # Program: udev
 if [ -x /sbin/udevadm ]
 then
