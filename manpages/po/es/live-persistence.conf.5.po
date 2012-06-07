@@ -1,12 +1,13 @@
 # Spanish translations for live-boot package
 # (C) 2012 Carlos Zuferri «chals» <chals@altorricon.com>
 # This file is distributed under the same license as the live-boot package.
+# Carlos Zuferri «chals» <chals@altorricon.com>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 3.0~a32-1\n"
-"POT-Creation-Date: 2012-06-06 19:02+0300\n"
-"PO-Revision-Date: \n"
+"POT-Creation-Date: 2012-06-07 21:04+0300\n"
+"PO-Revision-Date: 2012-06-07 19:11+0200\n"
 "Last-Translator: Carlos Zuferri «chals» <chals@altorricon.com>\n"
 "Language-Team:  none\n"
 "Language: es\n"
@@ -23,8 +24,8 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1
 #, no-wrap
-msgid "2012-06-06"
-msgstr "06.06.2012"
+msgid "2012-06-07"
+msgstr "07.06.2012"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1
@@ -90,10 +91,6 @@ msgid ""
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
 "E<lt>I<http://live.debian.net/manual/>E<gt>."
 msgstr ""
-"#-#-#-#-#  live-snapshot.1.po (live-snapshot)  #-#-#-#-#\n"
-"Se puede encontrar más información acerca de live-boot y el proyecto Debian "
-"Live en la página web E<lt>I<http://live.debian.net/>E<gt> y en el manual "
-"E<lt>I<http://live.debian.net/manual/>E<gt>.\n"
 "#-#-#-#-#  live-boot.7.po (live-boot)  #-#-#-#-#\n"
 "Se puede encontrar más información acerca de live-boot y el proyecto Debian "
 "Live en la página web E<lt>I<http://live.debian.net/>E<gt> y en el manual en "
@@ -139,13 +136,6 @@ msgstr ""
 
 #. type: Plain text
 #: en/live-persistence.conf.5:13
-#, fuzzy
-#| msgid ""
-#| "If live-boot probes a persistence volume with the label (or GPT name, or "
-#| "file name, but from now on we will just say \"label\") \"custom-ov\", "
-#| "that volume's persistence is fully customizable through the B<live-"
-#| "persistence.conf> file stored on the root of its file system. Any such "
-#| "labeled volume must have such a file, or it will be ignored."
 msgid ""
 "If live-boot probes a persistence volume with the label (or GPT name, or "
 "file name, but from now on we will just say \"label\") \"persistence\", that "
@@ -155,10 +145,10 @@ msgid ""
 msgstr ""
 "Si live-boot prueba un volumen persistente con la etiqueta (o nombre GPT, o "
 "nombre de fichero, aunque a partir de este momento nos referiremos a él como "
-"simplemente \"etiqueta\") \"custom-ov\", la persistencia de ese volumen es "
+"simplemente \"etiqueta\") \"persistence\", la persistencia de ese volumen es "
 "completamente personalizable a través del fichero B<live-persistence.conf> "
-"almacenado en la raíz de su sistema de ficheros. Cualquier volumen con una "
-"de esas etiquetas debe tener uno de esos ficheros, o si no será ignorado."
+"almacenado en la raíz de su sistema de ficheros. Cualquier volumen esa "
+"etiqueta debe tener uno de esos ficheros, o si no será ignorado."
 
 #. type: Plain text
 #: en/live-persistence.conf.5:17
@@ -187,17 +177,6 @@ msgstr ""
 
 #. type: Plain text
 #: en/live-persistence.conf.5:35
-#, fuzzy
-#| msgid ""
-#| "For each custom mount I<DIR> must be an absolute path that cannot contain "
-#| "white spaces or the special . and .. path components, and cannot be /live "
-#| "(or any of its sub-directories), or / (for the latter, use \"full-ov\" "
-#| "persistence instead). Once activated all changes (file deletion, creation "
-#| "and modification) to I<DIR> on the live file system are stored "
-#| "persistently into a path equivalent to I<DIR> on the persistence media, "
-#| "called the source directory. The default way to achieve persistence is to "
-#| "simply bind-mount the corresponding source directory to I<DIR>, but this "
-#| "can be changed through the use of I<OPTION>s."
 msgid ""
 "For each custom mount I<DIR> must be an absolute path that cannot contain "
 "white spaces or the special . and .. path components, and cannot be /live "
@@ -211,14 +190,13 @@ msgstr ""
 "Para cada uno de los montajes personalizados I<DIR> debe ser una ruta "
 "absoluta que no puede contener espacios en blanco ni los componentes "
 "especiales . y .. además no puede ser /live (o ninguno de sus sub-"
-"directorios) ni / (para este último utilizar persistencia \"full-ov\"). Una "
-"vez activados todos los cambios (creación, modificación y borrado de "
-"ficheros) en I<DIR> en el sistema de ficheros en vivo, son guardados de "
-"forma persistente en una ruta equivalente a I<DIR> en el medio persistente, "
-"llamado el directorio de origen. La manera de conseguir la persistencia por "
-"defecto es simplemente hacer un montaje enlazado (bind-mount N.del T.) del "
-"directorio de origen al I<DIR>, aunque esto se puede cambiar utilizando las "
-"opciones I<OPTION>s."
+"directorios) ni /. Una vez activados, todos los cambios (creación, "
+"modificación y borrado de ficheros) en I<DIR> en el sistema de ficheros en "
+"vivo, son guardados de forma persistente en una ruta equivalente a I<DIR> en "
+"el medio persistente, llamado el directorio de origen. La manera de "
+"conseguir la persistencia por defecto es simplemente hacer un montaje "
+"enlazado (bind-mount N.del T.) del directorio de origen al I<DIR>, aunque "
+"esto se puede cambiar utilizando las opciones I<OPTION>s."
 
 #. type: Plain text
 #: en/live-persistence.conf.5:48
@@ -440,7 +418,7 @@ msgid ""
 "conf> file containing the following four lines (numbered for ease of "
 "reference):"
 msgstr ""
-"Si tenemos un volumen con persistencia I<VOL> con el fichero B<live-"
+"Si tenemos un volumen con persistencia I<VOL> con un fichero B<live-"
 "persistence.conf> que contiene las cuatro lineas siguientes (numeradas para "
 "una mejor referencia):"
 

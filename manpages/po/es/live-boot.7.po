@@ -1,12 +1,13 @@
 # Spanish translations for live-boot package
 # (C) 2012 Carlos Zuferri «chals» <chals@altorricon.com>
 # This file is distributed under the same license as the live-boot package.
+# Carlos Zuferri «chals» <chals@altorricon.com>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 3.0~a32-1\n"
-"POT-Creation-Date: 2012-06-06 19:02+0300\n"
-"PO-Revision-Date: 2012-05-13 18:30+0100\n"
+"POT-Creation-Date: 2012-06-07 21:04+0300\n"
+"PO-Revision-Date: 2012-06-07 20:29+0200\n"
 "Last-Translator: Carlos Zuferri «chals» <chals@altorricon.com>\n"
 "Language-Team:  none\n"
 "Language: es\n"
@@ -24,8 +25,8 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1
 #, no-wrap
-msgid "2012-06-06"
-msgstr "06.06.2012"
+msgid "2012-06-07"
+msgstr "07.06.2012"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1
@@ -688,19 +689,6 @@ msgstr "B<persistence>"
 
 #. type: Plain text
 #: en/live-boot.7:113
-#, fuzzy
-#| msgid ""
-#| "live-boot will probe devices for persistence media. These can be "
-#| "partitions (with the correct GPT name), filesystems (with the correct "
-#| "label) or image/archive files (with the correct file name). Overlays are "
-#| "labeled/named either \"full-ov\", which will be mounted on /, or \"custom-"
-#| "ov\", which can be completely customized (see I<live-persistence.conf>"
-#| "(5)); snapshots are labeled/named either \"live-sn\" or \"home-sn\" and "
-#| "will be extracted into / or /home, respectively (see I<live-snapshot>(1) "
-#| "for more information). The order these are handled are: full-ov, custom-"
-#| "ov, live-sn, home-sn. Overlay image files and snapshot archive files have "
-#| "extensions which determines their filesystem or archive type, e.g. "
-#| "\"custom-ov.ext4\" and \"home-sn.squashfs\"."
 msgid ""
 "live-boot will probe devices for persistence media. These can be partitions "
 "(with the correct GPT name), filesystems (with the correct label) or image "
@@ -710,16 +698,10 @@ msgid ""
 msgstr ""
 "live-boot buscará dispositivos con \"persistence\". Estos pueden ser "
 "particiones (con el nombre GPT correcto), sistemas de ficheros (con la "
-"etiqueta correcta) o ficheros imagen/archivo (con el nombre de fichero "
-"correcto). Overlays con la etiqueta/nombre \"full-ov\", que se montará en / "
-"o \"custom-ov\", que puede ser completamente personalizado (ver I<live-"
-"persistence.conf>(5)); las instantáneas tienen la etiqueta/nombre \"live-sn"
-"\" o \"home-sn\" y se extraerán respectivamente en / o /home (ver I<live-"
-"snapshot>(1) para más información). El orden en que se tratan son: full-ov, "
-"custom-ov, live-sn, home-sn. Los ficheros imagen overlay y los ficheros "
-"archivo instantáneas tienen extensiones que determinan el tipo de fichero o "
-"de sistema de ficheros, por ejemplo, \"custom-ov.ext4\" y \"home-sn.squashfs"
-"\"."
+"etiqueta correcta) o ficheros imagen (con el nombre de fichero correcto). "
+"Los overlays tienen la etiqueta/nombre \"persistence\" (ver I<live-"
+"persistence.conf>(5)). Los ficheros imagen overlay tienen extensiones que "
+"determinan su sistema de ficheros, por ejemplo, \"persistence.ext4\"."
 
 #. type: IP
 #: en/live-boot.7:113
@@ -751,12 +733,6 @@ msgstr "B<persistence-media>={I<removable>|I<removable-usb>}"
 
 #. type: Plain text
 #: en/live-boot.7:117
-#, fuzzy
-#| msgid ""
-#| "If you specify the keyword 'removable', live-boot will try to find "
-#| "persistence and snapshot partitions on removable media only. Note that if "
-#| "you want to further restrict the media to usb mass storage only, you can "
-#| "use the 'removable-usb' keyword."
 msgid ""
 "If you specify the keyword 'removable', live-boot will try to find "
 "persistence partitions on removable media only. Note that if you want to "
@@ -764,10 +740,9 @@ msgid ""
 "'removable-usb' keyword."
 msgstr ""
 "Si se especifica la palabra clave 'removable', live-boot intentará encontrar "
-"particiones con persistencia e instantáneas únicamente en los medios "
-"extraíbles. Tener en cuenta que si se desea restringir aún más los medios a "
-"sistemas de almacenamiento masivo USB se puede utilizar la palabra clave "
-"'removable-usb'"
+"particiones con persistencia únicamente en los medios extraíbles. Tener en "
+"cuenta que si se desea restringir aún más los medios a sistemas de "
+"almacenamiento masivo USB se puede utilizar la palabra clave 'removable-usb'"
 
 #. type: IP
 #: en/live-boot.7:117
@@ -777,12 +752,6 @@ msgstr "B<persistence-method>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
 
 #. type: Plain text
 #: en/live-boot.7:119
-#, fuzzy
-#| msgid ""
-#| "This option determines which types of persistence media we allow. If "
-#| "\"overlay\" is in the list, we consider overlays (i.e. \"live-rw\" and "
-#| "\"home-rw\"); if \"snapshot\" is in the list, we consider snapshots (i.e. "
-#| "\"live-sn\" and \"home-sn\"). The default is \"overlay,snapshot\"."
 msgid ""
 "This option determines which types of persistence media we allow. If "
 "\"overlay\" is in the list, we consider overlays (i.e. \"live-rw\" and "
@@ -790,9 +759,7 @@ msgid ""
 msgstr ""
 "Esta opción determina qué tipos de medios se permiten para la persistencia. "
 "Si se especifica \"overlay\" en la lista, se considera overlays (es decir "
-"\"live-rw\" y \"home-rw\"); si se especifica \"snapshot\" en la lista, se "
-"consideran instantáneas (es decir \"live-sn\" y \"home-sn\"). Por defecto es "
-"\"overlay,snapshot\"."
+"\"live-rw\" y \"home-rw\"). Por defecto es \"overlay\"."
 
 #. type: IP
 #: en/live-boot.7:119
@@ -820,18 +787,13 @@ msgstr "B<persistence-read-only>"
 
 #. type: Plain text
 #: en/live-boot.7:123
-#, fuzzy
-#| msgid ""
-#| "Filesystem changes are not saved back to persistence media. In "
-#| "particular, overlays and netboot NFS mounts are mounted read-only, and "
-#| "snapshots are not resynced on shutdown."
 msgid ""
 "Filesystem changes are not saved back to persistence media. In particular, "
 "overlays and netboot NFS mounts are mounted read-only."
 msgstr ""
 "Los cambios en el sistema de ficheros no se guardan de nuevo en los medios "
 "con persistencia. En particular, los overlays y los montajes NFS de red son "
-"montados en sólo lectura, y las instantáneas no se resincronizan al apagar."
+"montados en sólo lectura."
 
 #. type: IP
 #: en/live-boot.7:123
@@ -1001,9 +963,6 @@ msgid ""
 "Some variables can be configured via this config file (inside the live "
 "system)."
 msgstr ""
-"#-#-#-#-#  live-snapshot.1.po (live-snapshot)  #-#-#-#-#\n"
-"Algunas variables pueden ser configuradas a través de este fichero de "
-"configuración (dentro del sistema en vivo).\n"
 "#-#-#-#-#  live-boot.7.po (live-boot)  #-#-#-#-#\n"
 "Algunas variables pueden ser configuradas a través de este fichero de "
 "configuración (dentro del sistema en vivo)."
@@ -1027,16 +986,6 @@ msgid ""
 "below /overlay.  Without this file, any images in the \"/live\" directory "
 "are loaded in alphanumeric order."
 msgstr ""
-"#-#-#-#-#  live-snapshot.1.po (live-snapshot)  #-#-#-#-#\n"
-"Este fichero opcional (dentro del medio en vivo) contiene una lista de "
-"nombres de ficheros separados por espacios en blanco o retornos de carro que "
-"corresponden a imágenes de disco en el directorio \"/live\". Si este fichero "
-"existe, sólo las imágenes que figuran en esta lista se fusionarán en la raíz "
-"aufs y se cargarán en el orden en que aparecen aquí. La primera entrada en "
-"este fichero será el punto \"más bajo\" en el aufs y el último fichero de "
-"esta lista estará en el punto \"más alto\" del aufs, justo debajo de /"
-"overlay. Sin este fichero, las imágenes en el directorio \"/live\" se cargan "
-"en orden alfanumérico.\n"
 "#-#-#-#-#  live-boot.7.po (live-boot)  #-#-#-#-#\n"
 "Este fichero opcional (dentro del medio en vivo) contiene una lista de "
 "nombres de ficheros separados por espacios en blanco o retornos de carro que "
@@ -1123,10 +1072,6 @@ msgid ""
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
 "E<lt>I<http://live.debian.net/manual/>E<gt>."
 msgstr ""
-"#-#-#-#-#  live-snapshot.1.po (live-snapshot)  #-#-#-#-#\n"
-"Se puede encontrar más información acerca de live-boot y el proyecto Debian "
-"Live en la página web E<lt>I<http://live.debian.net/>E<gt> y en el manual "
-"E<lt>I<http://live.debian.net/manual/>E<gt>.\n"
 "#-#-#-#-#  live-boot.7.po (live-boot)  #-#-#-#-#\n"
 "Se puede encontrar más información acerca de live-boot y el proyecto Debian "
 "Live en la página web E<lt>I<http://live.debian.net/>E<gt> y en el manual en "
