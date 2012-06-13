@@ -1,3 +1,14 @@
+live-boot (3.0~a33-1) unstable; urgency=low
+
+  [ chals ]
+  * Updating Spanish translation of man pages.
+
+  [ Daniel Baumann ]
+  * Removing some more dead parameters from cmdline function.
+  * Removing double author entries in Spanish po files.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 13 Jun 2012 13:26:49 +0200
+
 live-boot (3.0~a32-1) experimental; urgency=low
 
   * Dropping snapshot functionality, superseeded by awesome custom mount
