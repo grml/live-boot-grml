@@ -1,7 +1,6 @@
 # Spanish translations for live-boot package
 # (C) 2012 Carlos Zuferri «chals» <chals@altorricon.com>
 # This file is distributed under the same license as the live-boot package.
-# Carlos Zuferri «chals» <chals@altorricon.com>, 2012.
 #
 msgid ""
 msgstr ""
