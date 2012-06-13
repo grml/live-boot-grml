@@ -217,16 +217,6 @@ Cmdline ()
 				export NOPERSISTENCE
 				;;
 
-			noprompt)
-				NOPROMPT="true"
-				export NOPROMPT
-				;;
-
-			noprompt=*)
-				NOPROMPT="${_PARAMETER#noprompt=}"
-				export NOPROMPT
-				;;
-
 			quickusbmodules)
 				QUICKUSBMODULES="true"
 				export QUICKUSBMODULES
@@ -235,11 +225,6 @@ Cmdline ()
 			showmounts)
 				SHOWMOUNTS="true"
 				export SHOWMOUNTS
-				;;
-
-			silent)
-				SILENT="true"
-				export SILENT
 				;;
 
 			todisk=*)

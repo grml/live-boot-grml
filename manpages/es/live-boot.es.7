@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 06.06.2012 3.0~a32\-1 "Proyecto Debian Live"
+.TH LIVE\-BOOT 7 13.06.2012 3.0~a32\-1 "Proyecto Debian Live"
 
 .SH NOMBRE
 \fBlive\-boot\fP \- Scripts de Arranque del Sistema
@@ -187,11 +187,12 @@ actualmente ningún efecto cuando se arranca con toram
 .IP \fBswapon\fP 4
 Este parámetro permite el uso de particiones swap locales.
 .IP \fBpersistence\fP 4
-live\-boot will probe devices for persistence media. These can be partitions
-(with the correct GPT name), filesystems (with the correct label) or image
-files (with the correct file name). Overlays are labeled/named "persistence"
-(see \fIlive\-persistence.conf\fP(5)). Overlay image files have extensions which
-determines their filesystem, e.g. "persistence.ext4".
+live\-boot buscará dispositivos con "persistence". Estos pueden ser
+particiones (con el nombre GPT correcto), sistemas de ficheros (con la
+etiqueta correcta) o ficheros imagen (con el nombre de fichero
+correcto). Los overlays tienen la etiqueta/nombre "persistence" (ver
+\fIlive\-persistence.conf\fP(5)). Los ficheros imagen overlay tienen extensiones
+que determinan su sistema de ficheros, por ejemplo, "persistence.ext4".
 .IP "\fBpersistence\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 Esta opción determina qué tipo de cifrado se usa cuando se prueban los
 dispositivos de los medios con persistencia. Si se especifica "none" en la
@@ -200,22 +201,23 @@ se puede usar cifrado LUKS en los medios. Cada vez que se encuentra un
 dispositivo que contiene medios cifrados se pregunta al usuario una frase de
 contraseña. Por defecto es "none".
 .IP \fBpersistence\-media\fP={\fIremovable\fP|\fIremovable\-usb\fP} 4
-If you specify the keyword 'removable', live\-boot will try to find
-persistence partitions on removable media only. Note that if you want to
-further restrict the media to usb mass storage only, you can use the
-\&'removable\-usb' keyword.
+Si se especifica la palabra clave 'removable', live\-boot intentará encontrar
+particiones con persistencia únicamente en los medios extraíbles. Tener en
+cuenta que si se desea restringir aún más los medios a sistemas de
+almacenamiento masivo USB se puede utilizar la palabra clave 'removable\-usb'
 .IP "\fBpersistence\-method\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
-This option determines which types of persistence media we allow. If
-"overlay" is in the list, we consider overlays (i.e. "live\-rw" and
-"home\-rw"). The default is "overlay".
+Esta opción determina qué tipos de medios se permiten para la
+persistencia. Si se especifica "overlay" en la lista, se considera overlays
+(es decir "live\-rw" y "home\-rw"). Por defecto es "overlay".
 .IP \fBpersistence\-path\fP=\fIPATH\fP 4
 live\-boot buscará ficheros con persistencia en el directorio raíz de una
 partición, con este parámetro, la ruta se puede configurar de modo que se
 pueda tener varios directorios en la misma partición para almacenar ficheros
 con persistencia.
 .IP \fBpersistence\-read\-only\fP 4
-Filesystem changes are not saved back to persistence media. In particular,
-overlays and netboot NFS mounts are mounted read\-only.
+Los cambios en el sistema de ficheros no se guardan de nuevo en los medios
+con persistencia. En particular, los overlays y los montajes NFS de red son
+montados en sólo lectura.
 .IP "\fBpersistence\-storage\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 Esta opción determina qué tipos de almacenamiento persistente hay que tener
 en cuenta cuando se comprueban los medios con persistencia. Si "filesystem"
@@ -261,24 +263,11 @@ unionfs.
 .\" FIXME
 .SH "FICHEROS (antiguos)"
 .IP \fB/etc/live.conf\fP 4
-#\-#\-#\-#\-#  live\-snapshot.1.po (live\-snapshot)  #\-#\-#\-#\-#
-Algunas variables pueden ser configuradas a través de este fichero de
-configuración (dentro del sistema en vivo).
 #\-#\-#\-#\-#  live\-boot.7.po (live\-boot)  #\-#\-#\-#\-#
 Algunas variables pueden ser configuradas a través de este fichero de
 configuración (dentro del sistema en vivo).
 .IP \fBlive/filesystem.module\fP 4
 .\" FIXME
-#\-#\-#\-#\-#  live\-snapshot.1.po (live\-snapshot)  #\-#\-#\-#\-#
-Este fichero opcional (dentro del medio en vivo) contiene una lista de
-nombres de ficheros separados por espacios en blanco o retornos de carro que
-corresponden a imágenes de disco en el directorio "/live". Si este fichero
-existe, sólo las imágenes que figuran en esta lista se fusionarán en la raíz
-aufs y se cargarán en el orden en que aparecen aquí. La primera entrada en
-este fichero será el punto "más bajo" en el aufs y el último fichero de esta
-lista estará en el punto "más alto" del aufs, justo debajo de /overlay. Sin
-este fichero, las imágenes en el directorio "/live" se cargan en orden
-alfanumérico.
 #\-#\-#\-#\-#  live\-boot.7.po (live\-boot)  #\-#\-#\-#\-#
 Este fichero opcional (dentro del medio en vivo) contiene una lista de
 nombres de ficheros separados por espacios en blanco o retornos de carro que
@@ -307,10 +296,6 @@ alfanumérico.
 \fIlive\-tools\fP(7)
 
 .SH "PÁGINA WEB"
-#\-#\-#\-#\-#  live\-snapshot.1.po (live\-snapshot)  #\-#\-#\-#\-#
-Se puede encontrar más información acerca de live\-boot y el proyecto Debian
-Live en la página web <\fIhttp://live.debian.net/\fP> y en el manual
-<\fIhttp://live.debian.net/manual/\fP>.
 #\-#\-#\-#\-#  live\-boot.7.po (live\-boot)  #\-#\-#\-#\-#
 Se puede encontrar más información acerca de live\-boot y el proyecto Debian
 Live en la página web <\fIhttp://live.debian.net/\fP> y en el manual en
