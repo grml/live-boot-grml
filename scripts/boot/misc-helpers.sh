@@ -81,7 +81,6 @@ mount_images_in_directory ()
 	rootmnt="${2}"
 	mac="${3}"
 
-
 	if match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.squashfs" ||
 		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext2" ||
 		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext3" ||
@@ -377,7 +376,8 @@ really_export ()
 	eval export "${STRING}"="${VALUE}"
 }
 
-is_in_list_separator_helper () {
+is_in_list_separator_helper ()
+{
 	local sep=${1}
 	shift
 	local element=${1}
@@ -386,13 +386,15 @@ is_in_list_separator_helper () {
 	echo ${list} | grep -qe "^\(.*${sep}\)\?${element}\(${sep}.*\)\?$"
 }
 
-is_in_space_sep_list () {
+is_in_space_sep_list ()
+{
 	local element=${1}
 	shift
 	is_in_list_separator_helper "[[:space:]]" "${element}" "${*}"
 }
 
-is_in_comma_sep_list () {
+is_in_comma_sep_list ()
+{
 	local element=${1}
 	shift
 	is_in_list_separator_helper "," "${element}" "${*}"
@@ -501,10 +503,11 @@ where_is_mounted ()
 	grep -m1 "^${device} " /proc/mounts | cut -f2 -d ' '
 }
 
-trim_path () {
-    # remove all unnecessary /:s in the path, including last one (except
-    # if path is just "/")
-    echo ${1} | sed 's|//\+|/|g' | sed 's|^\(.*[^/]\)/$|\1|'
+trim_path ()
+{
+	# remove all unnecessary /:s in the path, including last one (except
+	# if path is just "/")
+	echo ${1} | sed 's|//\+|/|g' | sed 's|^\(.*[^/]\)/$|\1|'
 }
 
 what_is_mounted_on ()
@@ -761,7 +764,8 @@ mount_persistence_media ()
 	return 0
 }
 
-close_persistence_media () {
+close_persistence_media ()
+{
 	local device=${1}
 	local backing="$(where_is_mounted ${device})"
 
@@ -945,8 +949,7 @@ find_persistence_media ()
 		# in order to probe any filesystem it contains, like we do
 		# below. activate_custom_mounts() also depends on that any luks
 		# device already has been opened.
-		if is_in_comma_sep_list luks ${PERSISTENCE_ENCRYPTION} && \
-		   is_luks_partition ${dev}
+		if is_in_comma_sep_list luks ${PERSISTENCE_ENCRYPTION} && is_luks_partition ${dev}
 		then
 			if luks_device=$(open_luks_device "${dev}")
 			then
@@ -991,8 +994,7 @@ find_persistence_media ()
 		fi
 
 		# Close luks device if it isn't used
-		if [ -z "${result}" ] && [ -n "${luks_device}" ] && \
-		   is_active_luks_mapping "${luks_device}"
+		if [ -z "${result}" ] && [ -n "${luks_device}" ] && is_active_luks_mapping "${luks_device}"
 		then
 			/sbin/cryptsetup luksClose "${luks_device}"
 		fi
@@ -1034,7 +1036,8 @@ is_active_luks_mapping ()
 	/sbin/cryptsetup status "${device}" 1>/dev/null 2>&1
 }
 
-get_luks_backing_device () {
+get_luks_backing_device ()
+{
 	device=${1}
 	cryptsetup status ${device} 2> /dev/null | \
 		awk '{if ($1 == "device:") print $2}'
@@ -1131,7 +1134,9 @@ link_files ()
 		return
 	fi
 
-	find "${src_dir}" -mindepth 1 -maxdepth 1 | while read src; do
+	find "${src_dir}" -mindepth 1 -maxdepth 1 | \
+	while read src
+	do
 		local dest="${dest_dir}$(basename "${src}")"
 		if [ -d "${src}" ]
 		then
@@ -1166,19 +1171,23 @@ do_union ()
 	local unionro1="${3}"		# first underlying read-only branch (optional)
 	local unionro2="${4}"		# second underlying read-only branch (optional)
 
-	if [ "${UNIONTYPE}" = "aufs" ]
-	then
-		rw_opt="rw"
-		ro_opt="rr+wh"
-		noxino_opt="noxino"
-	elif [ "${UNIONTYPE}" = "unionfs-fuse" ]
-	then
-		rw_opt="RW"
-		ro_opt="RO"
-	else
-		rw_opt="rw"
-		ro_opt="ro"
-	fi
+	case "${UNIONTYPE}" in
+		aufs)
+			rw_opt="rw"
+			ro_opt="rr+wh"
+			noxino_opt="noxino"
+			;;
+
+		unionfs-fuse)
+			rw_opt="RW"
+			ro_opt="RO"
+			;;
+
+		*)
+			rw_opt="rw"
+			ro_opt="ro"
+			;;
+	esac
 
 	case "${UNIONTYPE}" in
 		unionfs-fuse)

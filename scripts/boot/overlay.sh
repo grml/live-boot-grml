@@ -22,10 +22,11 @@ setup_unionfs ()
 			;;
 	esac
 
-	if [ "${UNIONTYPE}" = unionfs-fuse ]
-	then
-		modprobe fuse
-	fi
+	case "${UNIONTYPE}" in
+		unionfs-fuse)
+			modprobe fuse
+			;;
+	esac
 
 	# run-init can't deal with images in a subdir, but we're going to
 	# move all of these away before it runs anyway.  No, we're not,
@@ -111,25 +112,29 @@ setup_unionfs ()
 				fi
 				fstype=$(get_fstype "${backdev}")
 
-				if [ "${fstype}" = "unknown" ]
-				then
-					panic "Unknown file system type on ${backdev} (${image})"
-				fi
+				case "${fstype}" in
+					unknown)
+						panic "Unknown file system type on ${backdev} (${image})"
+						;;
 
-				if [ -z "${fstype}" ]
-				then
-					fstype="${imagename##*.}"
-					log_warning_msg "Unknown file system type on ${backdev} (${image}), assuming ${fstype}."
-				fi
+					"")
+						fstype="${imagename##*.}"
+						log_warning_msg "Unknown file system type on ${backdev} (${image}), assuming ${fstype}."
+						;;
+				esac
 
-				if [ "${UNIONTYPE}" != "unionmount" ]
-				then
-					mpoint="${croot}/${imagename}"
-					rofslist="${mpoint} ${rofslist}"
-				else
-					mpoint="${rootmnt}"
-					rofslist="${rootmnt} ${rofslist}"
-				fi
+				case "${UNIONTYPE}" in
+					unionmount)
+						mpoint="${rootmnt}"
+						rofslist="${rootmnt} ${rofslist}"
+						;;
+
+					*)
+						mpoint="${croot}/${imagename}"
+						rofslist="${mpoint} ${rofslist}"
+						;;
+				esac
+
 				mkdir -p "${mpoint}"
 				log_begin_msg "Mounting \"${image}\" on \"${mpoint}\" via \"${backdev}\""
 				mount -t "${fstype}" -o ro,noatime "${backdev}" "${mpoint}" || panic "Can not mount ${backdev} (${image}) on ${mpoint}"
@@ -189,9 +194,11 @@ setup_unionfs ()
 			removable)
 				whitelistdev="$(removable_dev)"
 				;;
+
 			removable-usb)
 				whitelistdev="$(removable_usb_dev)"
 				;;
+
 			*)
 				whitelistdev=""
 				;;
@@ -206,17 +213,20 @@ setup_unionfs ()
 		for media in $(find_persistence_media "${overlays}" "${whitelistdev}")
 		do
 			media="$(echo ${media} | tr ":" " ")"
+
 			case ${media} in
 				${old_root_overlay_label}=*)
 					device="${media#*=}"
 					fix_backwards_compatibility ${device} / union
 					overlay_devices="${overlay_devices} ${device}"
 					;;
+
 				${old_home_overlay_label}=*)
 					device="${media#*=}"
 					fix_backwards_compatibility ${device} /home bind
 					overlay_devices="${overlay_devices} ${device}"
 					;;
+
 				${custom_overlay_label}=*)
 					device="${media#*=}"
 					overlay_devices="${overlay_devices} ${device}"
@@ -226,7 +236,7 @@ setup_unionfs ()
 	elif [ -n "${NFS_COW}" ] && [ -z "${NOPERSISTENCE}" ]
 	then
 		# check if there are any nfs options
-		if echo ${NFS_COW}|grep -q ','
+		if echo ${NFS_COW} | grep -q ','
 		then
 			nfs_cow_opts="-o nolock,$(echo ${NFS_COW}|cut -d, -f2-)"
 			nfs_cow=$(echo ${NFS_COW}|cut -d, -f1)
@@ -243,7 +253,7 @@ setup_unionfs ()
 		mac="$(get_mac)"
 		if [ -n "${mac}" ]
 		then
-			cowdevice=$(echo ${nfs_cow}|sed "s/client_mac_address/${mac}/")
+			cowdevice=$(echo ${nfs_cow} | sed "s/client_mac_address/${mac}/")
 			cow_fstype="nfs"
 		else
 			panic "unable to determine mac address"
@@ -354,6 +364,7 @@ setup_unionfs ()
 						unionfs-fuse)
 							mount -o bind "${d}" "${live_rofs}"
 							;;
+
 						*)
 							mount -o move "${d}" "${live_rofs}"
 							;;

@@ -4,8 +4,9 @@
 
 mountroot ()
 {
-	if [ -x /scripts/local-top/cryptroot ]; then
-	    /scripts/local-top/cryptroot
+	if [ -x /scripts/local-top/cryptroot ]
+	then
+		/scripts/local-top/cryptroot
 	fi
 
 	exec 6>&1
@@ -136,7 +137,8 @@ mountroot ()
 	fi
 
 
-	if [ -n "${ROOT_PID}" ] ; then
+	if [ -n "${ROOT_PID}" ]
+	then
 		echo "${ROOT_PID}" > "${rootmnt}"/live/root.pid
 	fi
 
@@ -144,10 +146,11 @@ mountroot ()
 
 	# unionfs-fuse needs /dev to be bind-mounted for the duration of
 	# live-bottom; udev's init script will take care of things after that
-	if [ "${UNIONTYPE}" = unionfs-fuse ]
-	then
-		mount -n -o bind /dev "${rootmnt}/dev"
-	fi
+	case "${UNIONTYPE}" in
+		unionfs-fuse)
+			mount -n -o bind /dev "${rootmnt}/dev"
+			;;
+	esac
 
 	# Move to the new root filesystem so that programs there can get at it.
 	if [ ! -d /root/live/image ]
@@ -205,10 +208,11 @@ mountroot ()
 			;;
 	esac
 
-	if [ "${UNIONFS}" = unionfs-fuse ]
-	then
-		umount "${rootmnt}/dev"
-	fi
+	case "${UNIONFS}" in
+		unionfs-fuse)
+			umount "${rootmnt}/dev"
+			;;
+	esac
 
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-
