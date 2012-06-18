@@ -42,7 +42,7 @@ fi
 
 # Handling live-boot
 
-if [ ! -e /usr/share/live-boot ]
+if [ ! -e /lib/live/boot ]
 then
 	echo "W: live-boot-initramfs-tools (backend) installed without live-boot,"
 	echo "W: this initramfs will *NOT* have live support."
