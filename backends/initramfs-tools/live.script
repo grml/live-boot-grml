@@ -4,5 +4,5 @@
 
 if [ -e /lib/live/boot.sh ]
 then
-	/lib/live/boot.sh ${@}
+	. /lib/live/boot.sh
 fi
