@@ -17,7 +17,7 @@ Netbase ()
 
 	IFFILE="/root/etc/network/interfaces"
 
-	if [ "${STATICIP}" = "frommedia" -a -e  "${IFFILE}" ]
+	if [ "${STATICIP}" = "frommedia" ] && [ -e "${IFFILE}" ]
 	then
 		# will use existent /etc/network/interfaces
 		log_end_msg
@@ -33,9 +33,9 @@ EOF
 	udevadm trigger
 	udevadm settle
 
-	if [ -z "${NETBOOT}" -a -n "${STATICIP}" -a "${STATICIP}" != "frommedia" ]
+	if [ -z "${NETBOOT}" ] && [ -n "${STATICIP}" ] && [ "${STATICIP}" != "frommedia" ]
 	then
-		parsed=$(echo "${STATICIP}" | sed -e 's/,/ /g')
+		parsed=$(echo "${STATICIP}" | sed -e 's|,| |g')
 
 		for ifline in ${parsed}
 		do

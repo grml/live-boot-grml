@@ -42,7 +42,7 @@ fi
 
 # Handling live-boot
 
-if [ ! -e /usr/share/live-boot ]
+if [ ! -e /lib/live/boot ]
 then
 	echo "W: live-boot-initramfs-tools (backend) installed without live-boot,"
 	echo "W: this initramfs will *NOT* have live support."
@@ -53,9 +53,6 @@ fi
 
 mkdir -p "${DESTDIR}/lib/live"
 cp -a /lib/live/boot.sh /lib/live/boot "${DESTDIR}/lib/live"
-
-# Directories
-mkdir -p "${DESTDIR}"/lib/live-boot
 
 # klibc dependencies
 for FILE in /lib/libacl* /lib/libblkid* /lib/libuuid* /lib/libdevmapper* /lib/libattr*

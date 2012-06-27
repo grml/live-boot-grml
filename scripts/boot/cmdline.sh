@@ -206,10 +206,10 @@ Cmdline ()
 				export PERSISTENCE_STORAGE
 				;;
 
-			persistence-subtext=*)
-				old_root_overlay_label="${old_root_overlay_label}-${_PARAMETER#persistence-subtext=}"
-				old_home_overlay_label="${old_home_overlay_label}-${_PARAMETER#persistence-subtext=}"
-				custom_overlay_label="${custom_overlay_label}-${_PARAMETER#persistence-subtext=}"
+			persistence-label=*)
+				old_root_overlay_label="${_PARAMETER#persistence-label=*}"
+				old_home_overlay_label="${_PARAMETER#persistence-label=*}"
+				custom_overlay_label="${_PARAMETER#persistence-label=*}"
 				;;
 
 			nopersistence)
