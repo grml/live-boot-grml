@@ -1,3 +1,24 @@
+live-boot (3.0~a34-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Renaming persistent-subtext option into persistent-label and making
+    it define the complete label instead of a custom suffix only.
+  * Updating coding style in a first bunch of locations.
+  * Updating location for live-boot files in initramfs-tools hook,
+    thanks to Baurzhan Muftakhidinov <baurthefirst@gmail.com>.
+  * Making live-boot-initramfs-tools.postinst more error safe.
+  * Removing pre-wheezy dpkg trigger for update-initramfs.
+  * Removing superfluous directory in initramfs-tools hook.
+  * Sourcing individual live-boot scripts rather than executing them.
+
+  [ Ben Armstrong ]
+  * Fix creation of /var/log/live in correct location.
+
+  [ Daniel Baumann ]
+  * Switching to xz compression in source and binary packages.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 27 Jun 2012 14:14:19 +0200
+
 live-boot (3.0~a33-1) unstable; urgency=low
 
   [ chals ]
