@@ -199,7 +199,7 @@ mountroot ()
 		panic "A wrong rootfs was mounted."
 	fi
 
-	fstab
+	Fstab
 	Netbase
 
 	case "${LIVE_SWAPON}" in
