@@ -11,6 +11,11 @@ Cmdline ()
 				LIVE_READ_ONLY="true"
 				;;
 
+			live-boot.swapon=*|swapon=*)
+				LIVE_SWAPON="true"
+				LIVE_SWAPON_DEVICES="${_PARAMETER#*swapon=}"
+				;;
+
 			live-boot.swapon|swapon)
 				LIVE_SWAPON="true"
 				;;

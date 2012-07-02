@@ -4,7 +4,12 @@
 
 Swapon ()
 {
-	_DEVICES="/dev/sd* /dev/vd*"
+	if [ "${LIVE_SWAPON}" != "true" ]
+	then
+		return 0
+	fi
+
+	LIVE_SWAPON_DEVICES="${LIVE_SWAPON_DEVICES:-/dev/sd* /dev/vd*}"
 
 	if [ -e /run ]
 	then
@@ -15,7 +20,7 @@ Swapon ()
 		_FSTAB="/root/etc/fstab"
 	fi
 
-	for _DEVICE in ${_DEVICES}
+	for _DEVICE in $(echo ${LIVE_SWAPON_DEVICES} | sed -e 's|,| |g')
 	do
 		if [ ! -b "${_DEVICE}" ]
 		then
@@ -41,7 +46,7 @@ Swapon ()
 	fi
 
 	# Add new swap entries
-	for _DEVICE in _SWAP_DEVICES
+	for _DEVICE in ${_SWAP_DEVICES}
 	do
 		echo "${_DEVICE} swap swap defaults 0 0" >> "${_FSTAB}"
 	done
