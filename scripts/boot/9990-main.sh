@@ -2,7 +2,7 @@
 
 # set -e
 
-mountroot ()
+Main ()
 {
 	if [ -x /scripts/local-top/cryptroot ]
 	then
