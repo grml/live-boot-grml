@@ -20,6 +20,7 @@ Main ()
 
 	_CMDLINE="$(cat /proc/cmdline)"
 	Cmdline
+	Cmdline_old
 
 	case "${LIVE_DEBUG}" in
 		true)
