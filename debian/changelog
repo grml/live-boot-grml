@@ -1,3 +1,20 @@
+live-boot (3.0~a36-1) unstable; urgency=low
+
+  * Adding temporary notes in a readme file.
+  * Renaming boot scripts for refactoring them into numbered plugins.
+  * Renaming mountroot function to main to provide a generic live-boot
+    entry point for initramfs generators.
+  * Adding temporary redirection layer for dracut initramfs generator.
+  * Adding redirection layer for initramfs-tools initramfs generator.
+  * Splitting out already reviewed cmdline parsing script.
+  * Splitting out already reviewed read-only script.
+  * Splitting out already reviewed swapon script.
+  * Splitting out already reviewed verify-checksums script.
+  * Adding support for defining one or more explicit swap partitions to
+    be used.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 18 Jul 2012 23:56:06 +0200
+
 live-boot (3.0~a35-1) unstable; urgency=low
 
   * Correcting typo in fstab function call in mountroot, thanks to
