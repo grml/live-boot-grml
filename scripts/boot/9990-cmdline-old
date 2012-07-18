@@ -2,30 +2,11 @@
 
 #set -e
 
-Cmdline ()
+Cmdline_old ()
 {
 	for _PARAMETER in ${_CMDLINE}
 	do
 		case "${_PARAMETER}" in
-			live-boot.read-only|read-only)
-				LIVE_READ_ONLY="true"
-				;;
-
-			live-boot.swapon)
-				LIVE_SWAPON="true"
-				;;
-
-			live-boot.verify-checksums|verify-checksums)
-				LIVE_VERIFY_CHECKSUMS="true"
-				;;
-
-			# Special options
-			live-boot.debug|debug)
-				LIVE_DEBUG="true"
-				;;
-
-
-			# parameters below need review (FIXME)
 			skipconfig)
 				NOFSTAB="true"
 				NONETWORKING="true"

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#set -e
+
+mountroot ()
+{
+	# initramfs-tools entry point for live-boot is mountroot(); function
+	Main
+}

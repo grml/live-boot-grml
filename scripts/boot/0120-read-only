@@ -15,7 +15,7 @@ Read_only ()
 			continue
 		fi
 
-		echo -n "Setting ${_DEVICE} read-only..." > /dev/console
+		echo -n "live-boot: Setting ${_DEVICE} read-only..." > /dev/console
 
 		blockdev --setro ${_DEVICE}
 		_RETURN="${?}"
