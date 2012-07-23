@@ -79,7 +79,7 @@
  	fi
  
  	# split args of ethdevice=eth0,eth1 into "eth0 eth1"
-@@ -374,38 +397,27 @@
+@@ -374,38 +397,29 @@
  		devlist="$devlist $device"
  	done
  
@@ -110,7 +110,9 @@
 -			export DEVICE="$dev"
 -			break
 +		IPV4ADDR="0.0.0.0"
-+		. /tmp/net-${device}.conf
++		if [ -e "/tmp/net-${device}.conf" ]; then
++			. /tmp/net-${device}.conf
++		fi
 +		if [ "${IPV4ADDR}" != "0.0.0.0" ]; then
 +			export DEVICE="$dev $DEVICE"
 +			# break  # exit loop as we just use the irst
