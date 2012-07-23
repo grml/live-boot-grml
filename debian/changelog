@@ -1,3 +1,11 @@
+live-boot (3.0~a27-1+grml.4) grml-testing; urgency=low
+
+  * [6d32dfe] Check for presence of /tmp/net-${device}.conf before
+    sourcing it [Closes: issue1196] Thanks to Marc 'Zugschlus' Haber for
+    the bugreport and debugging this issue
+
+ -- Michael Prokop <mika@grml.org>  Mon, 23 Jul 2012 17:13:42 +0200
+
 live-boot (3.0~a27-1+grml.3) grml-testing; urgency=low
 
   * [d978027] 35_fix_findiso_umount.patch: make sure ISO gets unmounted
