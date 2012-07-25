@@ -19,14 +19,9 @@ Main ()
 	. /live.vars
 
 	_CMDLINE="$(cat /proc/cmdline)"
-	Cmdline
 	Cmdline_old
 
-	case "${LIVE_DEBUG}" in
-		true)
-			set -x
-			;;
-	esac
+	Debug
 
 	Read_only
 
