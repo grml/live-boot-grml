@@ -88,11 +88,7 @@ Main ()
 		panic "Unable to find a medium containing a live file system"
 	fi
 
-	case "${LIVE_VERIFY_CHECKSUMS}" in
-		true)
-			Verify_checksums "${livefs_root}"
-			;;
-	esac
+	Verify_checksums "${livefs_root}"
 
 	if [ "${TORAM}" ]
 	then

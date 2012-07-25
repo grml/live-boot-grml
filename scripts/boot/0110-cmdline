@@ -7,10 +7,6 @@ Cmdline ()
 	for _PARAMETER in ${_CMDLINE}
 	do
 		case "${_PARAMETER}" in
-			live-boot.verify-checksums|verify-checksums)
-				LIVE_VERIFY_CHECKSUMS="true"
-				;;
-
 			# Special options
 			live-boot.debug|debug)
 				LIVE_DEBUG="true"

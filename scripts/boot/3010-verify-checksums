@@ -4,6 +4,20 @@
 
 Verify_checksums ()
 {
+	for _PARAMETER in ${_CMDLINE}
+	do
+		case "${_PARAMETER}" in
+			live-boot.verify-checksums|verify-checksums)
+				LIVE_VERIFY_CHECKSUMS="true"
+				;;
+		esac
+	done
+
+	if [ "${LIVE_VERIFY_CHECKSUMS}" != "true" ]
+	then
+		return 0
+	fi
+
 	_MOUNTPOINT="${1}"
 
 	_DIGESTS="sha512 sha384 sha256 sha224 sha1 md5"
