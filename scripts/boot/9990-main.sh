@@ -19,20 +19,11 @@ Main ()
 	. /live.vars
 
 	_CMDLINE="$(cat /proc/cmdline)"
-	Cmdline
 	Cmdline_old
 
-	case "${LIVE_DEBUG}" in
-		true)
-			set -x
-			;;
-	esac
+	Debug
 
-	case "${LIVE_READ_ONLY}" in
-		true)
-			Read_only
-			;;
-	esac
+	Read_only
 
 	Select_eth_device
 
@@ -92,11 +83,7 @@ Main ()
 		panic "Unable to find a medium containing a live file system"
 	fi
 
-	case "${LIVE_VERIFY_CHECKSUMS}" in
-		true)
-			Verify_checksums "${livefs_root}"
-			;;
-	esac
+	Verify_checksums "${livefs_root}"
 
 	if [ "${TORAM}" ]
 	then
@@ -203,11 +190,7 @@ Main ()
 	Fstab
 	Netbase
 
-	case "${LIVE_SWAPON}" in
-		true)
-			Swapon
-			;;
-	esac
+	Swap
 
 	case "${UNIONFS}" in
 		unionfs-fuse)

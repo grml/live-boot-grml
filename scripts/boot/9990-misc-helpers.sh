@@ -1304,7 +1304,7 @@ get_custom_mounts ()
 			local source="${dir}"
 			if [ -n "${opt_source}" ]
 			then
-				if echo ${opt_source} | grep -q -e "^/" -e "^\(.*/\)\?\.\.\?\(/.*\)\?$" && [ "${source}" != "." ]
+				if echo ${opt_source} | grep -q -e "^/" -e "^\(.*/\)\?\.\.\?\(/.*\)\?$" && [ "${opt_source}" != "." ]
 				then
 					log_warning_msg "Skipping unsafe custom mount with option source=${opt_source}: must be either \".\" (the media root) or a relative path w.r.t. the media root that contains neither comas, nor the special \".\" and \"..\" path components"
 					continue

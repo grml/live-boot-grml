@@ -2,14 +2,28 @@
 
 #set -e
 
-Swapon ()
+Swap ()
 {
-	if [ "${LIVE_SWAPON}" != "true" ]
+	for _PARAMETER in ${_CMDLINE}
+	do
+		case "${_PARAMETER}" in
+			live-boot.swap=*|swap=*)
+				LIVE_SWAP="true"
+				LIVE_SWAP_DEVICES="${_PARAMETER#*swap=}"
+				;;
+
+			live-boot.swap|swap)
+				LIVE_SWAP="true"
+				;;
+		esac
+	done
+
+	if [ "${LIVE_SWAP}" != "true" ]
 	then
 		return 0
 	fi
 
-	LIVE_SWAPON_DEVICES="${LIVE_SWAPON_DEVICES:-/dev/sd* /dev/vd*}"
+	LIVE_SWAP_DEVICES="${LIVE_SWAP_DEVICES:-/dev/sd* /dev/vd*}"
 
 	if [ -e /run ]
 	then
@@ -20,7 +34,7 @@ Swapon ()
 		_FSTAB="/root/etc/fstab"
 	fi
 
-	for _DEVICE in $(echo ${LIVE_SWAPON_DEVICES} | sed -e 's|,| |g')
+	for _DEVICE in $(echo ${LIVE_SWAP_DEVICES} | sed -e 's|,| |g')
 	do
 		if [ ! -b "${_DEVICE}" ]
 		then

@@ -4,8 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 3.0~a35-1\n"
-"POT-Creation-Date: 2012-07-18 23:56+0300\n"
+"Project-Id-Version: live-boot 3.0~a37-1\n"
+"POT-Creation-Date: 2012-07-25 17:21+0300\n"
 "PO-Revision-Date: 2012-04-08 22:48+0300\n"
 "Last-Translator: Daniel Baumann <daniel@debian.org>\n"
 "Language-Team: none\n"
@@ -24,13 +24,13 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1
 #, no-wrap
-msgid "2012-07-18"
-msgstr "18.07.2012"
+msgid "2012-07-25"
+msgstr "25.07.2012"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1
 #, no-wrap
-msgid "3.0~a36-1"
+msgid "3.0~a37-1"
 msgstr ""
 
 #. type: TH
