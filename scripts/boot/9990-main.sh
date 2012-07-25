@@ -203,11 +203,7 @@ Main ()
 	Fstab
 	Netbase
 
-	case "${LIVE_SWAPON}" in
-		true)
-			Swapon
-			;;
-	esac
+	Swap
 
 	case "${UNIONFS}" in
 		unionfs-fuse)
