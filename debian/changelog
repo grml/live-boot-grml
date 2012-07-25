@@ -1,3 +1,23 @@
+live-boot (3.0~a37-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Cleaning up initramfs-tools hook.
+
+  [ Tails developers ]
+  * Fixing persistence backward-compatibility mode (Closes: #681176).
+
+  [ Daniel Baumann ]
+  * Making swap function self contained.
+  * Making read-only function self contained.
+  * Making verify-checksums function self contained.
+  * Factoring out debug into an own function.
+  * Extending read-only parameters to allow specifying custom list of
+    devices.
+  * Avoid re-access /proc/cmdline in select-eth-device function and use
+    internal variable instead.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 25 Jul 2012 17:18:06 +0200
+
 live-boot (3.0~a36-1) unstable; urgency=low
 
   * Adding temporary notes in a readme file.
