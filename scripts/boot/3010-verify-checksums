@@ -7,6 +7,11 @@ Verify_checksums ()
 	for _PARAMETER in ${_CMDLINE}
 	do
 		case "${_PARAMETER}" in
+			live-boot.verify-checksums=*|verify-checksums=*)
+				LIVE_VERIFY_CHECKSUMS="true"
+				LIVE_VERIFY_CHECKSUMS_DIGESTS="${_PARAMETER#*verify-checksums=}"
+				;;
+
 			live-boot.verify-checksums|verify-checksums)
 				LIVE_VERIFY_CHECKSUMS="true"
 				;;
@@ -20,14 +25,14 @@ Verify_checksums ()
 
 	_MOUNTPOINT="${1}"
 
-	_DIGESTS="sha512 sha384 sha256 sha224 sha1 md5"
+	LIVE_VERIFY_CHECKSUMS_DIGESTS="${LIVE_VERIFY_CHECKSUMS_DIGESTS:-sha512 sha384 sha256 sha224 sha1 md5}"
 	_TTY="/dev/tty8"
 
 	log_begin_msg "Verifying checksums"
 
 	cd "${_MOUNTPOINT}"
 
-	for _DIGEST in ${_DIGESTS}
+	for _DIGEST in $(echo ${LIVE_VERIFY_CHECKSUMS_DIGESTS} | sed -e 's|,| |g')
 	do
 		_CHECKSUMS="$(echo ${_DIGEST} | tr [a-z] [A-Z])SUMS"
 
