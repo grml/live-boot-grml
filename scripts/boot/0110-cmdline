@@ -7,10 +7,6 @@ Cmdline ()
 	for _PARAMETER in ${_CMDLINE}
 	do
 		case "${_PARAMETER}" in
-			live-boot.read-only|read-only)
-				LIVE_READ_ONLY="true"
-				;;
-
 			live-boot.verify-checksums|verify-checksums)
 				LIVE_VERIFY_CHECKSUMS="true"
 				;;

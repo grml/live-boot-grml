@@ -4,6 +4,20 @@
 
 Read_only ()
 {
+	for _PARAMETER in ${_CMDLINE}
+	do
+		case "${_PARAMETER}" in
+			live-boot.read-only|read-only)
+				LIVE_READ_ONLY="true"
+				;;
+		esac
+	done
+
+	if [ "${LIVE_READ_ONLY}" != "true" ]
+	then
+		return 0
+	fi
+
 	# Marking some block devices as read-only to ensure that nothing
 	# gets written as linux still writes to 'only' read-only mounted filesystems.
 	_DEVICES="/dev/sd* /dev/vd*"

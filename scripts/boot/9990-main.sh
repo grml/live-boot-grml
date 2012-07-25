@@ -28,11 +28,7 @@ Main ()
 			;;
 	esac
 
-	case "${LIVE_READ_ONLY}" in
-		true)
-			Read_only
-			;;
-	esac
+	Read_only
 
 	Select_eth_device
 
