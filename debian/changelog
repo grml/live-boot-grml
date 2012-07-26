@@ -1,3 +1,16 @@
+live-boot (3.0~a38-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Extending verify-checksums parameters to allow specifying custom
+    list of digests.
+  * Harmonizing GPL boilerplate texts.
+
+  [ Richard Nelson ]
+  * Correct left over references to old initramfs-tools.sh (Closes:
+    #682504).
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 27 Jul 2012 00:20:39 +0200
+
 live-boot (3.0~a37-1) unstable; urgency=low
 
   [ Daniel Baumann ]
