@@ -3,7 +3,7 @@
 ## live-boot(7) - System Boot Scripts
 ## Copyright (C) 2006-2012 Daniel Baumann <daniel@debian.org>
 ##
-## live-boot comes with ABSOLUTELY NO WARRANTY; for details see COPYING.
+## This program comes with ABSOLUTELY NO WARRANTY; for details see COPYING.
 ## This is free software, and you are welcome to redistribute it
 ## under certain conditions; see COPYING for details.
 
