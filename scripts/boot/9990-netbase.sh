@@ -11,7 +11,7 @@ Netbase ()
 
 	# FIXME: stop hardcoding overloading of initramfs-tools functions
 	. /scripts/functions
-	. /lib/live/boot/initramfs-tools.sh
+	. /lib/live/boot/9990-initramfs-tools.sh
 
 	log_begin_msg "Preconfiguring networking"
 
