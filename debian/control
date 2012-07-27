@@ -53,6 +53,7 @@ Depends:
 Conflicts: live-boot-backend
 Replaces: live-boot-backend
 Provides: live-boot-backend
+Breaks: klibc-utils (<< 2.0-2)
 Description: Debian Live - System Boot Scripts (initramfs-tools backend)
  live-boot contains the scripts that configure a Debian Live system during the
  boot process (early userspace).
