@@ -16,3 +16,4 @@
 33_retry_phram.patch
 34_ignore_unknown_filesystems.patch
 35_fix_findiso_umount.patch
+36_support_dhcp_bootoption.patch

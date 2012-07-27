@@ -1,0 +1,28 @@
+--- a/scripts/live
++++ b/scripts/live
+@@ -399,7 +399,7 @@
+ 
+ 	for dev in $devlist ; do
+ 		param="$(get_ipconfig_para $dev)"
+-		if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] ; then
++		if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] && [ "$DHCP" != "Force" ] ; then
+ 			echo "Ignoring network device $dev due to nodhcp." | tee -a /live-boot.log
+ 			continue
+ 		fi
+--- a/scripts/live-bottom/23networking_grml
++++ b/scripts/live-bottom/23networking_grml
+@@ -75,6 +75,14 @@
+         method="manual"
+     fi
+ 
++    # if boot option "nodhcp" is set but also boot option "dhcp" is
++    # set, then dhcp should win over it as we default to dhcp and if
++    # nodhcp is used as default boot option but "dhcp" is added then it
++    # would be confusing to not get a working network setup
++    if [ "$DHCP" = "Force" ] ; then
++        method="dhcp"
++    fi
++
+     cat >> $IFFILE << EOF
+ allow-hotplug ${interface}
+ iface ${interface} inet ${method}
