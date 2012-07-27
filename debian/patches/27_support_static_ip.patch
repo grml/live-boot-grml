@@ -79,7 +79,7 @@
  	fi
  
  	# split args of ethdevice=eth0,eth1 into "eth0 eth1"
-@@ -374,38 +397,29 @@
+@@ -374,43 +397,34 @@
  		devlist="$devlist $device"
  	done
  
@@ -110,8 +110,8 @@
 -			export DEVICE="$dev"
 -			break
 +		IPV4ADDR="0.0.0.0"
-+		if [ -e "/tmp/net-${device}.conf" ]; then
-+			. /tmp/net-${device}.conf
++		if [ -e "/run/net-${device}.conf" ]; then
++			. /run/net-${device}.conf
 +		fi
 +		if [ "${IPV4ADDR}" != "0.0.0.0" ]; then
 +			export DEVICE="$dev $DEVICE"
@@ -134,6 +134,12 @@
  
  	for interface in ${DEVICE}; do
  		# source relevant ipconfig output
+ 		OLDHOSTNAME=${HOSTNAME}
+-		[ -e /tmp/net-${interface}.conf ] && . /tmp/net-${interface}.conf
++		[ -e /run/net-${interface}.conf ] && . /run/net-${interface}.conf
+ 		[ -z ${HOSTNAME} ] && HOSTNAME=${OLDHOSTNAME}
+ 		export HOSTNAME
+ 
 --- a/scripts/live-helpers
 +++ b/scripts/live-helpers
 @@ -93,9 +93,8 @@

@@ -9,10 +9,8 @@
 @DPATCH@
 
 diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_grml
-Index: b/scripts/live-bottom/23networking_grml
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ b/scripts/live-bottom/23networking_grml	2011-07-24 22:08:07.000000000 +0200
+--- /dev/null
++++ b/scripts/live-bottom/23networking_grml
 @@ -0,0 +1,107 @@
 +#!/bin/sh
 +
@@ -81,7 +79,7 @@ Index: b/scripts/live-bottom/23networking_grml
 +
 +    # NODHCP or a previously run ipconfig mean that ifupdown should never
 +    # touch this interface (IP-stack wise).
-+    netconfig=/tmp/net-${interface}.conf
++    netconfig=/run/net-${interface}.conf
 +    if [ -n "$NODHCP" ] || [ -e "${netconfig}" ]; then
 +        method="manual"
 +    fi
