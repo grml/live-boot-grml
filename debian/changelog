@@ -1,3 +1,16 @@
+live-boot (3.0~a27-1+grml.5) grml-testing; urgency=low
+
+  * [8b51f69] Adjust 15_networking_grml.patch + 27_support_static_ip.patch
+    for klibc's ipconfig /run switch
+  * [bbeb928] Add "Breaks: klibc-utils (<< 2.0-2)" to live-boot-grml-
+    initramfs-tools for /run switch
+  * [cad0077] Refresh debian/patches/35_fix_findiso_umount.patch
+  * [7f450c2] Support overriding "nodhcp" boot option via "dhcp"
+  * [2b065a0] Adjust file permissions also of files that are added during
+    dh_quilt_patch stage
+
+ -- Michael Prokop <mika@grml.org>  Fri, 27 Jul 2012 15:06:38 +0200
+
 live-boot (3.0~a27-1+grml.4) grml-testing; urgency=low
 
   * [6d32dfe] Check for presence of /tmp/net-${device}.conf before
