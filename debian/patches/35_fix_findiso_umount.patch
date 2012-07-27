@@ -2,7 +2,7 @@ Purpose: make sure the ISO gets unmounted correctly when booted via findiso/tora
 
 --- a/scripts/live
 +++ b/scripts/live
-@@ -1684,7 +1684,7 @@
+@@ -1686,7 +1686,7 @@
  	then
  		losetup -d /dev/loop0
  
