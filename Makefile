@@ -46,9 +46,6 @@ install:
 	cp -r scripts/boot.sh scripts/boot $(DESTDIR)/lib/live
 
 	# Installing executables
-	mkdir -p $(DESTDIR)/sbin
-	cp bin/live-new-uuid bin/live-swapfile $(DESTDIR)/sbin
-
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/hooks
 	cp backends/initramfs-tools/live.hook $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/scripts
