@@ -27,6 +27,11 @@ Main ()
 
 	Select_eth_device
 
+	if [ -e /conf/param.conf ]
+	then
+		. /conf/param.conf
+	fi
+
 	# Needed here too because some things (*cough* udev *cough*)
 	# changes the timeout
 
