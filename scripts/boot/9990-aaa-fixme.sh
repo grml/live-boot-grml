@@ -1,11 +1,5 @@
 #!/bin/sh
 
-if [ -e /scripts/functions ]
-then
-	# initramfs-tools specific (FIXME)
-	. /scripts/functions
-fi
-
 export PATH="/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
 
 echo "/root/lib" >> /etc/ld.so.conf
