@@ -18,10 +18,14 @@ Read_only ()
 		esac
 	done
 
-	if [ "${LIVE_READ_ONLY}" != "true" ]
-	then
-		return 0
-	fi
+	case "${LIVE_READ_ONLY}" in
+		true)
+			;;
+
+		*)
+			return 0
+			;;
+	esac
 
 	# Marking some block devices as read-only to ensure that nothing
 	# gets written as linux still writes to 'only' read-only mounted filesystems.
