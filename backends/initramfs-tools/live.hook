@@ -46,11 +46,7 @@ done
 # udev dependencies
 for FILE in /lib/udev/*_id
 do
-	if [ ! -e "${DESTDIR}/${FILE}" ]
-	then
-		mkdir -p "${DESTDIR}/lib/udev"
-		copy_exec "${FILE}" /lib/udev
-	fi
+	copy_exec "${FILE}"
 done
 
 # wheezy/sid
@@ -65,7 +61,7 @@ fi
 # Configuration: keymap (usefull when using encryption)
 if [ -x /bin/loadkeys ] && [ -r /etc/console/boottime.kmap.gz ]
 then
-	copy_exec /bin/loadkeys /bin
+	copy_exec /bin/loadkeys
 
 	mkdir -p "${DESTDIR}"/etc
 	cp /etc/console/boottime.kmap.gz "${DESTDIR}"/etc
@@ -84,7 +80,7 @@ manual_add_modules btrfs
 # Filesystem: cifs
 if [ -x /sbin/mount.cifs ]
 then
-	copy_exec /sbin/mount.cifs /sbin
+	copy_exec /sbin/mount.cifs
         manual_add_modules cifs
 fi
 
@@ -101,7 +97,7 @@ then
 fi
 
 # Filesystem: squashfs
-copy_exec /sbin/losetup /sbin
+copy_exec /sbin/losetup
 manual_add_modules loop
 manual_add_modules squashfs
 manual_add_modules sqlzma
@@ -166,7 +162,7 @@ fi
 if [ -x /sbin/udevadm ]
 then
 	[ "${QUIET}" ] || echo -n " udev"
-	copy_exec /sbin/udevadm /sbin
+	copy_exec /sbin/udevadm
 fi
 if [ -x /usr/bin/udevinfo ]
 then
@@ -185,7 +181,7 @@ fi
 if [ -x /sbin/blockdev ]
 then
 	[ "${QUIET}" ] || echo -n " blockdev"
-	copy_exec /sbin/blockdev /sbin
+	copy_exec /sbin/blockdev
 fi
 
 # FUSE kernel module
