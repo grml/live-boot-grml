@@ -225,13 +225,18 @@ case "${LIVE_DNS}" in
 	true)
 		[ "${QUIET}" ] || echo -n " dns"
 
-		#copy_exec /lib/libnss_files.so.*      /lib  # /etc/hosts and /etc/passwd
-		copy_exec /lib/libnss_dns.so.*      /lib  # DNS server
-		#copy_exec /lib/libnss_compat.so.*      /lib  # /etc/passwd
+		# /lib/libnss_dns.so.*:a   DNS
+		# /lib/libnss_files.so.*:  /etc/hosts and /etc/passwd
+		# /lib/libnss_compat.so.*: /etc/passwd
 
-		# Configuration file - may be needed if /etc/hosts is used.
-		#mkdir -p $DESTDIR/etc
-		#cp -p /etc/nsswitch.conf $DESTDIR/etc
+		for _SHLIB in $(find /lib -name 'libnss_dns.so.*')
+		do
+			copy_exec "${_SHLIB}"
+		done
+
+		# might be needed if /etc/hosts is used
+		#mkdir -p "${DESTDIR}/etc"
+		#cp -p /etc/nsswitch.conf "${DESTDIR}/etc"
 		;;
 esac
 
