@@ -155,9 +155,8 @@ setup_unionfs ()
 
 	# tmpfs file systems
 	touch /etc/fstab
-	mkdir -p /live
-	mount -t tmpfs tmpfs /live
 	mkdir -p /live/overlay
+	mount -t tmpfs tmpfs /live/overlay
 
 	# Looking for persistence devices or files
 	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
