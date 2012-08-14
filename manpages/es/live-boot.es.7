@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 30.07.2012 3.0~a38\-1 "Proyecto Debian Live"
+.TH LIVE\-BOOT 7 14.08.2012 3.0~a38\-1 "Proyecto Debian Live"
 
 .SH NOMBRE
 \fBlive\-boot\fP \- Scripts de Arranque del Sistema
@@ -42,8 +42,8 @@ comportamiento, ver más abajo.
 .SS "Ficheros de configuración"
 \fBlive\-boot\fP se puede configurar (pero no activar) mediante ficheros de
 configuración. Estos ficheros se pueden colocar en el sistema de ficheros
-raíz (/etc/live/boot.conf, /etc/live/boot.d/*.conf), o en el medio en vivo
-(live/boot.conf, live/boot.d/*.conf).
+raíz (/etc/live/boot.conf, /etc/live/boot/*), o en el medio en vivo
+(live/boot.conf, live/boot/*).
 
 .SH OPCIONES
 .\" FIXME
@@ -279,9 +279,9 @@ alfanumérico.
 
 .SH FICHEROS
 .IP \fB/etc/live/boot.conf\fP 4
-.IP \fB/etc/live/boot.d/*.conf\fP 4
+.IP \fB/etc/live/boot/*\fP 4
 .IP \fBlive/boot.conf\fP 4
-.IP \fBlive/boot.d/*.conf\fP 4
+.IP \fBlive/boot.d/*\fP 4
 .IP \fBlive\-persistence.conf\fP 4
 
 .SH "VER ADEMÁS"

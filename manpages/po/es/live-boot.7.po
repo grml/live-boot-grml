@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 3.0~a38-1\n"
-"POT-Creation-Date: 2012-07-30 15:21+0300\n"
+"POT-Creation-Date: 2012-08-14 20:47+0300\n"
 "PO-Revision-Date: 2012-06-07 20:29+0200\n"
 "Last-Translator: Carlos Zuferri «chals» <chals@altorricon.com>\n"
 "Language-Team:  Debian Live <debian-live@lists.debian.org>\n"
@@ -24,8 +24,8 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1
 #, no-wrap
-msgid "2012-07-30"
-msgstr "30.07.2012"
+msgid "2012-08-14"
+msgstr "14.08.2012"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1
@@ -152,13 +152,13 @@ msgstr "Ficheros de configuración"
 msgid ""
 "B<live-boot> can be configured (but not activated) through configuration "
 "files. Those files can be placed either in the root filesystem itself (/etc/"
-"live/boot.conf, /etc/live/boot.d/*.conf), or on the live media (live/boot."
-"conf, live/boot.d/*.conf)."
+"live/boot.conf, /etc/live/boot/*), or on the live media (live/boot.conf, "
+"live/boot/*)."
 msgstr ""
 "B<live-boot> se puede configurar (pero no activar) mediante ficheros de "
 "configuración. Estos ficheros se pueden colocar en el sistema de ficheros "
-"raíz (/etc/live/boot.conf, /etc/live/boot.d/*.conf), o en el medio en vivo "
-"(live/boot.conf, live/boot.d/*.conf)."
+"raíz (/etc/live/boot.conf, /etc/live/boot/*), o en el medio en vivo (live/"
+"boot.conf, live/boot/*)."
 
 #. type: SH
 #: en/live-boot.7:28 en/live-persistence.conf.5:57
@@ -1009,8 +1009,8 @@ msgstr "B</etc/live/boot.conf>"
 #. type: IP
 #: en/live-boot.7:151
 #, no-wrap
-msgid "B</etc/live/boot.d/*.conf>"
-msgstr "B</etc/live/boot.d/*.conf>"
+msgid "B</etc/live/boot/*>"
+msgstr "B</etc/live/boot/*>"
 
 #. type: IP
 #: en/live-boot.7:152
@@ -1021,8 +1021,8 @@ msgstr "B<live/boot.conf>"
 #. type: IP
 #: en/live-boot.7:153
 #, no-wrap
-msgid "B<live/boot.d/*.conf>"
-msgstr "B<live/boot.d/*.conf>"
+msgid "B<live/boot/*>"
+msgstr "B<live/boot.d/*>"
 
 #. type: IP
 #: en/live-boot.7:154

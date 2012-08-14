@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2012\-07\-30 3.0~a38-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 2012\-08\-14 3.0~a38-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -23,7 +23,7 @@ To configure the live\-boot parameters used by default in a live image, see the 
 In addition, there are some more boot parameters to influence the behaviour, see below.
 
 .SS Configuration Files
-\fBlive\-boot\fR can be configured (but not activated) through configuration files. Those files can be placed either in the root filesystem itself (/etc/live/boot.conf, /etc/live/boot.d/*.conf), or on the live media (live/boot.conf, live/boot.d/*.conf).
+\fBlive\-boot\fR can be configured (but not activated) through configuration files. Those files can be placed either in the root filesystem itself (/etc/live/boot.conf, /etc/live/boot/*), or on the live media (live/boot.conf, live/boot/*).
 
 .SH OPTIONS
 \fBlive\-boot\fR currently features the following parameters.
@@ -148,9 +148,9 @@ This optional file (inside the live media) contains a list of white\-space or ca
 
 .SH FILES
 .IP "\fB/etc/live/boot.conf\fR" 4
-.IP "\fB/etc/live/boot.d/*.conf\fR" 4
+.IP "\fB/etc/live/boot/*\fR" 4
 .IP "\fBlive/boot.conf\fR" 4
-.IP "\fBlive/boot.d/*.conf\fR" 4
+.IP "\fBlive/boot/*\fR" 4
 .IP "\fBlive-persistence.conf\fR" 4
 
 .SH SEE ALSO
