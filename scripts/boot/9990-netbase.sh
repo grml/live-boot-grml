@@ -16,6 +16,7 @@ Netbase ()
 	log_begin_msg "Preconfiguring networking"
 
 	IFFILE="/root/etc/network/interfaces"
+	DNSFILE="/root/etc/resolv.conf"
 
 	if [ "${STATICIP}" = "frommedia" ] && [ -e "${IFFILE}" ]
 	then
@@ -43,6 +44,7 @@ EOF
 			ifaddress="$(echo ${ifline} | cut -f2 -d ':')"
 			ifnetmask="$(echo ${ifline} | cut -f3 -d ':')"
 			ifgateway="$(echo ${ifline} | cut -f4 -d ':')"
+			nameserver="$(echo ${ifline} | cut -f5 -d ':')"
 
 cat >> "${IFFILE}" << EOF
 allow-hotplug ${ifname}
@@ -57,6 +59,15 @@ EOF
 cat >> "${IFFILE}" << EOF
     gateway ${ifgateway}
 
+EOF
+
+			fi
+
+			if [ -n "${nameserver}" ]
+			then
+
+cat >> "${DNSFILE}" << EOF
+nameserver ${nameserver}
 EOF
 
 			fi
