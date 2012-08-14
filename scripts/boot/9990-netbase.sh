@@ -65,11 +65,13 @@ EOF
 
 			if [ -n "${nameserver}" ]
 			then
+				if [ -e "${DNSFILE}" ]
+				then
+					grep -v ^nameserver "${DNSFILE}" > "${DNSFILE}.tmp"
+					mv "${DNSFILE}.tmp" "${DNSFILE}"
+				fi
 
-cat >> "${DNSFILE}" << EOF
-nameserver ${nameserver}
-EOF
-
+				echo "nameserver ${nameserver}" >> "${DNSFILE}"
 			fi
 		done
 	else
