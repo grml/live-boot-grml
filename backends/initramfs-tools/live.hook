@@ -6,19 +6,15 @@ set -e
 
 [ "${QUIET}" ] || echo -n "live-boot:"
 
-# Reading configuration files
-if [ -e /etc/live/boot.conf ]
-then
-	. /etc/live/boot.conf
-fi
-
-if ls /etc/live/boot/* > /dev/null 2>&1
-then
-	for _FILE in /etc/live/boot/*
-	do
-		. ${_FILE}
-	done
-fi
+# Reading configuration file from filesystem and live-media
+for _FILE in /etc/live/boot.conf /etc/live/boot/* \
+	     /live/image/live/boot.conf /live/image/live/boot/*
+do
+	if [ -e "${_FILE}" ]
+	then
+		. "${_FILE}"
+	fi
+done
 
 # Checking live-boot
 if [ ! -e /lib/live/boot ]
