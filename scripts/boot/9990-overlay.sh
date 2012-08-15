@@ -343,6 +343,12 @@ setup_unionfs ()
 	# Correct the permissions of /:
 	chmod 0755 "${rootmnt}"
 
+	# Correct the permission of /tmp:
+	if [ -d "${rootmnt}/tmp" ]
+	then
+		chmod 1777 "${rootmnt}"/tmp
+	fi
+
 	live_rofs_list=""
 	# SHOWMOUNTS is necessary for custom mounts with the union option
 	# Since we may want to do custom mounts in user-space it's best to always enable SHOWMOUNTS
