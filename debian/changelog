@@ -1,3 +1,49 @@
+live-boot (3.0~b1-1) unstable; urgency=low
+
+  [ chals ]
+  * Fixing build error in 'es' man pages caused by a newline conflict.
+
+  [ Daniel Baumann ]
+  * Removing live-new-uuid, a rewritten one goes to live-tools.
+  * Adding slightly modified patch from Steven Shiau
+    <steven@nchc.org.tw> to transition to /run for network interface
+    definition files which fixes resolv.conf creation for netboot.
+
+  [ Steven Shiau ]
+  * Reading /conf/param.conf after Select_eth_device in main function to
+    fix network booting (Closes: #683240).
+
+  [ Daniel Baumann ]
+  * Moving reading of initramfs-tools functions to initramfs-tools
+    script.
+  * Consistently using case instead of if for conditionals in script
+    boilerplate.
+  * Laying tmpfs on /live/overlay only during initramfs stage, fixes
+    boot failure with plain filesystems (Closes: #681579).
+  * Correcting DNS inclusion in initramfs-tools hook, thanks to Steven
+    Shiau <steven@nchc.org.tw> for reporting.
+  * Simplifying usage of copy_exec function from hooks-function in
+    initramfs-tools hook.
+  * Using /etc/live/boot/*.conf instead of /etc/live/boot.d/*.conf and
+    /live/image/live/boot/*.conf instead of
+    /live/image/live/boot.d/*.conf for consistency reasons.
+  * Reading configuration file from filesystem and live-media at runtime
+    too.
+  * Reading configuration files in initramfs-tools hook too.
+
+  [ Steven Shiau ]
+  * Adding support for nameserver in ip= boot parameter.
+
+  [ Daniel Baumann ]
+  * Making nameserver assignment from ip= bootparameter work with
+    persistence.
+  * Correcting permissions of /tmp which apparently somehow get mixed up
+    along the way.
+  * Updating scripts readme about transition to plugin based
+    architecture.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 16 Aug 2012 12:21:04 +0200
+
 live-boot (3.0~a38-1) unstable; urgency=low
 
   [ Daniel Baumann ]
