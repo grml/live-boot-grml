@@ -4,7 +4,7 @@ SHELL := sh -e
 
 LANGUAGES = $(shell cd manpages/po && ls)
 
-SCRIPTS = backends/*/* bin/* scripts/*.sh scripts/*/*
+SCRIPTS = backends/*/* bin/* scripts/*.sh scripts/*/*-*
 
 all: build
 
