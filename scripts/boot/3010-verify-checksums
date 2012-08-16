@@ -18,10 +18,14 @@ Verify_checksums ()
 		esac
 	done
 
-	if [ "${LIVE_VERIFY_CHECKSUMS}" != "true" ]
-	then
-		return 0
-	fi
+	case "${LIVE_VERIFY_CHECKSUMS}" in
+		true)
+			;;
+
+		*)
+			return 0
+			;;
+	esac
 
 	_MOUNTPOINT="${1}"
 

@@ -18,10 +18,14 @@ Swap ()
 		esac
 	done
 
-	if [ "${LIVE_SWAP}" != "true" ]
-	then
-		return 0
-	fi
+	case "${LIVE_SWAP}" in
+		true)
+			;;
+
+		*)
+			return 0
+			;;
+	esac
 
 	LIVE_SWAP_DEVICES="${LIVE_SWAP_DEVICES:-/dev/sd* /dev/vd*}"
 

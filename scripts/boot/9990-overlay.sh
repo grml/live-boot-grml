@@ -155,9 +155,8 @@ setup_unionfs ()
 
 	# tmpfs file systems
 	touch /etc/fstab
-	mkdir -p /live
-	mount -t tmpfs tmpfs /live
 	mkdir -p /live/overlay
+	mount -t tmpfs tmpfs /live/overlay
 
 	# Looking for persistence devices or files
 	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
@@ -343,6 +342,12 @@ setup_unionfs ()
 
 	# Correct the permissions of /:
 	chmod 0755 "${rootmnt}"
+
+	# Correct the permission of /tmp:
+	if [ -d "${rootmnt}/tmp" ]
+	then
+		chmod 1777 "${rootmnt}"/tmp
+	fi
 
 	live_rofs_list=""
 	# SHOWMOUNTS is necessary for custom mounts with the union option

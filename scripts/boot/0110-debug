@@ -13,10 +13,15 @@ Debug ()
 		esac
 	done
 
-	if [ "${LIVE_DEBUG}" != "true" ]
-	then
-		return 0
-	fi
+	case "${LIVE_DEBUG}" in
+		true)
+			;;
 
+		*)
+			return 0
+			;;
+	esac
+
+	# Write the trace output
 	set -x
 }
