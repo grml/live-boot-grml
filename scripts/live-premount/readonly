@@ -22,7 +22,7 @@ esac
 
 # make sure all harddisk devices are read-only
 # this is important for forensic investigations
-if grep -qe readonly /proc/cmdline
+if grep -qe forensic -qe readonly /proc/cmdline
 then
 	for device in /dev/hd* /dev/sd* /dev/vd*
 	do

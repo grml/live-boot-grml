@@ -18,3 +18,4 @@
 35_fix_findiso_umount.patch
 36_support_dhcp_bootoption.patch
 37_fix_legacy_persistence_handling.patch
+38_do_not_check_for_forensic_in_readonly_mode.patch

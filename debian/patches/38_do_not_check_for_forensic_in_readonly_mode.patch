@@ -1,0 +1,22 @@
+Description: readonly: do not check for "forensic" boot option
+
+Author: Michael Prokop <mika@grml.org>
+
+We use the "readonly" boot option in the forensic boot menu entry,
+so nothing will change from user's PoV.
+
+The "forensic" string might match in a different context though
+and the "readonly" boot option was removed by intention to not
+block write access to the devices.
+
+--- live-boot-3.0~a27.orig/scripts/live-premount/readonly
++++ live-boot-3.0~a27/scripts/live-premount/readonly
+@@ -22,7 +22,7 @@ esac
+ 
+ # make sure all harddisk devices are read-only
+ # this is important for forensic investigations
+-if grep -qe forensic -qe readonly /proc/cmdline
++if grep -qe readonly /proc/cmdline
+ then
+ 	for device in /dev/hd* /dev/sd* /dev/vd*
+ 	do
