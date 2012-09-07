@@ -1,3 +1,15 @@
+live-boot (3.0~a27-1+grml.6) grml-testing; urgency=low
+
+  [ Lukas Schwaighofer ]
+  * [95fb70f] fixed legacy persistence handling
+
+  [ Michael Prokop ]
+  * [ed79f48] readonly: do not check for "forensic" boot option
+  * [72aebf1] Move changes to scripts/live-premount/readonly into debian
+    patch file
+
+ -- Michael Prokop <mika@grml.org>  Fri, 07 Sep 2012 13:43:08 +0200
+
 live-boot (3.0~a27-1+grml.5) grml-testing; urgency=low
 
   * [8b51f69] Adjust 15_networking_grml.patch + 27_support_static_ip.patch
