@@ -1,0 +1,24 @@
+--- a/scripts/live-premount/readonly
++++ b/scripts/live-premount/readonly
+@@ -32,4 +32,21 @@
+ 			blockdev --setro $device && printf "done [ execute \"blockdev --setrw %-9s\" to unlock]\n" $device >/dev/console || printf "failed\n" >/dev/console
+ 		fi
+ 	done
++
++	if grep -qe persistence /proc/cmdline
++        then
++		printf " * Persistence mode enabled, searching for persistency related devices to unlock\n" >/dev/console
++
++		for label in custom-ov home-rw home-sn live-rw live-sn
++		do
++			if blkid -t LABEL="$label" | grep -q '.'
++			then
++				device=$(blkid -t LABEL="$label" | awk -F: '{print $1}')
++				  printf "   - Setting device %-9s with label '%s' to write mode for persistence mode: " "$device" "$label" >/dev/console
++				blockdev --setrw $device && printf "done\n" >/dev/console || printf "failed\n" >/dev/console
++			fi
++
++		done
++	fi
++
+ fi
