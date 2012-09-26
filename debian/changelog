@@ -1,3 +1,19 @@
+live-boot (3.0~b3-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Always move live filesystem mounts to /root within initramfs,
+    regardless if mountpoint already exists or not (Closes: #688782).
+
+  [ Gaudenz Steinlin ]
+  * Removing mountpoint if no persistence layer is found on a device.
+
+  [ Daniel Baumann ]
+  * Exposing rofs and persistence mounts under /live in the live
+    systems, not just initramfs only (Closes: #687099).
+  * Updating code for exposing of overlay mounts under /live too.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 26 Sep 2012 14:40:32 +0200
+
 live-boot (3.0~b2-1) unstable; urgency=low
 
   * Recreating /etc/live/boot in postinst.

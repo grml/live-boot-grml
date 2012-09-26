@@ -4,12 +4,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 3.0~b2-1\n"
-"POT-Creation-Date: 2012-08-24 12:36+0300\n"
+"Project-Id-Version: live-boot 3.0~b3-1\n"
+"POT-Creation-Date: 2012-09-26 14:38+0300\n"
 "PO-Revision-Date: 2012-06-07 19:11+0200\n"
 "Last-Translator: Carlos Zuferri «chals» <chals@altorricon.com>\n"
-"Language-Team:  Debian Live <debian-live@lists.debian.org>\n"
-"Language: Spanish\n"
+"Language-Team:  none\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,14 +23,14 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1
 #, no-wrap
-msgid "2012-08-24"
-msgstr "24.08.2012"
+msgid "2012-09-26"
+msgstr "26.09.2012"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1
 #, no-wrap
-msgid "3.0~b2-1"
-msgstr "3.0~b2-1"
+msgid "3.0~b3-1"
+msgstr "3.0~b3-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/live-persistence.conf.5:1
