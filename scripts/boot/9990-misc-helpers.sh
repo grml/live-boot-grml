@@ -911,7 +911,9 @@ probe_for_file_name ()
 	then
 		echo ${ret}
 	else
+		# unmount and remove mountpoint
 		umount ${backing} > /dev/null 2>&1 || true
+		rmdir ${backing} > /dev/null 2>&1 || true
 	fi
 }
 
