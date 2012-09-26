@@ -405,8 +405,26 @@ setup_unionfs ()
 		done
 	fi
 
+	# make /root/live writable for moving filesystems
 	mkdir -p "${rootmnt}/live"
-	mount -o move /live "${rootmnt}/live" >/dev/null 2>&1 || mount -o bind /live "${rootmnt}/live" || log_warning_msg "Unable to move or bind /live to ${rootmnt}/live"
+	mount -t tmpfs tmpfs "${rootmnt}/live"
+
+	# move all mountpoints to root filesystem
+	for _DIRECTORY in rofs persistence
+	do
+		if [ -d "/live/${_DIRECTORY}" ]
+		then
+			mkdir -p "${rootmnt}/live/${_DIRECTORY}"
+
+			for _MOUNT in $(ls /live/${_DIRECTORY})
+			do
+				mkdir -p "${rootmnt}/live/${_DIRECTORY}/${_MOUNT}"
+				mount -o move "/live/${_DIRECTORY}/${_MOUNT}" "${rootmnt}/live/${_DIRECTORY}/${_MOUNT}" > /dev/null 2>&1 || \
+					mount -o bind "/live/${_DIRECTORY}/${_MOUNT}" "${rootmnt}/live/${_DIRECTORY}/${_MOUNT}" || \
+					log_warning_msg "W: failed to mount /live/${_DIRECTORY}/${_MOUNT} to ${rootmnt}/live/${_DIRECTORY}/${_MOUNT}"
+			done
+		fi
+	done
 
 	# shows cow fs on /overlay (FIXME: do we still need/want this? probably yes)
 	mkdir -p "${rootmnt}/live/overlay"
