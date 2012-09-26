@@ -426,8 +426,9 @@ setup_unionfs ()
 		fi
 	done
 
-	# shows cow fs on /overlay (FIXME: do we still need/want this? probably yes)
 	mkdir -p "${rootmnt}/live/overlay"
-	mount -o move /live/overlay "${rootmnt}/live/overlay" >/dev/null 2>&1 || mount -o bind /overlay "${rootmnt}/live/overlay" || log_warning_msg "Unable to move or bind /overlay to ${rootmnt}/live/overlay"
+	mount -o move /live/overlay "${rootmnt}/live/overlay" > /dev/null 2>&1 || \
+		mount -o bind /overlay "${rootmnt}/live/overlay" || \
+		log_warning_msg "W: failed to mount /overlay to ${rootmnt}/live/overlay"
 
 }
