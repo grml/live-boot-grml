@@ -146,11 +146,8 @@ Main ()
 	esac
 
 	# Move to the new root filesystem so that programs there can get at it.
-	if [ ! -d /root/live/image ]
-	then
-		mkdir -p /root/live/image
-		mount --move /live/image /root/live/image
-	fi
+	mkdir -p /root/live/image
+	mount --move /live/image /root/live/image
 
 	# aufs2 in kernel versions around 2.6.33 has a regression:
 	# directories can't be accessed when read for the first the time,
@@ -159,7 +156,7 @@ Main ()
 	ls /root/* >/dev/null 2>&1
 
 	# Move findiso directory to the new root filesystem so that programs there can get at it.
-	if [ -d /live/findiso ] && [ ! -d /root/live/findiso ]
+	if [ -d /live/findiso ]
 	then
 		mkdir -p /root/live/findiso
 		mount -n --move /live/findiso /root/live/findiso
