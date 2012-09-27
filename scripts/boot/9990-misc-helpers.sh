@@ -99,16 +99,7 @@ is_nice_device ()
 {
 	sysfs_path="${1#/sys}"
 
-	if [ -e /lib/udev/path_id ]
-	then
-		# squeeze
-		PATH_ID="/lib/udev/path_id"
-	else
-		# wheezy/sid (udev >= 174)
-		PATH_ID="/sbin/udevadm test-builtin path_id"
-	fi
-
-	if ${PATH_ID} "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-[^-]*-(ide|sas|scsi|usb|virtio)|platform-sata_mv|platform-orion-ehci|platform-mmc|platform-mxsdhci)"
+	if /sbin/udevadm test-builtin path_id "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-[^-]*-(ide|sas|scsi|usb|virtio)|platform-sata_mv|platform-orion-ehci|platform-mmc|platform-mxsdhci)"
 	then
 		return 0
 	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
@@ -1530,31 +1521,6 @@ activate_custom_mounts ()
 	done < ${custom_mounts}
 
 	echo ${used_devices}
-}
-
-fix_backwards_compatibility ()
-{
-	local device=${1}
-	local dir=${2}
-	local opt=${3}
-
-	if [ -n "${PERSISTENCE_READONLY}" ]
-	then
-		return
-	fi
-
-	local backing="$(mount_persistence_media ${device})"
-	if [ -z "${backing}" ]
-	then
-		return
-	fi
-
-	local include_list="${backing}/${persistence_list}"
-	if [ ! -r "${include_list}" ]
-	then
-		echo "# persistence backwards compatibility:
-${dir} ${opt},source=." > "${include_list}"
-	fi
 }
 
 is_mountpoint ()

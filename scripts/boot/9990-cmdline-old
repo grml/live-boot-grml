@@ -188,8 +188,6 @@ Cmdline_old ()
 				;;
 
 			persistence-label=*)
-				old_root_overlay_label="${_PARAMETER#persistence-label=*}"
-				old_home_overlay_label="${_PARAMETER#persistence-label=*}"
 				custom_overlay_label="${_PARAMETER#persistence-label=*}"
 				;;
 
