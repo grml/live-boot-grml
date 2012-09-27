@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2012-09-26 14:38+0300\n"
+"POT-Creation-Date: 2012-09-27 13:22+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,31 +17,31 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #. type: TH
-#: en/live-boot.7:1 en/live-persistence.conf.5:1
+#: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "LIVE-BOOT"
 msgstr ""
 
 #. type: TH
-#: en/live-boot.7:1 en/live-persistence.conf.5:1
+#: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2012-09-26"
+msgid "2012-09-27"
 msgstr ""
 
 #. type: TH
-#: en/live-boot.7:1 en/live-persistence.conf.5:1
+#: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "3.0~b3-1"
+msgid "3.0~b4-1"
 msgstr ""
 
 #. type: TH
-#: en/live-boot.7:1 en/live-persistence.conf.5:1
+#: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "Debian Live Project"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:3 en/live-persistence.conf.5:3
+#: en/live-boot.7:3 en/persistence.conf.5:3
 #, no-wrap
 msgid "NAME"
 msgstr ""
@@ -52,7 +52,7 @@ msgid "B<live-boot> - System Boot Scripts"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:6 en/live-persistence.conf.5:7
+#: en/live-boot.7:6 en/persistence.conf.5:7
 #, no-wrap
 msgid "DESCRIPTION"
 msgstr ""
@@ -138,7 +138,7 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:28 en/live-persistence.conf.5:57
+#: en/live-boot.7:28 en/persistence.conf.5:57
 #, no-wrap
 msgid "OPTIONS"
 msgstr ""
@@ -574,8 +574,8 @@ msgid ""
 "live-boot will probe devices for persistence media. These can be partitions "
 "(with the correct GPT name), filesystems (with the correct label) or image "
 "files (with the correct file name). Overlays are labeled/named \"persistence"
-"\" (see I<live-persistence.conf>(5)). Overlay image files have extensions "
-"which determines their filesystem, e.g. \"persistence.ext4\"."
+"\" (see I<persistence.conf>(5)). Overlay image files have extensions which "
+"determines their filesystem, e.g. \"persistence.ext4\"."
 msgstr ""
 
 #. type: IP
@@ -705,7 +705,7 @@ msgstr ""
 #: en/live-boot.7:131
 msgid ""
 "This parameter will make live-boot to show on \"/\" the ro filesystems "
-"(mostly compressed) on \"/live\". This is not enabled by default because "
+"(mostly compressed) on \"/lib/live\". This is not enabled by default because "
 "could lead to problems by applications like \"mono\" which store binary "
 "paths on installation."
 msgstr ""
@@ -840,43 +840,43 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:154
 #, no-wrap
-msgid "B<live-persistence.conf>"
+msgid "B<persistence.conf>"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:156 en/live-persistence.conf.5:191
+#: en/live-boot.7:156 en/persistence.conf.5:191
 #, no-wrap
 msgid "SEE ALSO"
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:158
-msgid "I<live-persistence.conf>(5)"
+msgid "I<persistence.conf>(5)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:160 en/live-persistence.conf.5:195
+#: en/live-boot.7:160 en/persistence.conf.5:195
 msgid "I<live-build>(7)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:162 en/live-persistence.conf.5:197
+#: en/live-boot.7:162 en/persistence.conf.5:197
 msgid "I<live-config>(7)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:164 en/live-persistence.conf.5:199
+#: en/live-boot.7:164 en/persistence.conf.5:199
 msgid "I<live-tools>(7)"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:165 en/live-persistence.conf.5:200
+#: en/live-boot.7:165 en/persistence.conf.5:200
 #, no-wrap
 msgid "HOMEPAGE"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:167 en/live-persistence.conf.5:204
+#: en/live-boot.7:167 en/persistence.conf.5:204
 msgid ""
 "More information about live-boot and the Debian Live project can be found on "
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
@@ -884,13 +884,13 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:168 en/live-persistence.conf.5:205
+#: en/live-boot.7:168 en/persistence.conf.5:205
 #, no-wrap
 msgid "BUGS"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:170 en/live-persistence.conf.5:210
+#: en/live-boot.7:170 en/persistence.conf.5:210
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
 "the Debian Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
@@ -899,7 +899,7 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:171 en/live-persistence.conf.5:211
+#: en/live-boot.7:171 en/persistence.conf.5:211
 #, no-wrap
 msgid "AUTHOR"
 msgstr ""
