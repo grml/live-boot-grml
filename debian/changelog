@@ -1,3 +1,12 @@
+live-boot (3.0~b4-1) unstable; urgency=low
+
+  * Switching to final name for the persistence configuration file
+    'persistence.conf' in line with boot parameter.
+  * Moving remaining stuff from /live to /lib/live to avoid further
+    namespace pollution.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 27 Sep 2012 13:23:33 +0200
+
 live-boot (3.0~b3-1) unstable; urgency=low
 
   [ Daniel Baumann ]
