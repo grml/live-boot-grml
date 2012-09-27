@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 3.0~b3-1\n"
-"POT-Creation-Date: 2012-09-26 14:38+0300\n"
+"POT-Creation-Date: 2012-09-27 10:54+0300\n"
 "PO-Revision-Date: 2012-06-07 19:11+0200\n"
 "Last-Translator: Carlos Zuferri «chals» <chals@altorricon.com>\n"
 "Language-Team:  none\n"
@@ -15,76 +15,76 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #. type: TH
-#: en/live-boot.7:1 en/live-persistence.conf.5:1
+#: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "LIVE-BOOT"
 msgstr "LIVE-BOOT"
 
 #. type: TH
-#: en/live-boot.7:1 en/live-persistence.conf.5:1
+#: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2012-09-26"
-msgstr "26.09.2012"
+msgid "2012-09-27"
+msgstr "27.09.2012"
 
 #. type: TH
-#: en/live-boot.7:1 en/live-persistence.conf.5:1
+#: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "3.0~b3-1"
 msgstr "3.0~b3-1"
 
 #. type: TH
-#: en/live-boot.7:1 en/live-persistence.conf.5:1
+#: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "Debian Live Project"
 msgstr "Proyecto Debian Live"
 
 #. type: SH
-#: en/live-boot.7:3 en/live-persistence.conf.5:3
+#: en/live-boot.7:3 en/persistence.conf.5:3
 #, no-wrap
 msgid "NAME"
 msgstr "NOMBRE"
 
 #. type: SH
-#: en/live-boot.7:6 en/live-persistence.conf.5:7
+#: en/live-boot.7:6 en/persistence.conf.5:7
 #, no-wrap
 msgid "DESCRIPTION"
 msgstr "DESCRIPCIÓN"
 
 #. type: SH
-#: en/live-boot.7:28 en/live-persistence.conf.5:57
+#: en/live-boot.7:28 en/persistence.conf.5:57
 #, no-wrap
 msgid "OPTIONS"
 msgstr "OPCIONES"
 
 #. type: SH
-#: en/live-boot.7:156 en/live-persistence.conf.5:191
+#: en/live-boot.7:156 en/persistence.conf.5:191
 #, no-wrap
 msgid "SEE ALSO"
 msgstr "VER ADEMÁS"
 
 #. type: Plain text
-#: en/live-boot.7:160 en/live-persistence.conf.5:195
+#: en/live-boot.7:160 en/persistence.conf.5:195
 msgid "I<live-build>(7)"
 msgstr "I<live-build>(7)"
 
 #. type: Plain text
-#: en/live-boot.7:162 en/live-persistence.conf.5:197
+#: en/live-boot.7:162 en/persistence.conf.5:197
 msgid "I<live-config>(7)"
 msgstr "I<live-config>(7)"
 
 #. type: Plain text
-#: en/live-boot.7:164 en/live-persistence.conf.5:199
+#: en/live-boot.7:164 en/persistence.conf.5:199
 msgid "I<live-tools>(7)"
 msgstr "I<live-tools>(7)"
 
 #. type: SH
-#: en/live-boot.7:165 en/live-persistence.conf.5:200
+#: en/live-boot.7:165 en/persistence.conf.5:200
 #, no-wrap
 msgid "HOMEPAGE"
 msgstr "PÁGINA WEB"
 
 #. type: Plain text
-#: en/live-boot.7:167 en/live-persistence.conf.5:204
+#: en/live-boot.7:167 en/persistence.conf.5:204
 msgid ""
 "More information about live-boot and the Debian Live project can be found on "
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
@@ -95,13 +95,13 @@ msgstr ""
 "E<lt>I<http://live.debian.net/manual/>E<gt>."
 
 #. type: SH
-#: en/live-boot.7:168 en/live-persistence.conf.5:205
+#: en/live-boot.7:168 en/persistence.conf.5:205
 #, no-wrap
 msgid "BUGS"
 msgstr "ERRORES"
 
 #. type: Plain text
-#: en/live-boot.7:170 en/live-persistence.conf.5:210
+#: en/live-boot.7:170 en/persistence.conf.5:210
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
 "the Debian Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
@@ -114,54 +114,53 @@ msgstr ""
 "Live a la dirección E<lt>I<debian-live@lists.debian.org>E<gt>."
 
 #. type: SH
-#: en/live-boot.7:171 en/live-persistence.conf.5:211
+#: en/live-boot.7:171 en/persistence.conf.5:211
 #, no-wrap
 msgid "AUTHOR"
 msgstr "AUTOR"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:6
+#: en/persistence.conf.5:6
 msgid ""
-"B<live-persistence.conf> - Configuration file for persistence media in live-"
-"boot"
+"B<persistence.conf> - Configuration file for persistence media in live-boot"
 msgstr ""
-"B<live-persistence.conf> - Fichero para configurar medios de almacenamiento "
-"con persistencia en live-boot"
+"B<persistence.conf> - Fichero para configurar medios de almacenamiento con "
+"persistencia en live-boot"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:13
+#: en/persistence.conf.5:13
 msgid ""
 "If live-boot probes a persistence volume with the label (or GPT name, or "
 "file name, but from now on we will just say \"label\") \"persistence\", that "
-"volume's persistence is fully customizable through the B<live-persistence."
-"conf> file stored on the root of its file system. Any such labeled volume "
-"must have such a file, or it will be ignored."
+"volume's persistence is fully customizable through the B<persistence.conf> "
+"file stored on the root of its file system. Any such labeled volume must "
+"have such a file, or it will be ignored."
 msgstr ""
 "Si live-boot prueba un volumen persistente con la etiqueta (o nombre GPT, o "
 "nombre de fichero, aunque a partir de este momento nos referiremos a él como "
 "simplemente \"etiqueta\") \"persistence\", la persistencia de ese volumen es "
-"completamente personalizable a través del fichero B<live-persistence.conf> "
+"completamente personalizable a través del fichero B<persistence.conf> "
 "almacenado en la raíz de su sistema de ficheros. Cualquier volumen esa "
 "etiqueta debe tener uno de esos ficheros, o si no será ignorado."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:17
+#: en/persistence.conf.5:17
 msgid ""
-"The format of B<live-persistence.conf> allows empty lines and lines starting "
-"with a \"#\" (used for comments), both which will be ignored. A so called "
+"The format of B<persistence.conf> allows empty lines and lines starting with "
+"a \"#\" (used for comments), both which will be ignored. A so called "
 "\"custom mount\" has the format:"
 msgstr ""
-"El formato de B<live-persistence.conf> permite añadir líneas vacias o líneas "
-"que comiencen por \"#\" (usado para los comentarios), ambos serán ignorados. "
-"Un \"montaje personalizado\" tiene el formato:"
+"El formato de B<persistence.conf> permite añadir líneas vacias o líneas que "
+"comiencen por \"#\" (usado para los comentarios), ambos serán ignorados. Un "
+"\"montaje personalizado\" tiene el formato:"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:20
+#: en/persistence.conf.5:20
 msgid "I<DIR> [I<OPTION>]..."
 msgstr "I<DIR> [I<OPTION>]..."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:24
+#: en/persistence.conf.5:24
 msgid ""
 "which roughly translates to \"make I<DIR> persistence in the way described "
 "by the list of I<OPTION>s\"."
@@ -170,7 +169,7 @@ msgstr ""
 "lista de I<OPTION>s\"."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:35
+#: en/persistence.conf.5:35
 msgid ""
 "For each custom mount I<DIR> must be an absolute path that cannot contain "
 "white spaces or the special . and .. path components, and cannot be /live "
@@ -193,28 +192,28 @@ msgstr ""
 "esto se puede cambiar utilizando las opciones I<OPTION>s."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:48
+#: en/persistence.conf.5:48
 msgid ""
 "All custom mounts will be done in an order so that no two custom mounts can "
 "\"hide\" each other. For instance, if we have the two I<DIR>:s /a and /a/b "
 "it would always be the case that /a is mounted first, then /a/b. This "
-"remains true no matter how the lines in B<live-persistence.conf> are "
-"ordered, or if several B<live-persistence.conf> files on different "
-"persistence media are used at the same time. However, it is forbidden for "
-"custom mounts to have their source directory inside the source directory of "
-"another custom mount, so the source directories that are auto-created by "
-"live-boot does not support \"nested\" mounts like /a and /a/b on the same "
-"media. In this case you must use the B<source> option (see below) to make "
-"sure that they are stored in different source directories."
+"remains true no matter how the lines in B<persistence.conf> are ordered, or "
+"if several B<persistence.conf> files on different persistence media are used "
+"at the same time. However, it is forbidden for custom mounts to have their "
+"source directory inside the source directory of another custom mount, so the "
+"source directories that are auto-created by live-boot does not support "
+"\"nested\" mounts like /a and /a/b on the same media. In this case you must "
+"use the B<source> option (see below) to make sure that they are stored in "
+"different source directories."
 msgstr ""
 "Todos los montajes personalizados serán montados en orden de tal manera que "
 "dos montajes personalizados no se \"escondan\" uno al otro. Por ejemplo, si "
 "tenemos los dos I<DIR>:s /a y /a/b siempre /a será montado en primer lugar, "
 "después /a/b. Esto siempre es así sin importar el orden en que aparezcan las "
-"líneas en B<live-persistence.conf> o incluso si se usan varios ficheros "
-"B<live-persistence.conf> en medios persistentes distintos al mismo tiempo. "
-"Sin embargo, no está permitido que un montaje personalizado tenga su "
-"directorio de origen en el interior del directorio de origen de otro montaje "
+"líneas en B<persistence.conf> o incluso si se usan varios ficheros "
+"B<persistence.conf> en medios persistentes distintos al mismo tiempo. Sin "
+"embargo, no está permitido que un montaje personalizado tenga su directorio "
+"de origen en el interior del directorio de origen de otro montaje "
 "personalizado, ya que los directorios de origen que live-boot crea "
 "automáticamente no tienen soporte para montajes \"anidados\" como /a y /a/b "
 "en el mismo medio. En este caso se debe usar la opción B<source> (ver "
@@ -222,7 +221,7 @@ msgstr ""
 "diferentes."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:56
+#: en/persistence.conf.5:56
 msgid ""
 "When a source directory doesn't exist on the persistence media for a certain "
 "custom mount, it will be created automatically, and permissions and "
@@ -240,22 +239,22 @@ msgstr ""
 "opciones B<link> o B<union> (ver debajo)."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:60
+#: en/persistence.conf.5:60
 msgid ""
-"Custom mounts defined in B<live-persistence.conf> accept the following "
-"options in a coma-separated list:"
+"Custom mounts defined in B<persistence.conf> accept the following options in "
+"a coma-separated list:"
 msgstr ""
-"Los montajes personalizados definidos en B<live-persistence.conf> aceptan "
-"las siguientes opciones en una lista separada por comas:"
+"Los montajes personalizados definidos en B<persistence.conf> aceptan las "
+"siguientes opciones en una lista separada por comas:"
 
 #. type: IP
-#: en/live-persistence.conf.5:60
+#: en/persistence.conf.5:60
 #, no-wrap
 msgid "B<source>=I<PATH>"
 msgstr "B<source>=I<PATH>"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:69
+#: en/persistence.conf.5:69
 msgid ""
 "When given, store the persistence changes into I<PATH> on the persistence "
 "media. I<PATH> must be a relative path (with respect to the persistence "
@@ -277,7 +276,7 @@ msgstr ""
 "rw>)"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:72
+#: en/persistence.conf.5:72
 msgid ""
 "The following options are mutually exclusive (only the last given one will "
 "be in effect):"
@@ -286,26 +285,26 @@ msgstr ""
 "tendrá efecto):"
 
 #. type: IP
-#: en/live-persistence.conf.5:72
+#: en/persistence.conf.5:72
 #, no-wrap
 msgid "B<bind>"
 msgstr "B<bind>"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:74
+#: en/persistence.conf.5:74
 msgid "Bind-mount the source directory to I<DIR>. This is the default."
 msgstr ""
 "Montar de forma enlazada el directorio de origen a I<DIR>. Esto es así por "
 "defecto."
 
 #. type: IP
-#: en/live-persistence.conf.5:74
+#: en/persistence.conf.5:74
 #, no-wrap
 msgid "B<link>"
 msgstr "B<link>"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:83
+#: en/persistence.conf.5:83
 msgid ""
 "Create the directory structure of the source directory on the persistence "
 "media in I<DIR> and create symbolic links from the corresponding place in "
@@ -326,7 +325,7 @@ msgstr ""
 "origen."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:91
+#: en/persistence.conf.5:91
 msgid ""
 "Effectively B<link> will make only files already in the source directory "
 "persistent, not any other files in I<DIR>. These files must be manually "
@@ -345,13 +344,13 @@ msgstr ""
 "home de un usuario."
 
 #. type: IP
-#: en/live-persistence.conf.5:91
+#: en/persistence.conf.5:91
 #, no-wrap
 msgid "B<union>"
 msgstr "B<union>"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:101
+#: en/persistence.conf.5:101
 msgid ""
 "Save the rw branch of a union on the persistence media, so only the changes "
 "are stored persistently. This can potentially reduce disk usage compared to "
@@ -374,99 +373,98 @@ msgstr ""
 "tiene soporte si se utiliza B<union=unionmount>."
 
 #. type: SH
-#: en/live-persistence.conf.5:102
+#: en/persistence.conf.5:102
 #, no-wrap
 msgid "DIRECTORIES"
 msgstr "DIRECTORIOS"
 
 #. type: IP
-#: en/live-persistence.conf.5:103
+#: en/persistence.conf.5:103
 #, no-wrap
 msgid "B</live/persistence>"
 msgstr "B</live/persistence>"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:109
+#: en/persistence.conf.5:109
 msgid ""
 "All persistence volumes will be mounted here (in a directory corresponding "
-"to the device name). The B<live-persistence.conf> file can easily be edited "
+"to the device name). The B<persistence.conf> file can easily be edited "
 "through this mount, as well as any source directories (which is especially "
 "practical for custom mounts using the B<link> option)."
 msgstr ""
 "Aquí se montarán todos los volumenes persistentes (en un directorio que "
-"corresponda con el nombre del dispositivo). El fichero B<live-persistence."
-"conf> se puede editar fácilmente a través de este montaje, así como "
-"cualquier directorio de origen (esto resulta especialmente práctico para los "
-"montajes personalizados usando la opción B<link>)."
+"corresponda con el nombre del dispositivo). El fichero B<persistence.conf> "
+"se puede editar fácilmente a través de este montaje, así como cualquier "
+"directorio de origen (esto resulta especialmente práctico para los montajes "
+"personalizados usando la opción B<link>)."
 
 #. type: SH
-#: en/live-persistence.conf.5:110
+#: en/persistence.conf.5:110
 #, no-wrap
 msgid "EXAMPLES"
 msgstr "EJEMPLOS"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:115
+#: en/persistence.conf.5:115
 msgid ""
-"Let's say we have a persistence volume I<VOL> with the a B<live-persistence."
-"conf> file containing the following four lines (numbered for ease of "
-"reference):"
+"Let's say we have a persistence volume I<VOL> with the a B<persistence.conf> "
+"file containing the following four lines (numbered for ease of reference):"
 msgstr ""
-"Si tenemos un volumen con persistencia I<VOL> con un fichero B<live-"
-"persistence.conf> que contiene las cuatro lineas siguientes (numeradas para "
-"una mejor referencia):"
+"Si tenemos un volumen con persistencia I<VOL> con un fichero B<persistence."
+"conf>que contiene las cuatro lineas siguientes (numeradas para una mejor "
+"referencia):"
 
 #. type: TP
-#: en/live-persistence.conf.5:115 en/live-persistence.conf.5:129
+#: en/persistence.conf.5:115 en/persistence.conf.5:129
 #, no-wrap
 msgid "1."
 msgstr "1."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:118
+#: en/persistence.conf.5:118
 msgid "/home/user1 link,source=config-files/user1"
 msgstr "/home/user1 link,source=config-files/user1"
 
 #. type: TP
-#: en/live-persistence.conf.5:118 en/live-persistence.conf.5:133
+#: en/persistence.conf.5:118 en/persistence.conf.5:133
 #, no-wrap
 msgid "2."
 msgstr "2."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:121
+#: en/persistence.conf.5:121
 msgid "/home/user2 link,source=config-files/user2"
 msgstr "/home/user2 link,source=config-files/user2"
 
 #. type: TP
-#: en/live-persistence.conf.5:121 en/live-persistence.conf.5:137
+#: en/persistence.conf.5:121 en/persistence.conf.5:137
 #, no-wrap
 msgid "3."
 msgstr "3."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:124
+#: en/persistence.conf.5:124
 msgid "/home"
 msgstr "/home"
 
 #. type: TP
-#: en/live-persistence.conf.5:124 en/live-persistence.conf.5:140
+#: en/persistence.conf.5:124 en/persistence.conf.5:140
 #, no-wrap
 msgid "4."
 msgstr "4."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:127
+#: en/persistence.conf.5:127
 msgid "/usr union"
 msgstr "/usr union"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:129
+#: en/persistence.conf.5:129
 msgid "The corresponding source directories are:"
 msgstr "Los directorios de origen correspondientes son:"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:133
+#: en/persistence.conf.5:133
 msgid ""
 "I<VOL>/config-files/user1 (but it would be I<VOL>/home/user1 without the "
 "B<source> option)"
@@ -475,7 +473,7 @@ msgstr ""
 "B<source>)"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:137
+#: en/persistence.conf.5:137
 msgid ""
 "I<VOL>/config-files/user2 (but it would be I<VOL>/home/user2 without the "
 "B<source> option)"
@@ -484,17 +482,17 @@ msgstr ""
 "B<source>)"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:140
+#: en/persistence.conf.5:140
 msgid "I<VOL>/home"
 msgstr "I<VOL>/home"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:143
+#: en/persistence.conf.5:143
 msgid "I<VOL>/usr"
 msgstr "I<VOL>/usr"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:146
+#: en/persistence.conf.5:146
 msgid ""
 "It was necessary to set the B<source> options for 1 and 2, since they "
 "otherwise would become nested with 3's source, which is invalid."
@@ -503,7 +501,7 @@ msgstr ""
 "modo resultarían anidados con el origen de 3, lo cual no es válido."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:151
+#: en/persistence.conf.5:151
 msgid ""
 "Line 3 will be taken care of before line 1 and 2 in order to prevent custom "
 "mounts 1 and 2 from being hidden by 3. When line 3 is handled, I<VOL>/home "
@@ -517,96 +515,96 @@ msgstr ""
 "ficheros existen: "
 
 #. type: TP
-#: en/live-persistence.conf.5:151
+#: en/persistence.conf.5:151
 #, no-wrap
 msgid "a."
 msgstr "a."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:154
+#: en/persistence.conf.5:154
 msgid "I<VOL>/config-files/user1/.emacs"
 msgstr "I<VOL>/config-files/user1/.emacs"
 
 #. type: TP
-#: en/live-persistence.conf.5:154
+#: en/persistence.conf.5:154
 #, no-wrap
 msgid "b."
 msgstr "b."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:157
+#: en/persistence.conf.5:157
 msgid "I<VOL>/config-files/user2/.bashrc"
 msgstr "I<VOL>/config-files/user2/.bashrc"
 
 #. type: TP
-#: en/live-persistence.conf.5:157
+#: en/persistence.conf.5:157
 #, no-wrap
 msgid "c."
 msgstr "c."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:160
+#: en/persistence.conf.5:160
 msgid "I<VOL>/config-files/user2/.ssh/config"
 msgstr "I<VOL>/config-files/user2/.ssh/config"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:162
+#: en/persistence.conf.5:162
 msgid "Then the following links and directories will be created:"
 msgstr "Entonces se crearán los siguientes enlaces y directorios:"
 
 #. type: TP
-#: en/live-persistence.conf.5:162 en/live-persistence.conf.5:165
-#: en/live-persistence.conf.5:171
+#: en/persistence.conf.5:162 en/persistence.conf.5:165
+#: en/persistence.conf.5:171
 #, no-wrap
 msgid "Link:"
 msgstr "Enlace:"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:165
+#: en/persistence.conf.5:165
 msgid "/home/user1/.emacs -E<gt> I<VOL>/config-files/user1/.emacs (from a)"
 msgstr "/home/user1/.emacs -E<gt> I<VOL>/config-files/user1/.emacs (de a)"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:168
+#: en/persistence.conf.5:168
 msgid "/home/user2/.bashrc -E<gt> I<VOL>/config-files/user2/.bashrc (from b)"
 msgstr "/home/user2/.bashrc -E<gt> I<VOL>/config-files/user2/.bashrc (de b)"
 
 #. type: TP
-#: en/live-persistence.conf.5:168
+#: en/persistence.conf.5:168
 #, no-wrap
 msgid "Dir:"
 msgstr "Directorio:"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:171
+#: en/persistence.conf.5:171
 msgid "/homea/user2/.ssh (from c)"
 msgstr "/homea/user2/.ssh (de c)"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:175
+#: en/persistence.conf.5:175
 msgid ""
 "/home/user2/.ssh/config -E<gt> I<VOL>/config-files/user2/.ssh/config (from c)"
 msgstr ""
 "/home/user2/.ssh/config -E<gt> I<VOL>/config-files/user2/.ssh/config (de c)"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:181
+#: en/persistence.conf.5:181
 msgid ""
-"One could argue, though, that lines 1 and 2 in the example B<live-"
-"persistence.conf> file above are unnecessary since line 3 already would make "
-"all of /home persistent. The B<link> option is intended for situations where "
-"you don't want a complete directory to be persistent, only certain files in "
-"it or its sub-directories."
+"One could argue, though, that lines 1 and 2 in the example B<persistence."
+"conf> file above are unnecessary since line 3 already would make all of /"
+"home persistent. The B<link> option is intended for situations where you "
+"don't want a complete directory to be persistent, only certain files in it "
+"or its sub-directories."
 msgstr ""
 "Se podría decir, sin embargo, que las líneas 1 y 2 en el fichero de ejemplo "
-"B<live-persistence.conf> anterior son innecesarias ya que la línea 3 ya "
-"crearía el directorio /home persistente. La opción  B<link> se utiliza en "
+"B<persistence.conf> anterior son innecesarias ya que la línea 3 ya crearía "
+"el directorio /home persistente. La opción  B<link> se utiliza en "
 "situaciones en las que no se desea guardar de forma persistente un "
 "directorio completo, sino únicamente algunos ficheros o subdirectorios "
 "incluidos en él."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:190
+#: en/persistence.conf.5:190
 msgid ""
 "Line 4 can be mounted at any time since its I<DIR> (and source directory) is "
 "completely disjoint from all the other custom mounts. When mounted, I<VOL>/"
@@ -626,15 +624,15 @@ msgstr ""
 "tendría que ser copiado en I<VOL>/usr durante la preinstalación inicial."
 
 #. type: Plain text
-#: en/live-persistence.conf.5:193
+#: en/persistence.conf.5:193
 msgid "I<live-boot>(7)"
 msgstr "I<live-boot>(7)"
 
 #. type: Plain text
-#: en/live-persistence.conf.5:213
+#: en/persistence.conf.5:213
 msgid ""
-"live-persistence.conf was written by anonym E<lt>I<anonym@lavabit.com>E<gt> "
-"for the Debian project."
+"persistence.conf was written by anonym E<lt>I<anonym@lavabit.com>E<gt> for "
+"the Debian project."
 msgstr ""
-"live-persistence.conf fue escrito por anonym E<lt>I<anonym@lavabit.com>E<gt> "
-"para el proyecto Debian."
+"persistence.conf fue escrito por anonym E<lt>I<anonym@lavabit.com>E<gt> para "
+"el proyecto Debian."

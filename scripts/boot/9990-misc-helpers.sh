@@ -1233,7 +1233,7 @@ do_union ()
 
 get_custom_mounts ()
 {
-	# Side-effect: leaves $devices with live-persistence.conf mounted in /live/persistence
+	# Side-effect: leaves $devices with persistence.conf mounted in /live/persistence
 	# Side-effect: prints info to file $custom_mounts
 
 	local custom_mounts=${1}

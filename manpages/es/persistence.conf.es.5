@@ -3,23 +3,23 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT conf 26.09.2012 3.0~b3\-1 "Proyecto Debian Live"
+.TH LIVE\-BOOT conf 27.09.2012 3.0~b3\-1 "Proyecto Debian Live"
 
 .SH NOMBRE
-\fBlive\-persistence.conf\fP \- Fichero para configurar medios de almacenamiento
-con persistencia en live\-boot
+\fBpersistence.conf\fP \- Fichero para configurar medios de almacenamiento con
+persistencia en live\-boot
 
 .SH DESCRIPCIÓN
 Si live\-boot prueba un volumen persistente con la etiqueta (o nombre GPT, o
 nombre de fichero, aunque a partir de este momento nos referiremos a él como
 simplemente "etiqueta") "persistence", la persistencia de ese volumen es
-completamente personalizable a través del fichero \fBlive\-persistence.conf\fP
+completamente personalizable a través del fichero \fBpersistence.conf\fP
 almacenado en la raíz de su sistema de ficheros. Cualquier volumen esa
 etiqueta debe tener uno de esos ficheros, o si no será ignorado.
 .PP
-El formato de \fBlive\-persistence.conf\fP permite añadir líneas vacias o líneas
-que comiencen por "#" (usado para los comentarios), ambos serán
-ignorados. Un "montaje personalizado" tiene el formato:
+El formato de \fBpersistence.conf\fP permite añadir líneas vacias o líneas que
+comiencen por "#" (usado para los comentarios), ambos serán ignorados. Un
+"montaje personalizado" tiene el formato:
 .PP
 .RS
 \fIDIR\fP [\fIOPTION\fP]...
@@ -43,10 +43,10 @@ Todos los montajes personalizados serán montados en orden de tal manera que
 dos montajes personalizados no se "escondan" uno al otro. Por ejemplo, si
 tenemos los dos \fIDIR\fP:s /a y /a/b siempre /a será montado en primer lugar,
 después /a/b. Esto siempre es así sin importar el orden en que aparezcan las
-líneas en \fBlive\-persistence.conf\fP o incluso si se usan varios ficheros
-\fBlive\-persistence.conf\fP en medios persistentes distintos al mismo
-tiempo. Sin embargo, no está permitido que un montaje personalizado tenga su
-directorio de origen en el interior del directorio de origen de otro montaje
+líneas en \fBpersistence.conf\fP o incluso si se usan varios ficheros
+\fBpersistence.conf\fP en medios persistentes distintos al mismo tiempo. Sin
+embargo, no está permitido que un montaje personalizado tenga su directorio
+de origen en el interior del directorio de origen de otro montaje
 personalizado, ya que los directorios de origen que live\-boot crea
 automáticamente no tienen soporte para montajes "anidados" como /a y /a/b en
 el mismo medio. En este caso se debe usar la opción \fBsource\fP (ver debajo)
@@ -61,8 +61,8 @@ persistencia. La preinstalación no se realiza cuando se utilizan las
 opciones \fBlink\fP o \fBunion\fP (ver debajo).
 
 .SH OPCIONES
-Los montajes personalizados definidos en \fBlive\-persistence.conf\fP aceptan
-las siguientes opciones en una lista separada por comas:
+Los montajes personalizados definidos en \fBpersistence.conf\fP aceptan las
+siguientes opciones en una lista separada por comas:
 .IP \fBsource\fP=\fIPATH\fP 4
 Cuando se especifica, se guardan los cambios persistentes en \fIPATH\fP en los
 medios con persistencia. \fIPATH\fP debe ser una ruta relativa (respecto a la
@@ -112,16 +112,16 @@ tiene soporte si se utiliza \fBunion=unionmount\fP.
 .SH DIRECTORIOS
 .IP \fB/live/persistence\fP 4
 Aquí se montarán todos los volumenes persistentes (en un directorio que
-corresponda con el nombre del dispositivo). El fichero
-\fBlive\-persistence.conf\fP se puede editar fácilmente a través de este
-montaje, así como cualquier directorio de origen (esto resulta especialmente
-práctico para los montajes personalizados usando la opción \fBlink\fP).
+corresponda con el nombre del dispositivo). El fichero \fBpersistence.conf\fP
+se puede editar fácilmente a través de este montaje, así como cualquier
+directorio de origen (esto resulta especialmente práctico para los montajes
+personalizados usando la opción \fBlink\fP).
 
 .SH EJEMPLOS
 
 Si tenemos un volumen con persistencia \fIVOL\fP con un fichero
-\fBlive\-persistence.conf\fP que contiene las cuatro lineas siguientes
-(numeradas para una mejor referencia):
+\fBpersistence.conf\fPque contiene las cuatro lineas siguientes (numeradas para
+una mejor referencia):
 .TP  7
 1.
 /home/user1 link,source=config\-files/user1
@@ -184,8 +184,8 @@ Enlace:
 /home/user2/.ssh/config \-> \fIVOL\fP/config\-files/user2/.ssh/config (de c)
 .PP
 Se podría decir, sin embargo, que las líneas 1 y 2 en el fichero de ejemplo
-\fBlive\-persistence.conf\fP anterior son innecesarias ya que la línea 3 ya
-crearía el directorio /home persistente. La opción  \fBlink\fP se utiliza en
+\fBpersistence.conf\fP anterior son innecesarias ya que la línea 3 ya crearía
+el directorio /home persistente. La opción  \fBlink\fP se utiliza en
 situaciones en las que no se desea guardar de forma persistente un
 directorio completo, sino únicamente algunos ficheros o subdirectorios
 incluidos en él.
@@ -221,5 +221,5 @@ correo de Debian Live a la dirección
 <\fIdebian\-live@lists.debian.org\fP>.
 
 .SH AUTOR
-live\-persistence.conf fue escrito por anonym <\fIanonym@lavabit.com\fP>
-para el proyecto Debian.
+persistence.conf fue escrito por anonym <\fIanonym@lavabit.com\fP> para
+el proyecto Debian.

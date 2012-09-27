@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 26.09.2012 3.0~b3\-1 "Proyecto Debian Live"
+.TH LIVE\-BOOT 7 27.09.2012 3.0~b3\-1 "Proyecto Debian Live"
 
 .SH NOMBRE
 \fBlive\-boot\fP \- Scripts de Arranque del Sistema
@@ -191,8 +191,8 @@ live\-boot buscará dispositivos con "persistence". Estos pueden ser
 particiones (con el nombre GPT correcto), sistemas de ficheros (con la
 etiqueta correcta) o ficheros imagen (con el nombre de fichero
 correcto). Los overlays tienen la etiqueta/nombre "persistence" (ver
-\fIlive\-persistence.conf\fP(5)). Los ficheros imagen overlay tienen extensiones
-que determinan su sistema de ficheros, por ejemplo, "persistence.ext4".
+\fIpersistence.conf\fP(5)). Los ficheros imagen overlay tienen extensiones que
+determinan su sistema de ficheros, por ejemplo, "persistence.ext4".
 .IP "\fBpersistence\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 Esta opción determina qué tipo de cifrado se usa cuando se prueban los
 dispositivos de los medios con persistencia. Si se especifica "none" en la
@@ -282,10 +282,10 @@ alfanumérico.
 .IP \fB/etc/live/boot/*\fP 4
 .IP \fBlive/boot.conf\fP 4
 .IP \fBlive/boot.d/*\fP 4
-.IP \fBlive\-persistence.conf\fP 4
+.IP \fBpersistence.conf\fP 4
 
 .SH "VER ADEMÁS"
-\fIlive\-persistence.conf\fP(5)
+\fIpersistence.conf\fP(5)
 .PP
 \fIlive\-build\fP(7)
 .PP

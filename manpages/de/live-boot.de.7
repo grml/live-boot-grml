@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 26.09.2012 3.0~b3\-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 27.09.2012 3.0~b3\-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Scripts
@@ -180,7 +180,7 @@ This parameter enables usage of local swap partitions.
 live\-boot will probe devices for persistence media. These can be partitions
 (with the correct GPT name), filesystems (with the correct label) or image
 files (with the correct file name). Overlays are labeled/named "persistence"
-(see \fIlive\-persistence.conf\fP(5)). Overlay image files have extensions which
+(see \fIpersistence.conf\fP(5)). Overlay image files have extensions which
 determines their filesystem, e.g. "persistence.ext4".
 .IP "\fBpersistence\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 This option determines which types of encryption that we allow to be used
@@ -263,10 +263,10 @@ loaded in alphanumeric order.
 .IP \fB/etc/live/boot/*\fP 4
 .IP \fBlive/boot.conf\fP 4
 .IP \fBlive/boot/*\fP 4
-.IP \fBlive\-persistence.conf\fP 4
+.IP \fBpersistence.conf\fP 4
 
 .SH "SEE ALSO"
-\fIlive\-persistence.conf\fP(5)
+\fIpersistence.conf\fP(5)
 .PP
 \fIlive\-build\fP(7)
 .PP
