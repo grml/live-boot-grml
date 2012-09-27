@@ -3,8 +3,7 @@
 # set -e
 
 # Reading configuration file from filesystem and live-media
-for _FILE in /etc/live/boot.conf /etc/live/boot/* \
-	     /live/image/live/boot.conf /live/image/live/boot/*
+for _FILE in /etc/live/boot.conf /etc/live/boot/*
 do
 	if [ -e "${_FILE}" ]
 	then

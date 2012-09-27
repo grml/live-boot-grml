@@ -132,7 +132,7 @@ Main ()
 
 	if [ -n "${ROOT_PID}" ]
 	then
-		echo "${ROOT_PID}" > "${rootmnt}"/live/root.pid
+		echo "${ROOT_PID}" > "${rootmnt}"/lib/live/root.pid
 	fi
 
 	log_end_msg
@@ -146,8 +146,8 @@ Main ()
 	esac
 
 	# Move to the new root filesystem so that programs there can get at it.
-	mkdir -p /root/live/image
-	mount --move /live/image /root/live/image
+	mkdir -p /root/lib/live/image
+	mount --move /live/image /root/lib/live/image
 
 	# aufs2 in kernel versions around 2.6.33 has a regression:
 	# directories can't be accessed when read for the first the time,
@@ -158,8 +158,8 @@ Main ()
 	# Move findiso directory to the new root filesystem so that programs there can get at it.
 	if [ -d /live/findiso ]
 	then
-		mkdir -p /root/live/findiso
-		mount -n --move /live/findiso /root/live/findiso
+		mkdir -p /root/lib/live/findiso
+		mount -n --move /live/findiso /root/lib/live/findiso
 	fi
 
 	# if we do not unmount the ISO we can't run "fsck /dev/ice" later on
@@ -169,10 +169,10 @@ Main ()
 	then
 		losetup -d /dev/loop0
 
-		if is_mountpoint /root/live/findiso
+		if is_mountpoint /root/lib/live/findiso
 		then
-			umount /root/live/findiso
-			rmdir --ignore-fail-on-non-empty /root/live/findiso \
+			umount /root/lib/live/findiso
+			rmdir --ignore-fail-on-non-empty /root/lib/live/findiso \
 				>/dev/null 2>&1 || true
 		fi
 	fi
