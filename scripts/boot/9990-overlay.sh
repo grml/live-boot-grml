@@ -425,4 +425,8 @@ setup_unionfs ()
 		mount -o bind /live/overlay "${rootmnt}/lib/live/overlay" || \
 		log_warning_msg "W: failed to mount /live/overlay to ${rootmnt}/lib/live/overlay"
 
+        # ensure that a potentially stray tmpfs gets removed
+        # otherways, initramfs-tools is unable to remove /live
+        # and fails to boot
+        umount /live/overlay || true
 }
