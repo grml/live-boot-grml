@@ -203,11 +203,6 @@ Cmdline_old ()
 				export QUICKUSBMODULES
 				;;
 
-			showmounts)
-				SHOWMOUNTS="true"
-				export SHOWMOUNTS
-				;;
-
 			todisk=*)
 				TODISK="${_PARAMETER#todisk=}"
 				export TODISK

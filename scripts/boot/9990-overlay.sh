@@ -350,34 +350,28 @@ setup_unionfs ()
 	fi
 
 	live_rofs_list=""
-	# SHOWMOUNTS is necessary for custom mounts with the union option
-	# Since we may want to do custom mounts in user-space it's best to always enable SHOWMOUNTS
-	if true #[ -n "${SHOWMOUNTS}" ] || ( [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ] 1)
-	then
-		# XXX: is the for loop really necessary? rofslist can only contain one item (see above XXX about EXPOSEDROOT) and this is also assumed elsewhere above (see use of $rofs above).
-		for d in ${rofslist}
-		do
-			live_rofs="/live/rofs/${d##*/}"
-			live_rofs_list="${live_rofs_list} ${live_rofs}"
-			mkdir -p "${live_rofs}"
-			case d in
-				*.dir)
-					# do nothing # mount -o bind "${d}" "${live_rofs}"
-					;;
-				*)
-					case "${UNIONTYPE}" in
-						unionfs-fuse)
-							mount -o bind "${d}" "${live_rofs}"
-							;;
+	for d in ${rofslist}
+	do
+		live_rofs="/live/rofs/${d##*/}"
+		live_rofs_list="${live_rofs_list} ${live_rofs}"
+		mkdir -p "${live_rofs}"
+		case d in
+			*.dir)
+				# do nothing # mount -o bind "${d}" "${live_rofs}"
+				;;
+			*)
+				case "${UNIONTYPE}" in
+					unionfs-fuse)
+						mount -o bind "${d}" "${live_rofs}"
+						;;
 
-						*)
-							mount -o move "${d}" "${live_rofs}"
-							;;
-					esac
-					;;
-			esac
-		done
-	fi
+					*)
+						mount -o move "${d}" "${live_rofs}"
+						;;
+				esac
+				;;
+		esac
+	done
 
 	# Adding custom persistence
 	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
@@ -431,4 +425,8 @@ setup_unionfs ()
 		mount -o bind /live/overlay "${rootmnt}/lib/live/overlay" || \
 		log_warning_msg "W: failed to mount /live/overlay to ${rootmnt}/lib/live/overlay"
 
+        # ensure that a potentially stray tmpfs gets removed
+        # otherways, initramfs-tools is unable to remove /live
+        # and fails to boot
+        umount /live/overlay || true
 }
