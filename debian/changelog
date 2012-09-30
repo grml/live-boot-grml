@@ -1,3 +1,14 @@
+live-boot (3.0~b5-1) unstable; urgency=low
+
+  * Updating to standards version 3.9.4.
+  * Removing showmounts option as it's enable always anyway.
+  * Applying slightly modified patch from Reinhard Tartler
+    <siretart@tauware.de> to ensure that a potentially stray tmpfs on
+    /live/overlay gets removed to fix netboot failures (Closes:
+    #685375).
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 30 Sep 2012 10:07:09 +0200
+
 live-boot (3.0~b4-1) unstable; urgency=low
 
   * Switching to final name for the persistence configuration file
