@@ -84,6 +84,10 @@ fi
 manual_add_modules ext3
 manual_add_modules ext4
 
+# Filesystem: hfs/hfsplus
+manual_add_modules hfs
+manual_add_modules hfsplus
+
 # Filesystem: jffs2
 manual_add_modules jffs2
 
