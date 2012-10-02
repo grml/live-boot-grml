@@ -1442,23 +1442,23 @@ activate_custom_mounts ()
 		fi
 
 		# XXX: If CONFIG_AUFS_ROBR is added to the Debian kernel we can
-		# ignore the loop below and set rofs_dest_backing=$dest
-		local rofs_dest_backing=""
+		# ignore the loop below and set rootfs_dest_backing=$dest
+		local rootfs_dest_backing=""
 		if [ -n "${opt_link}"]
 		then
-			for d in /live/rofs/*
+			for d in /live/rootfs/*
 			do
 				if [ -n "${rootmnt}" ]
 				then
-					rofs_dest_backing="${d}/$(echo ${dest} | sed -e "s|${rootmnt}||")"
+					rootfs_dest_backing="${d}/$(echo ${dest} | sed -e "s|${rootmnt}||")"
 				else
-					rofs_dest_backing="${d}/${dest}"
+					rootfs_dest_backing="${d}/${dest}"
 				fi
-				if [ -d "${rofs_dest_backing}" ]
+				if [ -d "${rootfs_dest_backing}" ]
 				then
 					break
 				else
-					rofs_dest_backing=""
+					rootfs_dest_backing=""
 				fi
 			done
 		fi
@@ -1481,18 +1481,18 @@ activate_custom_mounts ()
 			mkdir -p ${cow_dir}
 			chown_ref "${source}" "${cow_dir}"
 			chmod_ref "${source}" "${cow_dir}"
-			do_union ${links_source} ${cow_dir} ${source} ${rofs_dest_backing}
+			do_union ${links_source} ${cow_dir} ${source} ${rootfs_dest_backing}
 			link_files ${links_source} ${dest} ${rootmnt}
 		elif [ -n "${opt_union}" ] && [ -z "${PERSISTENCE_READONLY}" ]
 		then
-			do_union ${dest} ${source} ${rofs_dest_backing}
+			do_union ${dest} ${source} ${rootfs_dest_backing}
 		elif [ -n "${opt_bind}" ] && [ -z "${PERSISTENCE_READONLY}" ]
 		then
 			mount --bind "${source}" "${dest}"
 		elif [ -n "${opt_bind}" -o -n "${opt_union}" ] && [ -n "${PERSISTENCE_READONLY}" ]
 		then
 			# bind-mount and union mount are handled the same
-			# in read-only mode, but note that rofs_dest_backing
+			# in read-only mode, but note that rootfs_dest_backing
 			# is non-empty (and necessary) only for unions
 			if [ -n "${rootmnt}" ]
 			then
@@ -1512,7 +1512,7 @@ activate_custom_mounts ()
 			mkdir -p ${cow_dir}
 			chown_ref "${source}" "${cow_dir}"
 			chmod_ref "${source}" "${cow_dir}"
-			do_union ${dest} ${cow_dir} ${source} ${rofs_dest_backing}
+			do_union ${dest} ${cow_dir} ${source} ${rootfs_dest_backing}
 		fi
 
 		PERSISTENCE_IS_ON="1"

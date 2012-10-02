@@ -36,7 +36,7 @@ setup_unionfs ()
 	croot="/"
 
 	# Let's just mount the read-only file systems first
-	rofslist=""
+	rootfslist=""
 
 	if [ -z "${PLAIN_ROOT}" ]
 	then
@@ -101,7 +101,7 @@ setup_unionfs ()
 			if [ -d "${image}" ]
 			then
 				# it is a plain directory: do nothing
-				rofslist="${image} ${rofslist}"
+				rootfslist="${image} ${rootfslist}"
 			elif [ -f "${image}" ]
 			then
 				if losetup --help 2>&1 | grep -q -- "-r\b"
@@ -126,12 +126,12 @@ setup_unionfs ()
 				case "${UNIONTYPE}" in
 					unionmount)
 						mpoint="${rootmnt}"
-						rofslist="${rootmnt} ${rofslist}"
+						rootfslist="${rootmnt} ${rootfslist}"
 						;;
 
 					*)
 						mpoint="${croot}/${imagename}"
-						rofslist="${mpoint} ${rofslist}"
+						rootfslist="${mpoint} ${rootfslist}"
 						;;
 				esac
 
@@ -147,7 +147,7 @@ setup_unionfs ()
 		log_begin_msg "Mounting \"${image_directory}\" on \"${croot}/filesystem\""
 		mount -t $(get_fstype "${image_directory}") -o ro,noatime "${image_directory}" "${croot}/filesystem" || \
 			panic "Can not mount ${image_directory} on ${croot}/filesystem" && \
-			rofslist="${croot}/filesystem ${rofslist}"
+			rootfslist="${croot}/filesystem ${rootfslist}"
 		# probably broken:
 		mount -o bind ${croot}/filesystem $mountpoint
 		log_end_msg
@@ -289,19 +289,19 @@ setup_unionfs ()
 		fi
 	fi
 
-	rofscount=$(echo ${rofslist} |wc -w)
+	rootfscount=$(echo ${rootfslist} |wc -w)
 
-	rofs=${rofslist%% }
+	rootfs=${rootfslist%% }
 
 	if [ -n "${EXPOSED_ROOT}" ]
 	then
-		if [ ${rofscount} -ne 1 ]
+		if [ ${rootfscount} -ne 1 ]
 		then
-			panic "only one RO file system supported with exposedroot: ${rofslist}"
+			panic "only one RO file system supported with exposedroot: ${rootfslist}"
 		fi
 
-		mount --bind ${rofs} ${rootmnt} || \
-			panic "bind mount of ${rofs} failed"
+		mount --bind ${rootfs} ${rootmnt} || \
+			panic "bind mount of ${rootfs} failed"
 
 		if [ -z "${SKIP_UNION_MOUNTS}" ]
 		then
@@ -329,13 +329,13 @@ setup_unionfs ()
 			mount_full $unionmountopts "${unionmountpoint}"
 		else
 			cow_dir="/live/overlay${dir}"
-			rofs_dir="${rofs}${dir}"
+			rootfs_dir="${rootfs}${dir}"
 			mkdir -p ${cow_dir}
 			if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
 			then
-				do_union ${unionmountpoint} ${cow_dir} ${root_backing} ${rofs_dir}
+				do_union ${unionmountpoint} ${cow_dir} ${root_backing} ${rootfs_dir}
 			else
-				do_union ${unionmountpoint} ${cow_dir} ${rofs_dir}
+				do_union ${unionmountpoint} ${cow_dir} ${rootfs_dir}
 			fi
 		fi || panic "mount ${UNIONTYPE} on ${unionmountpoint} failed with option ${unionmountopts}"
 	done
@@ -349,24 +349,24 @@ setup_unionfs ()
 		chmod 1777 "${rootmnt}"/tmp
 	fi
 
-	live_rofs_list=""
-	for d in ${rofslist}
+	live_rootfs_list=""
+	for d in ${rootfslist}
 	do
-		live_rofs="/live/rofs/${d##*/}"
-		live_rofs_list="${live_rofs_list} ${live_rofs}"
-		mkdir -p "${live_rofs}"
+		live_rootfs="/live/rootfs/${d##*/}"
+		live_rootfs_list="${live_rootfs_list} ${live_rootfs}"
+		mkdir -p "${live_rootfs}"
 		case d in
 			*.dir)
-				# do nothing # mount -o bind "${d}" "${live_rofs}"
+				# do nothing # mount -o bind "${d}" "${live_rootfs}"
 				;;
 			*)
 				case "${UNIONTYPE}" in
 					unionfs-fuse)
-						mount -o bind "${d}" "${live_rofs}"
+						mount -o bind "${d}" "${live_rootfs}"
 						;;
 
 					*)
-						mount -o move "${d}" "${live_rofs}"
+						mount -o move "${d}" "${live_rootfs}"
 						;;
 				esac
 				;;
@@ -399,12 +399,8 @@ setup_unionfs ()
 		done
 	fi
 
-	# make /root/lib/live writable for moving filesystems
-	mkdir -p "${rootmnt}/lib/live"
-	mount -t tmpfs tmpfs "${rootmnt}/lib/live"
-
 	# move all mountpoints to root filesystem
-	for _DIRECTORY in rofs persistence
+	for _DIRECTORY in rootfs persistence
 	do
 		if [ -d "/live/${_DIRECTORY}" ]
 		then
