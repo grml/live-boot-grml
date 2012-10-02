@@ -399,10 +399,6 @@ setup_unionfs ()
 		done
 	fi
 
-	# make /root/lib/live writable for moving filesystems
-	mkdir -p "${rootmnt}/lib/live"
-	mount -t tmpfs tmpfs "${rootmnt}/lib/live"
-
 	# move all mountpoints to root filesystem
 	for _DIRECTORY in rofs persistence
 	do
