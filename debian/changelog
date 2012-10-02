@@ -1,3 +1,19 @@
+live-boot (3.0~b6-1) unstable; urgency=low
+
+  * Including hfs and hfsplus modules in initrd to access filesystems on
+    apple systems.
+  * Stopping to put a tmpfs on /root/lib/live from within initramfs, it
+    over-'layered' most prominently the live systems /lib/live/config,
+    making the runtime configuration impossible and the tmpfs is not
+    used or needed in the first place anyway.
+  * Renaming rofs to more intuitive rootfs.
+  * Removing source-only readme file about boot scripts from the binary
+    package.
+  * Renaming the boot scripts readme file to fixme to make it even more
+    obvious.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 02 Oct 2012 10:32:44 +0200
+
 live-boot (3.0~b5-1) unstable; urgency=low
 
   * Updating to standards version 3.9.4.
