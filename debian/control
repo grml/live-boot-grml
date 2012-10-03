@@ -15,8 +15,8 @@ Depends: ${misc:Depends}, live-boot-initramfs-tools | live-boot-backend
 Recommends: live-boot-doc, eject, file, rsync, uuid-runtime
 Suggests: curlftpfs, cryptsetup, httpfs2, unionfs-fuse, wget
 Description: Live System Boot Scripts
- live-boot contains the scripts that configure a live system during the
- boot process (early userspace).
+ live-boot contains the scripts that configure a live system during the boot
+ process (early userspace).
  .
  In addition to live-boot, a backend for the initrd generation is required, such
  as live-boot-initramfs-tools.
@@ -28,8 +28,8 @@ Depends: ${misc:Depends}
 Conflicts: live-boot (<< 3.0~a18~)
 Replaces: live-boot
 Description: Live System Boot Scripts (documentation)
- live-boot contains the scripts that configure a live system during the
- boot process (early userspace).
+ live-boot contains the scripts that configure a live system during the boot
+ process (early userspace).
  .
  This package contains the documentation.
 
@@ -41,7 +41,7 @@ Conflicts: live-boot-backend
 Replaces: live-boot-backend
 Provides: live-boot-backend
 Description: Live System Boot Scripts (initramfs-tools backend)
- live-boot contains the scripts that configure a live system during the
- boot process (early userspace).
+ live-boot contains the scripts that configure a live system during the boot
+ process (early userspace).
  .
  This package contains the initramfs-tools backend.
