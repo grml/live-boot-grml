@@ -146,8 +146,8 @@ Main ()
 	esac
 
 	# Move to the new root filesystem so that programs there can get at it.
-	mkdir -p /root/lib/live/mount/image
-	mount --move /live/image /root/lib/live/mount/image
+	mkdir -p /root/lib/live/mount/medium
+	mount --move /live/medium /root/lib/live/mount/medium
 
 	# aufs2 in kernel versions around 2.6.33 has a regression:
 	# directories can't be accessed when read for the first the time,

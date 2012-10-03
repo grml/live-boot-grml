@@ -5,7 +5,7 @@ export PATH="/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbi
 echo "/root/lib" >> /etc/ld.so.conf
 echo "/root/usr/lib" >> /etc/ld.so.conf
 
-mountpoint="/live/image"
+mountpoint="/live/medium"
 alt_mountpoint="/media"
 LIVE_MEDIA_PATH="live"
 
