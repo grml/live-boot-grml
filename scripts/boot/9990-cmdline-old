@@ -30,6 +30,11 @@ Cmdline_old ()
 				export DHCP
 				;;
 
+			klibc-mount=*)
+				KLIBC_MOUNT="${_PARAMETER#klibc-mount=}"
+				export KLIBC_MOUNT
+				;;
+
 			ethdevice=*)
 				DEVICE="${_PARAMETER#ethdevice=}"
 				ETHDEVICE="${DEVICE}"
