@@ -449,9 +449,9 @@ storage_devices()
 	do
 		fulldevname=$(sys2dev "${sysblock}")
 
-		if echo "${black_listed_devices}" | grep -qe "\<${fulldevname}\>" || \
-			[ -n "${white_listed_devices}" ] && \
-			echo "${white_listed_devices}" | grep -qve "\<${fulldevname}\>"
+		if echo "${black_listed_devices}" | grep -qe "\(^\|\s\)${fulldevname}\($\|\s\)" || \
+			( [ -n "${white_listed_devices}" ] && \
+			echo "${white_listed_devices}" | grep -qve "\(^\|\s\)${fulldevname}\($\|\s\)" )
 		then
 			# skip this device entirely
 			continue
@@ -461,7 +461,7 @@ storage_devices()
 		do
 			devname=$(sys2dev "${dev}")
 
-			if echo "${black_listed_devices}" | grep -qe "\<${devname}\>"
+			if echo "${black_listed_devices}" | grep -qe "\(^\|\s\)${devname}\($\|\s\)"
 			then
 				# skip this subdevice
 				continue
