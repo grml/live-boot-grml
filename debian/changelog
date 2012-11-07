@@ -1,3 +1,22 @@
+live-boot (3.0~b7-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating file paths for /lib/live/mount. See
+    http://lists.debian.org/debian-live/2012/10/msg00021.html for more
+    information.
+  * Renaming /lib/live/mount/image to /lib/live/mount/medium. See
+    http://lists.debian.org/debian-live/2012/10/msg00023.html for more
+    information.
+  * Updating package descriptions.
+  * Properly wrap package descriptions to 80 characters per line.
+
+  [ Tails developers ]
+  * Adding support for the previous persistence configuration file name,
+    for compatibility with systems that have been deployed with live-
+    persistence.conf already.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 07 Nov 2012 15:04:32 +0100
+
 live-boot (3.0~b6-1) unstable; urgency=low
 
   * Including hfs and hfsplus modules in initrd to access filesystems on
