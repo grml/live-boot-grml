@@ -3,7 +3,7 @@ Section: misc
 Priority: optional
 Maintainer: Grml Team <team@grml.org>
 Build-Depends: debhelper (>= 9), quilt (>= 0.46-7~)
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Homepage: http://live.debian.net/devel/live-boot/
 Vcs-Browser: http://git.grml.org/?p=live-boot-grml.git
 Vcs-Git: git://git.grml.org/live-boot-grml.git

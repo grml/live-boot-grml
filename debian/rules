@@ -12,11 +12,7 @@ override_dh_auto_install:
 
 	# Removing useless files
 	rm -f debian/tmp/usr/share/doc/live-boot-grml/COPYING
-	# Some more useless files
-	rm -f debian/tmp/usr/share/initramfs-tools/scripts/live-bottom/12fstab
-	rm -f debian/tmp/usr/share/initramfs-tools/scripts/live-bottom/23networking
-	rm -f debian/tmp/usr/share/initramfs-tools/scripts/live-bottom/24preseed
-	rm -f debian/tmp/usr/share/initramfs-tools/scripts/live-bottom/30accessibility
+	rm -f debian/lib/live/boot/FIXME
 
 	# live-boot-initramfs-tools
 	mkdir -p debian/live-boot-grml-initramfs-tools/usr/share
@@ -29,7 +25,7 @@ override_dh_auto_install:
 	chmod a+rx debian/live-boot-grml-initramfs-tools/usr/share/initramfs-tools/hooks/*
 
 override_dh_builddeb:
-	dh_builddeb -- -Zgzip -z9
+	dh_builddeb -- -Zxz -z9
 
 override_dh_install:
 	dh_install --fail-missing
