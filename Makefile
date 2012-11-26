@@ -4,7 +4,7 @@ SHELL := sh -e
 
 LANGUAGES = $(shell cd manpages/po && ls)
 
-SCRIPTS = bin/* hooks/* scripts/live scripts/live-functions scripts/live-helpers scripts/*/*
+SCRIPTS = backends/*/* bin/* scripts/*.sh scripts/*/*-*
 
 all: build
 
@@ -41,23 +41,19 @@ build:
 	@echo "Nothing to build."
 
 install:
+	# Installing scripts
+	mkdir -p $(DESTDIR)/lib/live
+	cp -r scripts/boot.sh scripts/boot $(DESTDIR)/lib/live
+
 	# Installing executables
-	mkdir -p $(DESTDIR)/sbin
-	cp bin/live-new-uuid bin/live-snapshot bin/live-swapfile $(DESTDIR)/sbin
-
-	mkdir -p $(DESTDIR)/usr/share/live-boot
-	cp bin/live-preseed bin/live-reconfigure local/languagelist $(DESTDIR)/usr/share/live-boot
-
-	mkdir -p $(DESTDIR)/usr/share/initramfs-tools
-	cp -r hooks scripts $(DESTDIR)/usr/share/initramfs-tools
+	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/hooks
+	cp backends/initramfs-tools/live.hook $(DESTDIR)/usr/share/initramfs-tools/hooks/live
+	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/scripts
+	cp backends/initramfs-tools/live.script $(DESTDIR)/usr/share/initramfs-tools/scripts/live
 
 	# Installing docs
 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
 	cp -r COPYING $(DESTDIR)/usr/share/doc/live-boot
-
-	mkdir -p $(DESTDIR)/usr/share/doc/live-boot/examples
-	cp -r etc/* $(DESTDIR)/usr/share/doc/live-boot/examples
-	# (FIXME)
 
 	# Installing manpages
 	for MANPAGE in manpages/en/*; \
@@ -77,17 +73,13 @@ install:
 
 uninstall:
 	# Uninstalling executables
-	rm -f $(DESTDIR)/sbin/live-snapshot $(DESTDIR)/sbin/live-swapfile
+	rm -f $(DESTDIR)/sbin/live-swapfile
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin > /dev/null 2>&1 || true
 
-	rm -rf $(DESTDIR)/usr/share/live-boot
-
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/hooks/live
-	rm -rf $(DESTDIR)/usr/share/initramfs-tools/scripts/live*
-	rm -f $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top/live
+	rm -f $(DESTDIR)/usr/share/initramfs-tools/scripts/live
 
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/hooks > /dev/null 2>&1 || true
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts/local-top > /dev/null 2>&1 || true
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools/scripts > /dev/null 2>&1 || true
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/initramfs-tools > /dev/null 2>&1 || true
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share > /dev/null 2>&1 || true

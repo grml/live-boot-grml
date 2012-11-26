@@ -1,3 +1,308 @@
+live-boot (3.0~b6-1) unstable; urgency=low
+
+  * Including hfs and hfsplus modules in initrd to access filesystems on
+    apple systems.
+  * Stopping to put a tmpfs on /root/lib/live from within initramfs, it
+    over-'layered' most prominently the live systems /lib/live/config,
+    making the runtime configuration impossible and the tmpfs is not
+    used or needed in the first place anyway.
+  * Renaming rofs to more intuitive rootfs.
+  * Removing source-only readme file about boot scripts from the binary
+    package.
+  * Renaming the boot scripts readme file to fixme to make it even more
+    obvious.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 02 Oct 2012 10:32:44 +0200
+
+live-boot (3.0~b5-1) unstable; urgency=low
+
+  * Updating to standards version 3.9.4.
+  * Removing showmounts option as it's enable always anyway.
+  * Applying slightly modified patch from Reinhard Tartler
+    <siretart@tauware.de> to ensure that a potentially stray tmpfs on
+    /live/overlay gets removed to fix netboot failures (Closes:
+    #685375).
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 30 Sep 2012 10:07:09 +0200
+
+live-boot (3.0~b4-1) unstable; urgency=low
+
+  * Switching to final name for the persistence configuration file
+    'persistence.conf' in line with boot parameter.
+  * Moving remaining stuff from /live to /lib/live to avoid further
+    namespace pollution.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 27 Sep 2012 13:23:33 +0200
+
+live-boot (3.0~b3-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Always move live filesystem mounts to /root within initramfs,
+    regardless if mountpoint already exists or not (Closes: #688782).
+
+  [ Gaudenz Steinlin ]
+  * Removing mountpoint if no persistence layer is found on a device.
+
+  [ Daniel Baumann ]
+  * Exposing rofs and persistence mounts under /live in the live
+    systems, not just initramfs only (Closes: #687099).
+  * Updating code for exposing of overlay mounts under /live too.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 26 Sep 2012 14:40:32 +0200
+
+live-boot (3.0~b2-1) unstable; urgency=low
+
+  * Recreating /etc/live/boot in postinst.
+  * Removing /etc/live/boot if empty on purge in postrm.
+  * Regenerating initramfs on remove.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 24 Aug 2012 12:37:23 +0200
+
+live-boot (3.0~b1-1) unstable; urgency=low
+
+  [ chals ]
+  * Fixing build error in 'es' man pages caused by a newline conflict.
+
+  [ Daniel Baumann ]
+  * Removing live-new-uuid, a rewritten one goes to live-tools.
+  * Adding slightly modified patch from Steven Shiau
+    <steven@nchc.org.tw> to transition to /run for network interface
+    definition files which fixes resolv.conf creation for netboot.
+
+  [ Steven Shiau ]
+  * Reading /conf/param.conf after Select_eth_device in main function to
+    fix network booting (Closes: #683240).
+
+  [ Daniel Baumann ]
+  * Moving reading of initramfs-tools functions to initramfs-tools
+    script.
+  * Consistently using case instead of if for conditionals in script
+    boilerplate.
+  * Laying tmpfs on /live/overlay only during initramfs stage, fixes
+    boot failure with plain filesystems (Closes: #681579).
+  * Correcting DNS inclusion in initramfs-tools hook, thanks to Steven
+    Shiau <steven@nchc.org.tw> for reporting.
+  * Simplifying usage of copy_exec function from hooks-function in
+    initramfs-tools hook.
+  * Using /etc/live/boot/*.conf instead of /etc/live/boot.d/*.conf and
+    /live/image/live/boot/*.conf instead of
+    /live/image/live/boot.d/*.conf for consistency reasons.
+  * Reading configuration file from filesystem and live-media at runtime
+    too.
+  * Reading configuration files in initramfs-tools hook too.
+
+  [ Steven Shiau ]
+  * Adding support for nameserver in ip= boot parameter.
+
+  [ Daniel Baumann ]
+  * Making nameserver assignment from ip= bootparameter work with
+    persistence.
+  * Correcting permissions of /tmp which apparently somehow get mixed up
+    along the way.
+  * Updating scripts readme about transition to plugin based
+    architecture.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 16 Aug 2012 12:21:04 +0200
+
+live-boot (3.0~a38-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Extending verify-checksums parameters to allow specifying custom
+    list of digests.
+  * Harmonizing GPL boilerplate texts.
+
+  [ Richard Nelson ]
+  * Correct left over references to old initramfs-tools.sh (Closes:
+    #682504).
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 27 Jul 2012 00:20:39 +0200
+
+live-boot (3.0~a37-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Cleaning up initramfs-tools hook.
+
+  [ Tails developers ]
+  * Fixing persistence backward-compatibility mode (Closes: #681176).
+
+  [ Daniel Baumann ]
+  * Making swap function self contained.
+  * Making read-only function self contained.
+  * Making verify-checksums function self contained.
+  * Factoring out debug into an own function.
+  * Extending read-only parameters to allow specifying custom list of
+    devices.
+  * Avoid re-access /proc/cmdline in select-eth-device function and use
+    internal variable instead.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 25 Jul 2012 17:18:06 +0200
+
+live-boot (3.0~a36-1) unstable; urgency=low
+
+  * Adding temporary notes in a readme file.
+  * Renaming boot scripts for refactoring them into numbered plugins.
+  * Renaming mountroot function to main to provide a generic live-boot
+    entry point for initramfs generators.
+  * Adding temporary redirection layer for dracut initramfs generator.
+  * Adding redirection layer for initramfs-tools initramfs generator.
+  * Splitting out already reviewed cmdline parsing script.
+  * Splitting out already reviewed read-only script.
+  * Splitting out already reviewed swapon script.
+  * Splitting out already reviewed verify-checksums script.
+  * Adding support for defining one or more explicit swap partitions to
+    be used.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 18 Jul 2012 23:56:06 +0200
+
+live-boot (3.0~a35-1) unstable; urgency=low
+
+  * Correcting typo in fstab function call in mountroot, thanks to
+    Baurzhan Muftakhidinov <baurthefirst@gmail.com>.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 28 Jun 2012 14:30:46 +0200
+
+live-boot (3.0~a34-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Renaming persistent-subtext option into persistent-label and making
+    it define the complete label instead of a custom suffix only.
+  * Updating coding style in a first bunch of locations.
+  * Updating location for live-boot files in initramfs-tools hook,
+    thanks to Baurzhan Muftakhidinov <baurthefirst@gmail.com>.
+  * Making live-boot-initramfs-tools.postinst more error safe.
+  * Removing pre-wheezy dpkg trigger for update-initramfs.
+  * Removing superfluous directory in initramfs-tools hook.
+  * Sourcing individual live-boot scripts rather than executing them.
+
+  [ Ben Armstrong ]
+  * Fix creation of /var/log/live in correct location.
+
+  [ Daniel Baumann ]
+  * Switching to xz compression in source and binary packages.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 27 Jun 2012 14:14:19 +0200
+
+live-boot (3.0~a33-1) unstable; urgency=low
+
+  [ chals ]
+  * Updating Spanish translation of man pages.
+
+  [ Daniel Baumann ]
+  * Removing some more dead parameters from cmdline function.
+  * Removing double author entries in Spanish po files.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 13 Jun 2012 13:26:49 +0200
+
+live-boot (3.0~a32-1) experimental; urgency=low
+
+  * Dropping snapshot functionality, superseeded by awesome custom mount
+    persistence.
+  * Setting persistence label for live-* 3.x persistency to
+    'persistence', we're not making any difference between full-ov and
+    custom-ov anymore on the filesystem and partition label (it's
+    determined by the contents of live-persistence.conf).
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 06 Jun 2012 19:04:01 +0200
+
+live-boot (3.0~a31-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Renaming etc directory to their actual name, examples, within source
+    tree.
+  * Simplyfing scripts declaration in Makefile.
+
+  [ chals ]
+  * Fixing fuzzy strings in Spanish translation of man pages.
+
+  [ Daniel Baumann ]
+  * Removing live-reconfigure, not used anymore.
+  * Removing live-preseed, not used anymore.
+  * Unbreaking cmdline parsing after variable rename.
+  * Moving off remaining functions from main boot script to subscript
+    for later cleanup.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 05 Jun 2012 21:44:44 +0200
+
+live-boot (3.0~a30-1) experimental; urgency=low
+
+  * Removing dead lang2locale function and associated files, not used
+    anywhere.
+  * Converting select_eth_device initramfs-tools pre-mount script into
+    regular live-boot script.
+  * Consistenly using 'true' instead of 'Yes' or 'yes' when using
+    booleans.
+  * Removing some dead boot parameters.
+  * Splitting out integrity-check function to subscript.
+  * Rewriting live-media checksum verification to work with any SHA and
+    MD5 digests.
+  * Updating read-only handling to new parameter handling.
+  * Updating internal cmdline handling.
+  * Updating swapon handling to new parameter handling.
+  * Also allowing /dev/vd* to be used as swap devices and drop /dev/hd*.
+  * Splitting out swap handling and rewriting to a live-boot subscript.
+  * Moving validateroot bottom script into main boot script itself.
+  * Removing exporting of variables for reviewed options in the cmdline
+    function, not required.
+  * Removing fastboot handling, the normal system handles this via
+    'fastboot' bootparameter already.
+  * Transforming persistence_excludes bottom script into normal live-
+    boot script.
+  * Transforming fstab bottom script into normal live-boot script.
+  * Transforming networking bottom script into normal live-boot script.
+  * Simplyfing initramfs-tools specific files within the source tree.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 05 Jun 2012 19:37:54 +0200
+
+live-boot (3.0~a29-1) experimental; urgency=low
+
+  * Automatically translate date formats in po files.
+  * Starting initramfs-tools specific subdirectory within the source-
+    tree.
+  * Replacing live initramfs-tools script with empty stub that calls the
+    real, in future being initramfs-tools independent, script from
+    /lib/live.
+  * Splitting out a first bunch of functions out to /live/live/boot/.
+  * Moving out live-helpers from initramfs-tools specifics.
+  * Adding commented 'set -e' explicitly in all subscripts to avoid
+    running it with 'set -e' until we've made sure it's properly
+    working.
+  * Moving out live-functions from initramfs-tools specifics.
+  * Removing live-premount modules script, not needed anymore.
+  * Converting read-only initramfs-tools pre-mount script into regular
+    live-boot script.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 05 Jun 2012 16:00:59 +0200
+
+live-boot (3.0~a28-1) experimental; urgency=low
+
+  [ Tails developers ]
+  * Improving robustness of findiso cleanup process.
+  * Using fromiso in most places where isofrom was used, thanks to
+    adrian15 <adrian15sgd@gmail.com>.
+  * Mounting fromiso filesystem on /live/fromiso instead of /fromiso,
+    thanks to adrian15 <adrian15sgd@gmail.com>.
+  * Improving robustness of fromiso cleanup process with is_mountpoint
+    (Closes: #668100).
+
+  [ Daniel Baumann ]
+  * Using boot.log and /var/log/live/boot.log respectively for overall
+    consistency within all debian-live tools.
+
+  [ Ian Reinhart Geiser ]
+  * Fix to allow for multiple rof when exposed roots is disabled.
+
+  [ Tails developers ]
+  * Implement and make use of robust list functions.
+
+  [ chals ]
+  * Fixing several typos in man pages.
+  * Adding initial Spanish translation of man pages.
+
+  [ Evgeni Golov ]
+  * Fixing two typos and a wrong word in comments.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 04 Jun 2012 17:31:32 +0200
+
 live-boot (3.0~a27-1) experimental; urgency=low
 
   [ Daniel Baumann ]

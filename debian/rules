@@ -8,13 +8,14 @@ override_dh_auto_install:
 
 	# Removing useless files
 	rm -f debian/tmp/usr/share/doc/live-boot/COPYING
+	rm -f debian/lib/live/boot/FIXME
 
 	# live-boot-initramfs-tools
 	mkdir -p debian/live-boot-initramfs-tools/usr/share
 	mv debian/tmp/usr/share/initramfs-tools debian/live-boot-initramfs-tools/usr/share
 
 override_dh_builddeb:
-	dh_builddeb -- -Zgzip -z9
+	dh_builddeb -- -Zxz -z9
 
 override_dh_install:
 	dh_install --fail-missing

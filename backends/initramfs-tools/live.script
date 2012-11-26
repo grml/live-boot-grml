@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#set -e
+
+if [ -e /lib/live/boot.sh ]
+then
+	. /lib/live/boot.sh
+fi
