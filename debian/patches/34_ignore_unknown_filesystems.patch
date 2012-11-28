@@ -1,5 +1,5 @@
---- a/scripts/live-helpers
-+++ b/scripts/live-helpers
+--- a/scripts/boot/9990-misc-helpers.sh
++++ b/scripts/boot/9990-misc-helpers.sh
 @@ -507,6 +507,12 @@
  		return 1
  	fi

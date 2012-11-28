@@ -6,32 +6,41 @@ Date:   Fri Mar 25 23:02:38 2011 +0100
     
     Thanks to Ulrich Dangel for discovering this. [Closes: issue848]
 
-Index: live-boot-grml/hooks/live
-===================================================================
---- live-boot-grml.orig/hooks/live	2011-12-06 22:10:17.000000000 +0100
-+++ live-boot-grml/hooks/live	2011-12-06 22:10:47.000000000 +0100
-@@ -266,17 +266,14 @@
- 	manual_add_modules crc32c
- fi
+--- a/backends/initramfs-tools/live.hook
++++ b/backends/initramfs-tools/live.hook
+@@ -217,24 +217,20 @@ fi
  
--if [ "${LIVE_DNS}" = "true" ]
--then
--	[ "${QUIET}" ] || echo -n " "dns
--	#copy_exec /lib/libnss_files.so.*      /lib  # /etc/hosts and /etc/passwd
--	copy_exec /lib/libnss_dns.so.*      /lib  # DNS server
--	#copy_exec /lib/libnss_compat.so.*      /lib  # /etc/passwd
-+# DNS for initramfs
-+#copy_exec /lib/libnss_files.so.*      /lib  # /etc/hosts and /etc/passwd
-+copy_exec /lib/libnss_dns.so.*      /lib  # DNS server
-+#copy_exec /lib/libnss_compat.so.*      /lib  # /etc/passwd
+ # Some experimental stuff
  
--	# Configuration file - may be needed if /etc/hosts is used.
--	#mkdir -p $DESTDIR/etc
--	#cp -p /etc/nsswitch.conf $DESTDIR/etc
--fi
-+# Configuration file - may be needed if /etc/hosts is used.
-+#mkdir -p $DESTDIR/etc
-+#cp -p /etc/nsswitch.conf $DESTDIR/etc
+-case "${LIVE_DNS}" in
+-	true)
+-		[ "${QUIET}" ] || echo -n " dns"
++[ "${QUIET}" ] || echo -n " dns"
  
- if [ "${LIVE_UNIONMOUNT}" = "true" ]
- then
+-		# /lib/libnss_dns.so.*:a   DNS
+-		# /lib/libnss_files.so.*:  /etc/hosts and /etc/passwd
+-		# /lib/libnss_compat.so.*: /etc/passwd
++# /lib/libnss_dns.so.*:a   DNS
++# /lib/libnss_files.so.*:  /etc/hosts and /etc/passwd
++# /lib/libnss_compat.so.*: /etc/passwd
+ 
+-		for _SHLIB in $(find /lib -name 'libnss_dns.so.*')
+-		do
+-			copy_exec "${_SHLIB}"
+-		done
++for _SHLIB in $(find /lib -name 'libnss_dns.so.*')
++do
++	copy_exec "${_SHLIB}"
++done
+ 
+-		# might be needed if /etc/hosts is used
+-		#mkdir -p "${DESTDIR}/etc"
+-		#cp -p /etc/nsswitch.conf "${DESTDIR}/etc"
+-		;;
+-esac
++# might be needed if /etc/hosts is used
++#mkdir -p "${DESTDIR}/etc"
++#cp -p /etc/nsswitch.conf "${DESTDIR}/etc"
+ 
+ case "${LIVE_UNIONMOUNT}" in
+ 	true)

@@ -10,13 +10,10 @@
 26_support_dns_bootoption.patch
 27_support_static_ip.patch
 29_support_dns_in_initramfs.patch
-30_support_multiarch_dns.patch
 31_package_rename.patch
 32_add_kms.patch
 33_retry_phram.patch
 34_ignore_unknown_filesystems.patch
-35_fix_findiso_umount.patch
 36_support_dhcp_bootoption.patch
 37_fix_legacy_persistence_handling.patch
-38_do_not_check_for_forensic_in_readonly_mode.patch
 39_persistence_with_forensic.patch

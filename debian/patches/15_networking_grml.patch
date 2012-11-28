@@ -10,29 +10,13 @@
 
 diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_grml
 --- /dev/null
-+++ b/scripts/live-bottom/23networking_grml
-@@ -0,0 +1,107 @@
++++ b/scripts/boot/9990-grml-networking.sh
+@@ -0,0 +1,93 @@
 +#!/bin/sh
 +
 +#set -e
 +
-+# initramfs-tools header
-+
-+PREREQ=""
-+
-+prereqs()
-+{
-+   echo "${PREREQ}"
-+}
-+
-+case "${1}" in
-+   prereqs)
-+      prereqs
-+      exit 0
-+   ;;
-+esac
-+
-+. /scripts/live-functions
++Grml_Networking () {
 +
 +if [ -n "${NONETWORKING}" ]; then
 +   exit 0
@@ -119,3 +103,18 @@ diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_
 +
 +    echo>> $IFFILE
 +done
++
++}
+diff --git a/scripts/boot/9990-main.sh b/scripts/boot/9990-main.sh
+index ef41fb0..2af5eb6 100755
+--- a/scripts/boot/9990-main.sh
++++ b/scripts/boot/9990-main.sh
+@@ -194,6 +194,8 @@ Main ()
+ 
+ 	Swap
+ 
++	Grml_Networking
++
+ 	case "${UNIONFS}" in
+ 		unionfs-fuse)
+ 			umount "${rootmnt}/dev"

@@ -6,12 +6,12 @@
 
 @DPATCH@
 
---- a/scripts/live-helpers
-+++ b/scripts/live-helpers
-@@ -75,6 +75,8 @@
- 
+--- a/scripts/boot/9990-cmdline-old
++++ b/scripts/boot/9990-cmdline-old
+@@ -28,6 +28,8 @@
  			nodhcp)
- 				unset DHCP
+ 				DHCP=""
+ 				export DHCP
 +				NODHCP="Yes"
 +				export NODHCP
  				;;

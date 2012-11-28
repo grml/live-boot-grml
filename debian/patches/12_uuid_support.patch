@@ -12,8 +12,8 @@
 ## DP: * no bootid.txt + ignore_bootid=...                => boots
 
 @DPATCH@
---- a/scripts/live
-+++ b/scripts/live
+--- a/scripts/boot/9990-misc-helpers.sh
++++ b/scripts/boot/9990-misc-helpers.sh
 @@ -52,6 +52,42 @@
  	return 1
  }
@@ -86,21 +86,21 @@
  		fi
  	done
  
---- a/scripts/live-helpers
-+++ b/scripts/live-helpers
-@@ -45,6 +45,11 @@
- 				export ACCESS
+--- a/scripts/boot/9990-cmdline-old
++++ b/scripts/boot/9990-cmdline-old
+@@ -18,6 +18,11 @@
+ 				BOOTIF="${x#BOOTIF=}"
  				;;
  
 +			bootid=*)
-+				BOOTID="${ARGUMENT#bootid=}"
++				BOOTID="${_PARAMETER#bootid=}"
 +				export BOOTID
 +				;;
 +
- 			console=*)
- 				DEFCONSOLE="${ARGUMENT#*=}"
- 				export DEFCONSOLE
-@@ -126,6 +131,11 @@
+ 			dhcp)
+ 				# Force dhcp even while netbooting
+ 				# Use for debugging in case somebody works on fixing dhclient
+@@ -79,6 +84,11 @@
  				export FROMISO
  				;;
  
@@ -110,5 +110,5 @@
 +				;;
 +
  			ignore_uuid)
- 				IGNORE_UUID="Yes"
+ 				IGNORE_UUID="true"
  				export IGNORE_UUID

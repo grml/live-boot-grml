@@ -7,8 +7,8 @@ Date:   Mon Jul 11 12:42:24 2011 +0200
     phram doesn't work on first modprobe, when loading once again it seems
     to work. So let's try it this way.
 
---- a/scripts/live
-+++ b/scripts/live
+--- a/scripts/boot/9990-main.sh
++++ b/scripts/boot/9990-main.sh
 @@ -1576,6 +1576,7 @@
  				then
  					# We found a memdisk, set up phram

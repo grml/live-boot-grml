@@ -1,16 +1,5 @@
---- a/scripts/live
-+++ b/scripts/live
-@@ -399,7 +399,7 @@
- 
- 	for dev in $devlist ; do
- 		param="$(get_ipconfig_para $dev)"
--		if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] ; then
-+		if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] && [ "$DHCP" != "Force" ] ; then
- 			echo "Ignoring network device $dev due to nodhcp." | tee -a /live-boot.log
- 			continue
- 		fi
---- a/scripts/live-bottom/23networking_grml
-+++ b/scripts/live-bottom/23networking_grml
+--- a/scripts/boot/9990-grml-networking.sh
++++ b/scripts/boot/9990-grml-networking.sh
 @@ -75,6 +75,14 @@
          method="manual"
      fi
@@ -19,7 +8,7 @@
 +    # set, then dhcp should win over it as we default to dhcp and if
 +    # nodhcp is used as default boot option but "dhcp" is added then it
 +    # would be confusing to not get a working network setup
-+    if [ "$DHCP" = "Force" ] ; then
++    if [ "$DHCP" = "true" ] ; then
 +        method="dhcp"
 +    fi
 +

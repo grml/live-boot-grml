@@ -11,10 +11,10 @@ Support 'nodhcphostname' option which will disable setting the
 hostname of the booted system according to the DNS information.
 This patch takes care of the netboot case.
 
---- a/scripts/live-helpers
-+++ b/scripts/live-helpers
-@@ -202,6 +202,11 @@
- 				export NOACCESSIBILITY
+--- a/scripts/boot/9990-cmdline-old
++++ b/scripts/boot/9990-cmdline-old
+@@ -140,6 +140,11 @@ Cmdline_old ()
+ 				export NFS_COW
  				;;
  
 +			nodhcphostname)
@@ -22,6 +22,6 @@ This patch takes care of the netboot case.
 +				export NODHCPHOSTNAME
 +				;;
 +
- 			nofastboot)
- 				NOFASTBOOT="Yes"
- 				export NOFASTBOOT
+ 			nofstab)
+ 				NOFSTAB="true"
+ 				export NOFSTAB

@@ -5,13 +5,13 @@
 ## DP: Always display failure and warning messages.
 
 @DPATCH@
-Index: b/scripts/live-functions
+Index: live-boot-grml/scripts/boot/9990-initramfs-tools.sh
 ===================================================================
---- a/scripts/live-functions	2011-07-24 22:07:56.000000000 +0200
-+++ b/scripts/live-functions	2011-07-24 22:08:04.000000000 +0200
+--- live-boot-grml.orig/scripts/boot/9990-initramfs-tools.sh	2012-11-28 08:10:50.815614786 +0100
++++ live-boot-grml/scripts/boot/9990-initramfs-tools.sh	2012-11-28 08:25:12.864563943 +0100
 @@ -2,6 +2,17 @@
- . /scripts/functions
- . /live.vars
+ 
+ #set -e
  
 +# we definitely want this stuff visible
 +log_failure_msg()

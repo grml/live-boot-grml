@@ -6,9 +6,9 @@
 
 @DPATCH@
 
---- a/scripts/live-functions
-+++ b/scripts/live-functions
-@@ -88,14 +88,20 @@
+--- a/scripts/boot/9990-initramfs-tools.sh
++++ b/scripts/boot/9990-initramfs-tools.sh
+@@ -44,14 +44,20 @@
  	printf "     ${DEB_1}\n"
  	printf "     ${DEB_2}  \033[1;37mBOOT FAILED!\033[0m\n"
  	printf "     ${DEB_3}\n"

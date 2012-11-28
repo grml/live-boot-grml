@@ -6,11 +6,11 @@
 
 @DPATCH@
 
---- a/hooks/live
-+++ b/hooks/live
-@@ -40,6 +40,12 @@
- 	done
- fi
+--- a/backends/initramfs-tools/live.hook
++++ b/backends/initramfs-tools/live.hook
+@@ -16,6 +16,12 @@ do
+ 	fi
+ done
  
 +# Grml version information:
 +if [ -r /etc/grml_version ]
@@ -18,6 +18,6 @@
 +       cp /etc/grml_version "${DESTDIR}"/etc
 +fi
 +
- # Handling live-boot
- 
- if [ ! -e /usr/share/live-boot ]
+ # Checking live-boot
+ if [ ! -e /lib/live/boot ]
+ then

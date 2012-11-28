@@ -6,11 +6,13 @@
 
 @DPATCH@
 
---- a/scripts/live
-+++ b/scripts/live
-@@ -294,6 +294,24 @@
- 	return 0
- }
+Index: live-boot-grml/scripts/boot/9990-networking.sh
+===================================================================
+--- live-boot-grml.orig/scripts/boot/9990-networking.sh	2012-12-03 07:59:14.790837135 +0100
++++ live-boot-grml/scripts/boot/9990-networking.sh	2012-12-03 07:59:19.665258773 +0100
+@@ -2,6 +2,24 @@
+ 
+ #set -e
  
 +get_ipconfig_para()
 +{
@@ -33,12 +35,11 @@
  do_netsetup ()
  {
  	modprobe -q af_packet # For DHCP
-@@ -304,9 +322,19 @@
+@@ -12,8 +30,19 @@
  	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
  	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
  
--	if [ -z "${NETBOOT}" ] && [ -z "${FETCH}" ] && \
--	   [ -z "${HTTPFS}" ] && [ -z "${FTPFS}" ]
+-	if [ -z "${NETBOOT}" ] && [ -z "${FETCH}" ] && [ -z "${HTTPFS}" ] && [ -z "${FTPFS}" ]
 -	then
 +	# Our modus operandi for getting a working network setup is this:
 +	# * If ip=* is set, pass that to ipconfig and be done
@@ -52,113 +53,118 @@
 +	echo "Net: Turning on all device links..."
 +	for device in ${ALLDEVICES}; do
 +		ipconfig -c none -d $device -t 1 2>/dev/null >/dev/null
-+	done
++	done 
+ 		# support for Syslinux IPAPPEND parameter
+ 		# it sets the BOOTIF variable on the kernel parameter
  
+@@ -54,7 +83,7 @@
  
- 	# support for Syslinux IPAPPEND parameter
-@@ -349,7 +377,7 @@
- 
- 				if [ "$bootif_mac" = "$current_mac" ]
- 				then
--					DEVICE=${device##*/}
-+					ETHDEVICE="${device##*/},$ETHDEVICE" # use ethdevice
- 					break
+ 					if [ "$bootif_mac" = "$current_mac" ]
+ 					then
+-						DEVICE=${device##*/}
++						ETHDEVICE="${device##*/},$ETHDEVICE" # use ethdevice
+ 						break
+ 					fi
  				fi
+@@ -67,14 +96,7 @@
+ 		if [ -z "$ETHDEVICE" ]
+ 		then
+ 			echo "If you want to boot from a specific device use bootoption ethdevice=..."
+-			for device in /sys/class/net/*
+-			do
+-				dev=${device##*/}
+-				if [ "$dev" != "lo" ]
+-				then
+-					ETHDEVICE="$ETHDEVICE $dev"
+-				fi
+-			done
++			ETHDEVICE="$ALLDEVICES"
+ 		fi
+ 
+ 		# split args of ethdevice=eth0,eth1 into "eth0 eth1"
+@@ -83,46 +105,28 @@
+ 			devlist="$devlist $device"
+ 		done
+ 
+-		# this is tricky (and ugly) because ipconfig sometimes just hangs/runs into
+-		# an endless loop; if execution fails give it two further tries, that's
+-		# why we use '$devlist $devlist $devlist' for the other for loop
+-		for dev in $devlist $devlist $devlist
+-		do
+-			echo "Executing ipconfig -t $ETHDEV_TIMEOUT $dev"
+-			ipconfig -t "$ETHDEV_TIMEOUT" $dev | tee -a /netboot.config &
+-			jobid=$!
+-			sleep "$ETHDEV_TIMEOUT" ; sleep 1
+-			if [ -r /proc/"$jobid"/status ]
+-			then
+-				echo "Killing job $jobid for device $dev as ipconfig ran into recursion..."
+-				kill -9 $jobid
++        for dev in $devlist ; do
++            param="$(get_ipconfig_para $dev)"
++            if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] ; then
++                echo "Ignoring network device $dev due to nodhcp." | tee -a /live-boot.log
++                continue
  			fi
-@@ -361,12 +389,7 @@
- 	# for *every* present network device (except for loopback of course)
- 	if [ -z "$ETHDEVICE" ] ; then
- 		echo "If you want to boot from a specific device use bootoption ethdevice=..."
--		for device in /sys/class/net/*; do
--			dev=${device##*/} ;
--			if [ "$dev" != "lo" ] ; then
--				ETHDEVICE="$ETHDEVICE $dev"
--			fi
--		done
-+        ETHDEVICE="$ALLDEVICES"
- 	fi
++            echo "Executing ipconfig -t $ETHDEV_TIMEOUT $param"
++            ipconfig -t "$ETHDEV_TIMEOUT" "$param" | tee -a /netboot.config
  
- 	# split args of ethdevice=eth0,eth1 into "eth0 eth1"
-@@ -374,43 +397,34 @@
- 		devlist="$devlist $device"
- 	done
- 
--	# this is tricky (and ugly) because ipconfig sometimes just hangs/runs into
--	# an endless loop; iff execution fails give it two further tries, that's
--	# why we use '$devlist $devlist $devlist' for the other for loop
--	for dev in $devlist $devlist $devlist ; do
--		echo "Executing ipconfig -t $ETHDEV_TIMEOUT $dev"
--		ipconfig -t "$ETHDEV_TIMEOUT" $dev | tee -a /netboot.config &
--		jobid=$!
--		sleep "$ETHDEV_TIMEOUT" ; sleep 1
--		if [ -r /proc/"$jobid"/status ] ; then
--			echo "Killing job $jobid for device $dev as ipconfig ran into recursion..."
--			kill -9 $jobid
-+	for dev in $devlist ; do
-+		param="$(get_ipconfig_para $dev)"
-+		if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] ; then
-+			echo "Ignoring network device $dev due to nodhcp." | tee -a /live-boot.log
-+			continue
- 		fi
-+		echo "Executing ipconfig -t $ETHDEV_TIMEOUT $param"
-+		ipconfig -t "$ETHDEV_TIMEOUT" "$param" | tee -a /netboot.config
- 
- 		# if configuration of device worked we should have an assigned
- 		# IP address, iff so let's use the according as $DEVICE for later usage
- 		# simple and primitive approach which seems to work fine
--		if ifconfig $dev | grep -q 'inet.*addr:' ; then
--			export DEVICE="$dev"
--			break
-+		IPV4ADDR="0.0.0.0"
-+		if [ -e "/run/net-${device}.conf" ]; then
-+			. /run/net-${device}.conf
-+		fi
-+		if [ "${IPV4ADDR}" != "0.0.0.0" ]; then
-+			export DEVICE="$dev $DEVICE"
-+			# break  # exit loop as we just use the irst
- 		fi
--	done
- 
+ 			# if configuration of device worked we should have an assigned
+ 			# IP address, if so let's use the device as $DEVICE for later usage.
+ 			# simple and primitive approach which seems to work fine
+-			if ifconfig $dev | grep -q 'inet.*addr:'
+-			then
+-				export DEVICE="$dev"
+-				break
++            IPV4ADDR="0.0.0.0"
++            if [ -e "/run/net-${device}.conf" ]; then
++                . /run/net-${device}.conf
++            fi
++            if [ "${IPV4ADDR}" != "0.0.0.0" ]; then
++                export DEVICE="$dev $DEVICE"
++                # break  # exit loop as we just use the irst
+ 			fi
+ 		done
 -	else
 -		for interface in ${DEVICE}; do
 -			ipconfig -t "$ETHDEV_TIMEOUT" ${interface} | tee /netboot-${interface}.config
+-
+-			# squeeze
 -			[ -e /tmp/net-${interface}.conf ] && . /tmp/net-${interface}.conf
+-
+-			# wheezy
+-			[ -e /run/net-${interface}.conf ] && . /run/net-${interface}.conf
+-
 -			if [ "$IPV4ADDR" != "0.0.0.0" ]
 -			then
 -				break
 -			fi
 -		done
 -	fi
-+	done
-+	unset devlist
++        unset devlist
  
- 	for interface in ${DEVICE}; do
- 		# source relevant ipconfig output
- 		OLDHOSTNAME=${HOSTNAME}
--		[ -e /tmp/net-${interface}.conf ] && . /tmp/net-${interface}.conf
-+		[ -e /run/net-${interface}.conf ] && . /run/net-${interface}.conf
- 		[ -z ${HOSTNAME} ] && HOSTNAME=${OLDHOSTNAME}
- 		export HOSTNAME
- 
---- a/scripts/live-helpers
-+++ b/scripts/live-helpers
-@@ -93,9 +93,8 @@
+ 	for interface in ${DEVICE}
+ 	do
+Index: live-boot-grml/scripts/boot/9990-cmdline-old
+===================================================================
+--- live-boot-grml.orig/scripts/boot/9990-cmdline-old	2012-12-03 07:59:14.794839124 +0100
++++ live-boot-grml/scripts/boot/9990-cmdline-old	2012-12-03 07:59:19.665258773 +0100
+@@ -51,9 +51,8 @@
  				;;
  
  			ethdevice=*)
--				DEVICE="${ARGUMENT#ethdevice=}"
+-				DEVICE="${_PARAMETER#ethdevice=}"
 -				ETHDEVICE="${DEVICE}"
 -				export DEVICE ETHDEVICE
-+				ETHDEVICE="${ARGUMENT#ethdevice=}"
++				ETHDEVICE="${_PARAMETER#ethdevice=}"
 +				export ETHDEVICE
  				;;
  
  			ethdevice-timeout=*)
-@@ -162,13 +161,9 @@
+@@ -110,13 +109,9 @@
  				;;
  
  			ip=*)
--				STATICIP="${ARGUMENT#ip=}"
+-				STATICIP="${_PARAMETER#ip=}"
 -
 -				if [ -z "${STATICIP}" ]
 -				then
@@ -167,7 +173,7 @@
 -
 +				# copy complete ip=args into staticip, and
 +				# keep multiple uses.
-+				STATICIP="${STATICIP} ${ARGUMENT}"
++				STATICIP="${STATICIP} ${_PARAMETER}"
  				export STATICIP
  				;;
  

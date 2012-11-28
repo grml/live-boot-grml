@@ -5,9 +5,9 @@
 ## DP: Pseudo-brand as grml
 
 @DPATCH@
---- a/scripts/live
-+++ b/scripts/live
-@@ -11,7 +11,7 @@
+--- a/scripts/boot/9990-aaa-fixme.sh
++++ b/scripts/boot/9990-aaa-fixme.sh
+@@ -9,7 +9,7 @@
  alt_mountpoint="/media"
  LIVE_MEDIA_PATH="live"
  

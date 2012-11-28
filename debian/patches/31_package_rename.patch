@@ -1,7 +1,7 @@
 --- a/Makefile
 +++ b/Makefile
-@@ -52,11 +52,11 @@
- 	cp -r hooks scripts $(DESTDIR)/usr/share/initramfs-tools
+@@ -52,8 +52,8 @@
+ 	cp backends/initramfs-tools/live.script $(DESTDIR)/usr/share/initramfs-tools/scripts/live
  
  	# Installing docs
 -	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
@@ -9,14 +9,9 @@
 +	mkdir -p $(DESTDIR)/usr/share/doc/live-boot-grml
 +	cp -r COPYING $(DESTDIR)/usr/share/doc/live-boot-grml
  
--	mkdir -p $(DESTDIR)/usr/share/doc/live-boot/examples
--	cp -r etc/* $(DESTDIR)/usr/share/doc/live-boot/examples
-+	mkdir -p $(DESTDIR)/usr/share/doc/live-boot-grml/examples
-+	cp -r etc/* $(DESTDIR)/usr/share/doc/live-boot-grml/examples
- 	# (FIXME)
- 
  	# Installing manpages
-@@ -94,7 +94,7 @@
+ 	for MANPAGE in manpages/en/*; \
+@@ -86,7 +86,7 @@
  	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr > /dev/null 2>&1 || true
  
  	# Uninstalling docs
