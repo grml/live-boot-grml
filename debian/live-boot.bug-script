@@ -4,7 +4,7 @@
 dpkg -l busybox file initramfs-tools sudo udev user-setup
 
 # Checking recommends
-dpkg -l eject uuid-runtime wget
+dpkg -l uuid-runtime wget
 
 # Checking suggests
 dpkg -l loop-aes-utils curlftpfs genext2fs httpfs2 squashfs-tools mtd-tools
