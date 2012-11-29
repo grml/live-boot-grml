@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Checking depends
-dpkg -l busybox file initramfs-tools sudo udev user-setup
+dpkg -l busybox initramfs-tools sudo udev user-setup
 
 # Checking recommends
 dpkg -l uuid-runtime wget
