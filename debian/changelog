@@ -1,3 +1,13 @@
+live-boot (3.0~b8-1) unstable; urgency=low
+
+  * Removing eject from recommends, the script that ejects the live medium
+    is in live-config these days.
+  * Removing file from recommends, no usage of file in live-boot anymore.
+  * Updating package lists in bug script to match current implementations.
+  * Adding dpkg-source local options.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 30 Nov 2012 14:48:16 +0100
+
 live-boot (3.0~b7-1) unstable; urgency=low
 
   [ Daniel Baumann ]
