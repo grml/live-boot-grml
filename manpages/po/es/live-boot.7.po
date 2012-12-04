@@ -4,8 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 3.0~b6-1\n"
-"POT-Creation-Date: 2012-10-02 10:38+0300\n"
+"Project-Id-Version: live-boot 3.0~b8-1\n"
+"POT-Creation-Date: 2012-11-30 14:47+0100\n"
 "PO-Revision-Date: 2012-06-07 20:29+0200\n"
 "Last-Translator: Carlos Zuferri «chals» <chals@altorricon.com>\n"
 "Language-Team:  none\n"
@@ -24,14 +24,14 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2012-10-02"
-msgstr "02.10.2012"
+msgid "2012-11-30"
+msgstr "30.11.2012"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "3.0~b6-1"
-msgstr "3.0~b6-1"
+msgid "3.0~b8-1"
+msgstr "3.0~b8-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1

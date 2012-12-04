@@ -5,7 +5,7 @@ export PATH="/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbi
 echo "/root/lib" >> /etc/ld.so.conf
 echo "/root/usr/lib" >> /etc/ld.so.conf
 
-mountpoint="/live/image"
+mountpoint="/live/medium"
 alt_mountpoint="/media"
 LIVE_MEDIA_PATH="live"
 
@@ -44,6 +44,7 @@ old_root_overlay_label="live-rw"
 old_home_overlay_label="home-rw"
 custom_overlay_label="persistence"
 persistence_list="persistence.conf"
+old_persistence_list="live-persistence.conf"
 
 if [ ! -f /live.vars ]
 then

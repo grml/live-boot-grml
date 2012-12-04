@@ -1,15 +1,15 @@
 #!/bin/sh
 
 # Checking depends
-dpkg -l busybox file initramfs-tools sudo udev user-setup
+dpkg -l busybox busybox-initramfs initramfs-tools udev
 
 # Checking recommends
-dpkg -l eject uuid-runtime wget
+dpkg -l rsync uuid-runtime
 
 # Checking suggests
-dpkg -l loop-aes-utils curlftpfs genext2fs httpfs2 squashfs-tools mtd-tools
+dpkg -l curlftpfs cryptsetup httpfs2 unionfs-fuse wget
 
 # Checking other packages
-dpkg -l cryptsetup plymouth
+dpkg -l plymouth
 
 exit 0
