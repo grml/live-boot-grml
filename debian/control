@@ -12,15 +12,15 @@ Bugs: mailto:bugs@grml.org
 
 Package: live-boot-grml
 Architecture: all
-Depends: ${misc:Depends}, genext2fs, live-boot-grml-initramfs-tools
+Depends: ${misc:Depends}, genext2fs, live-boot-grml-initramfs-tools | live-boot-backend
 Recommends: live-boot-grml-doc, eject, file, rsync, uuid-runtime
 Conflicts: live-boot
 Replaces: live-boot
 Provides: live-boot
 Suggests: curlftpfs, cryptsetup, httpfs2, unionfs-fuse, wget
-Description: Debian Live - System Boot Scripts
- live-boot contains the scripts that configure a Debian Live system during the
- boot process (early userspace).
+Description: Live System Boot Scripts
+ live-boot contains the scripts that configure a live system during the boot
+ process (early userspace).
  .
  In addition to live-boot, a backend for the initrd generation is required, such
  as live-boot-initramfs-tools.
@@ -33,12 +33,11 @@ Package: live-boot-grml-doc
 Section: doc
 Architecture: all
 Depends: ${misc:Depends}
-Conflicts: live-boot (<< 3.0~a18~), live-boot-doc
-Replaces: live-boot, live-boot-doc
-Provides: live-boot-doc
-Description: Debian Live - System Boot Scripts (documentation)
- live-boot contains the scripts that configure a Debian Live system during the
- boot process (early userspace).
+Conflicts: live-boot (<< 3.0~a18~)
+Replaces: live-boot
+Description: Live System Boot Scripts (documentation)
+ live-boot contains the scripts that configure a live system during the boot
+ process (early userspace).
  .
  This package contains the documentation.
  .
@@ -53,10 +52,9 @@ Depends:
 Conflicts: live-boot-backend
 Replaces: live-boot-backend
 Provides: live-boot-backend
-Breaks: klibc-utils (<< 2.0-2)
-Description: Debian Live - System Boot Scripts (initramfs-tools backend)
- live-boot contains the scripts that configure a Debian Live system during the
- boot process (early userspace).
+Description: Live System Boot Scripts (initramfs-tools backend)
+ live-boot contains the scripts that configure a live system during the boot
+ process (early userspace).
  .
  This package contains the initramfs-tools backend.
  .
