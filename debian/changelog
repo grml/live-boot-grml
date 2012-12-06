@@ -1,3 +1,13 @@
+live-boot (3.0~b8-1+grml.1) unstable; urgency=low
+
+  The "sync with Debian's 3.0~b8-1 version" release
+
+  [ Evgeni Golov ]
+  * [ce765d3] refresh patches against Debian's 3.0~b8-1
+  * [b484d6d] allow the use of multiple initramfs hooks and scripts again
+
+ -- Michael Prokop <mika@grml.org>  Thu, 06 Dec 2012 12:51:50 +0100
+
 live-boot (3.0~b8-1) unstable; urgency=low
 
   * Removing eject from recommends, the script that ejects the live medium
