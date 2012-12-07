@@ -189,7 +189,8 @@ setup_unionfs ()
 			done
 		fi
 
-		local whitelistdev=""
+		local whitelistdev
+		whitelistdev=""
 		if [ -n "${PERSISTENCE_MEDIA}" ]
 		then
 			case "${PERSISTENCE_MEDIA}" in
@@ -212,7 +213,8 @@ setup_unionfs ()
 			overlays="${old_root_overlay_label} ${old_home_overlay_label} ${custom_overlay_label}"
 		fi
 
-		local overlay_devices=""
+		local overlay_devices
+		overlay_devices=""
 		if [ "${whitelistdev}" != "ignore_all_devices" ]
 		then
 			for media in $(find_persistence_media "${overlays}" "${whitelistdev}")
@@ -406,7 +408,8 @@ setup_unionfs ()
 	# Adding custom persistence
 	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
 	then
-		local custom_mounts="/tmp/custom_mounts.list"
+		local custom_mounts
+		custom_mounts="/tmp/custom_mounts.list"
 		rm -rf ${custom_mounts} 2> /dev/null
 
 		# Gather information about custom mounts from devies detected as overlays
@@ -415,7 +418,8 @@ setup_unionfs ()
 		[ -n "${DEBUG}" ] && cp ${custom_mounts} "/lib/live/mount/persistence"
 
 		# Now we do the actual mounting (and symlinking)
-		local used_overlays=""
+		local used_overlays
+		used_overlays=""
 		used_overlays=$(activate_custom_mounts ${custom_mounts})
 		rm ${custom_mounts}
 
