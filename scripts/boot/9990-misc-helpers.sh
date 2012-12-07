@@ -714,6 +714,11 @@ try_mount ()
 	fi
 }
 
+# Try to mount $device to the place expected by live-boot. If $device
+# is already mounted somewhere, move it to the expected place. If
+# we're only probing $device (to check if it has custom persistence)
+# $probe should be set, which suppresses warnings upon failure. On
+# success, print the mount point for $device.
 mount_persistence_media ()
 {
 	local device=${1}
@@ -751,8 +756,12 @@ mount_persistence_media ()
 			rmdir "${backing}"
 			return 1
 		fi
+	else
+		# This means that $device has already been mounted on
+		# the place expected by live-boot, so we're done.
+		echo ${backing}
+		return 0
 	fi
-	return 0
 }
 
 close_persistence_media ()
