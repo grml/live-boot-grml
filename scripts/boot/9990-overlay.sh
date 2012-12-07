@@ -189,19 +189,23 @@ setup_unionfs ()
 			done
 		fi
 
-		case "${PERSISTENCE_MEDIA}" in
-			removable)
-				whitelistdev="$(removable_dev)"
-				;;
+		local whitelistdev=""
+		if [ -n "${PERSISTENCE_MEDIA}" ]
+		then
+			case "${PERSISTENCE_MEDIA}" in
+				removable)
+					whitelistdev="$(removable_dev)"
+					;;
 
-			removable-usb)
-				whitelistdev="$(removable_usb_dev)"
-				;;
-
-			*)
-				whitelistdev=""
-				;;
-		esac
+				removable-usb)
+					whitelistdev="$(removable_usb_dev)"
+					;;
+			esac
+			if [ -z "${whitelistdev}" ]
+			then
+				whitelistdev="ignore_all_devices"
+			fi
+		fi
 
 		if is_in_comma_sep_list overlay ${PERSISTENCE_METHOD}
 		then
@@ -209,17 +213,20 @@ setup_unionfs ()
 		fi
 
 		local overlay_devices=""
-		for media in $(find_persistence_media "${overlays}" "${whitelistdev}")
-		do
-			media="$(echo ${media} | tr ":" " ")"
+		if [ "${whitelistdev}" != "ignore_all_devices" ]
+		then
+			for media in $(find_persistence_media "${overlays}" "${whitelistdev}")
+			do
+				media="$(echo ${media} | tr ":" " ")"
 
-			case ${media} in
-				${custom_overlay_label}=*)
-					device="${media#*=}"
-					overlay_devices="${overlay_devices} ${device}"
-					;;
-			 esac
-		done
+				case ${media} in
+					${custom_overlay_label}=*)
+						device="${media#*=}"
+						overlay_devices="${overlay_devices} ${device}"
+						;;
+				 esac
+			done
+		fi
 	elif [ -n "${NFS_COW}" ] && [ -z "${NOPERSISTENCE}" ]
 	then
 		# check if there are any nfs options
