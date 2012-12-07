@@ -373,34 +373,9 @@ setup_unionfs ()
 		esac
 	done
 
-	# Adding custom persistence
-	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
-	then
-		local custom_mounts="/tmp/custom_mounts.list"
-		rm -rf ${custom_mounts} 2> /dev/null
-
-		# Gather information about custom mounts from devies detected as overlays
-		get_custom_mounts ${custom_mounts} ${overlay_devices}
-
-		[ -n "${DEBUG}" ] && cp ${custom_mounts} "/live/persistence"
-
-		# Now we do the actual mounting (and symlinking)
-		local used_overlays=""
-		used_overlays=$(activate_custom_mounts ${custom_mounts})
-		rm ${custom_mounts}
-
-		# Close unused overlays (e.g. due to missing $persistence_list)
-		for overlay in ${overlay_devices}
-		do
-			if echo ${used_overlays} | grep -qve "^\(.* \)\?${device}\( .*\)\?$"
-			then
-				close_persistence_media ${overlay}
-			fi
-		done
-	fi
-
-	# move all mountpoints to root filesystem
-	for _DIRECTORY in rootfs persistence
+	# move all /live mountpoints that the custom persistence
+	# system depends on into /lib/live on the root filesystem
+	for _DIRECTORY in rootfs
 	do
 		if [ -d "/live/${_DIRECTORY}" ]
 		then
@@ -420,6 +395,32 @@ setup_unionfs ()
 	mount -o move /live/overlay "${rootmnt}/lib/live/mount/overlay" > /dev/null 2>&1 || \
 		mount -o bind /live/overlay "${rootmnt}/lib/live/mount/overlay" || \
 		log_warning_msg "W: failed to mount /live/overlay to ${rootmnt}/lib/live/mount/overlay"
+
+	# Adding custom persistence
+	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
+	then
+		local custom_mounts="/tmp/custom_mounts.list"
+		rm -rf ${custom_mounts} 2> /dev/null
+
+		# Gather information about custom mounts from devies detected as overlays
+		get_custom_mounts ${custom_mounts} ${overlay_devices}
+
+		[ -n "${DEBUG}" ] && cp ${custom_mounts} "/lib/live/mount/persistence"
+
+		# Now we do the actual mounting (and symlinking)
+		local used_overlays=""
+		used_overlays=$(activate_custom_mounts ${custom_mounts})
+		rm ${custom_mounts}
+
+		# Close unused overlays (e.g. due to missing $persistence_list)
+		for overlay in ${overlay_devices}
+		do
+			if echo ${used_overlays} | grep -qve "^\(.* \)\?${device}\( .*\)\?$"
+			then
+				close_persistence_media ${overlay}
+			fi
+		done
+	fi
 
         # ensure that a potentially stray tmpfs gets removed
         # otherways, initramfs-tools is unable to remove /live

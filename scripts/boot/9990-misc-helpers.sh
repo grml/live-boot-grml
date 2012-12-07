@@ -728,7 +728,7 @@ mount_persistence_media ()
 	local device=${1}
 	local probe=${2}
 
-	local backing="/live/persistence/$(basename ${device})"
+	local backing="${rootmnt}/lib/live/mount/persistence/$(basename ${device})"
 
 	mkdir -p "${backing}"
 	local old_backing="$(where_is_mounted ${device})"
@@ -940,7 +940,7 @@ find_persistence_media ()
 	local white_listed_devices="${2}"
 	local ret=""
 
-	local black_listed_devices="$(what_is_mounted_on /live/medium)"
+	local black_listed_devices="$(what_is_mounted_on ${rootmnt}/lib/live/medium)"
 
 	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
@@ -1233,7 +1233,7 @@ do_union ()
 
 get_custom_mounts ()
 {
-	# Side-effect: leaves $devices with persistence.conf mounted in /live/persistence
+	# Side-effect: leaves $devices with persistence.conf mounted in ${rootmnt}/lib/live/mount/persistence
 	# Side-effect: prints info to file $custom_mounts
 
 	local custom_mounts=${1}
@@ -1271,7 +1271,7 @@ get_custom_mounts ()
 
 		if [ -n "${DEBUG}" ] && [ -e "${include_list}" ]
 		then
-			cp ${include_list} /live/persistence/${persistence_list}.${device_name}
+			cp ${include_list} ${rootmnt}/lib/live/mount/persistence/${persistence_list}.${device_name}
 		fi
 
 		while read dir options # < ${include_list}
@@ -1282,9 +1282,9 @@ get_custom_mounts ()
 				continue
 			fi
 
-			if trim_path ${dir} | grep -q -e "^[^/]" -e "^/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
+			if trim_path ${dir} | grep -q -e "^[^/]" -e "^/lib" -e "^/lib/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
 			then
-				log_warning_msg "Skipping unsafe custom mount ${dir}: must be an absolute path containing neither the \".\" nor \"..\" special dirs, and cannot be \"/live\" or any sub-directory therein."
+				log_warning_msg "Skipping unsafe custom mount ${dir}: must be an absolute path containing neither the \".\" nor \"..\" special dirs, and cannot be \"/lib\", or \"/lib/live\" or any of its sub-directories."
 				continue
 			fi
 
@@ -1451,7 +1451,7 @@ activate_custom_mounts ()
 		local rootfs_dest_backing=""
 		if [ -n "${opt_link}"]
 		then
-			for d in /live/rootfs/*
+			for d in ${rootmnt}/lib/live/mount/rootfs/*
 			do
 				if [ -n "${rootmnt}" ]
 				then
@@ -1473,8 +1473,8 @@ activate_custom_mounts ()
 			link_files ${source} ${dest} ${rootmnt}
 		elif [ -n "${opt_link}" ] && [ -n "${PERSISTENCE_READONLY}" ]
 		then
-			mkdir -p /live/persistence
-			local links_source=$(mktemp -d /live/persistence/links-source-XXXXXX)
+			mkdir -p ${rootmnt}/lib/live/mount/persistence
+			local links_source=$(mktemp -d ${rootmnt}/lib/live/mount/persistence/links-source-XXXXXX)
 			chown_ref ${source} ${links_source}
 			chmod_ref ${source} ${links_source}
 			# We put the cow dir in the below strange place to
@@ -1482,7 +1482,7 @@ activate_custom_mounts ()
 			# has its own directory and isn't nested with some
 			# other custom mount (if so that mount's files would
 			# be linked, causing breakage.
-			local cow_dir="/live/overlay/live/persistence/$(basename ${links_source})"
+			local cow_dir="${rootmnt}/lib/live/mount/overlay/lib/live/mount/persistence/$(basename ${links_source})"
 			mkdir -p ${cow_dir}
 			chown_ref "${source}" "${cow_dir}"
 			chmod_ref "${source}" "${cow_dir}"
@@ -1499,14 +1499,7 @@ activate_custom_mounts ()
 			# bind-mount and union mount are handled the same
 			# in read-only mode, but note that rootfs_dest_backing
 			# is non-empty (and necessary) only for unions
-			if [ -n "${rootmnt}" ]
-			then
-				local cow_dir="$(echo ${dest} | sed -e "s|^${rootmnt}|/live/overlay/|")"
-			else
-				# This is happens if persistence is activated
-				# post boot
-				local cow_dir="/live/overlay/${dest}"
-			fi
+			local cow_dir="${rootmnt}/lib/live/mount/overlay/${dest}"
 			if [ -e "${cow_dir}" ] && [ -z "${opt_link}" ]
 			then
 				# If an earlier custom mount has files here
