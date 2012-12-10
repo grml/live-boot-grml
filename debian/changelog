@@ -1,3 +1,16 @@
+live-boot (4.0~a2-1) experimental; urgency=low
+
+  [ Tails developers ]
+  * Making the /live to /lib/live move for the persistence code.
+  * Handling already mounted persistence backing media correctly.
+  * Fixing persistence-media option when no devices are attached.
+  * Using 'local' in a safe way.
+
+  [ Daniel Baumann ]
+  * Adding 3.0~b9-1 changelog entries.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 10 Dec 2012 20:06:28 +0100
+
 live-boot (4.0~a1-1) experimental; urgency=low
 
   * Dropping specifics for squeeze based distributions.
