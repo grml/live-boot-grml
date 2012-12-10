@@ -4,6 +4,16 @@ live-boot (4.0~a1-1) experimental; urgency=low
 
  -- Daniel Baumann <daniel@debian.org>  Fri, 30 Nov 2012 14:58:46 +0100
 
+live-boot (3.0~b9-1) unstable; urgency=low
+
+  [ Tails developers ]
+  * Making the /live to /lib/live move for the persistence code.
+  * Handling already mounted persistence backing media correctly.
+  * Fixing persistence-media option when no devices are attached.
+  * Using 'local' in a safe way.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 10 Dec 2012 20:01:21 +0100
+
 live-boot (3.0~b8-1) unstable; urgency=low
 
   * Removing eject from recommends, the script that ejects the live medium
