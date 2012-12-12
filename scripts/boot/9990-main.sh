@@ -32,7 +32,7 @@ Main ()
 		. /conf/param.conf
 	fi
 
-	if [ -x /bin/mount.util-linux ] && [ -z "${KLIBC_MOUNT}" ]
+	if [ -n "${FUSE_MOUNT}" ]
 	then
 		# fuse does not work with klibc mount
 		ln -f /bin/mount.util-linux /bin/mount
