@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2012\-12\-10 3.0~b9-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 2012\-12\-16 3.0~b9-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -74,7 +74,7 @@ Allows to use a filesystem from within an iso image that's available on live-med
 Do not check that any UUID embedded in the initramfs matches the discovered medium. live\-boot may be told to generate a UUID by setting LIVE_GENERATE_UUID=1 when building the initramfs.
 .IP "\fBverify\-checksums\fR" 4
 If specified, an MD5 sum is calculated on the live media during boot and compared to the value found in md5sum.txt found in the root directory of the live media.
-.IP "\fBip\fR=[\fIDEVICE\fR]:[\fICLIENT_IP\fR]:[\fISERVER_IP\fR]:[\fIGATEWAY_IP\fR]:[\fINETMASK\fR]:[\fIHOSTNAME\fR]:[\fIAUTOCONF\fR] [,[\fIDEVICE\fR]:[\fICLIENT_IP\fR]:[\fISERVER_IP\fR]:[\fIGATEWAY_IP\fR]:[\fINETMASK\fR]:[\fIHOSTNAME\fR]:[\fIAUTOCONF\fR]]" 4
+.IP "\fBip\fR=[\fIDEVICE\fR]:[\fICLIENT_IP\fR]:[\fINETMASK\fR]:[\fIGATEWAY_IP\fR]:[\fINAMESERVER\fR] [,[\fIDEVICE\fR]:[\fICLIENT_IP\fR]:[\fINETMASK\fR]:[\fIGATEWAY_IP\fR]:[\fINAMESERVER\fR]]" 4
 Let you specify the name(s) and the options of the interface(s) that should be configured at boot time. Do not specify this if you want to use dhcp (default). It will be changed in a future release to mimick official kernel boot param specification (e.g. ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp).
 .IP "\fBip\fR=[\fIfrommedia\fR]" 4
 If this variable is set, dhcp and static configuration are just skipped and the system will use the (must be) media\-preconfigured /etc/network/interfaces instead.
