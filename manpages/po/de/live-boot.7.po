@@ -23,7 +23,7 @@ msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "2012-12-16"
 msgstr "16.12.2012"
 
