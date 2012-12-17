@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 10.12.2012 3.0~b9\-1 "Proyecto Debian Live"
+.TH LIVE\-BOOT 7 17.12.2012 3.0~b10\-1 "Proyecto Debian Live"
 
 .SH NOMBRE
 \fBlive\-boot\fP \- Scripts de Arranque del Sistema
@@ -116,7 +116,7 @@ configurando LIVE_GENERATE_UUID=1 en el momento de crear el initramfs.
 Si se especifica, se calcula una suma MD5 sobre los medios en vivo durante
 el arranque y se compara con el valor md5sum.txt que se encuentra en el
 directorio raíz de los medios en vivo.
-.IP "\fBip\fP=[\fIDEVICE\fP]:[\fICLIENT_IP\fP]:[\fISERVER_IP\fP]:[\fIGATEWAY_IP\fP]:[\fINETMASK\fP]:[\fIHOSTNAME\fP]:[\fIAUTOCONF\fP] [,[\fIDEVICE\fP]:[\fICLIENT_IP\fP]:[\fISERVER_IP\fP]:[\fIGATEWAY_IP\fP]:[\fINETMASK\fP]:[\fIHOSTNAME\fP]:[\fIAUTOCONF\fP]]" 4
+.IP "\fBip\fP=[\fIDEVICE\fP]:[\fICLIENT_IP\fP]:[\fINETMASK\fP]:[\fIGATEWAY_IP\fP]:[\fINAMESERVER\fP] [,[\fIDEVICE\fP]:[\fICLIENT_IP\fP]:[\fINETMASK\fP]:[\fIGATEWAY_IP\fP]:[\fINAMESERVER\fP]]" 4
 Permite especificar el nombre(s) y las opciones de la interfaz(ces) que se
 debe configurar en el arranque. No especificar esta opción si se desea
 utilizar DHCP (opción por defecto). Esto cambiará en una futura versión para
