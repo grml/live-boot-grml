@@ -1,3 +1,20 @@
+live-boot (3.0~b9-1+grml.1) unstable; urgency=low
+
+  [ Evgeni Golov ]
+  * [bdc44cd] drop 37_fix_legacy_persistence_handling.patch, applied
+    upstream
+
+  [ Michael Prokop ]
+  * [1aa780a] Refresh patches against current master
+  * [a133107] Add patch to drop nameserver handling from ip= boot
+    parameter
+  * [7782d4f] Add patch to restore support for persistence media with
+    LABEL=custom-ov (credits to Evgeni)
+  * [b7de9b2] Do not fix mountpoints with live-persistence.conf as
+    home-rw/live-rw (credits to Evgeni)
+
+ -- Michael Prokop <mika@grml.org>  Mon, 17 Dec 2012 18:22:27 +0100
+
 live-boot (3.0~b9-1) unstable; urgency=low
 
   [ Tails developers ]
