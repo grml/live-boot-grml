@@ -6,17 +6,18 @@ Date:   Fri Mar 25 23:02:38 2011 +0100
     
     Thanks to Ulrich Dangel for discovering this. [Closes: issue848]
 
---- a/backends/initramfs-tools/live.hook
-+++ b/backends/initramfs-tools/live.hook
-@@ -223,24 +223,20 @@
+Index: live-boot-grml/backends/initramfs-tools/live.hook
+===================================================================
+--- live-boot-grml.orig/backends/initramfs-tools/live.hook	2012-12-17 21:01:56.339847815 +0100
++++ live-boot-grml/backends/initramfs-tools/live.hook	2012-12-17 21:02:16.468142747 +0100
+@@ -227,23 +227,19 @@
  
  # Some experimental stuff
  
 -case "${LIVE_DNS}" in
 -	true)
 -		[ "${QUIET}" ] || echo -n " dns"
-+[ "${QUIET}" ] || echo -n " dns"
- 
+-
 -		# /lib/libnss_dns.so.*:a   DNS
 -		# /lib/libnss_files.so.*:  /etc/hosts and /etc/passwd
 -		# /lib/libnss_compat.so.*: /etc/passwd
@@ -31,6 +32,8 @@ Date:   Fri Mar 25 23:02:38 2011 +0100
 -		#cp -p /etc/nsswitch.conf "${DESTDIR}/etc"
 -		;;
 -esac
++[ "${QUIET}" ] || echo -n " dns"
++
 +# /lib/libnss_dns.so.*:a   DNS
 +# /lib/libnss_files.so.*:  /etc/hosts and /etc/passwd
 +# /lib/libnss_compat.so.*: /etc/passwd
@@ -44,5 +47,4 @@ Date:   Fri Mar 25 23:02:38 2011 +0100
 +#mkdir -p "${DESTDIR}/etc"
 +#cp -p /etc/nsswitch.conf "${DESTDIR}/etc"
  
- case "${LIVE_UNIONMOUNT}" in
- 	true)
+ [ "${QUIET}" ] || echo .
