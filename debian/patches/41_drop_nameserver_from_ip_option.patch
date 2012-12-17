@@ -1,0 +1,41 @@
+Author: Michael Prokop <mika@grml.org>
+Date:   Mon Dec 17 16:31:42 CET 2012
+
+    Drop nameserver handling from ip= boot parameter.
+
+In commit ab6364da036b4b09c0e5c92b0e21c4d43e4bd4c2
+("Adding support for nameserver in ip= boot parameter.")
+Debian's live-boot added support for handling nameserver
+option inside the ip= boot parameter.
+
+This violates the ip= handling as documented in
+https://www.kernel.org/doc/Documentation/filesystems/nfs/nfsroot.txt
+
+--- a/scripts/boot/9990-netbase.sh
++++ b/scripts/boot/9990-netbase.sh
+@@ -44,7 +44,6 @@
+ 			ifaddress="$(echo ${ifline} | cut -f2 -d ':')"
+ 			ifnetmask="$(echo ${ifline} | cut -f3 -d ':')"
+ 			ifgateway="$(echo ${ifline} | cut -f4 -d ':')"
+-			nameserver="$(echo ${ifline} | cut -f5 -d ':')"
+ 
+ cat >> "${IFFILE}" << EOF
+ allow-hotplug ${ifname}
+@@ -62,17 +61,6 @@
+ EOF
+ 
+ 			fi
+-
+-			if [ -n "${nameserver}" ]
+-			then
+-				if [ -e "${DNSFILE}" ]
+-				then
+-					grep -v ^nameserver "${DNSFILE}" > "${DNSFILE}.tmp"
+-					mv "${DNSFILE}.tmp" "${DNSFILE}"
+-				fi
+-
+-				echo "nameserver ${nameserver}" >> "${DNSFILE}"
+-			fi
+ 		done
+ 	else
+ 		if [ -z "${NETBOOT}" ] || [ -n "${DHCP}" ]
