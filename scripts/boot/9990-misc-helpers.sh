@@ -1581,7 +1581,7 @@ fix_backwards_compatibility ()
 	fi
 
 	include_list="${backing}/${persistence_list}"
-	if [ ! -r "${include_list}" ]
+	if [ ! -r "${include_list}" ] && [ ! -r "${backing}/${old_persistence_list}" ]
 	then
 		echo "# persistence backwards compatibility:
 ${dir} ${opt},source=." > "${include_list}"
