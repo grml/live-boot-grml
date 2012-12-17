@@ -335,7 +335,8 @@ setup_unionfs ()
 		then
 			# FIXME: handle PERSISTENCE_READONLY
 			unionmountopts="-t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice}"
-			mount_full $unionmountopts "${unionmountpoint}"
+			# unionmount only works with util-linux mount
+			mount.util-linux $unionmountopts "${unionmountpoint}"
 		else
 			cow_dir="/live/overlay${dir}"
 			rootfs_dir="${rootfs}${dir}"

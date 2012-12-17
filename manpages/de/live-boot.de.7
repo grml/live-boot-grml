@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 10.12.2012 3.0~b9\-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 17.12.2012 3.0~b10\-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Scripts
@@ -110,7 +110,7 @@ LIVE_GENERATE_UUID=1 when building the initramfs.
 If specified, an MD5 sum is calculated on the live media during boot and
 compared to the value found in md5sum.txt found in the root directory of the
 live media.
-.IP "\fBip\fP=[\fIDEVICE\fP]:[\fICLIENT_IP\fP]:[\fISERVER_IP\fP]:[\fIGATEWAY_IP\fP]:[\fINETMASK\fP]:[\fIHOSTNAME\fP]:[\fIAUTOCONF\fP] [,[\fIDEVICE\fP]:[\fICLIENT_IP\fP]:[\fISERVER_IP\fP]:[\fIGATEWAY_IP\fP]:[\fINETMASK\fP]:[\fIHOSTNAME\fP]:[\fIAUTOCONF\fP]]" 4
+.IP "\fBip\fP=[\fIDEVICE\fP]:[\fICLIENT_IP\fP]:[\fINETMASK\fP]:[\fIGATEWAY_IP\fP]:[\fINAMESERVER\fP] [,[\fIDEVICE\fP]:[\fICLIENT_IP\fP]:[\fINETMASK\fP]:[\fIGATEWAY_IP\fP]:[\fINAMESERVER\fP]]" 4
 Let you specify the name(s) and the options of the interface(s) that should
 be configured at boot time. Do not specify this if you want to use dhcp
 (default). It will be changed in a future release to mimick official kernel
