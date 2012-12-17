@@ -1,7 +1,5 @@
-Index: live-boot-grml/Makefile
-===================================================================
---- live-boot-grml.orig/Makefile	2012-11-28 16:30:56.243755796 +0100
-+++ live-boot-grml/Makefile	2012-11-28 16:36:50.614711051 +0100
+--- a/Makefile
++++ b/Makefile
 @@ -47,9 +47,13 @@
  
  	# Installing executables

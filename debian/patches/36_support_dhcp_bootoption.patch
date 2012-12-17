@@ -1,6 +1,6 @@
 --- a/scripts/boot/9990-grml-networking.sh
 +++ b/scripts/boot/9990-grml-networking.sh
-@@ -75,6 +75,14 @@
+@@ -59,6 +59,14 @@
          method="manual"
      fi
  

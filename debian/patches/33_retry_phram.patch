@@ -9,7 +9,7 @@ Date:   Mon Jul 11 12:42:24 2011 +0200
 
 --- a/scripts/boot/9990-main.sh
 +++ b/scripts/boot/9990-main.sh
-@@ -1576,6 +1576,7 @@
+@@ -60,6 +60,7 @@
  				then
  					# We found a memdisk, set up phram
  					modprobe phram phram=memdisk,${MEMDISK}

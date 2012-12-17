@@ -14,7 +14,7 @@
 @DPATCH@
 --- a/scripts/boot/9990-misc-helpers.sh
 +++ b/scripts/boot/9990-misc-helpers.sh
-@@ -52,6 +52,42 @@
+@@ -20,6 +20,42 @@
  	return 1
  }
  
@@ -57,7 +57,7 @@
  matches_uuid ()
  {
  	if [ "${IGNORE_UUID}" ] || [ ! -e /conf/uuid.conf ]
-@@ -1350,7 +1386,7 @@
+@@ -247,7 +283,7 @@
  		fi
  
  		if is_live_path ${mountpoint} && \
@@ -66,7 +66,7 @@
  		then
  			echo ${mountpoint}
  			return 0
-@@ -1446,19 +1482,6 @@
+@@ -343,19 +379,6 @@
  					return 0
  				fi
  			done
