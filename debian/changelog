@@ -1,3 +1,12 @@
+live-boot (3.0~b10-1+grml.1) unstable; urgency=low
+
+  * [795263e] refresh 29_support_dns_in_initramfs.patch against
+    current upstream
+  * [2045fef] drop 43_do_not_fix_mountpoints_with_live-persistence.patch,
+    applied upstream
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 17 Dec 2012 21:09:32 +0100
+
 live-boot (3.0~b10-1) unstable; urgency=low
 
   [ Daniel Baumann ]
