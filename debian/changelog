@@ -1,3 +1,28 @@
+live-boot (3.0~b10-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Adding live-tools to recommends.
+
+  [ Michal Suchanek ]
+  * Including util-linux mount in initramfs.
+
+  [ Daniel Baumann ]
+  * Making overwriting of /bin/mount within initramfs with mount.util-
+    linux dependent on fuse usage, not on some additional boot parameter.
+  * Correcting spelling typo in bug script.
+
+  [ Richard Nelson ]
+  * Update manpage information of ip= param to correctly reflect what
+    9990-netbase.sh expects.
+
+  [ Daniel Baumann ]
+  * Cleaning up manpage po files.
+
+  [ Evgeni Golov ]
+  * Do not fix mountpoints with live-persistence.conf as home-rw/live-rw.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 17 Dec 2012 20:22:50 +0100
+
 live-boot (3.0~b9-1) unstable; urgency=low
 
   [ Tails developers ]
