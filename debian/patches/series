@@ -15,6 +15,5 @@
 33_retry_phram.patch
 34_ignore_unknown_filesystems.patch
 36_support_dhcp_bootoption.patch
-37_fix_legacy_persistence_handling.patch
 39_persistence_with_forensic.patch
 40_support_multiple_hooks.patch
