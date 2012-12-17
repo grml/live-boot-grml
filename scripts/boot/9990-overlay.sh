@@ -189,49 +189,58 @@ setup_unionfs ()
 			done
 		fi
 
-		case "${PERSISTENCE_MEDIA}" in
-			removable)
-				whitelistdev="$(removable_dev)"
-				;;
+		local whitelistdev
+		whitelistdev=""
+		if [ -n "${PERSISTENCE_MEDIA}" ]
+		then
+			case "${PERSISTENCE_MEDIA}" in
+				removable)
+					whitelistdev="$(removable_dev)"
+					;;
 
-			removable-usb)
-				whitelistdev="$(removable_usb_dev)"
-				;;
-
-			*)
-				whitelistdev=""
-				;;
-		esac
+				removable-usb)
+					whitelistdev="$(removable_usb_dev)"
+					;;
+			esac
+			if [ -z "${whitelistdev}" ]
+			then
+				whitelistdev="ignore_all_devices"
+			fi
+		fi
 
 		if is_in_comma_sep_list overlay ${PERSISTENCE_METHOD}
 		then
 			overlays="${old_root_overlay_label} ${old_home_overlay_label} ${custom_overlay_label}"
 		fi
 
-		local overlay_devices=""
-		for media in $(find_persistence_media "${overlays}" "${whitelistdev}")
-		do
-			media="$(echo ${media} | tr ":" " ")"
+		local overlay_devices
+		overlay_devices=""
+		if [ "${whitelistdev}" != "ignore_all_devices" ]
+		then
+			for media in $(find_persistence_media "${overlays}" "${whitelistdev}")
+			do
+				media="$(echo ${media} | tr ":" " ")"
 
-			case ${media} in
-				${old_root_overlay_label}=*)
-					device="${media#*=}"
-					fix_backwards_compatibility ${device} / union
-					overlay_devices="${overlay_devices} ${device}"
-					;;
+				case ${media} in
+					${old_root_overlay_label}=*)
+						device="${media#*=}"
+						fix_backwards_compatibility ${device} / union
+						overlay_devices="${overlay_devices} ${device}"
+						;;
 
-				${old_home_overlay_label}=*)
-					device="${media#*=}"
-					fix_backwards_compatibility ${device} /home bind
-					overlay_devices="${overlay_devices} ${device}"
-					;;
+					${old_home_overlay_label}=*)
+						device="${media#*=}"
+						fix_backwards_compatibility ${device} /home bind
+						overlay_devices="${overlay_devices} ${device}"
+						;;
 
-				${custom_overlay_label}=*)
-					device="${media#*=}"
-					overlay_devices="${overlay_devices} ${device}"
-					;;
-			 esac
-		done
+					${custom_overlay_label}=*)
+						device="${media#*=}"
+						overlay_devices="${overlay_devices} ${device}"
+						;;
+				 esac
+			done
+		fi
 	elif [ -n "${NFS_COW}" ] && [ -z "${NOPERSISTENCE}" ]
 	then
 		# check if there are any nfs options
@@ -373,34 +382,9 @@ setup_unionfs ()
 		esac
 	done
 
-	# Adding custom persistence
-	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
-	then
-		local custom_mounts="/tmp/custom_mounts.list"
-		rm -rf ${custom_mounts} 2> /dev/null
-
-		# Gather information about custom mounts from devies detected as overlays
-		get_custom_mounts ${custom_mounts} ${overlay_devices}
-
-		[ -n "${DEBUG}" ] && cp ${custom_mounts} "/live/persistence"
-
-		# Now we do the actual mounting (and symlinking)
-		local used_overlays=""
-		used_overlays=$(activate_custom_mounts ${custom_mounts})
-		rm ${custom_mounts}
-
-		# Close unused overlays (e.g. due to missing $persistence_list)
-		for overlay in ${overlay_devices}
-		do
-			if echo ${used_overlays} | grep -qve "^\(.* \)\?${device}\( .*\)\?$"
-			then
-				close_persistence_media ${overlay}
-			fi
-		done
-	fi
-
-	# move all mountpoints to root filesystem
-	for _DIRECTORY in rootfs persistence
+	# move all /live mountpoints that the custom persistence
+	# system depends on into /lib/live on the root filesystem
+	for _DIRECTORY in rootfs
 	do
 		if [ -d "/live/${_DIRECTORY}" ]
 		then
@@ -420,6 +404,34 @@ setup_unionfs ()
 	mount -o move /live/overlay "${rootmnt}/lib/live/mount/overlay" > /dev/null 2>&1 || \
 		mount -o bind /live/overlay "${rootmnt}/lib/live/mount/overlay" || \
 		log_warning_msg "W: failed to mount /live/overlay to ${rootmnt}/lib/live/mount/overlay"
+
+	# Adding custom persistence
+	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
+	then
+		local custom_mounts
+		custom_mounts="/tmp/custom_mounts.list"
+		rm -rf ${custom_mounts} 2> /dev/null
+
+		# Gather information about custom mounts from devies detected as overlays
+		get_custom_mounts ${custom_mounts} ${overlay_devices}
+
+		[ -n "${DEBUG}" ] && cp ${custom_mounts} "/lib/live/mount/persistence"
+
+		# Now we do the actual mounting (and symlinking)
+		local used_overlays
+		used_overlays=""
+		used_overlays=$(activate_custom_mounts ${custom_mounts})
+		rm ${custom_mounts}
+
+		# Close unused overlays (e.g. due to missing $persistence_list)
+		for overlay in ${overlay_devices}
+		do
+			if echo ${used_overlays} | grep -qve "^\(.* \)\?${device}\( .*\)\?$"
+			then
+				close_persistence_media ${overlay}
+			fi
+		done
+	fi
 
         # ensure that a potentially stray tmpfs gets removed
         # otherways, initramfs-tools is unable to remove /live
