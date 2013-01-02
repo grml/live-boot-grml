@@ -38,7 +38,7 @@ Verify_checksums ()
 
 	for _DIGEST in $(echo ${LIVE_VERIFY_CHECKSUMS_DIGESTS} | sed -e 's|,| |g')
 	do
-		_CHECKSUMS="$(echo ${_DIGEST} | tr [a-z] [A-Z])SUMS ${_DIGEST}sums.txt"
+		_CHECKSUMS="$(echo ${_DIGEST} | tr [a-z] [A-Z])SUMS ${_DIGEST}sum.txt"
 
 		for _CHECKSUM in ${_CHECKSUMS}
 		do
