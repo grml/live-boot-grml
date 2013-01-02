@@ -1,5 +1,5 @@
 # Spanish translations for live-boot package
-# Copyright (C) 2012 Carlos Zuferri «chals» <chals@altorricon.com>
+# Copyright (C) 2012-2013 Carlos Zuferri «chals» <chals@altorricon.com>
 # This file is distributed under the same license as the live-boot package.
 #
 msgid ""
@@ -25,7 +25,7 @@ msgstr "LIVE-BOOT"
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "2013-01-02"
-msgstr ""
+msgstr "02.01.2013"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
