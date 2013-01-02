@@ -1,3 +1,15 @@
+live-boot (4.0~a4-1) experimental; urgency=low
+
+  * Updating year in copyright file.
+  * Supporting legacy filenames for checksums in debian within verify-
+    checksums.
+  * Correcting legacy filename for checksum files.
+  * By default including sha256sum only in progress-linux, keep md5sum
+    legacy for debian.
+  * Adding 3.0~b11-1 changelog entries.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 02 Jan 2013 11:37:12 +0100
+
 live-boot (4.0~a3-1) experimental; urgency=low
 
   [ Daniel Baumann ]
