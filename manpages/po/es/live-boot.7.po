@@ -23,9 +23,10 @@ msgstr "LIVE-BOOT"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
-#, no-wrap
-msgid "2013-01-02"
-msgstr "02.01.2013"
+#, fuzzy, no-wrap
+#| msgid "2013-01-02"
+msgid "2013-01-07"
+msgstr "07.01.2013"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
@@ -624,9 +625,10 @@ msgstr ""
 
 #. type: IP
 #: en/live-boot.7:103
-#, no-wrap
-msgid "B<noprompt>"
-msgstr "B<noprompt>"
+#, fuzzy, no-wrap
+#| msgid "B<nopersistence>"
+msgid "B<noeject>"
+msgstr "B<nopersistence>"
 
 #. type: Plain text
 #: en/live-boot.7:105
@@ -636,15 +638,20 @@ msgstr ""
 
 #. type: IP
 #: en/live-boot.7:105
-#, no-wrap
-msgid "B<noprompt>=I<TYPE>"
+#, fuzzy, no-wrap
+#| msgid "B<noprompt>=I<TYPE>"
+msgid "B<noeject>=I<TYPE>"
 msgstr "B<noprompt>=I<TYPE>"
 
 #. type: Plain text
 #: en/live-boot.7:107
+#, fuzzy
+#| msgid ""
+#| "This tells live-boot not to prompt to eject the CD (when noprompt=cd) or "
+#| "remove the USB flash drive (when noprompt=usb) on reboot."
 msgid ""
-"This tells live-boot not to prompt to eject the CD (when noprompt=cd) or "
-"remove the USB flash drive (when noprompt=usb) on reboot."
+"This tells live-boot not to prompt to eject the CD (when noeject=cd) or "
+"remove the USB flash drive (when noeject=usb) on reboot."
 msgstr ""
 "Indica a live-boot que no pregunte para expulsar el CD (usando noprompt=cd) "
 "o extraer la unidad flash USB (usando noprompt=usb) al reiniciar."
