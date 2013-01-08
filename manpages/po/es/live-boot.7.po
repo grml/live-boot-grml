@@ -630,12 +630,8 @@ msgstr "B<noeject>"
 
 #. type: Plain text
 #: en/live-boot.7:105
-#, fuzzy
-#| msgid ""
-#| "Do not prompt to eject the CD or remove the USB flash drive on reboot."
 msgid "Do not prompt to eject the live medium."
-msgstr ""
-"No preguntar para expulsar el CD o extraer la unidad flash USB al reiniciar."
+msgstr "No pedir que se extraiga el dispositivo en vivo."
 
 #. type: IP
 #: en/live-boot.7:105
