@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2013-01-02 11:36+0100\n"
+"POT-Creation-Date: 2013-01-07 20:22-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2013-01-02"
+msgid "2013-01-07"
 msgstr ""
 
 #. type: TH
@@ -515,7 +515,7 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:103
 #, no-wrap
-msgid "B<noprompt>"
+msgid "B<noeject>"
 msgstr ""
 
 #. type: Plain text
@@ -526,14 +526,14 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:105
 #, no-wrap
-msgid "B<noprompt>=I<TYPE>"
+msgid "B<noeject>=I<TYPE>"
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:107
 msgid ""
-"This tells live-boot not to prompt to eject the CD (when noprompt=cd) or "
-"remove the USB flash drive (when noprompt=usb) on reboot."
+"This tells live-boot not to prompt to eject the CD (when noeject=cd) or "
+"remove the USB flash drive (when noeject=usb) on reboot."
 msgstr ""
 
 #. type: IP

@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2013\-01\-02 4.0~a4-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 2013\-01\-07 4.0~a4-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -100,10 +100,10 @@ This lets you specify custom nfs options.
 This parameter disables the default disabling of filesystem checks in /etc/fstab. If you have static filesystems on your harddisk and you want them to be checked at boot time, use this parameter, otherwise they are skipped.
 .IP "\fBnopersistence\fR" 4
 disables the "persistence" feature, useful if the bootloader (like syslinux) has been installed with persistence enabled.
-.IP "\fBnoprompt\fR" 4
+.IP "\fBnoeject\fR" 4
 Do not prompt to eject the CD or remove the USB flash drive on reboot.
-.IP "\fBnoprompt\fR=\fITYPE\fR" 4
-This tells live-boot not to prompt to eject the CD (when noprompt=cd) or remove the USB flash drive (when noprompt=usb) on reboot.
+.IP "\fBnoeject\fR=\fITYPE\fR" 4
+This tells live-boot not to prompt to eject the CD (when noeject=cd) or remove the USB flash drive (when noeject=usb) on reboot.
 .IP "\fBramdisk\-size\fR" 4
 This parameters allows to set a custom ramdisk size (it's the '\-o size' option of tmpfs mount). By default, there is no ramdisk size set, so the default of mount applies (currently 50% of available RAM). Note that this option has no currently no effect when booting with toram.
 .IP "\fBswapon\fR" 4

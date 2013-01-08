@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 02.01.2013 4.0~a4\-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 2013\-01\-07 4.0~a4\-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Scripts
@@ -164,11 +164,11 @@ skipped.
 .IP \fBnopersistence\fP 4
 disables the "persistence" feature, useful if the bootloader (like syslinux)
 has been installed with persistence enabled.
-.IP \fBnoprompt\fP 4
+.IP \fBnoeject\fP 4
 Do not prompt to eject the CD or remove the USB flash drive on reboot.
-.IP \fBnoprompt\fP=\fITYPE\fP 4
-This tells live\-boot not to prompt to eject the CD (when noprompt=cd) or
-remove the USB flash drive (when noprompt=usb) on reboot.
+.IP \fBnoeject\fP=\fITYPE\fP 4
+This tells live\-boot not to prompt to eject the CD (when noeject=cd) or
+remove the USB flash drive (when noeject=usb) on reboot.
 .IP \fBramdisk\-size\fP 4
 This parameters allows to set a custom ramdisk size (it's the '\-o size'
 option of tmpfs mount). By default, there is no ramdisk size set, so the
