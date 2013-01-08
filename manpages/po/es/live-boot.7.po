@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 4.0~a4-1\n"
 "POT-Creation-Date: 2013-01-08 06:58+0100\n"
-"PO-Revision-Date: 2012-06-07 20:29+0200\n"
-"Last-Translator: Carlos Zuferri «chals» <chals@altorricon.com>\n"
-"Language-Team:  none\n"
+"PO-Revision-Date: 2013-01-08 14:00+0100\n"
+"Last-Translator: Carlos Zuferri <chals@altorricon.com>\n"
+"Language-Team: none\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -630,12 +630,8 @@ msgstr "B<noeject>"
 
 #. type: Plain text
 #: en/live-boot.7:105
-#, fuzzy
-#| msgid ""
-#| "Do not prompt to eject the CD or remove the USB flash drive on reboot."
 msgid "Do not prompt to eject the live medium."
-msgstr ""
-"No preguntar para expulsar el CD o extraer la unidad flash USB al reiniciar."
+msgstr "No pedir que se extraiga el dispositivo en vivo."
 
 #. type: IP
 #: en/live-boot.7:105
