@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 4.0~a4-1\n"
-"POT-Creation-Date: 2013-01-07 20:22-0600\n"
+"POT-Creation-Date: 2013-01-08 06:58+0100\n"
 "PO-Revision-Date: 2012-04-08 22:48+0300\n"
 "Last-Translator: Daniel Baumann <daniel@debian.org>\n"
 "Language-Team: none\n"
@@ -23,10 +23,9 @@ msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
-#, fuzzy, no-wrap
-#| msgid "2013-01-02"
-msgid "2013-01-07"
-msgstr "07.01.2013"
+#, no-wrap
+msgid "2013-01-08"
+msgstr "08.01.2013"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
@@ -59,34 +58,34 @@ msgid "OPTIONS"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:156 en/persistence.conf.5:191
+#: en/live-boot.7:154 en/persistence.conf.5:191
 #, no-wrap
 msgid "SEE ALSO"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:160 en/persistence.conf.5:195
+#: en/live-boot.7:158 en/persistence.conf.5:195
 msgid "I<live-build>(7)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:162 en/persistence.conf.5:197
+#: en/live-boot.7:160 en/persistence.conf.5:197
 msgid "I<live-config>(7)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:164 en/persistence.conf.5:199
+#: en/live-boot.7:162 en/persistence.conf.5:199
 msgid "I<live-tools>(7)"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:165 en/persistence.conf.5:200
+#: en/live-boot.7:163 en/persistence.conf.5:200
 #, no-wrap
 msgid "HOMEPAGE"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:167 en/persistence.conf.5:204
+#: en/live-boot.7:165 en/persistence.conf.5:204
 msgid ""
 "More information about live-boot and the Debian Live project can be found on "
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
@@ -94,13 +93,13 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:168 en/persistence.conf.5:205
+#: en/live-boot.7:166 en/persistence.conf.5:205
 #, no-wrap
 msgid "BUGS"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:170 en/persistence.conf.5:210
+#: en/live-boot.7:168 en/persistence.conf.5:210
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
 "the Debian Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
@@ -109,7 +108,7 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:171 en/persistence.conf.5:211
+#: en/live-boot.7:169 en/persistence.conf.5:211
 #, no-wrap
 msgid "AUTHOR"
 msgstr ""
