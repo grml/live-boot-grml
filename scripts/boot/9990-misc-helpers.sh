@@ -600,7 +600,7 @@ fs_size ()
 		size=$(expr ${size} + ${size} / 20 ) # FIXME: 5% more to be sure
 	else
 		# free space
-		size="$(df -k | grep -s ${mountp} | awk '{print $4}')"
+		size="$(df -kP | grep -s ${mountp} | awk '{print $4}')"
 	fi
 
 	if [ -n "${doumount}" ]
