@@ -13,7 +13,7 @@ Fstab ()
 		return
 	fi
 
-	if [ -e /run ]
+	if [ -e /root/etc/fstab.d ]
 	then
 		# wheezy
 		_FSTAB="/root/etc/fstab.d/live"
