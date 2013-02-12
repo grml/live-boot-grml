@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 08.01.2013 4.0~a4\-1 "Proyecto Debian Live"
+.TH LIVE\-BOOT 7 12.02.2013 4.0~a4\-1 "Proyecto Debian Live"
 
 .SH NOMBRE
 \fBlive\-boot\fP \- Scripts de Arranque del Sistema
@@ -222,13 +222,10 @@ está en la lista, se usarán los sistemas de ficheros que tengan su etiqueta
 correspondiente; si "file" está en la lista, todos los sistemas de ficheros
 se probarán buscando ficheros y ficheros imagen con sus etiquetas
 correspondientes. Por defecto es "file,filesystem".
-.IP \fBpersistence\-subtext\fP=\fISUFFIX\fP 4
-Añadir un sufijo cuando se buscan los nombres de las imágenes o etiquetas de
-las particiones a utilizar para la función de la persistencia mencionada
-anteriormente, el SUFFIX se añadirá después de un guión (por ejemplo:
-"live\-sn" se transformaría en "live\-sn\-SUFFIX"). Esto es útil para probar
-múltiples sistemas en vivo basados en live\-boot con diferentes opciones de
-almacenamiento con persistencia.
+.IP \fBpersistence\-label\fP=\fILABEL\fP 4
+live\-boot will use the name "LABEL" instead of "persistence" when searching
+for persistent storage. LABEL can be any valid filename, partition label, or
+GPT name.
 .IP \fBquickreboot\fP 4
 Esta opción hace que live\-boot reinicie sin tratar de expulsar los medios y
 sin pedirle al usuario que extraiga el dispositivo usado para arrancar.
