@@ -742,7 +742,7 @@ mount_persistence_media ()
 	device=${1}
 	probe=${2}
 
-	backing="${rootmnt}/lib/live/mount/persistence/$(basename ${device})"
+	backing="/live/persistence/$(basename ${device})"
 
 	mkdir -p "${backing}"
 	old_backing="$(where_is_mounted ${device})"
@@ -966,7 +966,7 @@ find_persistence_media ()
 	white_listed_devices="${2}"
 	ret=""
 
-	black_listed_devices="$(what_is_mounted_on ${rootmnt}/lib/live/medium)"
+	black_listed_devices="$(what_is_mounted_on /live/medium)"
 
 	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
@@ -1269,7 +1269,7 @@ do_union ()
 
 get_custom_mounts ()
 {
-	# Side-effect: leaves $devices with persistence.conf mounted in ${rootmnt}/lib/live/mount/persistence
+	# Side-effect: leaves $devices with persistence.conf mounted in /live/persistence
 	# Side-effect: prints info to file $custom_mounts
 
 	local custom_mounts devices bindings links
@@ -1308,7 +1308,7 @@ get_custom_mounts ()
 
 		if [ -n "${DEBUG}" ] && [ -e "${include_list}" ]
 		then
-			cp ${include_list} ${rootmnt}/lib/live/mount/persistence/${persistence_list}.${device_name}
+			cp ${include_list} /live/persistence/${persistence_list}.${device_name}
 		fi
 
 		while read dir options # < ${include_list}
@@ -1493,7 +1493,7 @@ activate_custom_mounts ()
 		rootfs_dest_backing=""
 		if [ -n "${opt_link}"]
 		then
-			for d in ${rootmnt}/lib/live/mount/rootfs/*
+			for d in /live/rootfs/*
 			do
 				if [ -n "${rootmnt}" ]
 				then
@@ -1523,7 +1523,7 @@ activate_custom_mounts ()
 			# has its own directory and isn't nested with some
 			# other custom mount (if so that mount's files would
 			# be linked, causing breakage.
-			cow_dir="${rootmnt}/lib/live/mount/overlay/lib/live/mount/persistence/$(basename ${links_source})"
+			cow_dir="/live/overlay/lib/live/mount/persistence/$(basename ${links_source})"
 			mkdir -p ${cow_dir}
 			chown_ref "${source}" "${cow_dir}"
 			chmod_ref "${source}" "${cow_dir}"
@@ -1540,7 +1540,7 @@ activate_custom_mounts ()
 			# bind-mount and union mount are handled the same
 			# in read-only mode, but note that rootfs_dest_backing
 			# is non-empty (and necessary) only for unions
-			cow_dir="${rootmnt}/lib/live/mount/overlay/${dest}"
+			cow_dir="/live/overlay/${dest}"
 			if [ -e "${cow_dir}" ] && [ -z "${opt_link}" ]
 			then
 				# If an earlier custom mount has files here
