@@ -1188,11 +1188,12 @@ link_files ()
 
 do_union ()
 {
-	local unionmountpoint unionrw unionro1 unionro2
+	local unionmountpoint unionrw unionro
 	unionmountpoint="${1}"	# directory where the union is mounted
-	unionrw="${2}"		# branch where the union changes are stored
-	unionro1="${3}"		# first underlying read-only branch (optional)
-	unionro2="${4}"		# second underlying read-only branch (optional)
+	shift
+	unionrw="${1}"		# branch where the union changes are stored
+	shift
+	unionro="${*}"		# space separated list of read-only branches (optional)
 
 	case "${UNIONTYPE}" in
 		aufs)
@@ -1216,13 +1217,12 @@ do_union ()
 		unionfs-fuse)
 			unionmountopts="-o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid"
 			unionmountopts="${unionmountopts} ${unionrw}=${rw_opt}"
-			if [ -n "${unionro1}" ]
+			if [ -n "${unionro}" ]
 			then
-				unionmountopts="${unionmountopts}:${unionro1}=${ro_opt}"
-			fi
-			if [ -n "${unionro2}" ]
-			then
-				unionmountopts="${unionmountopts}:${unionro2}=${ro_opt}"
+				for rofs in ${unionro}
+				do
+					unionmountopts="${unionmountopts}:${rofs}=${ro_opt}"
+				done
 			fi
 			( sysctl -w fs.file-max=391524 ; ulimit -HSn 16384
 			unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
@@ -1231,21 +1231,27 @@ do_union ()
 			;;
 
 		overlayfs)
-			# XXX: can unionro2 be used? (overlayfs only handles two dirs, but perhaps they can be chained?)
-			# XXX: and can unionro1 be optional? i.e. can overlayfs skip lowerdir?
-			unionmountopts="-o noatime,lowerdir=${unionro1},upperdir=${unionrw}"
+			# XXX: can multiple unionro be used? (overlayfs only handles two dirs, but perhaps they can be chained?)
+			# XXX: and can unionro be optional? i.e. can overlayfs skip lowerdir?
+			if echo ${unionro} | grep -q " "
+			then
+				panic "Multiple lower filesystems are currently not supported with overlayfs (unionro = ${unionro})."
+			elif [ -z "${unionro}"	]
+			then
+				panic "Overlayfs needs at least one lower filesystem (read-only branch)."
+			fi
+			unionmountopts="-o noatime,lowerdir=${unionro},upperdir=${unionrw}"
 			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 			;;
 
 		*)
 			unionmountopts="-o noatime,${noxino_opt},dirs=${unionrw}=${rw_opt}"
-			if [ -n "${unionro1}" ]
+			if [ -n "${unionro}" ]
 			then
-				unionmountopts="${unionmountopts}:${unionro1}=${ro_opt}"
-			fi
-			if [ -n "${unionro2}" ]
-			then
-				unionmountopts="${unionmountopts}:${unionro2}=${ro_opt}"
+				for rofs in ${unionro}
+				do
+					unionmountopts="${unionmountopts}:${rofs}=${ro_opt}"
+				done
 			fi
 			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 			;;
@@ -1482,15 +1488,13 @@ activate_custom_mounts ()
 			do
 				if [ -n "${rootmnt}" ]
 				then
-					rootfs_dest_backing="${d}/$(echo ${dest} | sed -e "s|${rootmnt}||")"
+					fs="${d}/$(echo ${dest} | sed -e "s|${rootmnt}||")"
 				else
-					rootfs_dest_backing="${d}/${dest}"
+					fs="${d}/${dest}"
 				fi
-				if [ -d "${rootfs_dest_backing}" ]
+				if [ -d "${fs}" ]
 				then
-					break
-				else
-					rootfs_dest_backing=""
+					rootfs_dest_backing="${rootfs_dest_backing} ${fs}"
 				fi
 			done
 		fi
