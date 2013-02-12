@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2013-02-12 08:27+0100\n"
+"POT-Creation-Date: 2013-02-12 08:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "4.0~a4-1"
+msgid "4.0~a5-1"
 msgstr ""
 
 #. type: TH
