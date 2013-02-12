@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 2013\-01\-02 3.0~b11\-1 "Proyecto Debian Live"
+.TH LIVE\-BOOT 7 12.02.2013 3.0.0\-1 "Proyecto Debian Live"
 
 .SH NOMBRE
 \fBlive\-boot\fP \- Scripts de Arranque del Sistema
@@ -173,11 +173,8 @@ utilizar este parámetro, de lo contrario, se omite.
 .IP \fBnopersistence\fP 4
 desactiva la "persistencia", es útil si el gestor de arranque (como
 syslinux) se ha instalado con persistencia habilitada.
-.IP \fBnoprompt\fP 4
-No preguntar para expulsar el CD o extraer la unidad flash USB al reiniciar.
-.IP \fBnoprompt\fP=\fITYPE\fP 4
-Indica a live\-boot que no pregunte para expulsar el CD (usando noprompt=cd)
-o extraer la unidad flash USB (usando noprompt=usb) al reiniciar.
+.IP \fBnoeject\fP 4
+No pedir que se extraiga el dispositivo en vivo.
 .IP \fBramdisk\-size\fP 4
 Este parámetro permite establecer un tamaño de disco RAM personalizado (que
 es la opción '\-o size' del montaje tmpfs). No hay un tamaño de ramdisk
@@ -225,13 +222,13 @@ está en la lista, se usarán los sistemas de ficheros que tengan su etiqueta
 correspondiente; si "file" está en la lista, todos los sistemas de ficheros
 se probarán buscando ficheros y ficheros imagen con sus etiquetas
 correspondientes. Por defecto es "file,filesystem".
-.IP \fBpersistence\-subtext\fP=\fISUFFIX\fP 4
-Añadir un sufijo cuando se buscan los nombres de las imágenes o etiquetas de
-las particiones a utilizar para la función de la persistencia mencionada
-anteriormente, el SUFFIX se añadirá después de un guión (por ejemplo:
-"live\-sn" se transformaría en "live\-sn\-SUFFIX"). Esto es útil para probar
-múltiples sistemas en vivo basados en live\-boot con diferentes opciones de
-almacenamiento con persistencia.
+.IP \fBpersistence\-label\fP=\fILABEL\fP 4
+live\-boot will use the name "LABEL" instead of "persistence" when searching
+for persistent storage. LABEL can be any valid filename, partition label, or
+GPT name. This option replaces the less flexible persistent\-subtext option
+from version 2 of live\-boot. If you wish to continue using legacy names for
+persistent storage, use the full name with this option,
+e.g. persistence\-label=live\-rw\-foo
 .IP \fBquickreboot\fP 4
 Esta opción hace que live\-boot reinicie sin tratar de expulsar los medios y
 sin pedirle al usuario que extraiga el dispositivo usado para arrancar.

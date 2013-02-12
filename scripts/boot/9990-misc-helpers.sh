@@ -600,7 +600,7 @@ fs_size ()
 		size=$(expr ${size} + ${size} / 20 ) # FIXME: 5% more to be sure
 	else
 		# free space
-		size="$(df -k | grep -s ${mountp} | awk '{print $4}')"
+		size="$(df -kP | grep -s ${mountp} | awk '{print $4}')"
 	fi
 
 	if [ -n "${doumount}" ]
@@ -742,7 +742,7 @@ mount_persistence_media ()
 	device=${1}
 	probe=${2}
 
-	backing="${rootmnt}/lib/live/mount/persistence/$(basename ${device})"
+	backing="/live/persistence/$(basename ${device})"
 
 	mkdir -p "${backing}"
 	old_backing="$(where_is_mounted ${device})"
@@ -966,7 +966,7 @@ find_persistence_media ()
 	white_listed_devices="${2}"
 	ret=""
 
-	black_listed_devices="$(what_is_mounted_on ${rootmnt}/lib/live/medium)"
+	black_listed_devices="$(what_is_mounted_on /live/medium)"
 
 	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
@@ -1197,11 +1197,12 @@ link_files ()
 
 do_union ()
 {
-	local unionmountpoint unionrw unionro1 unionro2
+	local unionmountpoint unionrw unionro
 	unionmountpoint="${1}"	# directory where the union is mounted
-	unionrw="${2}"		# branch where the union changes are stored
-	unionro1="${3}"		# first underlying read-only branch (optional)
-	unionro2="${4}"		# second underlying read-only branch (optional)
+	shift
+	unionrw="${1}"		# branch where the union changes are stored
+	shift
+	unionro="${*}"		# space separated list of read-only branches (optional)
 
 	case "${UNIONTYPE}" in
 		aufs)
@@ -1225,13 +1226,12 @@ do_union ()
 		unionfs-fuse)
 			unionmountopts="-o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid"
 			unionmountopts="${unionmountopts} ${unionrw}=${rw_opt}"
-			if [ -n "${unionro1}" ]
+			if [ -n "${unionro}" ]
 			then
-				unionmountopts="${unionmountopts}:${unionro1}=${ro_opt}"
-			fi
-			if [ -n "${unionro2}" ]
-			then
-				unionmountopts="${unionmountopts}:${unionro2}=${ro_opt}"
+				for rofs in ${unionro}
+				do
+					unionmountopts="${unionmountopts}:${rofs}=${ro_opt}"
+				done
 			fi
 			( sysctl -w fs.file-max=391524 ; ulimit -HSn 16384
 			unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
@@ -1240,21 +1240,27 @@ do_union ()
 			;;
 
 		overlayfs)
-			# XXX: can unionro2 be used? (overlayfs only handles two dirs, but perhaps they can be chained?)
-			# XXX: and can unionro1 be optional? i.e. can overlayfs skip lowerdir?
-			unionmountopts="-o noatime,lowerdir=${unionro1},upperdir=${unionrw}"
+			# XXX: can multiple unionro be used? (overlayfs only handles two dirs, but perhaps they can be chained?)
+			# XXX: and can unionro be optional? i.e. can overlayfs skip lowerdir?
+			if echo ${unionro} | grep -q " "
+			then
+				panic "Multiple lower filesystems are currently not supported with overlayfs (unionro = ${unionro})."
+			elif [ -z "${unionro}"	]
+			then
+				panic "Overlayfs needs at least one lower filesystem (read-only branch)."
+			fi
+			unionmountopts="-o noatime,lowerdir=${unionro},upperdir=${unionrw}"
 			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 			;;
 
 		*)
 			unionmountopts="-o noatime,${noxino_opt},dirs=${unionrw}=${rw_opt}"
-			if [ -n "${unionro1}" ]
+			if [ -n "${unionro}" ]
 			then
-				unionmountopts="${unionmountopts}:${unionro1}=${ro_opt}"
-			fi
-			if [ -n "${unionro2}" ]
-			then
-				unionmountopts="${unionmountopts}:${unionro2}=${ro_opt}"
+				for rofs in ${unionro}
+				do
+					unionmountopts="${unionmountopts}:${rofs}=${ro_opt}"
+				done
 			fi
 			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 			;;
@@ -1263,7 +1269,7 @@ do_union ()
 
 get_custom_mounts ()
 {
-	# Side-effect: leaves $devices with persistence.conf mounted in ${rootmnt}/lib/live/mount/persistence
+	# Side-effect: leaves $devices with persistence.conf mounted in /live/persistence
 	# Side-effect: prints info to file $custom_mounts
 
 	local custom_mounts devices bindings links
@@ -1302,7 +1308,7 @@ get_custom_mounts ()
 
 		if [ -n "${DEBUG}" ] && [ -e "${include_list}" ]
 		then
-			cp ${include_list} ${rootmnt}/lib/live/mount/persistence/${persistence_list}.${device_name}
+			cp ${include_list} /live/persistence/${persistence_list}.${device_name}
 		fi
 
 		while read dir options # < ${include_list}
@@ -1487,19 +1493,17 @@ activate_custom_mounts ()
 		rootfs_dest_backing=""
 		if [ -n "${opt_link}"]
 		then
-			for d in ${rootmnt}/lib/live/mount/rootfs/*
+			for d in /live/rootfs/*
 			do
 				if [ -n "${rootmnt}" ]
 				then
-					rootfs_dest_backing="${d}/$(echo ${dest} | sed -e "s|${rootmnt}||")"
+					fs="${d}/$(echo ${dest} | sed -e "s|${rootmnt}||")"
 				else
-					rootfs_dest_backing="${d}/${dest}"
+					fs="${d}/${dest}"
 				fi
-				if [ -d "${rootfs_dest_backing}" ]
+				if [ -d "${fs}" ]
 				then
-					break
-				else
-					rootfs_dest_backing=""
+					rootfs_dest_backing="${rootfs_dest_backing} ${fs}"
 				fi
 			done
 		fi
@@ -1519,7 +1523,7 @@ activate_custom_mounts ()
 			# has its own directory and isn't nested with some
 			# other custom mount (if so that mount's files would
 			# be linked, causing breakage.
-			cow_dir="${rootmnt}/lib/live/mount/overlay/lib/live/mount/persistence/$(basename ${links_source})"
+			cow_dir="/live/overlay/lib/live/mount/persistence/$(basename ${links_source})"
 			mkdir -p ${cow_dir}
 			chown_ref "${source}" "${cow_dir}"
 			chmod_ref "${source}" "${cow_dir}"
@@ -1536,7 +1540,7 @@ activate_custom_mounts ()
 			# bind-mount and union mount are handled the same
 			# in read-only mode, but note that rootfs_dest_backing
 			# is non-empty (and necessary) only for unions
-			cow_dir="${rootmnt}/lib/live/mount/overlay/${dest}"
+			cow_dir="/live/overlay/${dest}"
 			if [ -e "${cow_dir}" ] && [ -z "${opt_link}" ]
 			then
 				# If an earlier custom mount has files here
