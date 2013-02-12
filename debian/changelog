@@ -1,3 +1,39 @@
+live-boot (3.0.0-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating manpage year handling for 2013.
+
+  [ Richard Nelson ]
+  * Replace noprompt with noeject on manpage.
+
+  [ Daniel Baumann ]
+  * Updating noeject description in manpage.
+
+  [ chals ]
+  * Updating Spanish translation in respect to noeject.
+
+  [ Daniel Baumann ]
+  * Dropping dpkg compression level.
+  * Calling df with -P to avoid line wraps with overly long mountpoints.
+
+  [ Tails developers ]
+  * Improving test for /etc/fstab.d support by testing for its existence
+    instead of /run's one.
+
+  [ Daniel Baumann ]
+  * Removing some dead code in netbase parts.
+
+  [ Gaudenz Steinlin ]
+  * Fixing support for multiple squashfs images (Closes: #696494).
+  * Fixing mounting of rootfs, cow and medium filesystems (Closes:
+    #696495).
+
+  [ Daniel Baumann ]
+  * Correcting persistence-label handling fwrt/ legacy live-boot 2.x
+    support, thanks to Mike Gach <gach.mqt@gmail.com> (Closes: #697873).
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 12 Feb 2013 08:23:17 +0100
+
 live-boot (3.0~b11-1) unstable; urgency=low
 
   * Updating year in copyright file.
