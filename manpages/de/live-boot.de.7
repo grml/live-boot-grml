@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 17.12.2012 3.0~b10\-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 12.02.2013 3.0.0\-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Scripts
@@ -164,11 +164,8 @@ skipped.
 .IP \fBnopersistence\fP 4
 disables the "persistence" feature, useful if the bootloader (like syslinux)
 has been installed with persistence enabled.
-.IP \fBnoprompt\fP 4
-Do not prompt to eject the CD or remove the USB flash drive on reboot.
-.IP \fBnoprompt\fP=\fITYPE\fP 4
-This tells live\-boot not to prompt to eject the CD (when noprompt=cd) or
-remove the USB flash drive (when noprompt=usb) on reboot.
+.IP \fBnoeject\fP 4
+Do not prompt to eject the live medium.
 .IP \fBramdisk\-size\fP 4
 This parameters allows to set a custom ramdisk size (it's the '\-o size'
 option of tmpfs mount). By default, there is no ramdisk size set, so the
@@ -210,12 +207,13 @@ probing for persistence media. If "filesystem" is in the list, filesystems
 with matching labels will be used; if "file" is in the list, all filesystems
 will be probed for archives and image files with matching filenames. The
 default is "file,filesystem".
-.IP \fBpersistence\-subtext\fP=\fISUFFIX\fP 4
-Add a suffix when searching for the image filenames or partition labels to
-use for the above mentioned persistence feature, the SUFFIX will be added
-after a dash (e.g.: "live\-sn" would transform to "live\-sn\-SUFFIX"). This is
-handy to test multiple live\-boot based live\-systems with different
-persistence storage choices.
+.IP \fBpersistence\-label\fP=\fILABEL\fP 4
+live\-boot will use the name "LABEL" instead of "persistence" when searching
+for persistent storage. LABEL can be any valid filename, partition label, or
+GPT name. This option replaces the less flexible persistent\-subtext option
+from version 2 of live\-boot. If you wish to continue using legacy names for
+persistent storage, use the full name with this option,
+e.g. persistence\-label=live\-rw\-foo
 .IP \fBquickreboot\fP 4
 This option causes live\-boot to reboot without attempting to eject the media
 and without asking the user to remove the boot media.
