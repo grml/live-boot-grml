@@ -102,7 +102,7 @@ Index: live-boot-grml/scripts/boot/9990-networking.sh
 +        for dev in $devlist ; do
 +            param="$(get_ipconfig_para $dev)"
 +            if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] ; then
-+                echo "Ignoring network device $dev due to nodhcp." | tee -a /live-boot.log
++                echo "Ignoring network device $dev due to nodhcp." | tee -a /boot.log
 +                continue
  			fi
 +            echo "Executing ipconfig -t $ETHDEV_TIMEOUT $param"
