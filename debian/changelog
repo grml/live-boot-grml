@@ -1,3 +1,13 @@
+live-boot (4.0~a6-1) experimental; urgency=low
+
+  [ chals ]
+  * Updating Spanish translation of live-boot man page, persistence-label.
+
+  [ Daniel Baumann ]
+  * Adding 3.0.1-1 changelog entries.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 15 Feb 2013 08:57:13 +0100
+
 live-boot (4.0~a5-1) experimental; urgency=low
 
   [ Daniel Baumann ]
