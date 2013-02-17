@@ -402,5 +402,5 @@ setup_unionfs ()
         # ensure that a potentially stray tmpfs gets removed
         # otherways, initramfs-tools is unable to remove /live
         # and fails to boot
-        umount /live/overlay || true
+        umount /live/overlay > /dev/null 2>&1 || true
 }
