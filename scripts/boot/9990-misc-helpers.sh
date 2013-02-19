@@ -608,7 +608,7 @@ load_keymap ()
 	# Load custom keymap
 	if [ -x /bin/loadkeys -a -r /etc/boottime.kmap.gz ]
 	then
-		loadkeys /etc/boottime.kmap.gz
+		loadkeys --quiet /etc/boottime.kmap.gz
 	fi
 }
 
