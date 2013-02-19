@@ -1,3 +1,11 @@
+live-boot (4.0~a7-1) experimental; urgency=low
+
+  * Silencing unmounting of potentially stray tmpfs on /live/overlay.
+  * Making loadkeys call quiet in order to not mess-up persistence, thanks
+    to stack <stack@inventati.org> (Closes: #700902).
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 19 Feb 2013 05:49:37 +0100
+
 live-boot (4.0~a6-1) experimental; urgency=low
 
   [ chals ]
