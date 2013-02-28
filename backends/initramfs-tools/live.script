@@ -6,3 +6,14 @@ if [ -e /lib/live/boot.sh ]
 then
 	. /lib/live/boot.sh
 fi
+
+if [ -e /scripts/functions ]
+then
+	. /scripts/functions
+fi
+
+mountroot ()
+{
+	# initramfs-tools entry point for live-boot is mountroot(); function
+	Main
+}

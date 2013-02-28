@@ -17,8 +17,6 @@ From a users point of view, it doesn't matter at all though.
 Scripts overview
 ----------------
 
-00xx	initramfs "bootstrapping"
-
 0xxx	live-boot internals
 
 1xxx	find and mount rootfs
