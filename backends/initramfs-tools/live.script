@@ -2,15 +2,9 @@
 
 #set -e
 
-if [ -e /lib/live/boot.sh ]
-then
-	. /lib/live/boot.sh
-fi
+. /lib/live/boot.sh
 
-if [ -e /scripts/functions ]
-then
-	. /scripts/functions
-fi
+. /scripts/functions
 
 mountroot ()
 {
