@@ -8,7 +8,7 @@ Additionally, this will allow us to abstract initramfs-tools
 integration to also support other initrd generators, such as
 dracut.
 
-Unfortunately, from a developers point of view, we could no
+Unfortunately, from a developers point of view, we could not
 finish this in time for wheezy, but we will finish this for
 jessie. Please excuse the sorry state of the 9990-* scripts.
 From a users point of view, it doesn't matter at all though.
