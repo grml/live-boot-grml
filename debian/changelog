@@ -1,3 +1,13 @@
+live-boot (3.0.1-1) unstable; urgency=low
+
+  [ chals ]
+  * Updating Spanish translation of live-boot man page, persistence-label.
+
+  [ Daniel Baumann ]
+  * Dropping German manpage translations stubs for the release.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 14 Feb 2013 19:33:17 +0100
+
 live-boot (3.0.0-1) unstable; urgency=low
 
   [ Daniel Baumann ]
