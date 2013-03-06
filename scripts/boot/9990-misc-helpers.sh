@@ -1482,7 +1482,7 @@ activate_custom_mounts ()
 		# ignore the loop below and set rootfs_dest_backing=$dest
 		local rootfs_dest_backing
 		rootfs_dest_backing=""
-		if [ -n "${opt_link}"]
+		if [ -n "${opt_link}" ]
 		then
 			for d in /live/rootfs/*
 			do
