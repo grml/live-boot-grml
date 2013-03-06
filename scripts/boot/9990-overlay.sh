@@ -392,7 +392,7 @@ setup_unionfs ()
 		# Close unused overlays (e.g. due to missing $persistence_list)
 		for overlay in ${overlay_devices}
 		do
-			if echo ${used_overlays} | grep -qve "^\(.* \)\?${device}\( .*\)\?$"
+			if echo ${used_overlays} | grep -qve "^\(.* \)\?${overlay}\( .*\)\?$"
 			then
 				close_persistence_media ${overlay}
 			fi
