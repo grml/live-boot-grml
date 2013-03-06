@@ -1140,12 +1140,12 @@ link_files ()
 	# is non-empty, remove mask from all source paths when
 	# creating links (will be necessary if we change root, which
 	# live-boot normally does (into $rootmnt)).
-	local src_dir dest_dir src_mask
+	local src_dir dest_dir src_transform
 
 	# remove multiple /:s and ensure ending on /
 	src_dir="$(trim_path ${1})/"
 	dest_dir="$(trim_path ${2})/"
-	src_mask="${3}"
+	src_transform="${3}"
 
 	# This check can only trigger on the inital, non-recursive call since
 	# we create the destination before recursive calls
@@ -1172,12 +1172,12 @@ link_files ()
 				chown_ref "${src}" "${dest}"
 				chmod_ref "${src}" "${dest}"
 			fi
-			link_files "${src}" "${dest}" "${src_mask}"
+			link_files "${src}" "${dest}" "${src_transform}"
 		else
 			final_src=${src}
-			if [ -n "${src_mask}" ]
+			if [ -n "${src_transform}" ]
 			then
-				final_src="$(echo ${final_src} | sed "s|^${src_mask}||")"
+				final_src="$(echo ${final_src} | sed "${src_transform}")"
 			fi
 			rm -rf "${dest}" 2> /dev/null
 			ln -s "${final_src}" "${dest}"
@@ -1502,7 +1502,7 @@ activate_custom_mounts ()
 		local cow_dir links_source
 		if [ -n "${opt_link}" ] && [ -z "${PERSISTENCE_READONLY}" ]
 		then
-			link_files ${source} ${dest} ${rootmnt}
+			link_files ${source} ${dest} "s|^/live/|/lib/live/mount/|"
 		elif [ -n "${opt_link}" ] && [ -n "${PERSISTENCE_READONLY}" ]
 		then
 			mkdir -p ${rootmnt}/lib/live/mount/persistence
@@ -1519,7 +1519,7 @@ activate_custom_mounts ()
 			chown_ref "${source}" "${cow_dir}"
 			chmod_ref "${source}" "${cow_dir}"
 			do_union ${links_source} ${cow_dir} ${source} ${rootfs_dest_backing}
-			link_files ${links_source} ${dest} ${rootmnt}
+			link_files ${links_source} ${dest} "s|^${rootmnt}||"
 		elif [ -n "${opt_union}" ] && [ -z "${PERSISTENCE_READONLY}" ]
 		then
 			do_union ${dest} ${source} ${rootfs_dest_backing}
