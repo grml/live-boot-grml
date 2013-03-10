@@ -1,3 +1,23 @@
+live-boot (4.0~a8-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Moving initramfs-tools entry-point to backends.
+  * Moving dracut entry-point stub to backends.
+  * Dropping pre-squeeze udev conditionals in initramfs-tools hook.
+  * Dropping conditionals in backend, stuff is either there or not but not
+    nothing in between.
+  * Correcting spelling typos, thanks to Adam D. Barratt <adam@adam-
+    barratt.org.uk>.
+
+  [ Evgeni Golov ]
+  * Fixing invalid syntax in test for opt_link.
+  * Checking for ${overlay}, not ${device} when trying to close
+    ${overlay}.
+  * Transforming link targets so they work after the mount was moved
+    (Closes: #702421).
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 10 Mar 2013 19:02:23 +0100
+
 live-boot (4.0~a7-1) experimental; urgency=low
 
   * Silencing unmounting of potentially stray tmpfs on /live/overlay.
