@@ -1,3 +1,9 @@
+live-boot (4.0~a9-1) experimental; urgency=low
+
+  * Removing all references to my old email address.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Sun, 10 Mar 2013 22:13:18 +0100
+
 live-boot (4.0~a8-1) experimental; urgency=low
 
   [ Daniel Baumann ]
