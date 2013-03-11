@@ -19,3 +19,9 @@
 40_support_multiple_hooks.patch
 41_drop_nameserver_from_ip_option.patch
 42_restore_support_for_custom-ov_persistence.patch
+
+# patches submitted and accepted upstream
+101_fix-test-for-opt_link.patch
+102_check-for-overlay-not-device.patch
+103_transform-link-targets.patch
+104_set-rootfs_dest_backing.patch

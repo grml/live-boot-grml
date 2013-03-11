@@ -1,3 +1,10 @@
+live-boot (3.0.1-1+grml.1) unstable; urgency=low
+
+  * Sync Debian's 3.0.1.
+  * Backport some patches from Debian's debian-next (4.x) branch.
+
+ -- Evgeni Golov <evgeni@grml.org>  Wed, 06 Mar 2013 08:07:07 +0100
+
 live-boot (3.0.1-1) unstable; urgency=low
 
   [ chals ]
