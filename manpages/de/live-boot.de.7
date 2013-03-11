@@ -3,26 +3,26 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 10.03.2013 4.0~a9\-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 11.03.2013 4.0~a9\-1 "Live Systems Project"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Scripts
 
 .SH DESCRIPTION
-\fBlive\-boot\fP contains the scripts that configure a Debian Live system during
-the boot process (early userspace).
+\fBlive\-boot\fP contains the scripts that configure a live system during the
+boot process (early userspace).
 .PP
 .\" FIXME
 live\-boot is a hook for the initramfs\-tools, used to generate a initramfs
 capable to boot live systems, such as those created by
-\fIlive\-helper\fP(7). This includes the Debian Live isos, netboot tarballs, and
-usb stick images.
+\fIlive\-helper\fP(7). This includes the Live systems ISOs, netboot tarballs,
+and usb stick images.
 .PP
 .\" FIXME
 At boot time it will look for a (read\-only) media containing a "/live"
 directory where a root filesystems (often a compressed filesystem image like
 squashfs) is stored. If found, it will create a writable environment, using
-aufs, for Debian like systems to boot from.
+aufs, to boot the system from.
 
 .SH CONFIGURATION
 \fBlive\-boot\fP can be configured through a boot parameter or a configuration
@@ -86,8 +86,8 @@ You may also use the live iso image in place of the squashfs image.
 .IP \fBiscsi\fP=\fIserver\-ip[,server\-port];target\-name\fP 4
 Boot from an iSCSI target that has an iso or disk live image as one of its
 LUNs. The specified target is searched for a LUN which looks like a live
-media. If you use the \fBiscsitarget\fP software iSCSI target solution which is
-packaged in Debian your ietd.conf might look like this:
+media. If you use the \fBiscsitarget\fP software iSCSI target solution your
+ietd.conf might look like this:
 .br
 # The target\-name you specify in the iscsi= parameter
 .br
@@ -137,7 +137,7 @@ for loop\-aes encryption type.
 .IP \fBlive\-media\-offset\fP=\fIBYTES\fP 4
 This way you could tell live\-boot that your image starts at offset BYTES in
 the above specified or autodiscovered device, this could be useful to hide
-the Debian Live iso or image inside another iso or image, to create "clean"
+the live system ISO or image inside another iso or image, to create "clean"
 images.
 .IP \fBlive\-media\-path\fP=\fIPATH\fP 4
 Sets the path to the live filesystem on the medium. By default, it is set to
@@ -270,16 +270,15 @@ loaded in alphanumeric order.
 \fIlive\-tools\fP(7)
 
 .SH HOMEPAGE
-More information about live\-boot and the Debian Live project can be found on
-the homepage at <\fIhttp://live.debian.net/\fP> and in the manual at
-<\fIhttp://live.debian.net/manual/\fP>.
+More information about live\-boot and the Live Systems project can be found
+on the homepage at <\fIhttp://live\-systems.org/\fP> and in the manual
+at <\fIhttp://live\-systems.org/manual/\fP>.
 
 .SH BUGS
 Bugs can be reported by submitting a bugreport for the live\-boot package in
-the Debian Bug Tracking System at <\fIhttp://bugs.debian.org/\fP> or by
-writing a mail to the Debian Live mailing list at
+the Bug Tracking System at <\fIhttp://bugs.debian.org/\fP> or by
+writing a mail to the Live Systems mailing list at
 <\fIdebian\-live@lists.debian.org\fP>.
 
 .SH AUTHOR
-live\-boot was written by Daniel Baumann <\fImail@daniel\-baumann.ch\fP>
-for the Debian project.
+live\-boot was written by Daniel Baumann <\fImail@daniel\-baumann.ch\fP>.
