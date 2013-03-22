@@ -10,7 +10,7 @@ is_live_path ()
 	then
 		for FILESYSTEM in squashfs ext2 ext3 ext4 xfs dir jffs2
 		do
-			if [ "$(echo ${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM})" != "${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM}" ]
+			if [ -e "${DIRECTORY}/${LIVE_MEDIA_PATH}/"*".${FILESYSTEM}" ]
 			then
 				return 0
 			fi
