@@ -2,21 +2,21 @@
 
 #set -e
 
-is_live_path ()
+file_pattern_matches()
 {
-	DIRECTORY="${1}"
+	[ -e "$1" ]
+}
 
-	if [ -d "${DIRECTORY}"/"${LIVE_MEDIA_PATH}" ]
-	then
-		for FILESYSTEM in squashfs ext2 ext3 ext4 xfs dir jffs2
-		do
-			if [ -e "${DIRECTORY}/${LIVE_MEDIA_PATH}/"*".${FILESYSTEM}" ]
-			then
-				return 0
-			fi
-		done
-	fi
-
+is_live_path()
+{
+	DIRECTORY="${1}/${LIVE_MEDIA_PATH}"
+	for FILESYSTEM in squashfs ext2 ext3 ext4 xfs dir jffs
+	do
+		if file_pattern_matches "${DIRECTORY}/"*.${FILESYSTEM}
+		then
+			return 0
+		fi
+	done
 	return 1
 }
 
