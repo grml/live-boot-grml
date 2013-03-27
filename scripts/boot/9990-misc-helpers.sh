@@ -62,32 +62,13 @@ get_backing_device ()
 	esac
 }
 
-match_files_in_dir ()
-{
-	# Does any files match pattern ${1} ?
-	local pattern
-	pattern="${1}"
-
-	if [ "$(echo ${pattern})" != "${pattern}" ]
-	then
-		return 0
-	fi
-
-	return 1
-}
-
 mount_images_in_directory ()
 {
 	directory="${1}"
 	rootmnt="${2}"
 	mac="${3}"
 
-	if match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.squashfs" ||
-		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext2" ||
-		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext3" ||
-		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext4" ||
-		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.jffs2" ||
-		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.dir"
+	if is_live_path "${directory}"
 	then
 		[ -n "${mac}" ] && adddirectory="${directory}/${LIVE_MEDIA_PATH}/${mac}"
 		setup_unionfs "${directory}/${LIVE_MEDIA_PATH}" "${rootmnt}" "${adddirectory}"
