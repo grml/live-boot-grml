@@ -1,3 +1,20 @@
+live-boot (4.0~a10-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Debranding package for derivatives.
+
+  [ Evgeni Golov ]
+  * Fixing condition for setting rootfs_dest_backing.
+
+  [ Michael Stummvoll ]
+  * Simplifying if statement in is_live_system function.
+  * Fixing a bug with multiple files in is_live_path after the last
+    commit.
+  * Using is_live_path() in mount_images_in_directory() to avoid redundant
+    logic.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Mon, 01 Apr 2013 08:20:50 +0200
+
 live-boot (4.0~a9-1) experimental; urgency=low
 
   * Removing all references to my old email address.
