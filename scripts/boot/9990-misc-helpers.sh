@@ -938,7 +938,7 @@ find_persistence_media ()
 	white_listed_devices="${2}"
 	ret=""
 
-	black_listed_devices="$(what_is_mounted_on /live/medium)"
+	black_listed_devices="$(what_is_mounted_on /live/medium) $(what_is_mounted_on /live/findiso) $(what_is_mounted_on /live/fromiso)"
 
 	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
