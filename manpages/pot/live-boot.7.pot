@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2013-02-14 19:32+0100\n"
+"POT-Creation-Date: 2012-11-30 14:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,13 +25,13 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2013-02-14"
+msgid "2012-11-30"
 msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "3.0.1-1"
+msgid "4.0~a1-1"
 msgstr ""
 
 #. type: TH
@@ -339,7 +339,7 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:77
 #, no-wrap
-msgid "B<ip>=[I<DEVICE>]:[I<CLIENT_IP>]:[I<NETMASK>]:[I<GATEWAY_IP>]:[I<NAMESERVER>] [,[I<DEVICE>]:[I<CLIENT_IP>]:[I<NETMASK>]:[I<GATEWAY_IP>]:[I<NAMESERVER>]]"
+msgid "B<ip>=[I<DEVICE>]:[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<AUTOCONF>] [,[I<DEVICE>]:[I<CLIENT_IP>]:[I<SERVER_IP>]:[I<GATEWAY_IP>]:[I<NETMASK>]:[I<HOSTNAME>]:[I<AUTOCONF>]]"
 msgstr ""
 
 #. type: Plain text
@@ -515,22 +515,35 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:103
 #, no-wrap
-msgid "B<noeject>"
+msgid "B<noprompt>"
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:105
-msgid "Do not prompt to eject the live medium."
+msgid "Do not prompt to eject the CD or remove the USB flash drive on reboot."
 msgstr ""
 
 #. type: IP
 #: en/live-boot.7:105
 #, no-wrap
-msgid "B<ramdisk-size>"
+msgid "B<noprompt>=I<TYPE>"
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:107
+msgid ""
+"This tells live-boot not to prompt to eject the CD (when noprompt=cd) or "
+"remove the USB flash drive (when noprompt=usb) on reboot."
+msgstr ""
+
+#. type: IP
+#: en/live-boot.7:107
+#, no-wrap
+msgid "B<ramdisk-size>"
+msgstr ""
+
+#. type: Plain text
+#: en/live-boot.7:109
 msgid ""
 "This parameters allows to set a custom ramdisk size (it's the '-o size' "
 "option of tmpfs mount). By default, there is no ramdisk size set, so the "
@@ -539,24 +552,24 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:107
+#: en/live-boot.7:109
 #, no-wrap
 msgid "B<swapon>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:109
+#: en/live-boot.7:111
 msgid "This parameter enables usage of local swap partitions."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:109
+#: en/live-boot.7:111
 #, no-wrap
 msgid "B<persistence>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:111
+#: en/live-boot.7:113
 msgid ""
 "live-boot will probe devices for persistence media. These can be partitions "
 "(with the correct GPT name), filesystems (with the correct label) or image "
@@ -566,13 +579,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:111
+#: en/live-boot.7:113
 #, no-wrap
 msgid "B<persistence-encryption>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:113
+#: en/live-boot.7:115
 msgid ""
 "This option determines which types of encryption that we allow to be used "
 "when probing devices for persistence media. If \"none\" is in the list, we "
@@ -582,13 +595,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:113
+#: en/live-boot.7:115
 #, no-wrap
 msgid "B<persistence-media>={I<removable>|I<removable-usb>}"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:115
+#: en/live-boot.7:117
 msgid ""
 "If you specify the keyword 'removable', live-boot will try to find "
 "persistence partitions on removable media only. Note that if you want to "
@@ -597,13 +610,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:115
+#: en/live-boot.7:117
 #, no-wrap
 msgid "B<persistence-method>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:117
+#: en/live-boot.7:119
 msgid ""
 "This option determines which types of persistence media we allow. If "
 "\"overlay\" is in the list, we consider overlays (i.e. \"live-rw\" and "
@@ -611,13 +624,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:117
+#: en/live-boot.7:119
 #, no-wrap
 msgid "B<persistence-path>=I<PATH>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:119
+#: en/live-boot.7:121
 msgid ""
 "live-boot will look for persistency files in the root directory of a "
 "partition, with this parameter, the path can be configured so that you can "
@@ -625,26 +638,26 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:119
+#: en/live-boot.7:121
 #, no-wrap
 msgid "B<persistence-read-only>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:121
+#: en/live-boot.7:123
 msgid ""
 "Filesystem changes are not saved back to persistence media. In particular, "
 "overlays and netboot NFS mounts are mounted read-only."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:121
+#: en/live-boot.7:123
 #, no-wrap
 msgid "B<persistence-storage>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:123
+#: en/live-boot.7:125
 msgid ""
 "This option determines which types of persistence storage to consider when "
 "probing for persistence media. If \"filesystem\" is in the list, filesystems "
@@ -654,43 +667,42 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:123
+#: en/live-boot.7:125
 #, no-wrap
-msgid "B<persistence-label>=I<LABEL>"
+msgid "B<persistence-subtext>=I<SUFFIX>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:125
+#: en/live-boot.7:127
 msgid ""
-"live-boot will use the name \"LABEL\" instead of \"persistence\" when "
-"searching for persistent storage. LABEL can be any valid filename, partition "
-"label, or GPT name. This option replaces the less flexible persistent-"
-"subtext option from version 2 of live-boot. If you wish to continue using "
-"legacy names for persistent storage, use the full name with this option, e."
-"g. persistence-label=live-rw-foo"
+"Add a suffix when searching for the image filenames or partition labels to "
+"use for the above mentioned persistence feature, the SUFFIX will be added "
+"after a dash (e.g.: \"live-sn\" would transform to \"live-sn-SUFFIX\"). This "
+"is handy to test multiple live-boot based live-systems with different "
+"persistence storage choices."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:125
+#: en/live-boot.7:127
 #, no-wrap
 msgid "B<quickreboot>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:127
+#: en/live-boot.7:129
 msgid ""
 "This option causes live-boot to reboot without attempting to eject the media "
 "and without asking the user to remove the boot media."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:127
+#: en/live-boot.7:129
 #, no-wrap
 msgid "B<showmounts>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:129
+#: en/live-boot.7:131
 msgid ""
 "This parameter will make live-boot to show on \"/\" the ro filesystems "
 "(mostly compressed) on \"/lib/live\". This is not enabled by default because "
@@ -699,26 +711,26 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:129
+#: en/live-boot.7:131
 #, no-wrap
 msgid "B<silent>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:131
+#: en/live-boot.7:133
 msgid ""
 "If you boot with the normal quiet parameter, live-boot hides most messages "
 "of its own. When adding silent, it hides all."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:131
+#: en/live-boot.7:133
 #, no-wrap
 msgid "B<todisk>=I<DEVICE>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:133
+#: en/live-boot.7:135
 msgid ""
 "Adding this parameter, live-boot will try to copy the entire read-only media "
 "to the specified device before mounting the root filesystem. It probably "
@@ -728,13 +740,13 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:133
+#: en/live-boot.7:135
 #, no-wrap
 msgid "B<toram>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:135
+#: en/live-boot.7:137
 msgid ""
 "Adding this parameter, live-boot will try to copy the whole read-only media "
 "to the computer's RAM before mounting the root filesystem. This could need a "
@@ -742,14 +754,14 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:135
+#: en/live-boot.7:137
 #, no-wrap
 msgid "B<union>=aufs|unionfs"
 msgstr ""
 
 #.  FIXME
 #. type: Plain text
-#: en/live-boot.7:138
+#: en/live-boot.7:140
 msgid ""
 "By default, live-boot uses aufs. With this parameter, you can switch to "
 "unionfs."
@@ -757,33 +769,33 @@ msgstr ""
 
 #.  FIXME
 #. type: SH
-#: en/live-boot.7:140
+#: en/live-boot.7:142
 #, no-wrap
 msgid "FILES (old)"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:141
+#: en/live-boot.7:143
 #, no-wrap
 msgid "B</etc/live.conf>"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:143
+#: en/live-boot.7:145
 msgid ""
 "Some variables can be configured via this config file (inside the live "
 "system)."
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:143
+#: en/live-boot.7:145
 #, no-wrap
 msgid "B<live/filesystem.module>"
 msgstr ""
 
 #.  FIXME
 #. type: Plain text
-#: en/live-boot.7:146
+#: en/live-boot.7:148
 msgid ""
 "This optional file (inside the live media) contains a list of white-space or "
 "carriage-return-separated file names corresponding to disk images in the \"/"
@@ -796,75 +808,75 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:147
+#: en/live-boot.7:149
 #, no-wrap
 msgid "FILES"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:148
+#: en/live-boot.7:150
 #, no-wrap
 msgid "B</etc/live/boot.conf>"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:149
+#: en/live-boot.7:151
 #, no-wrap
 msgid "B</etc/live/boot/*>"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:150
+#: en/live-boot.7:152
 #, no-wrap
 msgid "B<live/boot.conf>"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:151
+#: en/live-boot.7:153
 #, no-wrap
 msgid "B<live/boot/*>"
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:152
+#: en/live-boot.7:154
 #, no-wrap
 msgid "B<persistence.conf>"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:154 en/persistence.conf.5:191
+#: en/live-boot.7:156 en/persistence.conf.5:191
 #, no-wrap
 msgid "SEE ALSO"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:156
+#: en/live-boot.7:158
 msgid "I<persistence.conf>(5)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:158 en/persistence.conf.5:195
+#: en/live-boot.7:160 en/persistence.conf.5:195
 msgid "I<live-build>(7)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:160 en/persistence.conf.5:197
+#: en/live-boot.7:162 en/persistence.conf.5:197
 msgid "I<live-config>(7)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:162 en/persistence.conf.5:199
+#: en/live-boot.7:164 en/persistence.conf.5:199
 msgid "I<live-tools>(7)"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:163 en/persistence.conf.5:200
+#: en/live-boot.7:165 en/persistence.conf.5:200
 #, no-wrap
 msgid "HOMEPAGE"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:165 en/persistence.conf.5:204
+#: en/live-boot.7:167 en/persistence.conf.5:204
 msgid ""
 "More information about live-boot and the Debian Live project can be found on "
 "the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
@@ -872,13 +884,13 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:166 en/persistence.conf.5:205
+#: en/live-boot.7:168 en/persistence.conf.5:205
 #, no-wrap
 msgid "BUGS"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:168 en/persistence.conf.5:210
+#: en/live-boot.7:170 en/persistence.conf.5:210
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
 "the Debian Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
@@ -887,13 +899,13 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:169 en/persistence.conf.5:211
+#: en/live-boot.7:171 en/persistence.conf.5:211
 #, no-wrap
 msgid "AUTHOR"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:170
+#: en/live-boot.7:172
 msgid ""
 "live-boot was written by Daniel Baumann E<lt>I<daniel@debian.org>E<gt> for "
 "the Debian project."

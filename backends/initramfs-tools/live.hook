@@ -143,19 +143,11 @@ then
 	copy_exec /usr/bin/eject /bin
 fi
 
-# Program: mount
-# fuse does not work with klibc mount
-copy_exec /bin/mount /bin/mount.util-linux
-
 [ "${QUIET}" ] || echo -n " utils"
 
 # Feature: Verify Checksums
-if [ -e /etc/progress-linux_version ]
-then
-	copy_exec /usr/bin/sha256sum /bin
-else
-	copy_exec /usr/bin/md5sum /bin
-fi
+copy_exec /usr/bin/sha256sum /bin
+copy_exec /usr/bin/md5sum /bin
 
 # Program: memdisk
 if [ -x /usr/bin/memdiskfind ]
@@ -241,6 +233,16 @@ case "${LIVE_DNS}" in
 		# might be needed if /etc/hosts is used
 		#mkdir -p "${DESTDIR}/etc"
 		#cp -p /etc/nsswitch.conf "${DESTDIR}/etc"
+		;;
+esac
+
+case "${LIVE_UNIONMOUNT}" in
+	true)
+		[ "${QUIET}" ] || echo -n " unionmount"
+
+		# UnionMount
+		# only mount from patched util-linux can do this currently
+		copy_exec /bin/mount /bin/mount_full
 		;;
 esac
 

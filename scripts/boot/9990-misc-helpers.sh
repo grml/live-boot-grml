@@ -65,8 +65,7 @@ get_backing_device ()
 match_files_in_dir ()
 {
 	# Does any files match pattern ${1} ?
-	local pattern
-	pattern="${1}"
+	local pattern="${1}"
 
 	if [ "$(echo ${pattern})" != "${pattern}" ]
 	then
@@ -100,16 +99,7 @@ is_nice_device ()
 {
 	sysfs_path="${1#/sys}"
 
-	if [ -e /lib/udev/path_id ]
-	then
-		# squeeze
-		PATH_ID="/lib/udev/path_id"
-	else
-		# wheezy/sid (udev >= 174)
-		PATH_ID="/sbin/udevadm test-builtin path_id"
-	fi
-
-	if ${PATH_ID} "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-[^-]*-(ide|sas|scsi|usb|virtio)|platform-sata_mv|platform-orion-ehci|platform-mmc|platform-mxsdhci)"
+	if /sbin/udevadm test-builtin path_id "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-[^-]*-(ide|sas|scsi|usb|virtio)|platform-sata_mv|platform-orion-ehci|platform-mmc|platform-mxsdhci)"
 	then
 		return 0
 	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
@@ -379,27 +369,24 @@ really_export ()
 
 is_in_list_separator_helper ()
 {
-	local sep element list
-	sep=${1}
+	local sep=${1}
 	shift
-	element=${1}
+	local element=${1}
 	shift
-	list=${*}
+	local list=${*}
 	echo ${list} | grep -qe "^\(.*${sep}\)\?${element}\(${sep}.*\)\?$"
 }
 
 is_in_space_sep_list ()
 {
-	local element
-	element=${1}
+	local element=${1}
 	shift
 	is_in_list_separator_helper "[[:space:]]" "${element}" "${*}"
 }
 
 is_in_comma_sep_list ()
 {
-	local element
-	element=${1}
+	local element=${1}
 	shift
 	is_in_list_separator_helper "," "${element}" "${*}"
 }
@@ -516,28 +503,25 @@ trim_path ()
 
 what_is_mounted_on ()
 {
-	local dir
-	dir="$(trim_path ${1})"
+	local dir="$(trim_path ${1})"
 	grep -m1 "^[^ ]\+ ${dir} " /proc/mounts | cut -d' ' -f1
 }
 
 chown_ref ()
 {
-	local reference targets owner
-	reference="${1}"
+	local reference="${1}"
 	shift
-	targets=${@}
-	owner=$(stat -c %u:%g "${reference}")
+	local targets=${@}
+	local owner=$(stat -c %u:%g "${reference}")
 	chown -h ${owner} ${targets}
 }
 
 chmod_ref ()
 {
-	local reference targets rights
-	reference="${1}"
+	local reference="${1}"
 	shift
-	targets=${@}
-	rights=$(stat -c %a "${reference}")
+	local targets=${@}
+	local rights=$(stat -c %a "${reference}")
 	chmod ${rights} ${targets}
 }
 
@@ -600,7 +584,7 @@ fs_size ()
 		size=$(expr ${size} + ${size} / 20 ) # FIXME: 5% more to be sure
 	else
 		# free space
-		size="$(df -kP | grep -s ${mountp} | awk '{print $4}')"
+		size="$(df -k | grep -s ${mountp} | awk '{print $4}')"
 	fi
 
 	if [ -n "${doumount}" ]
@@ -623,13 +607,12 @@ load_keymap ()
 
 setup_loop ()
 {
-	local fspath module pattern offset encryption readonly
-	fspath=${1}
-	module=${2}
-	pattern=${3}
-	offset=${4}
-	encryption=${5}
-	readonly=${6}
+	local fspath=${1}
+	local module=${2}
+	local pattern=${3}
+	local offset=${4}
+	local encryption=${5}
+	local readonly=${6}
 
 	# the output of setup_loop is evaluated in other functions,
 	# modprobe leaks kernel options like "libata.dma=0"
@@ -731,25 +714,19 @@ try_mount ()
 	fi
 }
 
-# Try to mount $device to the place expected by live-boot. If $device
-# is already mounted somewhere, move it to the expected place. If
-# we're only probing $device (to check if it has custom persistence)
-# $probe should be set, which suppresses warnings upon failure. On
-# success, print the mount point for $device.
 mount_persistence_media ()
 {
-	local device probe backing old_backing fstype mount_opts
-	device=${1}
-	probe=${2}
+	local device=${1}
+	local probe=${2}
 
-	backing="/live/persistence/$(basename ${device})"
+	local backing="/live/persistence/$(basename ${device})"
 
 	mkdir -p "${backing}"
-	old_backing="$(where_is_mounted ${device})"
+	local old_backing="$(where_is_mounted ${device})"
 	if [ -z "${old_backing}" ]
 	then
-		fstype="$(get_fstype ${device})"
-		mount_opts="rw,noatime"
+		local fstype="$(get_fstype ${device})"
+		local mount_opts="rw,noatime"
 		if [ -n "${PERSISTENCE_READONLY}" ]
 		then
 			mount_opts="ro,noatime"
@@ -774,19 +751,14 @@ mount_persistence_media ()
 			rmdir "${backing}"
 			return 1
 		fi
-	else
-		# This means that $device has already been mounted on
-		# the place expected by live-boot, so we're done.
-		echo ${backing}
-		return 0
 	fi
+	return 0
 }
 
 close_persistence_media ()
 {
-	local device backing
-	device=${1}
-	backing="$(where_is_mounted ${device})"
+	local device=${1}
+	local backing="$(where_is_mounted ${device})"
 
 	if [ -d "${backing}" ]
 	then
@@ -852,25 +824,22 @@ open_luks_device ()
 
 get_gpt_name ()
 {
-    local dev
-    dev="${1}"
+    local dev="${1}"
     /sbin/blkid -s PART_ENTRY_NAME -p -o value ${dev} 2>/dev/null
 }
 
 is_gpt_device ()
 {
-    local dev
-    dev="${1}"
+    local dev="${1}"
     [ "$(/sbin/blkid -s PART_ENTRY_SCHEME -p -o value ${dev} 2>/dev/null)" = "gpt" ]
 }
 
 probe_for_gpt_name ()
 {
-	local overlays dev gpt_dev gpt_name
-	overlays="${1}"
-	dev="${2}"
+	local overlays="${1}"
+	local dev="${2}"
 
-	gpt_dev="${dev}"
+	local gpt_dev="${dev}"
 	if is_active_luks_mapping ${dev}
 	then
 		# if $dev is an opened luks device, we need to check
@@ -883,7 +852,7 @@ probe_for_gpt_name ()
 		return
 	fi
 
-	gpt_name=$(get_gpt_name ${gpt_dev})
+	local gpt_name=$(get_gpt_name ${gpt_dev})
 	for label in ${overlays}
 	do
 		if [ "${gpt_name}" = "${label}" ]
@@ -895,9 +864,8 @@ probe_for_gpt_name ()
 
 probe_for_fs_label ()
 {
-	local overlays dev
-	overlays="${1}"
-	dev="${2}"
+	local overlays="${1}"
+	local dev="${2}"
 
 	for label in ${overlays}
 	do
@@ -910,12 +878,11 @@ probe_for_fs_label ()
 
 probe_for_file_name ()
 {
-	local overlays dev ret backing
-	overlays="${1}"
-	dev="${2}"
+	local overlays="${1}"
+	local dev="${2}"
 
-	ret=""
-	backing="$(mount_persistence_media ${dev} probe)"
+	local ret=""
+	local backing="$(mount_persistence_media ${dev} probe)"
 	if [ -z "${backing}" ]
 	then
 	    return
@@ -926,8 +893,7 @@ probe_for_file_name ()
 		path=${backing}/${PERSISTENCE_PATH}${label}
 		if [ -f "${path}" ]
 		then
-			local loopdev
-			loopdev=$(setup_loop "${path}" "loop" "/sys/block/loop*")
+			local loopdev=$(setup_loop "${path}" "loop" "/sys/block/loop*")
 			ret="${ret} ${label}=${loopdev}"
 		fi
 	done
@@ -961,19 +927,17 @@ find_persistence_media ()
 	# ${white_list_devices} is non-empty, only devices in it will be
 	# scanned.
 
-	local overlays white_listed_devices ret black_listed_devices
-	overlays="${1}"
-	white_listed_devices="${2}"
-	ret=""
+	local overlays="${1}"
+	local white_listed_devices="${2}"
+	local ret=""
 
-	black_listed_devices="$(what_is_mounted_on /live/medium)"
+	local black_listed_devices="$(what_is_mounted_on /live/medium)"
 
 	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
-		local result luks_device
-		result=""
+		local result=""
 
-		luks_device=""
+		local luks_device=""
 		# Check if it's a luks device; we'll have to open the device
 		# in order to probe any filesystem it contains, like we do
 		# below. activate_custom_mounts() also depends on that any luks
@@ -1149,12 +1113,11 @@ link_files ()
 	# is non-empty, remove mask from all source paths when
 	# creating links (will be necessary if we change root, which
 	# live-boot normally does (into $rootmnt)).
-	local src_dir dest_dir src_mask
 
 	# remove multiple /:s and ensure ending on /
-	src_dir="$(trim_path ${1})/"
-	dest_dir="$(trim_path ${2})/"
-	src_mask="${3}"
+	local src_dir="$(trim_path ${1})/"
+	local dest_dir="$(trim_path ${2})/"
+	local src_mask="${3}"
 
 	# This check can only trigger on the inital, non-recursive call since
 	# we create the destination before recursive calls
@@ -1167,8 +1130,7 @@ link_files ()
 	find "${src_dir}" -mindepth 1 -maxdepth 1 | \
 	while read src
 	do
-		local dest final_src
-		dest="${dest_dir}$(basename "${src}")"
+		local dest="${dest_dir}$(basename "${src}")"
 		if [ -d "${src}" ]
 		then
 			if [ -z "$(ls -A "${src}")" ]
@@ -1183,7 +1145,7 @@ link_files ()
 			fi
 			link_files "${src}" "${dest}" "${src_mask}"
 		else
-			final_src=${src}
+			local final_src=${src}
 			if [ -n "${src_mask}" ]
 			then
 				final_src="$(echo ${final_src} | sed "s|^${src_mask}||")"
@@ -1197,12 +1159,10 @@ link_files ()
 
 do_union ()
 {
-	local unionmountpoint unionrw unionro
-	unionmountpoint="${1}"	# directory where the union is mounted
-	shift
-	unionrw="${1}"		# branch where the union changes are stored
-	shift
-	unionro="${*}"		# space separated list of read-only branches (optional)
+	local unionmountpoint="${1}"	# directory where the union is mounted
+	local unionrw="${2}"		# branch where the union changes are stored
+	local unionro1="${3}"		# first underlying read-only branch (optional)
+	local unionro2="${4}"		# second underlying read-only branch (optional)
 
 	case "${UNIONTYPE}" in
 		aufs)
@@ -1226,12 +1186,13 @@ do_union ()
 		unionfs-fuse)
 			unionmountopts="-o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid"
 			unionmountopts="${unionmountopts} ${unionrw}=${rw_opt}"
-			if [ -n "${unionro}" ]
+			if [ -n "${unionro1}" ]
 			then
-				for rofs in ${unionro}
-				do
-					unionmountopts="${unionmountopts}:${rofs}=${ro_opt}"
-				done
+				unionmountopts="${unionmountopts}:${unionro1}=${ro_opt}"
+			fi
+			if [ -n "${unionro2}" ]
+			then
+				unionmountopts="${unionmountopts}:${unionro2}=${ro_opt}"
 			fi
 			( sysctl -w fs.file-max=391524 ; ulimit -HSn 16384
 			unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
@@ -1240,27 +1201,21 @@ do_union ()
 			;;
 
 		overlayfs)
-			# XXX: can multiple unionro be used? (overlayfs only handles two dirs, but perhaps they can be chained?)
-			# XXX: and can unionro be optional? i.e. can overlayfs skip lowerdir?
-			if echo ${unionro} | grep -q " "
-			then
-				panic "Multiple lower filesystems are currently not supported with overlayfs (unionro = ${unionro})."
-			elif [ -z "${unionro}"	]
-			then
-				panic "Overlayfs needs at least one lower filesystem (read-only branch)."
-			fi
-			unionmountopts="-o noatime,lowerdir=${unionro},upperdir=${unionrw}"
+			# XXX: can unionro2 be used? (overlayfs only handles two dirs, but perhaps they can be chained?)
+			# XXX: and can unionro1 be optional? i.e. can overlayfs skip lowerdir?
+			unionmountopts="-o noatime,lowerdir=${unionro1},upperdir=${unionrw}"
 			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 			;;
 
 		*)
 			unionmountopts="-o noatime,${noxino_opt},dirs=${unionrw}=${rw_opt}"
-			if [ -n "${unionro}" ]
+			if [ -n "${unionro1}" ]
 			then
-				for rofs in ${unionro}
-				do
-					unionmountopts="${unionmountopts}:${rofs}=${ro_opt}"
-				done
+				unionmountopts="${unionmountopts}:${unionro1}=${ro_opt}"
+			fi
+			if [ -n "${unionro2}" ]
+			then
+				unionmountopts="${unionmountopts}:${unionro2}=${ro_opt}"
 			fi
 			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 			;;
@@ -1272,13 +1227,12 @@ get_custom_mounts ()
 	# Side-effect: leaves $devices with persistence.conf mounted in /live/persistence
 	# Side-effect: prints info to file $custom_mounts
 
-	local custom_mounts devices bindings links
-	custom_mounts=${1}
+	local custom_mounts=${1}
 	shift
-	devices=${@}
+	local devices=${@}
 
-	bindings="/tmp/bindings.list"
-	links="/tmp/links.list"
+	local bindings="/tmp/bindings.list"
+	local links="/tmp/links.list"
 	rm -rf ${bindings} ${links} 2> /dev/null
 
 	for device in ${devices}
@@ -1288,14 +1242,14 @@ get_custom_mounts ()
 			continue
 		fi
 
-		local device_name backing include_list
-		device_name="$(basename ${device})"
-		backing=$(mount_persistence_media ${device})
+		local device_name="$(basename ${device})"
+		local backing=$(mount_persistence_media ${device})
 		if [ -z "${backing}" ]
 		then
 			continue
 		fi
 
+		local include_list
 		if [ -r "${backing}/${persistence_list}" ]
 		then
 			include_list="${backing}/${persistence_list}"
@@ -1319,15 +1273,14 @@ get_custom_mounts ()
 				continue
 			fi
 
-			if trim_path ${dir} | grep -q -e "^[^/]" -e "^/lib" -e "^/lib/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
+			if trim_path ${dir} | grep -q -e "^[^/]" -e "^/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
 			then
-				log_warning_msg "Skipping unsafe custom mount ${dir}: must be an absolute path containing neither the \".\" nor \"..\" special dirs, and cannot be \"/lib\", or \"/lib/live\" or any of its sub-directories."
+				log_warning_msg "Skipping unsafe custom mount ${dir}: must be an absolute path containing neither the \".\" nor \"..\" special dirs, and cannot be \"/live\" or any sub-directory therein."
 				continue
 			fi
 
-			local opt_source opt_link source full_source full_dest
-			opt_source=""
-			opt_link=""
+			local opt_source=""
+			local opt_link=""
 			for opt in $(echo ${options} | tr ',' ' ');
 			do
 				case "${opt}" in
@@ -1346,7 +1299,7 @@ get_custom_mounts ()
 				esac
 			done
 
-			source="${dir}"
+			local source="${dir}"
 			if [ -n "${opt_source}" ]
 			then
 				if echo ${opt_source} | grep -q -e "^/" -e "^\(.*/\)\?\.\.\?\(/.*\)\?$" && [ "${opt_source}" != "." ]
@@ -1358,8 +1311,8 @@ get_custom_mounts ()
 				fi
 			fi
 
-			full_source="$(trim_path ${backing}/${source})"
-			full_dest="$(trim_path ${rootmnt}/${dir})"
+			local full_source="$(trim_path ${backing}/${source})"
+			local full_dest="$(trim_path ${rootmnt}/${dir})"
 			if [ -n "${opt_link}" ]
 			then
 				echo "${device} ${full_source} ${full_dest} ${options}" >> ${links}
@@ -1380,9 +1333,8 @@ get_custom_mounts ()
 
 	# We need to make sure that no two custom mounts have the same sources
 	# or are nested; if that is the case, too much weird stuff can happen.
-	local prev_source prev_dest
-	prev_source="impossible source" # first iteration must not match
-	prev_dest=""
+	local prev_source="impossible source" # first iteration must not match
+	local prev_dest=""
 	# This sort will ensure that a source /a comes right before a source
 	# /a/b so we only need to look at the previous source
 	sort -k2 -b ${custom_mounts} |
@@ -1399,16 +1351,14 @@ get_custom_mounts ()
 
 activate_custom_mounts ()
 {
-	local custom_mounts used_devices
-	custom_mounts="${1}" # the ouput from get_custom_mounts()
-	used_devices=""
+	local custom_mounts="${1}" # the ouput from get_custom_mounts()
+	local used_devices=""
 
 	while read device source dest options # < ${custom_mounts}
 	do
-		local opt_bind opt_link opt_union
-		opt_bind="true"
-		opt_link=""
-		opt_union=""
+		local opt_bind="true"
+		local opt_link=""
+		local opt_union=""
 		for opt in $(echo ${options} | tr ',' ' ');
 		do
 			case "${opt}" in
@@ -1489,33 +1439,33 @@ activate_custom_mounts ()
 
 		# XXX: If CONFIG_AUFS_ROBR is added to the Debian kernel we can
 		# ignore the loop below and set rootfs_dest_backing=$dest
-		local rootfs_dest_backing
-		rootfs_dest_backing=""
+		local rootfs_dest_backing=""
 		if [ -n "${opt_link}"]
 		then
 			for d in /live/rootfs/*
 			do
 				if [ -n "${rootmnt}" ]
 				then
-					fs="${d}/$(echo ${dest} | sed -e "s|${rootmnt}||")"
+					rootfs_dest_backing="${d}/$(echo ${dest} | sed -e "s|${rootmnt}||")"
 				else
-					fs="${d}/${dest}"
+					rootfs_dest_backing="${d}/${dest}"
 				fi
-				if [ -d "${fs}" ]
+				if [ -d "${rootfs_dest_backing}" ]
 				then
-					rootfs_dest_backing="${rootfs_dest_backing} ${fs}"
+					break
+				else
+					rootfs_dest_backing=""
 				fi
 			done
 		fi
 
-		local cow_dir links_source
 		if [ -n "${opt_link}" ] && [ -z "${PERSISTENCE_READONLY}" ]
 		then
 			link_files ${source} ${dest} ${rootmnt}
 		elif [ -n "${opt_link}" ] && [ -n "${PERSISTENCE_READONLY}" ]
 		then
-			mkdir -p ${rootmnt}/lib/live/mount/persistence
-			links_source=$(mktemp -d ${rootmnt}/lib/live/mount/persistence/links-source-XXXXXX)
+			mkdir -p /live/persistence
+			local links_source=$(mktemp -d /live/persistence/links-source-XXXXXX)
 			chown_ref ${source} ${links_source}
 			chmod_ref ${source} ${links_source}
 			# We put the cow dir in the below strange place to
@@ -1523,7 +1473,7 @@ activate_custom_mounts ()
 			# has its own directory and isn't nested with some
 			# other custom mount (if so that mount's files would
 			# be linked, causing breakage.
-			cow_dir="/live/overlay/lib/live/mount/persistence/$(basename ${links_source})"
+			local cow_dir="/live/overlay/live/persistence/$(basename ${links_source})"
 			mkdir -p ${cow_dir}
 			chown_ref "${source}" "${cow_dir}"
 			chmod_ref "${source}" "${cow_dir}"
@@ -1540,7 +1490,14 @@ activate_custom_mounts ()
 			# bind-mount and union mount are handled the same
 			# in read-only mode, but note that rootfs_dest_backing
 			# is non-empty (and necessary) only for unions
-			cow_dir="/live/overlay/${dest}"
+			if [ -n "${rootmnt}" ]
+			then
+				local cow_dir="$(echo ${dest} | sed -e "s|^${rootmnt}|/live/overlay/|")"
+			else
+				# This is happens if persistence is activated
+				# post boot
+				local cow_dir="/live/overlay/${dest}"
+			fi
 			if [ -e "${cow_dir}" ] && [ -z "${opt_link}" ]
 			then
 				# If an earlier custom mount has files here
@@ -1564,32 +1521,6 @@ activate_custom_mounts ()
 	done < ${custom_mounts}
 
 	echo ${used_devices}
-}
-
-fix_backwards_compatibility ()
-{
-	local device dir opt backing include_list
-	device=${1}
-	dir=${2}
-	opt=${3}
-
-	if [ -n "${PERSISTENCE_READONLY}" ]
-	then
-		return
-	fi
-
-	backing="$(mount_persistence_media ${device})"
-	if [ -z "${backing}" ]
-	then
-		return
-	fi
-
-	include_list="${backing}/${persistence_list}"
-	if [ ! -r "${include_list}" ] && [ ! -r "${backing}/${old_persistence_list}" ]
-	then
-		echo "# persistence backwards compatibility:
-${dir} ${opt},source=." > "${include_list}"
-	fi
 }
 
 is_mountpoint ()

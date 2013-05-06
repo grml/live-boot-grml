@@ -29,15 +29,6 @@ Swap ()
 
 	LIVE_SWAP_DEVICES="${LIVE_SWAP_DEVICES:-/dev/sd* /dev/vd*}"
 
-	if [ -e /root/etc/fstab.d ]
-	then
-		# wheezy
-		_FSTAB="/root/etc/fstab.d/swap"
-	else
-		# squeeze
-		_FSTAB="/root/etc/fstab"
-	fi
-
 	for _DEVICE in $(echo ${LIVE_SWAP_DEVICES} | sed -e 's|,| |g')
 	do
 		if [ ! -b "${_DEVICE}" ]
@@ -57,15 +48,15 @@ Swap ()
 	done
 
 	# Remove all auto swap entries
-	if grep -qs "swap swap" "${_FSTAB}"
+	if grep -qs "swap swap" /root/etc/fstab.d/swap
 	then
-		grep -v "swap swap" "${_FSTAB}" > "${_FSTAB}".tmp
-		mv "${_FSTAB}".tmp "${_FSTAB}"
+		grep -v "swap swap" /root/etc/fstab.d/swap > /root/etc/fstab.d/swap.tmp
+		mv /root/etc/fstab.d/swap.tmp /root/etc/fstab.d/swap
 	fi
 
 	# Add new swap entries
 	for _DEVICE in ${_SWAP_DEVICES}
 	do
-		echo "${_DEVICE} swap swap defaults 0 0" >> "${_FSTAB}"
+		echo "${_DEVICE} swap swap defaults 0 0" >> /root/etc/fstab.d/swap
 	done
 }

@@ -32,12 +32,6 @@ Main ()
 		. /conf/param.conf
 	fi
 
-	if [ -n "${FUSE_MOUNT}" ]
-	then
-		# fuse does not work with klibc mount
-		ln -f /bin/mount.util-linux /bin/mount
-	fi
-
 	# Needed here too because some things (*cough* udev *cough*)
 	# changes the timeout
 
@@ -135,19 +129,6 @@ Main ()
 		mount_images_in_directory "${livefs_root}" "${rootmnt}" "${mac}"
 	fi
 
-	# At this point /root should contain the final root filesystem.
-	# Move all mountpoints below /live into /root/lib/live/mount.
-	# This has to be done after mounting the root filesystem to /
-	# otherwise these mount points won't be accessible from the running system.
-	for _MOUNT in $(cat /proc/mounts | cut -f 2 -d " " | grep -e "^/live/")
-	do
-		local newmount
-		newmount="${rootmnt}/lib/live/mount/${_MOUNT#/live/}"
-		mkdir -p "${newmount}"
-		mount -o move "${_MOUNT}" "${newmount}" > /dev/null 2>&1 || \
-		mount -o bind "${_MOUNT}" "${newmount}" > /dev/null || \
-		log_warning_msg "W: failed to move or bindmount ${_MOUNT} to ${newmount}"
-	done
 
 	if [ -n "${ROOT_PID}" ]
 	then
@@ -164,12 +145,22 @@ Main ()
 			;;
 	esac
 
+	# Move to the new root filesystem so that programs there can get at it.
+	mkdir -p /root/lib/live/mount/medium
+	mount --move /live/medium /root/lib/live/mount/medium
 
 	# aufs2 in kernel versions around 2.6.33 has a regression:
 	# directories can't be accessed when read for the first the time,
 	# causing a failure for example when accessing /var/lib/fai
 	# when booting FAI, this simple workaround solves it
 	ls /root/* >/dev/null 2>&1
+
+	# Move findiso directory to the new root filesystem so that programs there can get at it.
+	if [ -d /live/findiso ]
+	then
+		mkdir -p /root/lib/live/mount/findiso
+		mount -n --move /live/findiso /root/lib/live/mount/findiso
+	fi
 
 	# if we do not unmount the ISO we can't run "fsck /dev/ice" later on
 	# because the mountpoint is left behind in /proc/mounts, so let's get
