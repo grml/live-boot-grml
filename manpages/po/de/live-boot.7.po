@@ -4,8 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 4.0~a9-1\n"
-"POT-Creation-Date: 2013-03-10 22:13+0100\n"
+"Project-Id-Version: live-boot 4.0~a10-1\n"
+"POT-Creation-Date: 2013-04-01 08:19+0300\n"
 "PO-Revision-Date: 2012-04-08 22:48+0300\n"
 "Last-Translator: Daniel Baumann <mail@daniel-baumann.ch>\n"
 "Language-Team: none\n"
@@ -24,19 +24,19 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2013-03-10"
-msgstr "10.03.2013"
+msgid "2013-04-01"
+msgstr "01.04.2013"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "4.0~a9-1"
-msgstr "4.0~a9-1"
+msgid "4.0~a10-1"
+msgstr "4.0~a10-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "Debian Live Project"
+msgid "Live Systems Project"
 msgstr ""
 
 #. type: SH
@@ -59,8 +59,8 @@ msgstr ""
 #. type: Plain text
 #: en/live-boot.7:8
 msgid ""
-"B<live-boot> contains the scripts that configure a Debian Live system during "
-"the boot process (early userspace)."
+"B<live-boot> contains the scripts that configure a live system during the "
+"boot process (early userspace)."
 msgstr ""
 
 #.  FIXME
@@ -69,7 +69,7 @@ msgstr ""
 msgid ""
 "live-boot is a hook for the initramfs-tools, used to generate a initramfs "
 "capable to boot live systems, such as those created by I<live-helper>(7). "
-"This includes the Debian Live isos, netboot tarballs, and usb stick images."
+"This includes the Live systems ISOs, netboot tarballs, and usb stick images."
 msgstr ""
 
 #.  FIXME
@@ -79,7 +79,7 @@ msgid ""
 "At boot time it will look for a (read-only) media containing a \"/live\" "
 "directory where a root filesystems (often a compressed filesystem image like "
 "squashfs) is stored. If found, it will create a writable environment, using "
-"aufs, for Debian like systems to boot from."
+"aufs, to boot the system from."
 msgstr ""
 
 #. type: SH
@@ -262,8 +262,8 @@ msgstr ""
 msgid ""
 "Boot from an iSCSI target that has an iso or disk live image as one of its "
 "LUNs. The specified target is searched for a LUN which looks like a live "
-"media. If you use the B<iscsitarget> software iSCSI target solution which is "
-"packaged in Debian your ietd.conf might look like this:"
+"media. If you use the B<iscsitarget> software iSCSI target solution your "
+"ietd.conf might look like this:"
 msgstr ""
 
 #. type: Plain text
@@ -414,7 +414,7 @@ msgstr ""
 msgid ""
 "This way you could tell live-boot that your image starts at offset BYTES in "
 "the above specified or autodiscovered device, this could be useful to hide "
-"the Debian Live iso or image inside another iso or image, to create \"clean"
+"the live system ISO or image inside another iso or image, to create \"clean"
 "\" images."
 msgstr ""
 
@@ -860,37 +860,36 @@ msgid "HOMEPAGE"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:165 en/persistence.conf.5:204
+#: en/live-boot.7:165 en/persistence.conf.5:202
 msgid ""
-"More information about live-boot and the Debian Live project can be found on "
-"the homepage at E<lt>I<http://live.debian.net/>E<gt> and in the manual at "
-"E<lt>I<http://live.debian.net/manual/>E<gt>."
+"More information about live-boot and the Live Systems project can be found "
+"on the homepage at E<lt>I<http://live-systems.org/>E<gt> and in the manual "
+"at E<lt>I<http://live-systems.org/manual/>E<gt>."
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:166 en/persistence.conf.5:205
+#: en/live-boot.7:166 en/persistence.conf.5:203
 #, no-wrap
 msgid "BUGS"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:168 en/persistence.conf.5:210
+#: en/live-boot.7:168 en/persistence.conf.5:205
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
-"the Debian Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
-"writing a mail to the Debian Live mailing list at E<lt>I<debian-live@lists."
+"the Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
+"writing a mail to the Live Systems mailing list at E<lt>I<debian-live@lists."
 "debian.org>E<gt>."
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:169 en/persistence.conf.5:211
+#: en/live-boot.7:169 en/persistence.conf.5:206
 #, no-wrap
 msgid "AUTHOR"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:170
+#: en/live-boot.7:170 en/persistence.conf.5:207
 msgid ""
-"live-boot was written by Daniel Baumann E<lt>I<mail@daniel-baumann.ch>E<gt> "
-"for the Debian project."
+"live-boot was written by Daniel Baumann E<lt>I<mail@daniel-baumann.ch>E<gt>."
 msgstr ""
