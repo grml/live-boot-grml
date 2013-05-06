@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 4.0~a5-1\n"
-"POT-Creation-Date: 2013-02-12 08:28+0100\n"
-"PO-Revision-Date: 2013-01-08 14:00+0100\n"
+"Project-Id-Version: live-boot 4.0~a6-1\n"
+"POT-Creation-Date: 2013-02-15 08:56+0100\n"
+"PO-Revision-Date: 2013-02-12 14:25+0100\n"
 "Last-Translator: Carlos Zuferri <chals@altorricon.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
@@ -24,14 +24,14 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2013-02-12"
-msgstr "12.02.2013"
+msgid "2013-02-15"
+msgstr "15.02.2013"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "4.0~a5-1"
-msgstr "4.0~a5-1"
+msgid "4.0~a6-1"
+msgstr "4.0~a6-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
@@ -813,6 +813,9 @@ msgid ""
 "searching for persistent storage. LABEL can be any valid filename, partition "
 "label, or GPT name."
 msgstr ""
+"live-boot utilizará el nombre \"LABEL\" en lugar de \"persistence\" cuando "
+"busque medios de almacenamiento persistente. LABEL puede ser cualquier "
+"nombre de fichero, etiqueta de una partición or nombre GPT."
 
 #. type: IP
 #: en/live-boot.7:125
