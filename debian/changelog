@@ -1,3 +1,32 @@
+live-boot (4.0~a11-1) experimental; urgency=low
+
+  [ chals ]
+  * Updating dates in man pages.
+  * Updating the Spanish translation of live-boot man page.
+  * Updating the Spanish translation of persistence.conf man page.
+  * Fixing the use of one preposition in the Spanish translation of the
+    man pages.
+
+  [ Daniel Baumann ]
+  * Renumbering the first three early scripts.
+  * Renaming main function to live for consistent namespace.
+  * Correcting leftovers from old variable handling for BOOTIF, thanks to
+    Andrew Jeffery <andrewj@avalon.com.au> (Closes: #703743).
+
+  [ Andrew Jeffery ]
+  * Select BOOTIF device if defined for netboot (Closes: #703744).
+  * Don't quote $CIFSOPTS for mount.cifs (Closes: #703746).
+
+  [ Peter Schaefer ]
+  * Adding support for luks persistence with persistence files (Closes:
+    #701614).
+
+  [ David Hare ]
+  * Also blacklisting findiso and fromiso devices for luks file
+    persistence.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Mon, 06 May 2013 14:28:00 +0200
+
 live-boot (4.0~a10-1) experimental; urgency=low
 
   [ Daniel Baumann ]
