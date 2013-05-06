@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2013-05-06 14:23+0300\n"
+"POT-Creation-Date: 2013-05-06 20:50+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -513,7 +513,7 @@ msgid ""
 msgstr ""
 
 #. type: IP
-#: en/live-boot.7:103
+#: en/live-boot.7:103 en/live-boot.7:125
 #, no-wrap
 msgid "B<noeject>"
 msgstr ""
@@ -665,12 +665,6 @@ msgid ""
 "live-boot will use the name \"LABEL\" instead of \"persistence\" when "
 "searching for persistent storage. LABEL can be any valid filename, partition "
 "label, or GPT name."
-msgstr ""
-
-#. type: IP
-#: en/live-boot.7:125
-#, no-wrap
-msgid "B<quickreboot>"
 msgstr ""
 
 #. type: Plain text
