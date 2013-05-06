@@ -135,5 +135,20 @@ EOF
 		fi
 	fi
 
+	#if [ ! -x /root/usr/sbin/NetworkManager ]
+	#then
+	#	for i in eth0 eth1 eth2 ath0 wlan0
+	#	do
+	#		grep -q "iface ${i}" ${IFFILE} && continue
+	#
+	#cat >> "${IFFILE}" << EOF
+	#allow-hotplug ${i}
+	#iface ${i} inet dhcp
+	#
+	#EOF
+	#
+	#	done
+	#fi
+
 	log_end_msg
 }

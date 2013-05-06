@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2013\-02\-14 3.0.1-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 2012\-11\-30 4.0~a1-1 "Debian Live Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -74,7 +74,7 @@ Allows to use a filesystem from within an iso image that's available on live-med
 Do not check that any UUID embedded in the initramfs matches the discovered medium. live\-boot may be told to generate a UUID by setting LIVE_GENERATE_UUID=1 when building the initramfs.
 .IP "\fBverify\-checksums\fR" 4
 If specified, an MD5 sum is calculated on the live media during boot and compared to the value found in md5sum.txt found in the root directory of the live media.
-.IP "\fBip\fR=[\fIDEVICE\fR]:[\fICLIENT_IP\fR]:[\fINETMASK\fR]:[\fIGATEWAY_IP\fR]:[\fINAMESERVER\fR] [,[\fIDEVICE\fR]:[\fICLIENT_IP\fR]:[\fINETMASK\fR]:[\fIGATEWAY_IP\fR]:[\fINAMESERVER\fR]]" 4
+.IP "\fBip\fR=[\fIDEVICE\fR]:[\fICLIENT_IP\fR]:[\fISERVER_IP\fR]:[\fIGATEWAY_IP\fR]:[\fINETMASK\fR]:[\fIHOSTNAME\fR]:[\fIAUTOCONF\fR] [,[\fIDEVICE\fR]:[\fICLIENT_IP\fR]:[\fISERVER_IP\fR]:[\fIGATEWAY_IP\fR]:[\fINETMASK\fR]:[\fIHOSTNAME\fR]:[\fIAUTOCONF\fR]]" 4
 Let you specify the name(s) and the options of the interface(s) that should be configured at boot time. Do not specify this if you want to use dhcp (default). It will be changed in a future release to mimick official kernel boot param specification (e.g. ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp).
 .IP "\fBip\fR=[\fIfrommedia\fR]" 4
 If this variable is set, dhcp and static configuration are just skipped and the system will use the (must be) media\-preconfigured /etc/network/interfaces instead.
@@ -100,8 +100,10 @@ This lets you specify custom nfs options.
 This parameter disables the default disabling of filesystem checks in /etc/fstab. If you have static filesystems on your harddisk and you want them to be checked at boot time, use this parameter, otherwise they are skipped.
 .IP "\fBnopersistence\fR" 4
 disables the "persistence" feature, useful if the bootloader (like syslinux) has been installed with persistence enabled.
-.IP "\fBnoeject\fR" 4
-Do not prompt to eject the live medium.
+.IP "\fBnoprompt\fR" 4
+Do not prompt to eject the CD or remove the USB flash drive on reboot.
+.IP "\fBnoprompt\fR=\fITYPE\fR" 4
+This tells live-boot not to prompt to eject the CD (when noprompt=cd) or remove the USB flash drive (when noprompt=usb) on reboot.
 .IP "\fBramdisk\-size\fR" 4
 This parameters allows to set a custom ramdisk size (it's the '\-o size' option of tmpfs mount). By default, there is no ramdisk size set, so the default of mount applies (currently 50% of available RAM). Note that this option has no currently no effect when booting with toram.
 .IP "\fBswapon\fR" 4
@@ -120,8 +122,8 @@ live\-boot will look for persistency files in the root directory of a partition,
 Filesystem changes are not saved back to persistence media. In particular, overlays and netboot NFS mounts are mounted read-only.
 .IP "\fBpersistence\-storage\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
 This option determines which types of persistence storage to consider when probing for persistence media. If "filesystem" is in the list, filesystems with matching labels will be used; if "file" is in the list, all filesystems will be probed for archives and image files with matching filenames. The default is "file,filesystem".
-.IP "\fBpersistence\-label\fR=\fILABEL\fR" 4
-live-boot will use the name "LABEL" instead of "persistence" when searching for persistent storage. LABEL can be any valid filename, partition label, or GPT name. This option replaces the less flexible persistent\-subtext option from version 2 of live-boot. If you wish to continue using legacy names for persistent storage, use the full name with this option, e.g. persistence\-label=live-rw-foo
+.IP "\fBpersistence\-subtext\fR=\fISUFFIX\fR" 4
+Add a suffix when searching for the image filenames or partition labels to use for the above mentioned persistence feature, the SUFFIX will be added after a dash (e.g.: "live-sn" would transform to "live-sn-SUFFIX"). This is handy to test multiple live-boot based live-systems with different persistence storage choices.
 .IP "\fBquickreboot\fR" 4
 This option causes live\-boot to reboot without attempting to eject the media and without asking the user to remove the boot media.
 .IP "\fBshowmounts\fR" 4

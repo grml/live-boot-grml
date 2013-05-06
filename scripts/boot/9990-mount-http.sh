@@ -8,9 +8,8 @@ do_httpmount ()
 
 	for webfile in HTTPFS FTPFS FETCH
 	do
-		local url extension dest
-		url="$(eval echo \"\$\{${webfile}\}\")"
-		extension="$(echo "${url}" | sed 's/\(.*\)\.\(.*\)/\2/')"
+		local url="$(eval echo \"\$\{${webfile}\}\")"
+		local extension="$(echo "${url}" | sed 's/\(.*\)\.\(.*\)/\2/')"
 
 		if [ -n "$url" ]
 		then
@@ -21,7 +20,7 @@ do_httpmount ()
 						mkdir -p "${alt_mountpoint}"
 						dest="${alt_mountpoint}"
 					else
-						dest="${mountpoint}/${LIVE_MEDIA_PATH}"
+						local dest="${mountpoint}/${LIVE_MEDIA_PATH}"
 						mount -t ramfs ram "${mountpoint}"
 						mkdir -p "${dest}"
 					fi
