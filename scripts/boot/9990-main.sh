@@ -2,7 +2,7 @@
 
 # set -e
 
-Main ()
+Live ()
 {
 	if [ -x /scripts/local-top/cryptroot ]
 	then

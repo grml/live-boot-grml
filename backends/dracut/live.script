@@ -7,5 +7,5 @@
 DRACUT_FIXME ()
 {
 	# dracut entry point for live-boot is FIXME(); function
-	Main
+	Live
 }

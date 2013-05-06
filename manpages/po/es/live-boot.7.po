@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 4.0~a10-1\n"
-"POT-Creation-Date: 2013-04-01 08:19+0300\n"
-"PO-Revision-Date: 2013-02-12 14:25+0100\n"
+"Project-Id-Version: live-boot 4.0~a11-1\n"
+"POT-Creation-Date: 2013-05-06 14:23+0300\n"
+"PO-Revision-Date: 2013-04-13 22:38+0100\n"
 "Last-Translator: Carlos Zuferri <chals@altorricon.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
@@ -24,20 +24,20 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2013-04-01"
-msgstr "01.04.2013"
+msgid "2013-05-06"
+msgstr "06.05.2013"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "4.0~a10-1"
-msgstr "4.0~a10-1"
+msgid "4.0~a11-1"
+msgstr "4.0~a11-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "Live Systems Project"
-msgstr "Proyecto Debian Live"
+msgstr "Proyecto Live Systems"
 
 #. type: SH
 #: en/live-boot.7:3 en/persistence.conf.5:3
@@ -58,26 +58,16 @@ msgstr "DESCRIPCIÓN"
 
 #. type: Plain text
 #: en/live-boot.7:8
-#, fuzzy
-#| msgid ""
-#| "B<live-boot> contains the scripts that configure a Debian Live system "
-#| "during the boot process (early userspace)."
 msgid ""
 "B<live-boot> contains the scripts that configure a live system during the "
 "boot process (early userspace)."
 msgstr ""
-"B<live-boot> contiene los scripts que configuran un sistema Debian Live "
-"durante el proceso de arranque (early userspace)."
+"B<live-boot> contiene los scripts que configuran un sistema en vivo durante "
+"el proceso de arranque (early userspace)."
 
 #.  FIXME
 #. type: Plain text
 #: en/live-boot.7:11
-#, fuzzy
-#| msgid ""
-#| "live-boot is a hook for the initramfs-tools, used to generate a initramfs "
-#| "capable to boot live systems, such as those created by I<live-helper>(7). "
-#| "This includes the Debian Live isos, netboot tarballs, and usb stick "
-#| "images."
 msgid ""
 "live-boot is a hook for the initramfs-tools, used to generate a initramfs "
 "capable to boot live systems, such as those created by I<live-helper>(7). "
@@ -85,18 +75,12 @@ msgid ""
 msgstr ""
 "live-boot es un hook para initramfs-tools, usado para generar un initramfs "
 "capaz de arrancar sistemas en vivo, tales como los creados por I<live-helper>"
-"(7). Esto incluye las isos de Debian Live, netboot tarballs e imágenes para "
-"llaves usb. "
+"(7). Esto incluye las ISOs de Live Systems, netboot tarballs y las imágenes "
+"para llaves usb. "
 
 #.  FIXME
 #. type: Plain text
 #: en/live-boot.7:14
-#, fuzzy
-#| msgid ""
-#| "At boot time it will look for a (read-only) media containing a \"/live\" "
-#| "directory where a root filesystems (often a compressed filesystem image "
-#| "like squashfs) is stored. If found, it will create a writable "
-#| "environment, using aufs, for Debian like systems to boot from."
 msgid ""
 "At boot time it will look for a (read-only) media containing a \"/live\" "
 "directory where a root filesystems (often a compressed filesystem image like "
@@ -107,8 +91,7 @@ msgstr ""
 "contenga un directorio \"/live\" dónde se almacena un sistema de ficheros "
 "raíz (a menudo se trata de una imagen comprimida de un sistema de ficheros "
 "como squashfs). Si live-boot lo encuentra, creará un entorno de escritura, "
-"usando aufs, a partir del cual pueda arrancar un sistema Debian u otro "
-"similar."
+"usando aufs, a partir del cual pueda arrancar un sistema."
 
 #. type: SH
 #: en/live-boot.7:15
@@ -323,23 +306,16 @@ msgstr "B<iscsi>=I<server-ip[,server-port];target-name>"
 
 #. type: Plain text
 #: en/live-boot.7:62
-#, fuzzy
-#| msgid ""
-#| "Boot from an iSCSI target that has an iso or disk live image as one of "
-#| "its LUNs. The specified target is searched for a LUN which looks like a "
-#| "live media. If you use the B<iscsitarget> software iSCSI target solution "
-#| "which is packaged in Debian your ietd.conf might look like this:"
 msgid ""
 "Boot from an iSCSI target that has an iso or disk live image as one of its "
 "LUNs. The specified target is searched for a LUN which looks like a live "
 "media. If you use the B<iscsitarget> software iSCSI target solution your "
 "ietd.conf might look like this:"
 msgstr ""
-"Arranca desde un objetivo iSCSI que tiene una iso o una imagen disco en vivo "
-"como uno de sus LUNs. Se busca en el objetivo especificado un LUN que sea "
-"similar a un medio en vivo. Si se utiliza el software B<iscsitarget> del "
-"objetivo iSCSI que se encuentra disponible en un paquete Debian la ietd.conf "
-"podría ser similar al siguiente: "
+"Arranca desde un iSCSI que tiene una iso o una imagen de disco en vivo como "
+"uno de sus LUNs. Se busca en el objetivo especificado un LUN que sea similar "
+"a un medio en vivo. Si se utiliza el software de iSCSI B<iscsitarget> el "
+"ietd.conf podría ser similar al siguiente: "
 
 #. type: Plain text
 #: en/live-boot.7:64
@@ -522,12 +498,6 @@ msgstr "B<live-media-offset>=I<BYTES>"
 
 #. type: Plain text
 #: en/live-boot.7:89
-#, fuzzy
-#| msgid ""
-#| "This way you could tell live-boot that your image starts at offset BYTES "
-#| "in the above specified or autodiscovered device, this could be useful to "
-#| "hide the Debian Live iso or image inside another iso or image, to create "
-#| "\"clean\" images."
 msgid ""
 "This way you could tell live-boot that your image starts at offset BYTES in "
 "the above specified or autodiscovered device, this could be useful to hide "
@@ -536,8 +506,8 @@ msgid ""
 msgstr ""
 "De esta manera se puede especificar a live-boot que la imagen comienza en "
 "BYTES en el dispositivo anteriormente especificado, o auto-descubierto, esto "
-"podría ser útil para esconder la iso o la imagen Debian Live dentro de otra "
-"iso o imagen, para crear imágenes \"limpias\"."
+"podría ser útil para esconder la iso o la imagen dentro de otra iso o "
+"imagen, para crear imágenes \"limpias\"."
 
 #. type: IP
 #: en/live-boot.7:89
@@ -1071,15 +1041,14 @@ msgstr "PÁGINA WEB"
 
 #. type: Plain text
 #: en/live-boot.7:165 en/persistence.conf.5:202
-#, fuzzy
 msgid ""
 "More information about live-boot and the Live Systems project can be found "
 "on the homepage at E<lt>I<http://live-systems.org/>E<gt> and in the manual "
 "at E<lt>I<http://live-systems.org/manual/>E<gt>."
 msgstr ""
-"Se puede encontrar más información acerca de live-boot y el proyecto Debian "
-"Live en la página web E<lt>I<http://live-systems.org/>E<gt> y en el manual "
-"en E<lt>I<http://live-systems.org/manual/>E<gt>."
+"Se puede encontrar más información acerca de live-boot y el proyecto Live "
+"Systems en la página web E<lt>I<http://live-systems.org/>E<gt> y en el "
+"manual en E<lt>I<http://live-systems.org/manual/>E<gt>."
 
 #. type: SH
 #: en/live-boot.7:166 en/persistence.conf.5:203
@@ -1089,7 +1058,6 @@ msgstr "ERRORES"
 
 #. type: Plain text
 #: en/live-boot.7:168 en/persistence.conf.5:205
-#, fuzzy
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
 "the Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
@@ -1097,9 +1065,9 @@ msgid ""
 "debian.org>E<gt>."
 msgstr ""
 "Se puede notificar los fallos enviando un informe de errores sobre el "
-"paquete live-boot en el Debian Bug Tracking System en E<lt>I<http://bugs."
-"debian.org/>E<gt> o escribiendo un mensaje a la lista de correo de Debian "
-"Live a la dirección E<lt>I<debian-live@lists.debian.org>E<gt>."
+"paquete live-boot al Sistema de Seguimiento de Errores en E<lt>I<http://bugs."
+"debian.org/>E<gt> o escribiendo un mensaje a la lista de correo de Live "
+"Systems a la dirección E<lt>I<debian-live@lists.debian.org>E<gt>."
 
 #. type: SH
 #: en/live-boot.7:169 en/persistence.conf.5:206
@@ -1109,9 +1077,7 @@ msgstr "AUTOR"
 
 #. type: Plain text
 #: en/live-boot.7:170 en/persistence.conf.5:207
-#, fuzzy
 msgid ""
 "live-boot was written by Daniel Baumann E<lt>I<mail@daniel-baumann.ch>E<gt>."
 msgstr ""
-"live-boot fue escrito por Daniel Baumann E<lt>I<mail@daniel-baumann.ch>E<gt> "
-"para el proyecto Debian."
+"live-boot fue escrito por Daniel Baumann E<lt>I<mail@daniel-baumann.ch>E<gt>."
