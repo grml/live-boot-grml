@@ -150,8 +150,12 @@ copy_exec /bin/mount /bin/mount.util-linux
 [ "${QUIET}" ] || echo -n " utils"
 
 # Feature: Verify Checksums
-copy_exec /usr/bin/sha256sum /bin
-copy_exec /usr/bin/md5sum /bin
+if [ -e /etc/progress-linux_version ]
+then
+	copy_exec /usr/bin/sha256sum /bin
+else
+	copy_exec /usr/bin/md5sum /bin
+fi
 
 # Program: memdisk
 if [ -x /usr/bin/memdiskfind ]
