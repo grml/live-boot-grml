@@ -2,6 +2,8 @@
 
 #set -e
 
+. /lib/live/boot.sh
+
 DRACUT_FIXME ()
 {
 	# dracut entry point for live-boot is FIXME(); function
