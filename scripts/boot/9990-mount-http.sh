@@ -51,7 +51,7 @@ do_httpmount ()
 							FUSE_MOUNT="httpfs"
 						fi
 
-						if [ -n "${FUSE_MOUNT}" ]
+						if [ -n "${FUSE_MOUNT}" ] && [ -x /bin/mount.util-linux ]
 						then
 							# fuse does not work with klibc mount
 							ln -f /bin/mount.util-linux /bin/mount
