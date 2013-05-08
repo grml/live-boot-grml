@@ -1,3 +1,13 @@
+live-boot (4.0~a12-1) experimental; urgency=low
+
+  * Updating manpage wrt/ quickreboot (Closes: #706686).
+  * Moving overwriting of /bin/mount with /bin/mount.util-linux for httpfs
+    to make it active (Closes: #707116).
+  * Further guarding overwriting of /bin/mount by making it dependent on
+    the existence of /bin/mount.util-linux.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Wed, 08 May 2013 08:42:54 +0200
+
 live-boot (4.0~a11-1) experimental; urgency=low
 
   [ chals ]
