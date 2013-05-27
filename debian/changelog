@@ -1,3 +1,10 @@
+live-boot (4.0~a13-1) experimental; urgency=low
+
+  * Increasing tftp blocksize to maximum value per RFC 2348, thanks to
+    Vincent Smeets <Vincent.VSmeets@gmail.com> (Closes: #709887).
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Mon, 27 May 2013 16:45:49 +0200
+
 live-boot (4.0~a12-1) experimental; urgency=low
 
   * Updating manpage wrt/ quickreboot (Closes: #706686).
