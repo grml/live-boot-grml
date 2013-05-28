@@ -8,12 +8,12 @@ Debug ()
 	do
 		case "${_PARAMETER}" in
 			live-boot.debug|debug)
-				LIVE_DEBUG="true"
+				LIVE_BOOT_DEBUG="true"
 				;;
 		esac
 	done
 
-	case "${LIVE_DEBUG}" in
+	case "${LIVE_BOOT_DEBUG}" in
 		true)
 			;;
 

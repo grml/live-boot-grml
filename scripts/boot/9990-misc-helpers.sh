@@ -1293,7 +1293,7 @@ get_custom_mounts ()
 			continue
 		fi
 
-		if [ -n "${DEBUG}" ] && [ -e "${include_list}" ]
+		if [ -n "${LIVE_BOOT_DEBUG}" ] && [ -e "${include_list}" ]
 		then
 			cp ${include_list} /live/persistence/${persistence_list}.${device_name}
 		fi
