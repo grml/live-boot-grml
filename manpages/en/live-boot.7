@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2013\-05\-27 4.0~a13-1 "Live Systems Project"
+.TH LIVE\-BOOT 7 2013\-05\-28 4.0~a13-1 "Live Systems Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
@@ -107,7 +107,7 @@ This parameters allows to set a custom ramdisk size (it's the '\-o size' option 
 .IP "\fBswapon\fR" 4
 This parameter enables usage of local swap partitions.
 .IP "\fBpersistence\fR" 4
-live\-boot will probe devices for persistence media. These can be partitions (with the correct GPT name), filesystems (with the correct label) or image files (with the correct file name). Overlays are labeled/named "persistence" (see \fIpersistence.conf\fR(5)). Overlay image files have extensions which determines their filesystem, e.g. "persistence.ext4".
+live\-boot will probe devices for persistence media. These can be partitions (with the correct GPT name), filesystems (with the correct label) or image files (with the correct file name). Overlays are labeled/named "persistence" (see \fIpersistence.conf\fR(5)). Overlay image files are named "persistence".
 .IP "\fBpersistence\-encryption\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
 This option determines which types of encryption that we allow to be used when probing devices for persistence media. If "none" is in the list, we allow unencrypted media; if "luks" is in the list, we allow LUKS\-encrypted media. Whenever a device containing encrypted media is probed the user will be prompted for the passphrase. The default value is "none".
 .IP "\fBpersistence\-media\fR={\fIremovable\fR|\fIremovable\-usb\fR}" 4
