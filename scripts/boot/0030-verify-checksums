@@ -4,7 +4,7 @@
 
 Verify_checksums ()
 {
-	for _PARAMETER in ${_CMDLINE}
+	for _PARAMETER in ${LIVE_BOOT_CMDLINE}
 	do
 		case "${_PARAMETER}" in
 			live-boot.verify-checksums=*|verify-checksums=*)

@@ -18,7 +18,7 @@ Live ()
 
 	. /live.vars
 
-	_CMDLINE="$(cat /proc/cmdline)"
+	LIVE_BOOT_CMDLINE="${LIVE_BOOT_CMDLINE:-$(cat /proc/cmdline)}"
 	Cmdline_old
 
 	Debug
