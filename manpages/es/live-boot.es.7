@@ -183,10 +183,12 @@ actualmente ningún efecto cuando se arranca con toram
 .IP \fBswapon\fP 4
 Este parámetro permite el uso de particiones swap locales.
 .IP \fBpersistence\fP 4
-live\-boot will probe devices for persistence media. These can be partitions
-(with the correct GPT name), filesystems (with the correct label) or image
-files (with the correct file name). Overlays are labeled/named "persistence"
-(see \fIpersistence.conf\fP(5)). Overlay image files are named "persistence".
+live\-boot buscará dispositivos con "persistence". Estos pueden ser
+particiones (con el nombre GPT correcto), sistemas de ficheros (con la
+etiqueta correcta) o ficheros imagen (con el nombre de fichero
+correcto). Los overlays tienen la etiqueta/nombre "persistence" (ver
+\fIpersistence.conf\fP(5)). Los ficheros imagen overlay tienen, como nombre,
+"persistence".
 .IP "\fBpersistence\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 Esta opción determina qué tipo de cifrado se usa cuando se prueban los
 dispositivos de los medios con persistencia. Si se especifica "none" en la

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 4.0~a13-1\n"
 "POT-Creation-Date: 2013-05-28 06:34+0300\n"
-"PO-Revision-Date: 2013-04-13 22:38+0100\n"
+"PO-Revision-Date: 2013-05-28 14:04+0100\n"
 "Last-Translator: Carlos Zuferri <chals@altorricon.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
@@ -670,14 +670,6 @@ msgstr "B<persistence>"
 
 #. type: Plain text
 #: en/live-boot.7:111
-#, fuzzy
-#| msgid ""
-#| "live-boot will probe devices for persistence media. These can be "
-#| "partitions (with the correct GPT name), filesystems (with the correct "
-#| "label) or image files (with the correct file name). Overlays are labeled/"
-#| "named \"persistence\" (see I<persistence.conf>(5)). Overlay image files "
-#| "have extensions which determines their filesystem, e.g. \"persistence."
-#| "ext4\"."
 msgid ""
 "live-boot will probe devices for persistence media. These can be partitions "
 "(with the correct GPT name), filesystems (with the correct label) or image "
@@ -689,8 +681,7 @@ msgstr ""
 "particiones (con el nombre GPT correcto), sistemas de ficheros (con la "
 "etiqueta correcta) o ficheros imagen (con el nombre de fichero correcto). "
 "Los overlays tienen la etiqueta/nombre \"persistence\" (ver I<persistence."
-"conf>(5)). Los ficheros imagen overlay tienen extensiones que determinan su "
-"sistema de ficheros, por ejemplo, \"persistence.ext4\"."
+"conf>(5)). Los ficheros imagen overlay tienen, como nombre, \"persistence\"."
 
 #. type: IP
 #: en/live-boot.7:111
