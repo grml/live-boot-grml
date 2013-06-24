@@ -17,11 +17,7 @@ mkdir -p /var/lib/live/boot
 
 # Create /etc/mtab for debug purpose and future syncs
 mkdir -p /etc
-
-if [ ! -f /etc/mtab ]
-then
-	touch /etc/mtab
-fi
+touch /etc/mtab
 
 if [ ! -x "/bin/fstype" ]
 then
