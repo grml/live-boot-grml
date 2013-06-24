@@ -2,7 +2,7 @@
 
 #set -e
 
-. /lib/live/boot.sh
+. /bin/live-boot
 
 . /scripts/functions
 

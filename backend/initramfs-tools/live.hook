@@ -17,7 +17,7 @@ do
 done
 
 # Checking live-boot
-if [ ! -e /lib/live/boot ]
+if [ ! -e /bin/live-boot ]
 then
 	echo
 	echo "W: live-boot-initramfs-tools (backend) installed without live-boot,"
@@ -27,8 +27,10 @@ fi
 
 [ "${QUIET}" ] || echo -n " core"
 
+mkdir -p "${DESTDIR}/bin"
+cp -a /bin/live-boot /lib/live/boot "${DESTDIR}/bin"
 mkdir -p "${DESTDIR}/lib/live"
-cp -a /lib/live/boot.sh /lib/live/boot "${DESTDIR}/lib/live"
+cp -a /lib/live/boot "${DESTDIR}/lib/live"
 
 # klibc dependencies
 for FILE in /lib/libacl* /lib/libblkid* /lib/libuuid* /lib/libdevmapper* /lib/libattr*
