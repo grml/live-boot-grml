@@ -1286,9 +1286,6 @@ get_custom_mounts ()
 		if [ -r "${backing}/${persistence_list}" ]
 		then
 			include_list="${backing}/${persistence_list}"
-		elif [ -r "${backing}/${old_persistence_list}" ]
-		then
-			include_list="${backing}/${old_persistence_list}"
 		else
 			continue
 		fi

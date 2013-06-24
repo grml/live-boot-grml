@@ -32,7 +32,6 @@ fi
 
 custom_overlay_label="persistence"
 persistence_list="persistence.conf"
-old_persistence_list="live-persistence.conf"
 
 if [ ! -f /live.vars ]
 then
