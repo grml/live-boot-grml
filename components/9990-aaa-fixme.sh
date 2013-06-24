@@ -30,15 +30,6 @@ then
 	export PATH
 fi
 
-# handle upgrade path from old udev (using udevinfo) to
-# recent versions of udev (using udevadm info)
-if [ -x /sbin/udevadm ]
-then
-	udevinfo='/sbin/udevadm info'
-else
-	udevinfo='udevinfo'
-fi
-
 custom_overlay_label="persistence"
 persistence_list="persistence.conf"
 old_persistence_list="live-persistence.conf"
