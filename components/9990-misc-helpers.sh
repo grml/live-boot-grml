@@ -329,21 +329,6 @@ find_livefs ()
 	return 1
 }
 
-really_export ()
-{
-	STRING="${1}"
-	VALUE="$(eval echo -n \${$STRING})"
-
-	if [ -f /live.vars ] && grep -sq "export ${STRING}" /live.vars
-	then
-		sed -i -e 's/\('${STRING}'=\).*$/\1'${VALUE}'/' /live.vars
-	else
-		echo "export ${STRING}=\"${VALUE}\"" >> /live.vars
-	fi
-
-	eval export "${STRING}"="${VALUE}"
-}
-
 is_in_list_separator_helper ()
 {
 	local sep element list

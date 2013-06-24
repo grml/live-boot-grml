@@ -16,8 +16,6 @@ Live ()
 	tail -f boot.log >&7 &
 	tailpid="${!}"
 
-	. /live.vars
-
 	LIVE_BOOT_CMDLINE="${LIVE_BOOT_CMDLINE:-$(cat /proc/cmdline)}"
 	Cmdline_old
 

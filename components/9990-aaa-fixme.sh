@@ -28,8 +28,3 @@ fi
 
 custom_overlay_label="persistence"
 persistence_list="persistence.conf"
-
-if [ ! -f /live.vars ]
-then
-	touch /live.vars
-fi
