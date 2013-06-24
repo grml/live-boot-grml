@@ -4,7 +4,7 @@ SHELL := sh -e
 
 LANGUAGES = $(shell cd manpages/po && ls)
 
-SCRIPTS = backends/*/* bin/* scripts/*.sh scripts/*/*-*
+SCRIPTS = backend/*/* bin/* scripts/*.sh scripts/*/*-*
 
 all: build
 
@@ -47,9 +47,9 @@ install:
 
 	# Installing executables
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/hooks
-	cp backends/initramfs-tools/live.hook $(DESTDIR)/usr/share/initramfs-tools/hooks/live
+	cp backend/initramfs-tools/live.hook $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/scripts
-	cp backends/initramfs-tools/live.script $(DESTDIR)/usr/share/initramfs-tools/scripts/live
+	cp backend/initramfs-tools/live.script $(DESTDIR)/usr/share/initramfs-tools/scripts/live
 
 	# Installing docs
 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
