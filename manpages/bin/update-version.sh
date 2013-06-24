@@ -1,6 +1,6 @@
 #!/bin/sh
 
-## live-boot(7) - System Boot Scripts
+## live-boot(7) - System Boot Components
 ## Copyright (C) 2006-2013 Daniel Baumann <mail@daniel-baumann.ch>
 ##
 ## This program comes with ABSOLUTELY NO WARRANTY; for details see COPYING.
