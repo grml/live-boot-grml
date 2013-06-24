@@ -1,6 +1,7 @@
 #!/bin/sh
 
-export PATH="/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+PATH="/root/usr/bin:/root/usr/sbin:/root/bin:/root/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+export PATH
 
 echo "/root/lib" >> /etc/ld.so.conf
 echo "/root/usr/lib" >> /etc/ld.so.conf
@@ -15,10 +16,7 @@ mkdir -p "${mountpoint}"
 tried="/tmp/tried"
 
 # Create /etc/mtab for debug purpose and future syncs
-if [ ! -d /etc ]
-then
-	mkdir /etc/
-fi
+mkdir -p /etc
 
 if [ ! -f /etc/mtab ]
 then
@@ -28,7 +26,8 @@ fi
 if [ ! -x "/bin/fstype" ]
 then
 	# klibc not in path -> not in initramfs
-	export PATH="${PATH}:/usr/lib/klibc/bin"
+	PATH="${PATH}:/usr/lib/klibc/bin"
+	export PATH
 fi
 
 # handle upgrade path from old udev (using udevinfo) to

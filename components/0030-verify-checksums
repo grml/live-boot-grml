@@ -72,7 +72,7 @@ Verify_checksums ()
 
 			# Unmount live-media
 			cd /
-			umount -f ${_MOUNTPOINT} > /dev/null 2>&1
+			umount -f "${_MOUNTPOINT}" > /dev/null 2>&1
 			sync
 
 			# Attempt to remount all mounted filesystems read-only

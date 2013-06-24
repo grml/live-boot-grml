@@ -29,15 +29,16 @@ fi
 
 mkdir -p "${DESTDIR}/bin"
 cp -a /bin/live-boot /lib/live/boot "${DESTDIR}/bin"
+
 mkdir -p "${DESTDIR}/lib/live"
 cp -a /lib/live/boot "${DESTDIR}/lib/live"
 
 # klibc dependencies
 for FILE in /lib/libacl* /lib/libblkid* /lib/libuuid* /lib/libdevmapper* /lib/libattr*
 do
-	if [ ! -e "${DESTDIR}"/"${FILE}" ] && ls ${FILE} > /dev/null 2>&1
+	if [ ! -e "${DESTDIR}/${FILE}" ] && ls "${FILE}" > /dev/null 2>&1
 	then
-		cp -a "${FILE}" "${DESTDIR}"/"${FILE}"
+		cp -a "${FILE}" "${DESTDIR}/${FILE}"
 	fi
 done
 
@@ -49,8 +50,8 @@ done
 
 if [ -e /lib/udev/rules.d/60-cdrom_id.rules ]
 then
-	mkdir -p ${DESTDIR}/lib/udev/rules.d
-	cp -p /lib/udev/rules.d/60-cdrom_id.rules ${DESTDIR}/lib/udev/rules.d
+	mkdir -p "${DESTDIR}/lib/udev/rules.d"
+	cp -p /lib/udev/rules.d/60-cdrom_id.rules "${DESTDIR}/lib/udev/rules.d"
 fi
 
 [ "${QUIET}" ] || echo -n " filesystems"
@@ -60,15 +61,15 @@ if [ -x /bin/loadkeys ] && [ -r /etc/console/boottime.kmap.gz ]
 then
 	copy_exec /bin/loadkeys
 
-	mkdir -p "${DESTDIR}"/etc
-	cp /etc/console/boottime.kmap.gz "${DESTDIR}"/etc
+	mkdir -p "${DESTDIR}/etc"
+	cp /etc/console/boottime.kmap.gz "${DESTDIR}/etc"
 fi
 
 # Configuration: Unique ID
 if [ -n "${LIVE_GENERATE_UUID}" ]
 then
-	mkdir -p "${DESTDIR}"/conf
-	uuidgen -r > "${DESTDIR}"/conf/uuid.conf
+	mkdir -p "${DESTDIR}/conf"
+	uuidgen -r > "${DESTDIR}/conf/uuid.conf"
 fi
 
 # Filesystem: btrfs
