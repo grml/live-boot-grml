@@ -4,7 +4,7 @@ SHELL := sh -e
 
 LANGUAGES = $(shell cd manpages/po && ls)
 
-SCRIPTS = backend/*/* frontend/* scripts/*/*-*
+SCRIPTS = backend/*/* frontend/* components/*
 
 all: build
 
@@ -41,9 +41,9 @@ build:
 	@echo "Nothing to build."
 
 install:
-	# Installing scripts
+	# Installing components
 	mkdir -p $(DESTDIR)/lib/live
-	cp scripts/boot/* $(DESTDIR)/lib/live
+	cp components/* $(DESTDIR)/lib/live
 
 	# Installing executables
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/hooks
