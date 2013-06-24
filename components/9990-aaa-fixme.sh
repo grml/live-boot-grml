@@ -13,7 +13,7 @@ LIVE_MEDIA_PATH="live"
 HOSTNAME="host"
 
 mkdir -p "${mountpoint}"
-tried="/tmp/tried"
+mkdir -p /var/lib/live/boot
 
 # Create /etc/mtab for debug purpose and future syncs
 mkdir -p /etc

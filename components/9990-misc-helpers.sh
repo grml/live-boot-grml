@@ -199,9 +199,9 @@ check_dev ()
 	if is_supported_fs ${fstype}
 	then
 		devuid=$(blkid -o value -s UUID "$devname")
-		[ -n "$devuid" ] && grep -qs "\<$devuid\>" $tried && continue
+		[ -n "$devuid" ] && grep -qs "\<$devuid\>" /var/lib/live/boot/devices-already-tried-to-mount && continue
 		mount -t ${fstype} -o ro,noatime "${devname}" ${mountpoint} || continue
-		[ -n "$devuid" ] && echo "$devuid" >> $tried
+		[ -n "$devuid" ] && echo "$devuid" >> /var/lib/live/boot/devices-already-tried-to-mount
 
 		if [ -n "${FINDISO}" ]
 		then
