@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 4.0~a13-1\n"
 "POT-Creation-Date: 2013-06-25 20:40+0300\n"
-"PO-Revision-Date: 2013-05-28 14:04+0100\n"
+"PO-Revision-Date: 2013-06-25 20:42+0100\n"
 "Last-Translator: Carlos Zuferri <chals@altorricon.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
@@ -23,7 +23,7 @@ msgstr "LIVE-BOOT"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "2013-06-25"
 msgstr "25.06.2013"
 
@@ -47,10 +47,8 @@ msgstr "NOMBRE"
 
 #. type: Plain text
 #: en/live-boot.7:5
-#, fuzzy
-#| msgid "B<live-boot> - System Boot Scripts"
 msgid "B<live-boot> - System Boot Components"
-msgstr "B<live-boot> - Scripts de Arranque del Sistema"
+msgstr "B<live-boot> - Componentes de Arranque del Sistema"
 
 #. type: SH
 #: en/live-boot.7:6 en/persistence.conf.5:7
@@ -60,16 +58,12 @@ msgstr "DESCRIPCIÓN"
 
 #. type: Plain text
 #: en/live-boot.7:8
-#, fuzzy
-#| msgid ""
-#| "B<live-boot> contains the scripts that configure a live system during the "
-#| "boot process (early userspace)."
 msgid ""
 "B<live-boot> contains the components that configure a live system during the "
 "boot process (early userspace)."
 msgstr ""
-"B<live-boot> contiene los scripts que configuran un sistema en vivo durante "
-"el proceso de arranque (early userspace)."
+"B<live-boot> contiene los componentes que configuran un sistema en vivo "
+"durante el proceso de arranque (early userspace)."
 
 #.  FIXME
 #. type: Plain text
