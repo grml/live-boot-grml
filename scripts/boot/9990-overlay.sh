@@ -210,7 +210,7 @@ setup_unionfs ()
 
 		if is_in_comma_sep_list overlay ${PERSISTENCE_METHOD}
 		then
-			overlays="${old_root_overlay_label} ${old_home_overlay_label} ${custom_overlay_label}"
+			overlays="${custom_overlay_label}"
 		fi
 
 		local overlay_devices
@@ -222,18 +222,6 @@ setup_unionfs ()
 				media="$(echo ${media} | tr ":" " ")"
 
 				case ${media} in
-					${old_root_overlay_label}=*)
-						device="${media#*=}"
-						fix_backwards_compatibility ${device} / union
-						overlay_devices="${overlay_devices} ${device}"
-						;;
-
-					${old_home_overlay_label}=*)
-						device="${media#*=}"
-						fix_backwards_compatibility ${device} /home bind
-						overlay_devices="${overlay_devices} ${device}"
-						;;
-
 					${custom_overlay_label}=*)
 						device="${media#*=}"
 						overlay_devices="${overlay_devices} ${device}"
@@ -404,7 +392,7 @@ setup_unionfs ()
 		# Close unused overlays (e.g. due to missing $persistence_list)
 		for overlay in ${overlay_devices}
 		do
-			if echo ${used_overlays} | grep -qve "^\(.* \)\?${device}\( .*\)\?$"
+			if echo ${used_overlays} | grep -qve "^\(.* \)\?${overlay}\( .*\)\?$"
 			then
 				close_persistence_media ${overlay}
 			fi
@@ -414,5 +402,5 @@ setup_unionfs ()
         # ensure that a potentially stray tmpfs gets removed
         # otherways, initramfs-tools is unable to remove /live
         # and fails to boot
-        umount /live/overlay || true
+        umount /live/overlay > /dev/null 2>&1 || true
 }

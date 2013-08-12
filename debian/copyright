@@ -1,10 +1,10 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: live-boot
-Upstream-Contact: Debian Live Project <debian-live@lists.debian.org>
-Source: http://live.debian.net/archive/packages/live-boot/
+Upstream-Contact: Live Systems Project <debian-live@lists.debian.org>
+Source: http://live-systems.org/archive/packages/live-boot/
 
 Files: *
-Copyright: 2006-2013 Daniel Baumann <daniel@debian.org>
+Copyright: 2006-2013 Daniel Baumann <mail@daniel-baumann.ch>
            2005-2008 Canonical Ltd. <http://www.cannonical.com/>
            2008 Chris Lamb <chris@debian.org>
            2006-2007 Marco Amadori <marco.amadori@gmail.com>

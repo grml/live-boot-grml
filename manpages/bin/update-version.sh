@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ## live-boot(7) - System Boot Scripts
-## Copyright (C) 2006-2013 Daniel Baumann <daniel@debian.org>
+## Copyright (C) 2006-2013 Daniel Baumann <mail@daniel-baumann.ch>
 ##
 ## This program comes with ABSOLUTELY NO WARRANTY; for details see COPYING.
 ## This is free software, and you are welcome to redistribute it
@@ -25,7 +25,7 @@ for MANPAGE in en/*
 do
 	SECTION="$(basename ${MANPAGE} | awk -F. '{ print $2 }')"
 
-	sed -i -e "s|^.TH.*$|.TH ${PROGRAM} ${SECTION} ${DATE} ${VERSION} \"Debian Live Project\"|" ${MANPAGE}
+	sed -i -e "s|^.TH.*$|.TH ${PROGRAM} ${SECTION} ${DATE} ${VERSION} \"Live Systems Project\"|" ${MANPAGE}
 done
 
 # European date format

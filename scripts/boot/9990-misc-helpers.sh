@@ -2,21 +2,21 @@
 
 #set -e
 
-is_live_path ()
+file_pattern_matches()
 {
-	DIRECTORY="${1}"
+	[ -e "$1" ]
+}
 
-	if [ -d "${DIRECTORY}"/"${LIVE_MEDIA_PATH}" ]
-	then
-		for FILESYSTEM in squashfs ext2 ext3 ext4 xfs dir jffs2
-		do
-			if [ "$(echo ${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM})" != "${DIRECTORY}/${LIVE_MEDIA_PATH}/*.${FILESYSTEM}" ]
-			then
-				return 0
-			fi
-		done
-	fi
-
+is_live_path()
+{
+	DIRECTORY="${1}/${LIVE_MEDIA_PATH}"
+	for FILESYSTEM in squashfs ext2 ext3 ext4 xfs dir jffs
+	do
+		if file_pattern_matches "${DIRECTORY}/"*.${FILESYSTEM}
+		then
+			return 0
+		fi
+	done
 	return 1
 }
 
@@ -62,32 +62,13 @@ get_backing_device ()
 	esac
 }
 
-match_files_in_dir ()
-{
-	# Does any files match pattern ${1} ?
-	local pattern
-	pattern="${1}"
-
-	if [ "$(echo ${pattern})" != "${pattern}" ]
-	then
-		return 0
-	fi
-
-	return 1
-}
-
 mount_images_in_directory ()
 {
 	directory="${1}"
 	rootmnt="${2}"
 	mac="${3}"
 
-	if match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.squashfs" ||
-		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext2" ||
-		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext3" ||
-		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.ext4" ||
-		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.jffs2" ||
-		match_files_in_dir "${directory}/${LIVE_MEDIA_PATH}/*.dir"
+	if is_live_path "${directory}"
 	then
 		[ -n "${mac}" ] && adddirectory="${directory}/${LIVE_MEDIA_PATH}/${mac}"
 		setup_unionfs "${directory}/${LIVE_MEDIA_PATH}" "${rootmnt}" "${adddirectory}"
@@ -100,16 +81,7 @@ is_nice_device ()
 {
 	sysfs_path="${1#/sys}"
 
-	if [ -e /lib/udev/path_id ]
-	then
-		# squeeze
-		PATH_ID="/lib/udev/path_id"
-	else
-		# wheezy/sid (udev >= 174)
-		PATH_ID="/sbin/udevadm test-builtin path_id"
-	fi
-
-	if ${PATH_ID} "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-[^-]*-(ide|sas|scsi|usb|virtio)|platform-sata_mv|platform-orion-ehci|platform-mmc|platform-mxsdhci)"
+	if /sbin/udevadm test-builtin path_id "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-[^-]*-(ide|sas|scsi|usb|virtio)|platform-sata_mv|platform-orion-ehci|platform-mmc|platform-mxsdhci)"
 	then
 		return 0
 	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
@@ -617,7 +589,7 @@ load_keymap ()
 	# Load custom keymap
 	if [ -x /bin/loadkeys -a -r /etc/boottime.kmap.gz ]
 	then
-		loadkeys /etc/boottime.kmap.gz
+		loadkeys --quiet /etc/boottime.kmap.gz
 	fi
 }
 
@@ -966,7 +938,7 @@ find_persistence_media ()
 	white_listed_devices="${2}"
 	ret=""
 
-	black_listed_devices="$(what_is_mounted_on /live/medium)"
+	black_listed_devices="$(what_is_mounted_on /live/medium) $(what_is_mounted_on /live/findiso) $(what_is_mounted_on /live/fromiso)"
 
 	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
@@ -1017,6 +989,21 @@ find_persistence_media ()
 			result=$(probe_for_file_name "${overlays}" ${dev})
 			if [ -n "${result}" ]
 			then
+			        local loopdevice
+				loopdevice=${result##*=}
+			        if is_in_comma_sep_list luks ${PERSISTENCE_ENCRYPTION} && is_luks_partition ${loopdevice}
+				then
+				        local luksfile
+					luksfile=""
+					if luksfile=$(open_luks_device "${loopdevice}")
+					then
+					        result=${result%%=*}
+						result="${result}=${luksfile}"
+					else
+					        losetup -d $loopdevice
+						result=""
+					fi
+				fi
 				ret="${ret} ${result}"
 				continue
 			fi
@@ -1149,12 +1136,12 @@ link_files ()
 	# is non-empty, remove mask from all source paths when
 	# creating links (will be necessary if we change root, which
 	# live-boot normally does (into $rootmnt)).
-	local src_dir dest_dir src_mask
+	local src_dir dest_dir src_transform
 
 	# remove multiple /:s and ensure ending on /
 	src_dir="$(trim_path ${1})/"
 	dest_dir="$(trim_path ${2})/"
-	src_mask="${3}"
+	src_transform="${3}"
 
 	# This check can only trigger on the inital, non-recursive call since
 	# we create the destination before recursive calls
@@ -1181,12 +1168,12 @@ link_files ()
 				chown_ref "${src}" "${dest}"
 				chmod_ref "${src}" "${dest}"
 			fi
-			link_files "${src}" "${dest}" "${src_mask}"
+			link_files "${src}" "${dest}" "${src_transform}"
 		else
 			final_src=${src}
-			if [ -n "${src_mask}" ]
+			if [ -n "${src_transform}" ]
 			then
-				final_src="$(echo ${final_src} | sed "s|^${src_mask}||")"
+				final_src="$(echo ${final_src} | sed "${src_transform}")"
 			fi
 			rm -rf "${dest}" 2> /dev/null
 			ln -s "${final_src}" "${dest}"
@@ -1491,7 +1478,7 @@ activate_custom_mounts ()
 		# ignore the loop below and set rootfs_dest_backing=$dest
 		local rootfs_dest_backing
 		rootfs_dest_backing=""
-		if [ -n "${opt_link}"]
+		if [ -n "${opt_link}" ] || [ -n "${opt_union}" ]
 		then
 			for d in /live/rootfs/*
 			do
@@ -1511,7 +1498,7 @@ activate_custom_mounts ()
 		local cow_dir links_source
 		if [ -n "${opt_link}" ] && [ -z "${PERSISTENCE_READONLY}" ]
 		then
-			link_files ${source} ${dest} ${rootmnt}
+			link_files ${source} ${dest} "s|^/live/|/lib/live/mount/|"
 		elif [ -n "${opt_link}" ] && [ -n "${PERSISTENCE_READONLY}" ]
 		then
 			mkdir -p ${rootmnt}/lib/live/mount/persistence
@@ -1528,7 +1515,7 @@ activate_custom_mounts ()
 			chown_ref "${source}" "${cow_dir}"
 			chmod_ref "${source}" "${cow_dir}"
 			do_union ${links_source} ${cow_dir} ${source} ${rootfs_dest_backing}
-			link_files ${links_source} ${dest} ${rootmnt}
+			link_files ${links_source} ${dest} "s|^${rootmnt}||"
 		elif [ -n "${opt_union}" ] && [ -z "${PERSISTENCE_READONLY}" ]
 		then
 			do_union ${dest} ${source} ${rootfs_dest_backing}
@@ -1564,32 +1551,6 @@ activate_custom_mounts ()
 	done < ${custom_mounts}
 
 	echo ${used_devices}
-}
-
-fix_backwards_compatibility ()
-{
-	local device dir opt backing include_list
-	device=${1}
-	dir=${2}
-	opt=${3}
-
-	if [ -n "${PERSISTENCE_READONLY}" ]
-	then
-		return
-	fi
-
-	backing="$(mount_persistence_media ${device})"
-	if [ -z "${backing}" ]
-	then
-		return
-	fi
-
-	include_list="${backing}/${persistence_list}"
-	if [ ! -r "${include_list}" ] && [ ! -r "${backing}/${old_persistence_list}" ]
-	then
-		echo "# persistence backwards compatibility:
-${dir} ${opt},source=." > "${include_list}"
-	fi
 }
 
 is_mountpoint ()

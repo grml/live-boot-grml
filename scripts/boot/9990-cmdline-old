@@ -15,7 +15,7 @@ Cmdline_old ()
 				;;
 
 			BOOTIF=*)
-				BOOTIF="${x#BOOTIF=}"
+				BOOTIF="${_PARAMETER#BOOTIF=}"
 				;;
 
 			dhcp)

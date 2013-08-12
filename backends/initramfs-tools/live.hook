@@ -45,7 +45,6 @@ do
 	copy_exec "${FILE}"
 done
 
-# wheezy/sid
 if [ -e /lib/udev/rules.d/60-cdrom_id.rules ]
 then
 	mkdir -p ${DESTDIR}/lib/udev/rules.d
@@ -171,11 +170,6 @@ if [ -x /sbin/udevadm ]
 then
 	[ "${QUIET}" ] || echo -n " udev"
 	copy_exec /sbin/udevadm
-fi
-if [ -x /usr/bin/udevinfo ]
-then
-	[ "${QUIET}" ] || echo -n " udev"
-	copy_exec /usr/bin/udevinfo /bin
 fi
 
 # Program: wget
