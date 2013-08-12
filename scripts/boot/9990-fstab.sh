@@ -13,25 +13,16 @@ Fstab ()
 		return
 	fi
 
-	if [ -e /root/etc/fstab.d ]
-	then
-		# wheezy
-		_FSTAB="/root/etc/fstab.d/live"
-	else
-		# squeeze
-		_FSTAB="/root/etc/fstab"
-	fi
-
 	log_begin_msg "Configuring fstab"
 
-	if ! grep -qs  "^${UNIONTYPE}" "${_FSTAB}"
+	if ! grep -qs  "^${UNIONTYPE}" /root/etc/fstab.d/live
 	then
-		echo "${UNIONTYPE} / ${UNIONTYPE} rw 0 0" >> "${_FSTAB}"
+		echo "${UNIONTYPE} / ${UNIONTYPE} rw 0 0" >> /root/etc/fstab.d/live
 	fi
 
-	if ! grep -qs "^tmpfs /tmp" "${_FSTAB}"
+	if ! grep -qs "^tmpfs /tmp" /root/etc/fstab.d/live
 	then
-		echo "tmpfs /tmp tmpfs nosuid,nodev 0 0" >> "${_FSTAB}"
+		echo "tmpfs /tmp tmpfs nosuid,nodev 0 0" >> /root/etc/fstab.d/live
 	fi
 
 	log_end_msg

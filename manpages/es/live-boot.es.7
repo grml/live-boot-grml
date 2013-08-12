@@ -3,27 +3,27 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 14.02.2013 3.0.1\-1 "Proyecto Debian Live"
+.TH LIVE\-BOOT 7 2013\-05\-27 4.0~a13\-1 "Proyecto Live Systems"
 
 .SH NOMBRE
 \fBlive\-boot\fP \- Scripts de Arranque del Sistema
 
 .SH DESCRIPCIÓN
-\fBlive\-boot\fP contiene los scripts que configuran un sistema Debian Live
-durante el proceso de arranque (early userspace).
+\fBlive\-boot\fP contiene los scripts que configuran un sistema en vivo durante
+el proceso de arranque (early userspace).
 .PP
 .\" FIXME
 live\-boot es un hook para initramfs\-tools, usado para generar un initramfs
 capaz de arrancar sistemas en vivo, tales como los creados por
-\fIlive\-helper\fP(7). Esto incluye las isos de Debian Live, netboot tarballs e
-imágenes para llaves usb.
+\fIlive\-helper\fP(7). Esto incluye las ISOs de Live Systems, netboot tarballs y
+las imágenes para llaves usb.
 .PP
 .\" FIXME
 En el momento del arranque se buscará un dispositivo de sólo lectura que
 contenga un directorio "/live" dónde se almacena un sistema de ficheros raíz
 (a menudo se trata de una imagen comprimida de un sistema de ficheros como
 squashfs). Si live\-boot lo encuentra, creará un entorno de escritura, usando
-aufs, a partir del cual pueda arrancar un sistema Debian u otro similar.
+aufs, a partir del cual pueda arrancar un sistema.
 
 .SH CONFIGURACIÓN
 \fBlive\-boot\fP se puede configurar mediante un parámetro de arranque o un
@@ -89,11 +89,10 @@ compartiendo la ip con la instancia principal httpd.
 También se puede utilizar la imagen iso en vivo en lugar de la imagen
 squashfs.
 .IP \fBiscsi\fP=\fIserver\-ip[,server\-port];target\-name\fP 4
-Arranca desde un objetivo iSCSI que tiene una iso o una imagen disco en vivo
-como uno de sus LUNs. Se busca en el objetivo especificado un LUN que sea
-similar a un medio en vivo. Si se utiliza el software \fBiscsitarget\fP del
-objetivo iSCSI que se encuentra disponible en un paquete Debian la ietd.conf
-podría ser similar al siguiente:
+Arranca desde un iSCSI que tiene una iso o una imagen de disco en vivo como
+uno de sus LUNs. Se busca en el objetivo especificado un LUN que sea similar
+a un medio en vivo. Si se utiliza el software de iSCSI \fBiscsitarget\fP el
+ietd.conf podría ser similar al siguiente:
 .br
 # El nombre de destino se especifica en el parámetro iscsi=
 .br
@@ -145,8 +144,8 @@ soportado es "aes" para cifrado loop\-aes.
 .IP \fBlive\-media\-offset\fP=\fIBYTES\fP 4
 De esta manera se puede especificar a live\-boot que la imagen comienza en
 BYTES en el dispositivo anteriormente especificado, o auto\-descubierto, esto
-podría ser útil para esconder la iso o la imagen Debian Live dentro de otra
-iso o imagen, para crear imágenes "limpias".
+podría ser útil para esconder la iso o la imagen dentro de otra iso o
+imagen, para crear imágenes "limpias".
 .IP \fBlive\-media\-path\fP=\fIPATH\fP 4
 Establece la ruta de acceso al sistema de ficheros en vivo en el medio. De
 forma predeterminada está en '/live' y no se debe cambiar a menos que se
@@ -226,7 +225,7 @@ correspondientes. Por defecto es "file,filesystem".
 live\-boot utilizará el nombre "LABEL" en lugar de "persistence" cuando
 busque medios de almacenamiento persistente. LABEL puede ser cualquier
 nombre de fichero, etiqueta de una partición or nombre GPT.
-.IP \fBquickreboot\fP 4
+.IP \fBnoeject\fP 4
 Esta opción hace que live\-boot reinicie sin tratar de expulsar los medios y
 sin pedirle al usuario que extraiga el dispositivo usado para arrancar.
 .IP \fBshowmounts\fP 4
@@ -288,17 +287,17 @@ alfanumérico.
 \fIlive\-tools\fP(7)
 
 .SH "PÁGINA WEB"
-Se puede encontrar más información acerca de live\-boot y el proyecto Debian
-Live en la página web <\fIhttp://live.debian.net/\fP> y en el manual en
-<\fIhttp://live.debian.net/manual/\fP>.
+Se puede encontrar más información acerca de live\-boot y el proyecto Live
+Systems en la página web <\fIhttp://live\-systems.org/\fP> y en el
+manual en <\fIhttp://live\-systems.org/manual/\fP>.
 
 .SH ERRORES
 Se puede notificar los fallos enviando un informe de errores sobre el
-paquete live\-boot en el Debian Bug Tracking System en
+paquete live\-boot al Sistema de Seguimiento de Errores en
 <\fIhttp://bugs.debian.org/\fP> o escribiendo un mensaje a la lista de
-correo de Debian Live a la dirección
+correo de Live Systems a la dirección
 <\fIdebian\-live@lists.debian.org\fP>.
 
 .SH AUTOR
-live\-boot fue escrito por Daniel Baumann <\fIdaniel@debian.org\fP> para
-el proyecto Debian.
+live\-boot fue escrito por Daniel Baumann
+<\fImail@daniel\-baumann.ch\fP>.

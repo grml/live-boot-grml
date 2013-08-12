@@ -1,15 +1,15 @@
-.TH LIVE\-BOOT 7 2013\-02\-14 3.0.1-1 "Debian Live Project"
+.TH LIVE\-BOOT 7 2013\-05\-27 4.0~a13-1 "Live Systems Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Scripts
 
 .SH DESCRIPTION
-\fBlive\-boot\fR contains the scripts that configure a Debian Live system during the boot process (early userspace).
+\fBlive\-boot\fR contains the scripts that configure a live system during the boot process (early userspace).
 .PP
 .\" FIXME
-live\-boot is a hook for the initramfs\-tools, used to generate a initramfs capable to boot live systems, such as those created by \fIlive\-helper\fR(7). This includes the Debian Live isos, netboot tarballs, and usb stick images.
+live\-boot is a hook for the initramfs\-tools, used to generate a initramfs capable to boot live systems, such as those created by \fIlive\-helper\fR(7). This includes the Live systems ISOs, netboot tarballs, and usb stick images.
 .PP
-At boot time it will look for a (read\-only) media containing a "/live" directory where a root filesystems (often a compressed filesystem image like squashfs) is stored. If found, it will create a writable environment, using aufs, for Debian like systems to boot from.
+At boot time it will look for a (read\-only) media containing a "/live" directory where a root filesystems (often a compressed filesystem image like squashfs) is stored. If found, it will create a writable environment, using aufs, to boot the system from.
 .\" FIXME
 
 .SH CONFIGURATION
@@ -58,7 +58,7 @@ Also note that therefore it's currently not possible to fetch an image from a na
 .br
 You may also use the live iso image in place of the squashfs image.
 .IP "\fBiscsi\fR=\fIserver-ip[,server-port];target-name\fR" 4
-Boot from an iSCSI target that has an iso or disk live image as one of its LUNs. The specified target is searched for a LUN which looks like a live media. If you use the \fBiscsitarget\fR software iSCSI target solution which is packaged in Debian your ietd.conf might look like this:
+Boot from an iSCSI target that has an iso or disk live image as one of its LUNs. The specified target is searched for a LUN which looks like a live media. If you use the \fBiscsitarget\fR software iSCSI target solution your ietd.conf might look like this:
 .br
 # The target-name you specify in the iscsi= parameter
 .br
@@ -85,7 +85,7 @@ Instead of specifing an actual device name, the keyword 'removable' can be used 
 .IP "{\fBlive\-media\-encryption\fR|\fBencryption\fR}=\fITYPE\fI" 4
 live\-boot will mount the encrypted rootfs TYPE, asking the passphrase, useful to build paranoid live systems :\-). TYPE supported so far are "aes" for loop\-aes encryption type.
 .IP "\fBlive\-media\-offset\fR=\fIBYTES\fR" 4
-This way you could tell live\-boot that your image starts at offset BYTES in the above specified or autodiscovered device, this could be useful to hide the Debian Live iso or image inside another iso or image, to create "clean" images.
+This way you could tell live\-boot that your image starts at offset BYTES in the above specified or autodiscovered device, this could be useful to hide the live system ISO or image inside another iso or image, to create "clean" images.
 .IP "\fBlive\-media\-path\fR=\fIPATH\fR" 4
 Sets the path to the live filesystem on the medium. By default, it is set to '/live' and you should not change that unless you have customized your media accordingly.
 .IP "\fBlive\-media\-timeout\fR=\fISECONDS\fI" 4
@@ -121,8 +121,8 @@ Filesystem changes are not saved back to persistence media. In particular, overl
 .IP "\fBpersistence\-storage\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
 This option determines which types of persistence storage to consider when probing for persistence media. If "filesystem" is in the list, filesystems with matching labels will be used; if "file" is in the list, all filesystems will be probed for archives and image files with matching filenames. The default is "file,filesystem".
 .IP "\fBpersistence\-label\fR=\fILABEL\fR" 4
-live-boot will use the name "LABEL" instead of "persistence" when searching for persistent storage. LABEL can be any valid filename, partition label, or GPT name. This option replaces the less flexible persistent\-subtext option from version 2 of live-boot. If you wish to continue using legacy names for persistent storage, use the full name with this option, e.g. persistence\-label=live-rw-foo
-.IP "\fBquickreboot\fR" 4
+live-boot will use the name "LABEL" instead of "persistence" when searching for persistent storage. LABEL can be any valid filename, partition label, or GPT name.
+.IP "\fBnoeject\fR" 4
 This option causes live\-boot to reboot without attempting to eject the media and without asking the user to remove the boot media.
 .IP "\fBshowmounts\fR" 4
 This parameter will make live\-boot to show on "/" the ro filesystems (mostly compressed) on "/lib/live". This is not enabled by default because could lead to problems by applications like "mono" which store binary paths on installation.
@@ -161,10 +161,10 @@ This optional file (inside the live media) contains a list of white\-space or ca
 \fIlive\-tools\fR(7)
 
 .SH HOMEPAGE
-More information about live\-boot and the Debian Live project can be found on the homepage at <\fIhttp://live.debian.net/\fR> and in the manual at <\fIhttp://live.debian.net/manual/\fR>.
+More information about live\-boot and the Live Systems project can be found on the homepage at <\fIhttp://live-systems.org/\fR> and in the manual at <\fIhttp://live-systems.org/manual/\fR>.
 
 .SH BUGS
-Bugs can be reported by submitting a bugreport for the live\-boot package in the Debian Bug Tracking System at <\fIhttp://bugs.debian.org/\fR> or by writing a mail to the Debian Live mailing list at <\fIdebian-live@lists.debian.org\fR>.
+Bugs can be reported by submitting a bugreport for the live\-boot package in the Bug Tracking System at <\fIhttp://bugs.debian.org/\fR> or by writing a mail to the Live Systems mailing list at <\fIdebian-live@lists.debian.org\fR>.
 
 .SH AUTHOR
-live\-boot was written by Daniel Baumann <\fIdaniel@debian.org\fR> for the Debian project.
+live\-boot was written by Daniel Baumann <\fImail@daniel-baumann.ch\fR>.

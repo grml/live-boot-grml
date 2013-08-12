@@ -40,8 +40,6 @@ else
 	udevinfo='udevinfo'
 fi
 
-old_root_overlay_label="live-rw"
-old_home_overlay_label="home-rw"
 custom_overlay_label="persistence"
 persistence_list="persistence.conf"
 old_persistence_list="live-persistence.conf"

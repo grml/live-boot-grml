@@ -2,7 +2,7 @@
 
 # set -e
 
-Main ()
+Live ()
 {
 	if [ -x /scripts/local-top/cryptroot ]
 	then
@@ -30,12 +30,6 @@ Main ()
 	if [ -e /conf/param.conf ]
 	then
 		. /conf/param.conf
-	fi
-
-	if [ -n "${FUSE_MOUNT}" ]
-	then
-		# fuse does not work with klibc mount
-		ln -f /bin/mount.util-linux /bin/mount
 	fi
 
 	# Needed here too because some things (*cough* udev *cough*)

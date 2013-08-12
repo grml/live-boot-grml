@@ -41,13 +41,12 @@ panic() {
 	kill ${tailpid}
 
 	printf "\n\n"
-	printf "     ${DEB_1}\n"
-	printf "     ${DEB_2}  \033[1;37mBOOT FAILED!\033[0m\n"
-	printf "     ${DEB_3}\n"
-	printf "     ${DEB_4}  This Debian Live image failed to boot.\n\n"
+	printf "  \033[1;37mBOOT FAILED!\033[0m\n"
+	printf "\n"
+	printf "  This Live System image failed to boot.\n\n"
 
-	printf "  Please file a bug against the 'live-boot' package or email the Debian\n"
-	printf "  Live mailing list at <debian-live@lists.debian.org>, making sure to note the\n"
+	printf "  Please file a bug against the 'live-boot' package or email the Live Systems\n"
+	printf "  mailing list at <debian-live@lists.debian.org>, making sure to note the\n"
 	printf "  exact version, name and distribution of the image you were attempting to boot.\n\n"
 
 	printf "  The file ${LIVELOG} contains some debugging information but booting with the\n"
