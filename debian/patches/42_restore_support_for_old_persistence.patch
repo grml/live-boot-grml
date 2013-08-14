@@ -1,0 +1,96 @@
+From: Evgeni Golov <evgeni@debian.org>
+Subject: restore support for old persistence media
+
+diff --git a/scripts/boot/9990-aaa-fixme.sh b/scripts/boot/9990-aaa-fixme.sh
+index 416d6b4..74517e8 100755
+--- a/scripts/boot/9990-aaa-fixme.sh
++++ b/scripts/boot/9990-aaa-fixme.sh
+@@ -40,7 +40,10 @@ else
+ 	udevinfo='udevinfo'
+ fi
+ 
++old_root_overlay_label="live-rw"
++old_home_overlay_label="home-rw"
+ custom_overlay_label="persistence"
++old_custom_overlay_label="custom-ov"
+ persistence_list="persistence.conf"
+ old_persistence_list="live-persistence.conf"
+ 
+diff --git a/scripts/boot/9990-misc-helpers.sh b/scripts/boot/9990-misc-helpers.sh
+index 5c5341c..addc82a 100755
+--- a/scripts/boot/9990-misc-helpers.sh
++++ b/scripts/boot/9990-misc-helpers.sh
+@@ -1553,6 +1553,32 @@ activate_custom_mounts ()
+ 	echo ${used_devices}
+ }
+ 
++fix_backwards_compatibility ()
++{
++	local device dir opt backing include_list
++	device=${1}
++	dir=${2}
++	opt=${3}
++
++	if [ -n "${PERSISTENCE_READONLY}" ]
++	then
++		return
++	fi
++
++	backing="$(mount_persistence_media ${device})"
++	if [ -z "${backing}" ]
++	then
++		return
++	fi
++
++	include_list="${backing}/${persistence_list}"
++	if [ ! -r "${include_list}" ] && [ ! -r "${backing}/${old_persistence_list}" ]
++	then
++		echo "# persistence backwards compatibility:
++${dir} ${opt},source=." > "${include_list}"
++	fi
++}
++
+ is_mountpoint ()
+ {
+ 	directory="$1"
+diff --git a/scripts/boot/9990-overlay.sh b/scripts/boot/9990-overlay.sh
+index c6de171..4a080bc 100755
+--- a/scripts/boot/9990-overlay.sh
++++ b/scripts/boot/9990-overlay.sh
+@@ -210,7 +210,7 @@ setup_unionfs ()
+ 
+ 		if is_in_comma_sep_list overlay ${PERSISTENCE_METHOD}
+ 		then
+-			overlays="${custom_overlay_label}"
++			overlays="${old_root_overlay_label} ${old_home_overlay_label} ${custom_overlay_label} ${old_custom_overlay_label}"
+ 		fi
+ 
+ 		local overlay_devices
+@@ -222,10 +222,27 @@ setup_unionfs ()
+ 				media="$(echo ${media} | tr ":" " ")"
+ 
+ 				case ${media} in
++					${old_root_overlay_label}=*)
++						device="${media#*=}"
++						fix_backwards_compatibility ${device} / union
++						overlay_devices="${overlay_devices} ${device}"
++						;;
++
++					${old_home_overlay_label}=*)
++						device="${media#*=}"
++						fix_backwards_compatibility ${device} /home bind
++						overlay_devices="${overlay_devices} ${device}"
++						;;
++
+ 					${custom_overlay_label}=*)
+ 						device="${media#*=}"
+ 						overlay_devices="${overlay_devices} ${device}"
+ 						;;
++
++					${old_custom_overlay_label}=*)
++						device="${media#*=}"
++						overlay_devices="${overlay_devices} ${device}"
++						;;
+ 				 esac
+ 			done
+ 		fi
