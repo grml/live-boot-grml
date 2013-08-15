@@ -8,11 +8,20 @@
 
 Index: live-boot-grml/scripts/boot/9990-networking.sh
 ===================================================================
---- live-boot-grml.orig/scripts/boot/9990-networking.sh	2012-12-03 07:59:14.790837135 +0100
-+++ live-boot-grml/scripts/boot/9990-networking.sh	2012-12-03 07:59:19.665258773 +0100
-@@ -2,6 +2,24 @@
+--- live-boot-grml.orig/scripts/boot/9990-networking.sh	2013-08-15 08:04:49.299973806 +0200
++++ live-boot-grml/scripts/boot/9990-networking.sh	2013-08-15 08:29:13.959972623 +0200
+@@ -44,7 +44,7 @@
  
- #set -e
+ 			if [ "$bootif_mac" = "$current_mac" ]
+ 			then
+-				DEVICE=${device##*/}
++				ETHDEVICE="${device##*/},$ETHDEVICE" # use ethdevice
+ 				break
+ 			fi
+ 		fi
+@@ -53,6 +53,24 @@
+ 
+ }
  
 +get_ipconfig_para()
 +{
@@ -35,7 +44,7 @@ Index: live-boot-grml/scripts/boot/9990-networking.sh
  do_netsetup ()
  {
  	modprobe -q af_packet # For DHCP
-@@ -12,8 +30,19 @@
+@@ -63,8 +81,20 @@
  	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
  	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
  
@@ -53,20 +62,12 @@ Index: live-boot-grml/scripts/boot/9990-networking.sh
 +	echo "Net: Turning on all device links..."
 +	for device in ${ALLDEVICES}; do
 +		ipconfig -c none -d $device -t 1 2>/dev/null >/dev/null
-+	done 
- 		# support for Syslinux IPAPPEND parameter
- 		# it sets the BOOTIF variable on the kernel parameter
++	done
++
+ 		# See if we can select the device from BOOTIF
+ 		Device_from_bootif
  
-@@ -54,7 +83,7 @@
- 
- 					if [ "$bootif_mac" = "$current_mac" ]
- 					then
--						DEVICE=${device##*/}
-+						ETHDEVICE="${device##*/},$ETHDEVICE" # use ethdevice
- 						break
- 					fi
- 				fi
-@@ -67,14 +96,7 @@
+@@ -74,14 +104,7 @@
  		if [ -z "$ETHDEVICE" ]
  		then
  			echo "If you want to boot from a specific device use bootoption ethdevice=..."
@@ -82,7 +83,7 @@ Index: live-boot-grml/scripts/boot/9990-networking.sh
  		fi
  
  		# split args of ethdevice=eth0,eth1 into "eth0 eth1"
-@@ -83,46 +105,28 @@
+@@ -90,42 +113,29 @@
  			devlist="$devlist $device"
  		done
  
@@ -99,14 +100,14 @@ Index: live-boot-grml/scripts/boot/9990-networking.sh
 -			then
 -				echo "Killing job $jobid for device $dev as ipconfig ran into recursion..."
 -				kill -9 $jobid
-+        for dev in $devlist ; do
-+            param="$(get_ipconfig_para $dev)"
-+            if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] ; then
-+                echo "Ignoring network device $dev due to nodhcp." | tee -a /live-boot.log
-+                continue
++		for dev in $devlist ; do
++			param="$(get_ipconfig_para $dev)"
++			if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] ; then
++				echo "Ignoring network device $dev due to nodhcp." | tee -a /live-boot.log
++				continue
  			fi
-+            echo "Executing ipconfig -t $ETHDEV_TIMEOUT $param"
-+            ipconfig -t "$ETHDEV_TIMEOUT" "$param" | tee -a /netboot.config
++			echo "Executing ipconfig -t $ETHDEV_TIMEOUT $param"
++			ipconfig -t "$ETHDEV_TIMEOUT" "$param" | tee -a /netboot.config
  
  			# if configuration of device worked we should have an assigned
  			# IP address, if so let's use the device as $DEVICE for later usage.
@@ -115,39 +116,35 @@ Index: live-boot-grml/scripts/boot/9990-networking.sh
 -			then
 -				export DEVICE="$dev"
 -				break
-+            IPV4ADDR="0.0.0.0"
-+            if [ -e "/run/net-${device}.conf" ]; then
-+                . /run/net-${device}.conf
-+            fi
-+            if [ "${IPV4ADDR}" != "0.0.0.0" ]; then
-+                export DEVICE="$dev $DEVICE"
-+                # break  # exit loop as we just use the irst
- 			fi
- 		done
+-			fi
+-		done
 -	else
 -		for interface in ${DEVICE}; do
 -			ipconfig -t "$ETHDEV_TIMEOUT" ${interface} | tee /netboot-${interface}.config
 -
--			# squeeze
--			[ -e /tmp/net-${interface}.conf ] && . /tmp/net-${interface}.conf
--
--			# wheezy
 -			[ -e /run/net-${interface}.conf ] && . /run/net-${interface}.conf
--
+ 
 -			if [ "$IPV4ADDR" != "0.0.0.0" ]
 -			then
 -				break
--			fi
--		done
++			IPV4ADDR="0.0.0.0"
++			if [ -e "/run/net-${device}.conf" ]; then
++				. /run/net-${device}.conf
++			fi
++			if [ "${IPV4ADDR}" != "0.0.0.0" ]; then
++				export DEVICE="$dev $DEVICE"
++				# break  # exit loop as we just use the irst
+ 			fi
+ 		done
 -	fi
-+        unset devlist
++	unset devlist
  
  	for interface in ${DEVICE}
  	do
 Index: live-boot-grml/scripts/boot/9990-cmdline-old
 ===================================================================
---- live-boot-grml.orig/scripts/boot/9990-cmdline-old	2012-12-03 07:59:14.794839124 +0100
-+++ live-boot-grml/scripts/boot/9990-cmdline-old	2012-12-03 07:59:19.665258773 +0100
+--- live-boot-grml.orig/scripts/boot/9990-cmdline-old	2013-08-15 08:04:49.299973806 +0200
++++ live-boot-grml/scripts/boot/9990-cmdline-old	2013-08-15 08:04:49.295973806 +0200
 @@ -51,9 +51,8 @@
  				;;
  
