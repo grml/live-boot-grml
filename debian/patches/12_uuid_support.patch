@@ -12,8 +12,10 @@
 ## DP: * no bootid.txt + ignore_bootid=...                => boots
 
 @DPATCH@
---- a/scripts/boot/9990-misc-helpers.sh
-+++ b/scripts/boot/9990-misc-helpers.sh
+Index: live-boot-grml/scripts/boot/9990-misc-helpers.sh
+===================================================================
+--- live-boot-grml.orig/scripts/boot/9990-misc-helpers.sh	2013-08-15 08:01:04.303981714 +0200
++++ live-boot-grml/scripts/boot/9990-misc-helpers.sh	2013-08-15 08:01:04.299981714 +0200
 @@ -20,6 +20,42 @@
  	return 1
  }
@@ -57,7 +59,7 @@
  matches_uuid ()
  {
  	if [ "${IGNORE_UUID}" ] || [ ! -e /conf/uuid.conf ]
-@@ -247,7 +283,7 @@
+@@ -219,7 +255,7 @@
  		fi
  
  		if is_live_path ${mountpoint} && \
@@ -66,7 +68,7 @@
  		then
  			echo ${mountpoint}
  			return 0
-@@ -343,19 +379,6 @@
+@@ -315,19 +351,6 @@
  					return 0
  				fi
  			done
@@ -86,10 +88,12 @@
  		fi
  	done
  
---- a/scripts/boot/9990-cmdline-old
-+++ b/scripts/boot/9990-cmdline-old
+Index: live-boot-grml/scripts/boot/9990-cmdline-old
+===================================================================
+--- live-boot-grml.orig/scripts/boot/9990-cmdline-old	2013-08-15 08:01:04.303981714 +0200
++++ live-boot-grml/scripts/boot/9990-cmdline-old	2013-08-15 08:01:04.299981714 +0200
 @@ -18,6 +18,11 @@
- 				BOOTIF="${x#BOOTIF=}"
+ 				BOOTIF="${_PARAMETER#BOOTIF=}"
  				;;
  
 +			bootid=*)
