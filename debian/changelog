@@ -1,3 +1,14 @@
+live-boot (4.0~a13-1+grml.1) unstable; urgency=low
+
+  * Sync Debian's 4.0~a13.
+  * [ba11a22] drop patches that were previously backported from
+    the 4.x upstream branch
+  * [5eca029, 3a80a92, eae4296, e6023f8] refresh patches against
+    new upstream
+  * [2130827] more forwardporting of deprecated persistence options
+
+ -- Evgeni Golov <evgeni@grml.org>  Sun, 18 Aug 2013 10:53:12 +0200
+
 live-boot (4.0~a13-1) experimental; urgency=low
 
   * Increasing tftp blocksize to maximum value per RFC 2348, thanks to
