@@ -875,7 +875,7 @@ probe_for_file_name ()
 
 	for label in ${overlays}
 	do
-		path=${backing}/${PERSISTENCE_PATH}${label}
+		path=${backing}/${PERSISTENCE_PATH}/${label}
 		if [ -f "${path}" ]
 		then
 			local loopdev
