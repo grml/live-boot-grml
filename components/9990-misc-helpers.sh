@@ -694,6 +694,11 @@ mount_persistence_media ()
 	device=${1}
 	probe=${2}
 
+	if [ ! -b "${device}" ]
+	then
+		return 1
+	fi
+
 	backing="/live/persistence/$(basename ${device})"
 
 	mkdir -p "${backing}"
@@ -1250,11 +1255,6 @@ get_custom_mounts ()
 
 	for device in ${devices}
 	do
-		if [ ! -b "${device}" ]
-		then
-			continue
-		fi
-
 		local device_name backing include_list
 		device_name="$(basename ${device})"
 		backing=$(mount_persistence_media ${device})
