@@ -722,15 +722,24 @@ mount_persistence_media ()
 		fi
 	elif [ "${backing}" != "${old_backing}" ]
 	then
-		if mount --move ${old_backing} ${backing} >/dev/null
+		if ! mount --move ${old_backing} ${backing} >/dev/null
 		then
-			echo ${backing}
-			return 0
-		else
 			[ -z "${probe}" ] && log_warning_msg "Failed to move persistence media ${device}"
 			rmdir "${backing}"
 			return 1
 		fi
+		mount_opts="rw,noatime"
+		if [ -n "${PERSISTENCE_READONLY}" ]
+		then
+			mount_opts="ro,noatime"
+		fi
+		if ! mount -o "remount,${mount_opts}" "${backing}" >/dev/null
+		then
+			log_warning_msg "Failed to remount persistence media ${device} writable"
+			# Don't unmount or rmdir the new mountpoint in this case
+		fi
+		echo ${backing}
+		return 0
 	else
 		# This means that $device has already been mounted on
 		# the place expected by live-boot, so we're done.
