@@ -684,8 +684,9 @@ try_mount ()
 }
 
 # Try to mount $device to the place expected by live-boot. If $device
-# is already mounted somewhere, move it to the expected place. If
-# we're only probing $device (to check if it has custom persistence)
+# is already mounted somewhere, move it to the expected place. If $device
+# ends with a "/" this is a directory path.
+# If we're only probing $device (to check if it has custom persistence)
 # $probe should be set, which suppresses warnings upon failure. On
 # success, print the mount point for $device.
 mount_persistence_media ()
@@ -693,6 +694,15 @@ mount_persistence_media ()
 	local device probe backing old_backing fstype mount_opts
 	device=${1}
 	probe=${2}
+
+	# get_custom_mounts() might call this with a directory path instead
+	# of a block device path. This means we have found sub-directory path
+	# underneath /lib/live/mounts/persistence, so we're done
+	if [ -d "${device}" ]
+	then
+		echo "${device}"
+		return 0
+	fi
 
 	if [ ! -b "${device}" ]
 	then
@@ -908,6 +918,39 @@ probe_for_file_name ()
 	fi
 }
 
+probe_for_directory_name ()
+{
+	local overlays dev ret backing
+	overlays="${1}"
+	dev="${2}"
+
+	ret=""
+	backing="$(mount_persistence_media ${dev} probe)"
+	if [ -z "${backing}" ]
+	then
+	    return
+	fi
+
+	for label in ${overlays}
+	do
+		path=${backing}/${PERSISTENCE_PATH}/${label}
+		if [ -d "${path}" ]
+		then
+			# in this case the "device" ends with a "/"
+			ret="${ret} ${label}=${backing}/${PERSISTENCE_PATH}/${label%%/}/"
+		fi
+	done
+
+	if [ -n "${ret}" ]
+	then
+		echo ${ret}
+	else
+		# unmount and remove mountpoint
+		umount ${backing} > /dev/null 2>&1 || true
+		rmdir ${backing} > /dev/null 2>&1 || true
+	fi
+}
+
 find_persistence_media ()
 {
 	# Scans devices for overlays, and returns a whitespace
@@ -1008,6 +1051,17 @@ find_persistence_media ()
 						result=""
 					fi
 				fi
+				ret="${ret} ${result}"
+				continue
+			fi
+		fi
+
+		# Probe for directory with matching name on mounted partition
+		if is_in_comma_sep_list directory ${PERSISTENCE_STORAGE}
+		then
+			result=$(probe_for_directory_name "${overlays}" ${dev})
+			if [ -n "${result}" ]
+			then
 				ret="${ret} ${result}"
 				continue
 			fi
