@@ -42,8 +42,8 @@ build:
 
 install:
 	# Installing components
-	mkdir -p $(DESTDIR)/lib/live
-	cp components/* $(DESTDIR)/lib/live
+	mkdir -p $(DESTDIR)/lib/live/boot
+	cp components/* $(DESTDIR)/lib/live/boot
 
 	# Installing executables
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/hooks
