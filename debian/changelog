@@ -1,3 +1,10 @@
+live-boot (4.0~a15-1) experimental; urgency=low
+
+  [ Jan Blunck ]
+  * Install components into /lib/live/boot folder.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Fri, 13 Sep 2013 17:21:50 +0200
+
 live-boot (4.0~a14-1) experimental; urgency=low
 
   [ Daniel Baumann ]
