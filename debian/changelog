@@ -1,3 +1,53 @@
+live-boot (4.0~a14-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating note about overlay file image names in live-boot manpage,
+    thanks to Peter Schaefer <peter.schaefer@physik.hu-berlin.de> (Closes:
+    #701615).
+  * Correcting debug variables through out the code to use the same one.
+  * Allowing to superseed live-boot cmdline through configuration files.
+
+  [ chals ]
+  * Updating Spanish translation of live-boot man page.
+
+  [ Steven Shiau ]
+  * Calculating size for the whole media "/live/image/", not only the dir
+    "/live/image/live/" when using toram.
+
+  [ Daniel Baumann ]
+  * Reorganizing backend in source tree.
+  * Reorganizing frontend in source tree.
+  * Reorganizing components in source tree.
+  * Replace various mentionings of scripts with components.
+  * Updating code to current coding style in a some locations.
+  * Dropping old pre-wheezy udevadm handling.
+  * Dropping old pre-wheezy persistence list handling.
+  * Replacing variable used in one place only with explicit directory for
+    simplicity.
+  * Shortening /etc/mtab conditional creation.
+  * Dropping helper function used in one place only which can be replaced
+    with a simple ls call anyway.
+  * Dropping really_export dead code.
+  * Simplifying /etc/resolv.conf generation a bit.
+  * Updating indenting in network component.
+
+  [ chals ]
+  * Updating the dates in man pages.
+  * Updating Spanish translation of man pages.
+
+  [ Jan Blunck ]
+  * Use PERSISTENCE_PATH with a trailing "/".
+  * Move check for block device to mount_persistence_media().
+  * Remount writable when moving the mountpoint of the persistence device.
+  * Blacklist devices used for /live/rootfs/* insted of /live/medium.
+  * Add support for persistence-storage type "directory".
+
+  [ Daniel Baumann ]
+  * Updating debhelper install file to include additional scripts in new
+    location.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Fri, 13 Sep 2013 14:17:30 +0200
+
 live-boot (4.0~a13-1) experimental; urgency=low
 
   * Increasing tftp blocksize to maximum value per RFC 2348, thanks to
