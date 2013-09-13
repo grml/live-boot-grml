@@ -381,7 +381,7 @@ setup_unionfs ()
 		# Gather information about custom mounts from devies detected as overlays
 		get_custom_mounts ${custom_mounts} ${overlay_devices}
 
-		[ -n "${DEBUG}" ] && cp ${custom_mounts} "/lib/live/mount/persistence"
+		[ -n "${LIVE_BOOT_DEBUG}" ] && cp ${custom_mounts} "/lib/live/mount/persistence"
 
 		# Now we do the actual mounting (and symlinking)
 		local used_overlays

@@ -4,7 +4,7 @@ SHELL := sh -e
 
 LANGUAGES = $(shell cd manpages/po && ls)
 
-SCRIPTS = backends/*/* bin/* scripts/*.sh scripts/*/*-*
+SCRIPTS = backend/*/* frontend/* components/*
 
 all: build
 
@@ -41,15 +41,18 @@ build:
 	@echo "Nothing to build."
 
 install:
-	# Installing scripts
+	# Installing components
 	mkdir -p $(DESTDIR)/lib/live
-	cp -r scripts/boot.sh scripts/boot $(DESTDIR)/lib/live
+	cp components/* $(DESTDIR)/lib/live
 
 	# Installing executables
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/hooks
-	cp backends/initramfs-tools/live.hook $(DESTDIR)/usr/share/initramfs-tools/hooks/live
+	cp backend/initramfs-tools/live.hook $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/scripts
-	cp backends/initramfs-tools/live.script $(DESTDIR)/usr/share/initramfs-tools/scripts/live
+	cp backend/initramfs-tools/live.script $(DESTDIR)/usr/share/initramfs-tools/scripts/live
+
+	mkdir -p $(DESTDIR)/bin
+	cp frontend/* $(DESTDIR)/bin
 
 	# Installing docs
 	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
@@ -73,8 +76,9 @@ install:
 
 uninstall:
 	# Uninstalling executables
-	rm -f $(DESTDIR)/sbin/live-swapfile
-	rmdir --ignore-fail-on-non-empty $(DESTDIR)/sbin > /dev/null 2>&1 || true
+	rm -f $(DESTDIR)/bin/live-boot
+	rm -f $(DESTDIR)/bin/live-swapfile
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/bin > /dev/null 2>&1 || true
 
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/hooks/live
 	rm -f $(DESTDIR)/usr/share/initramfs-tools/scripts/live

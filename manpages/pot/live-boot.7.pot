@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2013-05-27 16:45+0300\n"
+"POT-Creation-Date: 2013-09-13 14:16+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,13 +25,13 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2013-05-27"
+msgid "2013-09-13"
 msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "4.0~a13-1"
+msgid "4.0~a14-1"
 msgstr ""
 
 #. type: TH
@@ -48,7 +48,7 @@ msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:5
-msgid "B<live-boot> - System Boot Scripts"
+msgid "B<live-boot> - System Boot Components"
 msgstr ""
 
 #. type: SH
@@ -60,7 +60,7 @@ msgstr ""
 #. type: Plain text
 #: en/live-boot.7:8
 msgid ""
-"B<live-boot> contains the scripts that configure a live system during the "
+"B<live-boot> contains the components that configure a live system during the "
 "boot process (early userspace)."
 msgstr ""
 
@@ -561,8 +561,8 @@ msgid ""
 "live-boot will probe devices for persistence media. These can be partitions "
 "(with the correct GPT name), filesystems (with the correct label) or image "
 "files (with the correct file name). Overlays are labeled/named \"persistence"
-"\" (see I<persistence.conf>(5)). Overlay image files have extensions which "
-"determines their filesystem, e.g. \"persistence.ext4\"."
+"\" (see I<persistence.conf>(5)). Overlay image files are named \"persistence"
+"\"."
 msgstr ""
 
 #. type: IP

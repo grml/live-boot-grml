@@ -4,7 +4,7 @@
 
 Verify_checksums ()
 {
-	for _PARAMETER in ${_CMDLINE}
+	for _PARAMETER in ${LIVE_BOOT_CMDLINE}
 	do
 		case "${_PARAMETER}" in
 			live-boot.verify-checksums=*|verify-checksums=*)
@@ -72,7 +72,7 @@ Verify_checksums ()
 
 			# Unmount live-media
 			cd /
-			umount -f ${_MOUNTPOINT} > /dev/null 2>&1
+			umount -f "${_MOUNTPOINT}" > /dev/null 2>&1
 			sync
 
 			# Attempt to remount all mounted filesystems read-only
