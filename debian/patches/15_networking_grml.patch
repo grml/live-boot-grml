@@ -19,7 +19,7 @@ diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_
 +Grml_Networking () {
 +
 +if [ -n "${NONETWORKING}" ]; then
-+   exit 0
++   return 0
 +fi
 +
 +modprobe af_packet # req'd for DHCP
@@ -105,11 +105,9 @@ diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_
 +done
 +
 +}
-diff --git a/scripts/boot/9990-main.sh b/scripts/boot/9990-main.sh
-index ef41fb0..2af5eb6 100755
 --- a/scripts/boot/9990-main.sh
 +++ b/scripts/boot/9990-main.sh
-@@ -194,6 +194,8 @@ Main ()
+@@ -197,6 +197,8 @@
  
  	Swap
  
