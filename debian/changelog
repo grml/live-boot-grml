@@ -1,3 +1,11 @@
+live-boot (4.0~a13-1+grml.2) unstable; urgency=low
+
+  * [61895ec] Do not "exit" if boot option nonetworking is set but
+    "return" instead [Closes: issue1276]
+  * [85bddc0] Refresh debian/patches/
+
+ -- Michael Prokop <mika@grml.org>  Fri, 20 Sep 2013 16:38:53 +0200
+
 live-boot (4.0~a13-1+grml.1) unstable; urgency=low
 
   * Sync Debian's 4.0~a13.
