@@ -1,6 +1,6 @@
 --- a/scripts/boot/9990-misc-helpers.sh
 +++ b/scripts/boot/9990-misc-helpers.sh
-@@ -491,6 +491,12 @@
+@@ -463,6 +463,12 @@
  		return 1
  	fi
  
