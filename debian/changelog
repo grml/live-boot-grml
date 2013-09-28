@@ -1,3 +1,12 @@
+live-boot (4.0~a13-1+grml.3) unstable; urgency=low
+
+  * [79dceec] Update 9990-misc-helpers.sh to support latest udev version
+    [Closes: issue1278] Thanks to Michael Biebl <biebl@debian.org> for
+    helping in resolve this issue and Ulrich Dangel <mru@spamt.net>
+    for the initial patch
+
+ -- Michael Prokop <mika@grml.org>  Sat, 28 Sep 2013 11:44:52 +0200
+
 live-boot (4.0~a13-1+grml.2) unstable; urgency=low
 
   * [61895ec] Do not "exit" if boot option nonetworking is set but
