@@ -15,7 +15,10 @@ Depends: ${misc:Depends}, live-boot-initramfs-tools | live-boot-backend
 Recommends: live-boot-doc, live-tools, rsync, uuid-runtime
 Suggests: curlftpfs, cryptsetup, httpfs2, unionfs-fuse, wget
 Description: Live System Boot Components
- live-boot contains the components that configure a live system during the boot
+ The Live Systems project maintains the components to build Debian based Live
+ systems and the official Debian Live images themselves.
+ .
+ live-boot contains the components to configure a live system during the boot
  process (early userspace).
  .
  In addition to live-boot, a backend for the initrd generation is required, such
@@ -26,7 +29,10 @@ Section: doc
 Architecture: all
 Depends: ${misc:Depends}
 Description: Live System Boot Components (documentation)
- live-boot contains the components that configure a live system during the boot
+ The Live Systems project maintains the components to build Debian based Live
+ systems and the official Debian Live images themselves.
+ .
+ live-boot contains the components to configure a live system during the boot
  process (early userspace).
  .
  This package contains the documentation.
@@ -39,7 +45,10 @@ Conflicts: live-boot-backend
 Replaces: live-boot-backend
 Provides: live-boot-backend
 Description: Live System Boot Components (initramfs-tools backend)
- live-boot contains the components that configure a live system during the boot
+ The Live Systems project maintains the components to build Debian based Live
+ systems and the official Debian Live images themselves.
+ .
+ live-boot contains the components to configure a live system during the boot
  process (early userspace).
  .
  This package contains the initramfs-tools backend.
