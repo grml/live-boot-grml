@@ -11,9 +11,20 @@ Vcs-Git: git://live-systems.org/git/live-boot.git
 
 Package: live-boot
 Architecture: all
-Depends: ${misc:Depends}, live-boot-initramfs-tools | live-boot-backend
-Recommends: live-boot-doc, live-tools, rsync, uuid-runtime
-Suggests: curlftpfs, cryptsetup, httpfs2, unionfs-fuse, wget
+Depends:
+ ${misc:Depends},
+ live-boot-initramfs-tools | live-boot-backend,
+Recommends:
+ live-boot-doc,
+ live-tools,
+ rsync,
+ uuid-runtime,
+Suggests:
+ curlftpfs,
+ cryptsetup,
+ httpfs2,
+ unionfs-fuse,
+ wget,
 Description: Live System Boot Components
  The Live Systems project maintains the components to build Debian based Live
  systems and the official Debian Live images themselves.
@@ -40,7 +51,10 @@ Description: Live System Boot Components (documentation)
 Package: live-boot-initramfs-tools
 Architecture: all
 Depends:
- ${misc:Depends}, busybox | busybox-initramfs, initramfs-tools, udev
+ ${misc:Depends},
+ busybox | busybox-initramfs,
+ initramfs-tools,
+ udev,
 Conflicts: live-boot-backend
 Replaces: live-boot-backend
 Provides: live-boot-backend
