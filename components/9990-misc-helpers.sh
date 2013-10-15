@@ -76,7 +76,7 @@ is_nice_device ()
 {
 	sysfs_path="${1#/sys}"
 
-	if udevadm test-builtin path_id "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-[^-]*-(ide|sas|scsi|usb|virtio)|platform-sata_mv|platform-orion-ehci|platform-mmc|platform-mxsdhci)"
+	if udevadm info --query=all --path="${sysfs_path}" | egrep -q "DEVTYPE=disk"
 	then
 		return 0
 	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
