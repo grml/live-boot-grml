@@ -1,3 +1,11 @@
+live-boot (4.0~alpha16-1) experimental; urgency=low
+
+  * Updating package descriptions.
+  * Applying patch from Michael Prokop <mika@grml.org> to update udev
+    usage in is_nice_device() for newer udev versions.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Tue, 15 Oct 2013 09:17:35 +0200
+
 live-boot (4.0~a15-1) experimental; urgency=low
 
   [ Jan Blunck ]
