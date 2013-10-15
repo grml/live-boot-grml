@@ -161,7 +161,7 @@ check_dev ()
 				# Adding lvm support
 				if [ -x /scripts/local-top/lvm2 ]
 				then
-					ROOT="$device" resume="" /scripts/local-top/lvm2
+					ROOT="$device" resume="" /scripts/local-top/lvm2 >>/boot.log
 				fi
 				;;
 
@@ -169,10 +169,10 @@ check_dev ()
 				# Adding raid support
 				if [ -x /scripts/local-top/mdadm ]
 				then
-					cp /conf/conf.d/md /conf/conf.d/md.orig
+					[ -r /conf/conf.d/md ] && cp /conf/conf.d/md /conf/conf.d/md.orig
 					echo "MD_DEVS=$device " >> /conf/conf.d/md
-					/scripts/local-top/mdadm
-					mv /conf/conf.d/md.orig /conf/conf.d/md
+					/scripts/local-top/mdadm >>/boot.log
+					[ -r /conf/conf.d/md.orig ] && mv /conf/conf.d/md.orig /conf/conf.d/md
 				fi
 				;;
 		esac
