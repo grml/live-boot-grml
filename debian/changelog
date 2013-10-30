@@ -1,3 +1,19 @@
+live-boot (4.0~alpha17-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Rewrapping control file.
+
+  [ Michael Prokop ]
+  * Properly boot from mdadm via findiso boot option.
+
+  [ Daniel Baumann ]
+  * Updating to standards version 3.9.5.
+  * Correcting spelling typo in overlay component breaking booting from
+    uncompressed filesystems, thanks to John Bazik <jsb@cs.brown.edu>
+    (Closes: #728250).
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Wed, 30 Oct 2013 02:44:22 +0100
+
 live-boot (4.0~alpha16-1) experimental; urgency=low
 
   * Updating package descriptions.
