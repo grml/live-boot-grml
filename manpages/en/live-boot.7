@@ -40,25 +40,25 @@ Use: debug=1
 Without setting debug to a value the messages may not be shown.
 .IP "\fBfetch\fR=\fIURL\fR" 4
 .IP "\fBhttpfs\fR=\fIURL\fR" 4
-Another form of netboot by downloading a squashfs image from a given url.
-The fetch method copies the image to ram and the httpfs method uses fuse and
-httpfs2 to mount the image in place. Copying to ram requires more memory and
+Another form of netboot by downloading a squashfs image from a given URL.
+The fetch method copies the image to RAM and the httpfs method uses FUSE and
+httpfs2 to mount the image in place. Copying to RAM requires more memory and
 might take a long time for large images. However, it is more likely to work
 correctly because it does not require networking afterwards and the system
 operates faster once booted because it does not require to contact the server
 anymore.
 .br
-Due to current limitations in busybox's wget and DNS resolution, an URL can not contain a hostname but an IP only.
+Due to current limitations in busybox's wget and DNS resolution, an URL can not contain a hostname but an IP address only.
 .br
 Not working: http://example.com/path/to/your_filesystem.squashfs
 .br
 Working: http://1.2.3.4/path/to/your_filesystem.squashfs
 .br
-Also note that therefore it's currently not possible to fetch an image from a namebased virtualhost of an httpd if it is sharing the ip with the main httpd instance.
+Also note that therefore it's currently not possible to fetch an image from a name-based virtualhost of an httpd if it is sharing the IP address with the main httpd instance.
 .br
-You may also use the live iso image in place of the squashfs image.
+You may also use the live ISO image in place of the squashfs image.
 .IP "\fBiscsi\fR=\fIserver-ip[,server-port];target-name\fR" 4
-Boot from an iSCSI target that has an iso or disk live image as one of its LUNs. The specified target is searched for a LUN which looks like a live media. If you use the \fBiscsitarget\fR software iSCSI target solution your ietd.conf might look like this:
+Boot from an iSCSI target that has an ISO or disk live image as one of its LUNs. The specified target is searched for a LUN which looks like a live media. If you use the \fBiscsitarget\fR software iSCSI target solution your ietd.conf might look like this:
 .br
 # The target-name you specify in the iscsi= parameter
 .br
@@ -69,7 +69,7 @@ Target <target-name>
 .IP "\fBfindiso\fR=\fI/PATH/TO/IMAGE\fI" 4
 Look for the specified ISO file on all disks where it usually looks for the .squashfs file (so you don't have to know the device name as in fromiso=....).
 .IP "\fBfromiso\fR=\fI/PATH/TO/IMAGE\fI" 4
-Allows to use a filesystem from within an iso image that's available on live-media.
+Allows to use a filesystem from within an ISO image that's available on live-media.
 .IP "\fBignore_uuid\fR" 4
 Do not check that any UUID embedded in the initramfs matches the discovered medium. live\-boot may be told to generate a UUID by setting LIVE_GENERATE_UUID=1 when building the initramfs.
 .IP "\fBverify\-checksums\fR" 4
@@ -83,9 +83,9 @@ If you specify one of this two equivalent forms, live\-boot will first try to fi
 .br
 Instead of specifing an actual device name, the keyword 'removable' can be used to limit the search of acceptable live media to removable type only. Note that if you want to further restrict the media to usb mass storage only, you can use the 'removable\-usb' keyword.
 .IP "{\fBlive\-media\-encryption\fR|\fBencryption\fR}=\fITYPE\fI" 4
-live\-boot will mount the encrypted rootfs TYPE, asking the passphrase, useful to build paranoid live systems :\-). TYPE supported so far are "aes" for loop\-aes encryption type.
+live\-boot will mount the encrypted rootfs TYPE, asking the passphrase, useful to build paranoid live systems :\-). TYPE supported so far is "aes" for loop\-aes encryption type.
 .IP "\fBlive\-media\-offset\fR=\fIBYTES\fR" 4
-This way you could tell live\-boot that your image starts at offset BYTES in the above specified or autodiscovered device, this could be useful to hide the live system ISO or image inside another iso or image, to create "clean" images.
+This way you could tell live\-boot that your image starts at offset BYTES in the above specified or autodiscovered device, this could be useful to hide the live system ISO or image inside another ISO or image, to create "clean" images.
 .IP "\fBlive\-media\-path\fR=\fIPATH\fR" 4
 Sets the path to the live filesystem on the medium. By default, it is set to '/live' and you should not change that unless you have customized your media accordingly.
 .IP "\fBlive\-media\-timeout\fR=\fISECONDS\fI" 4
@@ -103,7 +103,7 @@ disables the "persistence" feature, useful if the bootloader (like syslinux) has
 .IP "\fBnoeject\fR" 4
 Do not prompt to eject the live medium.
 .IP "\fBramdisk\-size\fR" 4
-This parameters allows to set a custom ramdisk size (it's the '\-o size' option of tmpfs mount). By default, there is no ramdisk size set, so the default of mount applies (currently 50% of available RAM). Note that this option has no currently no effect when booting with toram.
+This parameter allows to set a custom ramdisk size (it's the '\-o size' option of tmpfs mount). By default, there is no ramdisk size set, so the default of mount applies (currently 50% of available RAM). Note that this option has currently no effect when booting with toram.
 .IP "\fBswapon\fR" 4
 This parameter enables usage of local swap partitions.
 .IP "\fBpersistence\fR" 4
