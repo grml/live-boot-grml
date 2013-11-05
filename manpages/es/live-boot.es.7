@@ -65,34 +65,31 @@ Uso: debug=1
 Si no se asigna un valor a debug, puede que no se muestren los mensajes.
 .IP \fBfetch\fP=\fIURL\fP 4
 .IP \fBhttpfs\fP=\fIURL\fP 4
-Otra forma de arranque en red mediante la descarga de una imagen squashfs a
-partir de una URL determinada. El método «fetch» copia la imagen en la
-memoria RAM y el método httpfs utiliza fuse y httpfs2 para montar la imagen
-en su lugar. Copiar en la memoria RAM requiere más memoria y puede tardar
-mucho tiempo con imágenes de gran tamaño. Sin embargo, es más probable que
-funcione correctamente, ya que no requiere el uso de la red después y el
-sistema funciona más rápido una vez iniciado, debido a que ya no necesita
-más ponerse en contacto con el servidor.
+Another form of netboot by downloading a squashfs image from a given URL.
+The fetch method copies the image to RAM and the httpfs method uses FUSE and
+httpfs2 to mount the image in place. Copying to RAM requires more memory and
+might take a long time for large images. However, it is more likely to work
+correctly because it does not require networking afterwards and the system
+operates faster once booted because it does not require to contact the
+server anymore.
 .br
-Debido a las limitaciones actuales de busybox, wget y la resolución de DNS,
-una dirección URL no puede contener un nombre de anfitrión, sino sólo una
-dirección IP.
+Due to current limitations in busybox's wget and DNS resolution, an URL can
+not contain a hostname but an IP address only.
 .br
 No funciona: http://ejemplo.com/ruta/al/sistema_de_ficheros.squashfs
 .br
 Funciona: http://ejemplo.com/ruta/al/sistema_de_ficheros.squashfs
 .br
-Tener en cuenta también que, por lo tanto, no es posible en la actualidad ir
-a buscar una imagen en un host virtual basado en nombre de un httpd si está
-compartiendo la ip con la instancia principal httpd.
+Also note that therefore it's currently not possible to fetch an image from
+a name\-based virtualhost of an httpd if it is sharing the IP address with
+the main httpd instance.
 .br
-También se puede utilizar la imagen iso en vivo en lugar de la imagen
-squashfs.
+You may also use the live ISO image in place of the squashfs image.
 .IP \fBiscsi\fP=\fIserver\-ip[,server\-port];target\-name\fP 4
-Arranca desde un iSCSI que tiene una iso o una imagen de disco en vivo como
-uno de sus LUNs. Se busca en el objetivo especificado un LUN que sea similar
-a un medio en vivo. Si se utiliza el software de iSCSI \fBiscsitarget\fP el
-ietd.conf podría ser similar al siguiente:
+Boot from an iSCSI target that has an ISO or disk live image as one of its
+LUNs. The specified target is searched for a LUN which looks like a live
+media. If you use the \fBiscsitarget\fP software iSCSI target solution your
+ietd.conf might look like this:
 .br
 # El nombre de destino se especifica en el parámetro iscsi=
 .br
@@ -105,8 +102,8 @@ Busca el fichero ISO especificado en todos los discos en los que por lo
 general se busca el fichero .squashfs (por lo que no se tiene que saber el
 nombre del dispositivo como en fromiso=....).
 .IP \fBfromiso\fP=\fI/PATH/TO/IMAGE\fP 4
-Permite utilizar un sistema de ficheros desde dentro de una imagen iso que
-está disponible en los medios en vivo.
+Allows to use a filesystem from within an ISO image that's available on
+live\-media.
 .IP \fBignore_uuid\fP 4
 No comprobar que cualquier UUID integrado en el initramfs coincida con el
 medio encontrado. Se puede especificar a live\-boot que genere un UUID
@@ -138,14 +135,14 @@ vivo de tipo extraíble. Tener en cuenta que si se desea restringir aún más
 los medios a sistemas de almacenamiento masivo USB se puede utilizar la
 palabra clave 'removable\-usb'
 .IP {\fBlive\-media\-encryption\fP|\fBencryption\fP}=\fITYPE\fP 4
-live\-boot montará el TYPE rotfs cifrado,  pidiendo la contraseña. Es útil
-para crear sistemas en vivo paranoicos :\-) Hasta el momento el TYPE
-soportado es "aes" para cifrado loop\-aes.
+live\-boot will mount the encrypted rootfs TYPE, asking the passphrase,
+useful to build paranoid live systems :\-). TYPE supported so far is "aes"
+for loop\-aes encryption type.
 .IP \fBlive\-media\-offset\fP=\fIBYTES\fP 4
-De esta manera se puede especificar a live\-boot que la imagen comienza en
-BYTES en el dispositivo anteriormente especificado, o auto\-descubierto, esto
-podría ser útil para esconder la iso o la imagen dentro de otra iso o
-imagen, para crear imágenes "limpias".
+This way you could tell live\-boot that your image starts at offset BYTES in
+the above specified or autodiscovered device, this could be useful to hide
+the live system ISO or image inside another ISO or image, to create "clean"
+images.
 .IP \fBlive\-media\-path\fP=\fIPATH\fP 4
 Establece la ruta de acceso al sistema de ficheros en vivo en el medio. De
 forma predeterminada está en '/live' y no se debe cambiar a menos que se
@@ -175,11 +172,10 @@ syslinux) se ha instalado con persistencia habilitada.
 .IP \fBnoeject\fP 4
 No pedir que se extraiga el dispositivo en vivo.
 .IP \fBramdisk\-size\fP 4
-Este parámetro permite establecer un tamaño de disco RAM personalizado (que
-es la opción '\-o size' del montaje tmpfs). No hay un tamaño de ramdisk
-predeterminado, por lo que se aplica el valor por defecto (actualmente el
-50% de la RAM disponible). Tener en cuenta que esta opción no tiene
-actualmente ningún efecto cuando se arranca con toram
+This parameter allows to set a custom ramdisk size (it's the '\-o size'
+option of tmpfs mount). By default, there is no ramdisk size set, so the
+default of mount applies (currently 50% of available RAM). Note that this
+option has currently no effect when booting with toram.
 .IP \fBswapon\fP 4
 Este parámetro permite el uso de particiones swap locales.
 .IP \fBpersistence\fP 4

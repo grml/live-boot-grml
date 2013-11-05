@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 4.0~alpha17-1\n"
-"POT-Creation-Date: 2013-11-05 20:30+0100\n"
+"POT-Creation-Date: 2013-11-05 22:27+0100\n"
 "PO-Revision-Date: 2013-04-13 16:48+0100\n"
 "Last-Translator: victory <victory.deb@gmail.com>\n"
 "Language-Team: none\n"
@@ -236,10 +236,19 @@ msgstr "B<httpfs>=I<URL>"
 
 #. type: Plain text
 #: en/live-boot.7:50
+#, fuzzy
+#| msgid ""
+#| "Another form of netboot by downloading a squashfs image from a given "
+#| "url.  The fetch method copies the image to ram and the httpfs method uses "
+#| "fuse and httpfs2 to mount the image in place. Copying to ram requires "
+#| "more memory and might take a long time for large images. However, it is "
+#| "more likely to work correctly because it does not require networking "
+#| "afterwards and the system operates faster once booted because it does not "
+#| "require to contact the server anymore."
 msgid ""
-"Another form of netboot by downloading a squashfs image from a given url.  "
-"The fetch method copies the image to ram and the httpfs method uses fuse and "
-"httpfs2 to mount the image in place. Copying to ram requires more memory and "
+"Another form of netboot by downloading a squashfs image from a given URL.  "
+"The fetch method copies the image to RAM and the httpfs method uses FUSE and "
+"httpfs2 to mount the image in place. Copying to RAM requires more memory and "
 "might take a long time for large images. However, it is more likely to work "
 "correctly because it does not require networking afterwards and the system "
 "operates faster once booted because it does not require to contact the "
@@ -255,9 +264,13 @@ msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:52
+#, fuzzy
+#| msgid ""
+#| "Due to current limitations in busybox's wget and DNS resolution, an URL "
+#| "can not contain a hostname but an IP only."
 msgid ""
 "Due to current limitations in busybox's wget and DNS resolution, an URL can "
-"not contain a hostname but an IP only."
+"not contain a hostname but an IP address only."
 msgstr ""
 "busybox の現在の wget 及び DNS 解決の制限のために URL にはホスト名を使えず、"
 "IPアドレスにしか対応していません。"
@@ -274,10 +287,15 @@ msgstr "機能する: http://1.2.3.4/path/to/your_filesystem.squashfs"
 
 #. type: Plain text
 #: en/live-boot.7:58
+#, fuzzy
+#| msgid ""
+#| "Also note that therefore it's currently not possible to fetch an image "
+#| "from a namebased virtualhost of an httpd if it is sharing the ip with the "
+#| "main httpd instance."
 msgid ""
 "Also note that therefore it's currently not possible to fetch an image from "
-"a namebased virtualhost of an httpd if it is sharing the ip with the main "
-"httpd instance."
+"a name-based virtualhost of an httpd if it is sharing the IP address with "
+"the main httpd instance."
 msgstr ""
 "また、そのため httpd の名前ベースのバーチャルホストからイメージを取得すること"
 "は、httpd のそのホストの設定で同一のIPアドレスを共有している場合は現在不可能"
@@ -285,7 +303,9 @@ msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:60
-msgid "You may also use the live iso image in place of the squashfs image."
+#, fuzzy
+#| msgid "You may also use the live iso image in place of the squashfs image."
+msgid "You may also use the live ISO image in place of the squashfs image."
 msgstr ""
 "また、squashfs イメージの適切な位置にある Live ISO イメージも利用できます。"
 
@@ -297,8 +317,14 @@ msgstr "B<iscsi>=I<サーバのIPアドレス[,サーバのポート];対象の�
 
 #. type: Plain text
 #: en/live-boot.7:62
+#, fuzzy
+#| msgid ""
+#| "Boot from an iSCSI target that has an iso or disk live image as one of "
+#| "its LUNs. The specified target is searched for a LUN which looks like a "
+#| "live media. If you use the B<iscsitarget> software iSCSI target solution "
+#| "your ietd.conf might look like this:"
 msgid ""
-"Boot from an iSCSI target that has an iso or disk live image as one of its "
+"Boot from an iSCSI target that has an ISO or disk live image as one of its "
 "LUNs. The specified target is searched for a LUN which looks like a live "
 "media. If you use the B<iscsitarget> software iSCSI target solution your "
 "ietd.conf might look like this:"
@@ -353,8 +379,12 @@ msgstr "B<fromiso>=I</イメージ/への/パス>"
 
 #. type: Plain text
 #: en/live-boot.7:73
+#, fuzzy
+#| msgid ""
+#| "Allows to use a filesystem from within an iso image that's available on "
+#| "live-media."
 msgid ""
-"Allows to use a filesystem from within an iso image that's available on live-"
+"Allows to use a filesystem from within an ISO image that's available on live-"
 "media."
 msgstr ""
 "Live メディア上で利用可能な ISO イメージ内からファイルシステムを利用できるよ"
@@ -470,9 +500,14 @@ msgstr "{B<live-media-encryption>|B<encryption>}=I<暗号化の種類>"
 
 #. type: Plain text
 #: en/live-boot.7:87
+#, fuzzy
+#| msgid ""
+#| "live-boot will mount the encrypted rootfs TYPE, asking the passphrase, "
+#| "useful to build paranoid live systems :-). TYPE supported so far are \"aes"
+#| "\" for loop-aes encryption type."
 msgid ""
 "live-boot will mount the encrypted rootfs TYPE, asking the passphrase, "
-"useful to build paranoid live systems :-). TYPE supported so far are \"aes\" "
+"useful to build paranoid live systems :-). TYPE supported so far is \"aes\" "
 "for loop-aes encryption type."
 msgstr ""
 "live-boot はパスフレーズを質問することで暗号化する種類の rootfs をマウントで"
@@ -487,10 +522,16 @@ msgstr "B<live-media-offset>=I<バイト数>"
 
 #. type: Plain text
 #: en/live-boot.7:89
+#, fuzzy
+#| msgid ""
+#| "This way you could tell live-boot that your image starts at offset BYTES "
+#| "in the above specified or autodiscovered device, this could be useful to "
+#| "hide the live system ISO or image inside another iso or image, to create "
+#| "\"clean\" images."
 msgid ""
 "This way you could tell live-boot that your image starts at offset BYTES in "
 "the above specified or autodiscovered device, this could be useful to hide "
-"the live system ISO or image inside another iso or image, to create \"clean"
+"the live system ISO or image inside another ISO or image, to create \"clean"
 "\" images."
 msgstr ""
 "このようにして、上記で指定したまたは自動検出したデバイスの、指定バイト数だけ"
@@ -628,11 +669,17 @@ msgstr "B<ramdisk-size>"
 
 #. type: Plain text
 #: en/live-boot.7:107
+#, fuzzy
+#| msgid ""
+#| "This parameters allows to set a custom ramdisk size (it's the '-o size' "
+#| "option of tmpfs mount). By default, there is no ramdisk size set, so the "
+#| "default of mount applies (currently 50% of available RAM). Note that this "
+#| "option has no currently no effect when booting with toram."
 msgid ""
-"This parameters allows to set a custom ramdisk size (it's the '-o size' "
+"This parameter allows to set a custom ramdisk size (it's the '-o size' "
 "option of tmpfs mount). By default, there is no ramdisk size set, so the "
 "default of mount applies (currently 50% of available RAM). Note that this "
-"option has no currently no effect when booting with toram."
+"option has currently no effect when booting with toram."
 msgstr ""
 "このパラメータにより独自の RAM ディスクサイズ (tmpfs マウント時の「-o サイ"
 "ズ」オプション) をセットできます。デフォルトでは RAM ディスクサイズはセットさ"
