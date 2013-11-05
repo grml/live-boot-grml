@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 2013\-10\-30 4.0~alpha17\-1 "Live システムプロジェクト"
+.TH LIVE\-BOOT 7 2013\-11\-05 4.0~alpha17\-1 "Live システムプロジェクト"
 
 .SH 名前
 \fBlive\-boot\fP \- システム起動構成要素
@@ -54,31 +54,24 @@ debug=1 としてください
 debug に値をセットしないとメッセージは表示されないかもしれません。
 .IP \fBfetch\fP=\fIURL\fP 4
 .IP \fBhttpfs\fP=\fIURL\fP 4
-Another form of netboot by downloading a squashfs image from a given URL.
-The fetch method copies the image to RAM and the httpfs method uses FUSE and
-httpfs2 to mount the image in place. Copying to RAM requires more memory and
-might take a long time for large images. However, it is more likely to work
-correctly because it does not require networking afterwards and the system
-operates faster once booted because it does not require to contact the
-server anymore.
+指定した URL から squashfs イメージをダウンロードしてネットワーク経由でブートする別のやり方で、この取得方法ではイメージを RAM
+にコピーし、httpfs を使う方法では FUSE と httpfs2 を使ってイメージを適切な位置にマウントします。RAM
+へのコピーにはさらに多くのメモリが必要で、大きなイメージでは多少時間がかかるかもしれません。しかしその後はネットワークを必要としないため正常に動作する可能性が高くなり、それ以上サーバとやりとりする必要がないためブート後はそのシステムは高速に動作します。
 .br
-Due to current limitations in busybox's wget and DNS resolution, an URL can
-not contain a hostname but an IP address only.
+busybox の現在の wget 及び DNS 解決の制限のために URL にはホスト名を使えず、IPアドレスにしか対応していません。
 .br
 機能しない: http://example.com/path/to/your_filesystem.squashfs
 .br
 機能する: http://1.2.3.4/path/to/your_filesystem.squashfs
 .br
-Also note that therefore it's currently not possible to fetch an image from
-a name\-based virtualhost of an httpd if it is sharing the IP address with
-the main httpd instance.
+また、そのため httpd の名前ベースのバーチャルホストからイメージを取得することは、httpd
+のそのホストの設定で同一のIPアドレスを共有している場合は現在不可能であることにも注意してください。
 .br
-You may also use the live ISO image in place of the squashfs image.
+また、squashfs イメージの適切な位置にある Live ISO イメージも利用できます。
 .IP \fBiscsi\fP=\fIサーバのIPアドレス[,サーバのポート];対象の名前\fP 4
-Boot from an iSCSI target that has an ISO or disk live image as one of its
-LUNs. The specified target is searched for a LUN which looks like a live
-media. If you use the \fBiscsitarget\fP software iSCSI target solution your
-ietd.conf might look like this:
+LUN (Logical Unit Number、論理ユニット番号) が ISO またはディスクの Live イメージを指している iSCSI
+ターゲットからのブートで、指定されたターゲットは LUN のうち Live メディアらしきものから検索されます。\fBiscsitarget\fP
+ソフトウェアを使って iSCSI ターゲットを判定している場合の ietd.conf はこのようになります:
 .br
 # iscsi= パラメータで指定したターゲットの名前
 .br
@@ -91,8 +84,7 @@ Target <ターゲットの名前>
 \&.squashfs ファイルを通常検索する位置にある全ディスクから、指定した ISO ファイルを検索します (そのため
 fromiso=... で指定するデバイス名を知っている必要はありません)。
 .IP \fBfromiso\fP=\fI/イメージ/への/パス\fP 4
-Allows to use a filesystem from within an ISO image that's available on
-live\-media.
+Live メディア上で利用可能な ISO イメージ内からファイルシステムを利用できるようにします。
 .IP \fBignore_uuid\fP 4
 検出したメディアに合う initramfs に埋め込まれた UUID の確認を一切行いません。initramfs のビルド時に
 LIVE_GENERATE_UUID=1 を設定して UUID を生成するように live\-boot に指示しているかもしれません。
@@ -114,14 +106,12 @@ ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp) かもしれませ�
 メディアを脱着可能なものだけに限定することができます。メディアを USB
 大容量記憶装置だけにさらに限定したい場合は「removable\-usb」というキーワードを使えることに注目してください。
 .IP {\fBlive\-media\-encryption\fP|\fBencryption\fP}=\fI暗号化の種類\fP 4
-live\-boot will mount the encrypted rootfs TYPE, asking the passphrase,
-useful to build paranoid live systems :\-). TYPE supported so far is "aes"
-for loop\-aes encryption type.
+live\-boot はパスフレーズを質問することで暗号化する種類の rootfs をマウントできます。凝った Live システムをビルドするのに有用です
+:\-)。これまでのところサポートしているのは loop\-aes 暗号化を指示する「aes」です。
 .IP \fBlive\-media\-offset\fP=\fIバイト数\fP 4
-This way you could tell live\-boot that your image starts at offset BYTES in
-the above specified or autodiscovered device, this could be useful to hide
-the live system ISO or image inside another ISO or image, to create "clean"
-images.
+このようにして、上記で指定したまたは自動検出したデバイスの、指定バイト数だけずれた位置からイメージが開始することを live\-boot
+に指示できます。他の ISO やイメージの中にある Live システムの ISO
+やイメージを見えないようにして「クリーン」なイメージを作成するのに有用かもしれません。
 .IP \fBlive\-media\-path\fP=\fIパス\fP 4
 メディア上の Live
 ファイルシステムへのパスをセットします。このデフォルト値は「/live」で、合わせてメディアを独自化していない限りこの値を変更すべきではありません。
@@ -146,10 +136,9 @@ images.
 .IP \fBnoeject\fP 4
 Live メディアを取り出すかどうか確認しません。
 .IP \fBramdisk\-size\fP 4
-This parameter allows to set a custom ramdisk size (it's the '\-o size'
-option of tmpfs mount). By default, there is no ramdisk size set, so the
-default of mount applies (currently 50% of available RAM). Note that this
-option has currently no effect when booting with toram.
+このパラメータにより独自の RAM ディスクサイズ (tmpfs マウント時の「\-o サイズ」オプション) をセットできます。デフォルトでは RAM
+ディスクサイズはセットされていないため、マウント時のデフォルト値が適用されます (現在は利用可能な RAM の 50%)。toram
+を指定してブートした場合、このオプションは現在のところ効果がないことに注意してください
 .IP \fBswapon\fP 4
 このパラメータはローカルのスワップパーティションの利用を有効にします。
 .IP \fBpersistence\fP 4

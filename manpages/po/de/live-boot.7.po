@@ -76,7 +76,7 @@ msgstr ""
 #. type: Plain text
 #: en/live-boot.7:14
 msgid ""
-"At boot time it will look for a (read-only) media containing a \"/live\" "
+"At boot time it will look for a (read-only) medium containing a \"/live\" "
 "directory where a root filesystems (often a compressed filesystem image like "
 "squashfs) is stored. If found, it will create a writable environment, using "
 "aufs, to boot the system from."
@@ -262,7 +262,7 @@ msgstr ""
 msgid ""
 "Boot from an iSCSI target that has an ISO or disk live image as one of its "
 "LUNs. The specified target is searched for a LUN which looks like a live "
-"media. If you use the B<iscsitarget> software iSCSI target solution your "
+"medium. If you use the B<iscsitarget> software iSCSI target solution your "
 "ietd.conf might look like this:"
 msgstr ""
 
