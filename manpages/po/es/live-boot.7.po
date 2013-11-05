@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 4.0~alpha17-1\n"
 "POT-Creation-Date: 2013-11-05 22:27+0100\n"
-"PO-Revision-Date: 2013-06-25 20:42+0100\n"
+"PO-Revision-Date: 2013-11-05 22:39+0100\n"
 "Last-Translator: Carlos Zuferri <chals@altorricon.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
@@ -14,6 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
@@ -242,15 +243,6 @@ msgstr "B<httpfs>=I<URL>"
 
 #. type: Plain text
 #: en/live-boot.7:50
-#, fuzzy
-#| msgid ""
-#| "Another form of netboot by downloading a squashfs image from a given "
-#| "url.  The fetch method copies the image to ram and the httpfs method uses "
-#| "fuse and httpfs2 to mount the image in place. Copying to ram requires "
-#| "more memory and might take a long time for large images. However, it is "
-#| "more likely to work correctly because it does not require networking "
-#| "afterwards and the system operates faster once booted because it does not "
-#| "require to contact the server anymore."
 msgid ""
 "Another form of netboot by downloading a squashfs image from a given URL.  "
 "The fetch method copies the image to RAM and the httpfs method uses FUSE and "
@@ -262,19 +254,15 @@ msgid ""
 msgstr ""
 "Otra forma de arranque en red mediante la descarga de una imagen squashfs a "
 "partir de una URL determinada. El método «fetch» copia la imagen en la "
-"memoria RAM y el método httpfs utiliza fuse y httpfs2 para montar la imagen "
+"memoria RAM y el método httpfs utiliza FUSE y httpfs2 para montar la imagen "
 "en su lugar. Copiar en la memoria RAM requiere más memoria y puede tardar "
 "mucho tiempo con imágenes de gran tamaño. Sin embargo, es más probable que "
 "funcione correctamente, ya que no requiere el uso de la red después y el "
 "sistema funciona más rápido una vez iniciado, debido a que ya no necesita "
-"más ponerse en contacto con el servidor."
+"ponerse más en contacto con el servidor."
 
 #. type: Plain text
 #: en/live-boot.7:52
-#, fuzzy
-#| msgid ""
-#| "Due to current limitations in busybox's wget and DNS resolution, an URL "
-#| "can not contain a hostname but an IP only."
 msgid ""
 "Due to current limitations in busybox's wget and DNS resolution, an URL can "
 "not contain a hostname but an IP address only."
@@ -295,11 +283,6 @@ msgstr "Funciona: http://ejemplo.com/ruta/al/sistema_de_ficheros.squashfs"
 
 #. type: Plain text
 #: en/live-boot.7:58
-#, fuzzy
-#| msgid ""
-#| "Also note that therefore it's currently not possible to fetch an image "
-#| "from a namebased virtualhost of an httpd if it is sharing the ip with the "
-#| "main httpd instance."
 msgid ""
 "Also note that therefore it's currently not possible to fetch an image from "
 "a name-based virtualhost of an httpd if it is sharing the IP address with "
@@ -307,15 +290,13 @@ msgid ""
 msgstr ""
 "Tener en cuenta también que, por lo tanto, no es posible en la actualidad ir "
 "a buscar una imagen en un host virtual basado en nombre de un httpd si está "
-"compartiendo la ip con la instancia principal httpd."
+"compartiendo la IP con la instancia principal httpd."
 
 #. type: Plain text
 #: en/live-boot.7:60
-#, fuzzy
-#| msgid "You may also use the live iso image in place of the squashfs image."
 msgid "You may also use the live ISO image in place of the squashfs image."
 msgstr ""
-"También se puede utilizar la imagen iso en vivo en lugar de la imagen "
+"También se puede utilizar la imagen ISO en vivo en lugar de la imagen "
 "squashfs."
 
 #. type: IP
@@ -326,19 +307,13 @@ msgstr "B<iscsi>=I<server-ip[,server-port];target-name>"
 
 #. type: Plain text
 #: en/live-boot.7:62
-#, fuzzy
-#| msgid ""
-#| "Boot from an iSCSI target that has an iso or disk live image as one of "
-#| "its LUNs. The specified target is searched for a LUN which looks like a "
-#| "live media. If you use the B<iscsitarget> software iSCSI target solution "
-#| "your ietd.conf might look like this:"
 msgid ""
 "Boot from an iSCSI target that has an ISO or disk live image as one of its "
 "LUNs. The specified target is searched for a LUN which looks like a live "
 "media. If you use the B<iscsitarget> software iSCSI target solution your "
 "ietd.conf might look like this:"
 msgstr ""
-"Arranca desde un iSCSI que tiene una iso o una imagen de disco en vivo como "
+"Arranca desde un iSCSI que tiene una ISO una imagen de disco en vivo como "
 "uno de sus LUNs. Se busca en el objetivo especificado un LUN que sea similar "
 "a un medio en vivo. Si se utiliza el software de iSCSI B<iscsitarget> el "
 "ietd.conf podría ser similar al siguiente: "
@@ -386,15 +361,11 @@ msgstr "B<fromiso>=I</PATH/TO/IMAGE>"
 
 #. type: Plain text
 #: en/live-boot.7:73
-#, fuzzy
-#| msgid ""
-#| "Allows to use a filesystem from within an iso image that's available on "
-#| "live-media."
 msgid ""
 "Allows to use a filesystem from within an ISO image that's available on live-"
 "media."
 msgstr ""
-"Permite utilizar un sistema de ficheros desde dentro de una imagen iso que "
+"Permite utilizar un sistema de ficheros desde dentro de una imagen ISO que "
 "está disponible en los medios en vivo."
 
 #. type: IP
@@ -511,17 +482,12 @@ msgstr "{B<live-media-encryption>|B<encryption>}=I<TYPE>"
 
 #. type: Plain text
 #: en/live-boot.7:87
-#, fuzzy
-#| msgid ""
-#| "live-boot will mount the encrypted rootfs TYPE, asking the passphrase, "
-#| "useful to build paranoid live systems :-). TYPE supported so far are \"aes"
-#| "\" for loop-aes encryption type."
 msgid ""
 "live-boot will mount the encrypted rootfs TYPE, asking the passphrase, "
 "useful to build paranoid live systems :-). TYPE supported so far is \"aes\" "
 "for loop-aes encryption type."
 msgstr ""
-"live-boot montará el TYPE rotfs cifrado,  pidiendo la contraseña. Es útil "
+"live-boot montará el TYPE rotfs cifrado, pidiendo la contraseña. Es útil "
 "para crear sistemas en vivo paranoicos :-) Hasta el momento el TYPE "
 "soportado es \"aes\" para cifrado loop-aes."
 
@@ -533,12 +499,6 @@ msgstr "B<live-media-offset>=I<BYTES>"
 
 #. type: Plain text
 #: en/live-boot.7:89
-#, fuzzy
-#| msgid ""
-#| "This way you could tell live-boot that your image starts at offset BYTES "
-#| "in the above specified or autodiscovered device, this could be useful to "
-#| "hide the live system ISO or image inside another iso or image, to create "
-#| "\"clean\" images."
 msgid ""
 "This way you could tell live-boot that your image starts at offset BYTES in "
 "the above specified or autodiscovered device, this could be useful to hide "
@@ -547,7 +507,7 @@ msgid ""
 msgstr ""
 "De esta manera se puede especificar a live-boot que la imagen comienza en "
 "BYTES en el dispositivo anteriormente especificado, o auto-descubierto, esto "
-"podría ser útil para esconder la iso o la imagen dentro de otra iso o "
+"podría ser útil para esconder la ISO o la imagen dentro de otra ISO o "
 "imagen, para crear imágenes \"limpias\"."
 
 #. type: IP
@@ -680,12 +640,6 @@ msgstr "B<ramdisk-size>"
 
 #. type: Plain text
 #: en/live-boot.7:107
-#, fuzzy
-#| msgid ""
-#| "This parameters allows to set a custom ramdisk size (it's the '-o size' "
-#| "option of tmpfs mount). By default, there is no ramdisk size set, so the "
-#| "default of mount applies (currently 50% of available RAM). Note that this "
-#| "option has no currently no effect when booting with toram."
 msgid ""
 "This parameter allows to set a custom ramdisk size (it's the '-o size' "
 "option of tmpfs mount). By default, there is no ramdisk size set, so the "
@@ -696,7 +650,7 @@ msgstr ""
 "es la opción '-o size' del montaje tmpfs). No hay un tamaño de ramdisk "
 "predeterminado, por lo que se aplica el valor por defecto (actualmente el "
 "50% de la RAM disponible). Tener en cuenta que esta opción no tiene "
-"actualmente ningún efecto cuando se arranca con toram"
+"actualmente ningún efecto cuando se arranca con toram."
 
 #. type: IP
 #: en/live-boot.7:107
