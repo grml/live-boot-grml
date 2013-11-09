@@ -248,7 +248,7 @@ msgstr ""
 #: en/persistence.conf.5:60
 #, no-wrap
 msgid "B<source>=I<PATH>"
-msgstr "B<sourcee>=I<パス>"
+msgstr "B<source>=I<パス>"
 
 #. type: Plain text
 #: en/persistence.conf.5:69
