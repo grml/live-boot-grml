@@ -3,110 +3,69 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT conf 2013\-10\-30 4.0~alpha17\-1 "Live システムプロジェクト"
+.TH LIVE\-BOOT conf 2013\-11\-05 4.0~alpha17\-1 "Live システムプロジェクト"
 
 .SH 名前
-\fBpersistence.conf\fP \- Configuration file for persistence media in live\-boot
+\fBpersistence.conf\fP \- live\-boot 状態保持用メディアの設定ファイル
 
 .SH 説明
-If live\-boot probes a persistence volume with the label (or GPT name, or
-file name, but from now on we will just say "label") "persistence", that
-volume's persistence is fully customizable through the \fBpersistence.conf\fP
-file stored on the root of its file system. Any such labeled volume must
-have such a file, or it will be ignored.
+live\-boot が「persistence」というラベル (GPT の名前やファイル名も含みますがここからは「ラベル」と呼びます)
+を付けられた保持用ボリュームを調査するとき、そのボリュームの保持方法はそのファイルシステムの最上部に置かれた \fBpersistence.conf\fP
+ファイルにより全面的に独自化できます。こういったラベルを付けられたボリュームにはそういったファイルがないといけません。ない場合は無視します。
 .PP
-The format of \fBpersistence.conf\fP allows empty lines and lines starting with
-a "#" (used for comments), both which will be ignored. A so called "custom
-mount" has the format:
+\fBpersistence.conf\fP の形式では空行や「#」で始まる行 (コメント用)
+を両方とも利用でき、そういった行は解釈されず無視されます。いわゆる「独自マウント」は
 .PP
 .RS
-\fIDIR\fP [\fIOPTION\fP]...
+\fIディレクトリ\fP [\fIオプション\fP]...
 .RE
 .PP
-which roughly translates to "make \fIDIR\fP persistence in the way described by
-the list of \fIOPTION\fPs".
+の形式で、大まかに言い換えると「\fIオプション\fP一覧により指示した方法で\fIディレクトリ\fPを保持する」ということになります。
 .PP
-For each custom mount \fIDIR\fP must be an absolute path that cannot contain
-white spaces or the special . and .. path components, and cannot be /live
-(or any of its sub\-directories).  Once activated all changes (file deletion,
-creation and modification) to \fIDIR\fP on the live file system are stored
-persistently into a path equivalent to \fIDIR\fP on the persistence media,
-called the source directory. The default way to achieve persistence is to
-simply bind\-mount the corresponding source directory to \fIDIR\fP, but this can
-be changed through the use of \fIOPTION\fPs.
+独自マウントそれぞれについて\fIディレクトリ\fPには絶対パスを使う必要があり、空白文字や特別なパスである「.」や「..」を含めること、/live
+(やそのサブディレクトリ) を使うことはできません。Live ファイルシステムの\fIディレクトリ\fPに対するあらゆる変更 (ファイルの削除や作成、変更)
+はそれを有効にした段階でソースディレクトリと呼ばれる保持用メディアの\fIディレクトリ\fPに相当するパスに持続的に保管されます。保持を実現するデフォルトの方法は対応するソースディレクトリをバインド型のマウントを\fIディレクトリ\fPに対して単純に行う方法ですが、これは\fIオプション\fPを使うことで変更できます。
 .PP
-All custom mounts will be done in an order so that no two custom mounts can
-"hide" each other. For instance, if we have the two \fIDIR\fP:s /a and /a/b it
-would always be the case that /a is mounted first, then /a/b. This remains
-true no matter how the lines in \fBpersistence.conf\fP are ordered, or if
-several \fBpersistence.conf\fP files on different persistence media are used at
-the same time. However, it is forbidden for custom mounts to have their
-source directory inside the source directory of another custom mount, so the
-source directories that are auto\-created by live\-boot does not support
-"nested" mounts like /a and /a/b on the same media. In this case you must
-use the \fBsource\fP option (see below) to make sure that they are stored in
-different source directories.
+独自マウントは全て順番に行われるため、2つの独自マウントで互いに「隠す」ようなことはできません。例えば2つの\fIディレクトリ\fP /a と /a/b
+があるとすると、この場合は常にまず /a がマウントされ、それから /a/b がマウントされます。これは \fBpersistence.conf\fP
+の他の行の順を問わず成り立ち、異なる保持用メディアにある複数の \fBpersistence.conf\fP
+ファイルを同時に使う場合でも同様です。しかし、独自マウントではソースディレクトリを別の独自マウントのソースディレクトリ内にすることは禁止されているため、live\-boot
+により自動生成されたソースディレクトリは同一のメディアでの /a と /a/b のような「入り組んだ」マウントをサポートしません。この場合は
+\fBsource\fP オプション (以下参照) を使い、対象ディレクトリが必ず異なるソースディレクトリにあるようにしないといけません。
 .PP
-When a source directory doesn't exist on the persistence media for a certain
-custom mount, it will be created automatically, and permissions and
-ownership will be optimistically set according to \fIDIR\fP. It will also be
-bootstrapped by copying the contents of the \fIDIR\fP into its source directory
-on the persistence media. The bootstrapping will not happen when the \fBlink\fP
-or \fBunion\fP options are used (see below).
+特定の独自マウントのソースディレクトリが保持用メディアに存在しない場合は自動的に作成され、その\fIディレクトリ\fPにふさわしい権限と所有がセットされます。\fIディレクトリ\fPの内容を保持用メディアのソースディレクトリにコピーすることでもこの自動処理は行われます。\fBlink\fP
+や \fBunion\fP オプション (以下参照) を使った場合はこの自動処理は行われません。
 
 .SH オプション
-Custom mounts defined in \fBpersistence.conf\fP accept the following options in
-a coma\-separated list:
-.IP \fBsource\fP=\fIPATH\fP 4
-When given, store the persistence changes into \fIPATH\fP on the persistence
-media. \fIPATH\fP must be a relative path (with respect to the persistence
-media root) that cannot contain white spaces or the special . or .. path
-components, with the exception that it can be just . which means the
-persistence media root. This option is mostly relevant if you want to nest
-custom mounts, which otherwise would cause errors, or if you want to make
-the whole media root available (similar to the now deprecated \fBhome\-rw\fP
-type of persistence).
+\fBpersistence.conf\fP で定義する独自マウントでは以下のオプションをコンマで区切った一覧の形で受け付けます:
+.IP \fBsourcee\fP=\fIパス\fP 4
+指定した場合は保持用メディアの\fIパス\fPに保持内容の変更を保管します。\fIパス\fPは (その保持用メディアのルートからの)
+相対パスを使う必要があり、空白文字や特別なパスである「.」や「..」については、「.」だけが単体で使われたときにはその保持用メディアのルートを指しますが、その例外を除いて含めることができません。このオプションが関連するのはほとんどが、これ以外ではエラーを引き起こす入り組んだ独自マウントにしたい場合、またはメディア全体のルートを利用できるようにしたい場合です
+(現在では非推奨となっている \fBhome\-rw\fP という種類の保持に似ています)。
 .PP
-The following options are mutually exclusive (only the last given one will
-be in effect):
+以下のオプションは相互に排他です (効果があるのは最後に指定したものだけです):
 .IP \fBbind\fP 4
-Bind\-mount the source directory to \fIDIR\fP. This is the default.
+ソースディレクトリを\fIディレクトリ\fPに対してバインド型のマウントを行います。これはデフォルトです。
 .IP \fBlink\fP 4
-Create the directory structure of the source directory on the persistence
-media in \fIDIR\fP and create symbolic links from the corresponding place in
-\fIDIR\fP to each file in the source directory.  Existing files or directories
-with the same name as any link will be overwritten. Note that deleting the
-links in \fIDIR\fP will only remove the link, not the corresponding file in the
-source; removed links will reappear after a reboot. To permanently add or
-delete a file one must do so directly in the source directory.
+ソースディレクトリのディレクトリ構造を保持用メディアの\fIディレクトリ\fPに作成し、\fIディレクトリ\fPの対応する位置からソースディレクトリの各ファイルに向けてシンボリックリンクを作成します。リンクと同一名の既存のファイルやディレクトリは全て上書きされます。\fIディレクトリ\fP内にあるリンクの削除はリンクを削除するだけで、ソースの対応するファイルは削除しないことに注意してください。削除したリンクは再起動後には再び現れます。ファイルを恒久的に追加、削除するにはソースディレクトリで直接その作業を行わないといけません。
 .IP
-Effectively \fBlink\fP will make only files already in the source directory
-persistent, not any other files in \fIDIR\fP. These files must be manually
-added to the source directory to make use of this option, and they will
-appear in \fIDIR\fP in addition to files already there. This option is useful
-when only certain files need to be persistent, not the whole directory
-they're in, e.g. some configuration files in a user's home directory.
+事実上、\fBlink\fP
+は既にソースディレクトリにあるファイルだけを保持し、\fIディレクトリ\fPにあるそれ以外のファイルは保持しません。保持するファイルをこのオプションの対象とするには手作業によりソースディレクトリに追加する必要があり、そうすることで\fIディレクトリ\fPに、既にそこにあるファイルに加えて現れるようになります。このオプションは特定のファイルだけを保持する必要があり、それがあるディレクトリ全体が必要ではない場合、例えばユーザのホームディレクトリにある設定ファイルの一部を保持する場合に有用です。
 .IP \fBunion\fP 4
-Save the rw branch of a union on the persistence media, so only the changes
-are stored persistently. This can potentially reduce disk usage compared to
-bind\-mounts, and will not hide files added to the read\-only media. One
-caveat is that the union will use \fIDIR\fP from the image's read\-only file
-system, not the real file system root, so files created after boot (e.g. by
-live\-config) will not appear in the union. This option will use the union
-file system specified by live\-boot's \fBunion\fP boot parameter, but is not
-supported with \fBunion=unionmount\fP.
+結合ファイルシステムの rw
+ブランチを保持用メディアに保存するため、変更点だけを持続的に保管します。バインド型のマウントと比較するとこの方法は潜在的にディスク使用量を減らせる可能性があり、また読み取り専用メディアに追加したファイルを隠しません。1つ注意があり、結合後に実際のファイルシステムのルートではなくイメージの読み取り専用ファイルシステムから\fIディレクトリ\fPを使うため、(例えば
+live\-config により) ブート後に作成されたファイルは結合後には見えなくなります。このオプションは live\-boot の \fBunion\fP
+ブートパラメータにより指定された結合ファイルシステムを使いますが、\fBunion=unionmount\fP ではサポートしていません。
 
-.SH DIRECTORIES
+.SH ディレクトリ
 .IP \fB/live/persistence\fP 4
-All persistence volumes will be mounted here (in a directory corresponding
-to the device name). The \fBpersistence.conf\fP file can easily be edited
-through this mount, as well as any source directories (which is especially
-practical for custom mounts using the \fBlink\fP option).
+保持用ボリュームは全てここで (デバイス名に対応するディレクトリで) マウントされます。\fBpersistence.conf\fP
+ファイルはこのマウントや任意のソースディレクトリから (\fBlink\fP オプションを使った独自マウントではこちらが特に実用的) 簡単に編集できます。
 
-.SH EXAMPLES
+.SH 例
 
-Let's say we have a persistence volume \fIVOL\fP with the a \fBpersistence.conf\fP
-file containing the following four lines (numbered for ease of reference):
+保持用ボリューム \fIVOL\fP があり、その \fBpersistence.conf\fP ファイルに以下の4行を収録しているものとしましょう
+(番号は参照しやすいように付加しています):
 .TP  7
 1.
 /home/user1 link,source=config\-files/user1
@@ -120,15 +79,13 @@ file containing the following four lines (numbered for ease of reference):
 4.
 /usr union
 .PP
-The corresponding source directories are:
+それぞれに対応するディレクトリ:
 .TP  7
 1.
-\fIVOL\fP/config\-files/user1 (but it would be \fIVOL\fP/home/user1 without the
-\fBsource\fP option)
+\fIVOL\fP/config\-files/user1 (ただし \fBsource\fP オプションを指定しない場合は \fIVOL\fP/home/user1)
 .TP 
 2.
-\fIVOL\fP/config\-files/user2 (but it would be \fIVOL\fP/home/user2 without the
-\fBsource\fP option)
+\fIVOL\fP/config\-files/user2 (ただし \fBsource\fP オプションを指定しない場合は \fIVOL\fP/home/user2)
 .TP 
 3.
 \fIVOL\fP/home
@@ -136,13 +93,11 @@ The corresponding source directories are:
 4.
 \fIVOL\fP/usr
 .PP
-It was necessary to set the \fBsource\fP options for 1 and 2, since they
-otherwise would become nested with 3's source, which is invalid.
+1と2の例では \fBsource\fP オプションをセットする必要があります。そうしないと3のソースと入り組んでしまい不正となるためです。
 .PP
-Line 3 will be taken care of before line 1 and 2 in order to prevent custom
-mounts 1 and 2 from being hidden by 3. When line 3 is handled, \fIVOL\fP/home
-is simply bind\-mounted on /home. To illustrate what happens for lines 1 and
-2, let's say that the following files exist:
+1行目と2行目の独自マウントが3行目によって隠されるのを回避するため3行目は1行目と2行目よりも先に処理されます。3行目が処理された時点で
+\fIVOL\fP/home は単純に /home
+に対するバインド型のマウントが行われた状態になります。1行目と2行目で起きたことを説明するため、以下のファイルが存在するとしましょう:
 .TP  7
 a.
 \fIVOL\fP/config\-files/user1/.emacs
@@ -153,34 +108,29 @@ b.
 c.
 \fIVOL\fP/config\-files/user2/.ssh/config
 .PP
-Then the following links and directories will be created:
+それにより作成されるリンクやディレクトリ:
 .TP  7
-Link:
-/home/user1/.emacs \-> \fIVOL\fP/config\-files/user1/.emacs (from a)
+リンク:
+/home/user1/.emacs \-> \fIVOL\fP/config\-files/user1/.emacs (a の場合)
 .TP 
-Link:
-/home/user2/.bashrc \-> \fIVOL\fP/config\-files/user2/.bashrc (from b)
+リンク:
+/home/user2/.bashrc \-> \fIVOL\fP/config\-files/user2/.bashrc (b の場合)
 .TP 
-Dir:
-/homea/user2/.ssh (from c)
+ディレクトリ:
+/homea/user2/.ssh (c の場合)
 .TP 
-Link:
-/home/user2/.ssh/config \-> \fIVOL\fP/config\-files/user2/.ssh/config (from
-c)
+リンク:
+/home/user2/.ssh/config \-> \fIVOL\fP/config\-files/user2/.ssh/config (c の場合)
 .PP
-One could argue, though, that lines 1 and 2 in the example
-\fBpersistence.conf\fP file above are unnecessary since line 3 already would
-make all of /home persistent. The \fBlink\fP option is intended for situations
-where you don't want a complete directory to be persistent, only certain
-files in it or its sub\-directories.
+別の主張があるかもしれませんが、上記の \fBpersistence.conf\fP ファイルの例では3行目が既に /home
+の全てを保持対象としているため1行目と2行目は不要です。\fBlink\fP
+オプションはディレクトリ全体を保持したいのではなく、そのディレクトリ中やサブディレクトリにある特定のファイルを保持したいという状況を対象としています。
 .PP
-Line 4 can be mounted at any time since its \fIDIR\fP (and source directory) is
-completely disjoint from all the other custom mounts. When mounted,
-\fIVOL\fP/usr will be the rw branch due to the \fBunion\fP option, and will only
-contain the difference compared to the underlying read\-only file
-system. Hence packages could be installed into /usr with great space\-wise
-efficiency compared to bind\-mounts, since in the latter case all of /usr
-would have to be copied into \fIVOL\fP/usr during the initial bootstrap.
+4行目はその\fIディレクトリ\fP (とソースディレクトリ)
+が他のどの独自マウントとも完全に分離しているためいつでもマウントできます。マウントすると、\fIVOL\fP/usr は \fBunion\fP
+オプションが指定されているため rw
+ブランチになり、元の読み取り専用ファイルシステムと比較した差分だけが収録されます。そのため、バインド型のマウントと比較すると容量の面で非常に効率良くパッケージを
+/usr にインストールできます。これは後者では初期の自動処理で /usr 全体を \fIVOL\fP/usr にコピーする必要があるためです。
 
 .SH 関連項目
 \fIlive\-boot\fP(7)

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 4.0~alpha17-1\n"
 "POT-Creation-Date: 2013-11-05 20:30+0100\n"
-"PO-Revision-Date: 2013-04-13 16:48+0100\n"
+"PO-Revision-Date: 2013-11-06 04:30+0900\n"
 "Last-Translator: victory <victory.deb@gmail.com>\n"
 "Language-Team: none\n"
 "Language: ja\n"
@@ -24,7 +24,7 @@ msgstr "LIVE-BOOT"
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "2013-11-05"
-msgstr "2013-10-30"
+msgstr "2013-11-05"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
@@ -131,7 +131,7 @@ msgstr ""
 #: en/persistence.conf.5:6
 msgid ""
 "B<persistence.conf> - Configuration file for persistence media in live-boot"
-msgstr ""
+msgstr "B<persistence.conf> - live-boot 状態保持用メディアの設定ファイル"
 
 #. type: Plain text
 #: en/persistence.conf.5:13
@@ -142,6 +142,11 @@ msgid ""
 "file stored on the root of its file system. Any such labeled volume must "
 "have such a file, or it will be ignored."
 msgstr ""
+"live-boot が「persistence」というラベル (GPT の名前やファイル名も含みますがこ"
+"こからは「ラベル」と呼びます) を付けられた保持用ボリュームを調査するとき、その"
+"ボリュームの保持方法はそのファイルシステムの最上部に置かれた B<persistence."
+"conf> ファイルにより全面的に独自化できます。こういったラベルを付けられたボ"
+"リュームにはそういったファイルがないといけません。ない場合は無視します。"
 
 #. type: Plain text
 #: en/persistence.conf.5:17
@@ -150,11 +155,13 @@ msgid ""
 "a \"#\" (used for comments), both which will be ignored. A so called "
 "\"custom mount\" has the format:"
 msgstr ""
+"B<persistence.conf> の形式では空行や「#」で始まる行 (コメント用) を両方とも利"
+"用でき、そういった行は解釈されず無視されます。いわゆる「独自マウント」は"
 
 #. type: Plain text
 #: en/persistence.conf.5:20
 msgid "I<DIR> [I<OPTION>]..."
-msgstr ""
+msgstr "I<ディレクトリ> [I<オプション>]..."
 
 #. type: Plain text
 #: en/persistence.conf.5:24
@@ -162,6 +169,8 @@ msgid ""
 "which roughly translates to \"make I<DIR> persistence in the way described "
 "by the list of I<OPTION>s\"."
 msgstr ""
+"の形式で、大まかに言い換えると「I<オプション>一覧により指示した方法でI<ディレ"
+"クトリ>を保持する」ということになります。"
 
 #. type: Plain text
 #: en/persistence.conf.5:35
@@ -175,6 +184,14 @@ msgid ""
 "simply bind-mount the corresponding source directory to I<DIR>, but this can "
 "be changed through the use of I<OPTION>s."
 msgstr ""
+"独自マウントそれぞれについてI<ディレクトリ>には絶対パスを使う必要があり、空白"
+"文字や特別なパスである「.」や「..」を含めること、/live (やそのサブディレクト"
+"リ) を使うことはできません。Live ファイルシステムのI<ディレクトリ>に対するあら"
+"ゆる変更 (ファイルの削除や作成、変更) はそれを有効にした段階でソースディレクト"
+"リと呼ばれる保持用メディアのI<ディレクトリ>に相当するパスに持続的に保管されま"
+"す。保持を実現するデフォルトの方法は対応するソースディレクトリをバインド型のマ"
+"ウントをI<ディレクトリ>に対して単純に行う方法ですが、これはI<オプション>を使う"
+"ことで変更できます。"
 
 #. type: Plain text
 #: en/persistence.conf.5:48
@@ -191,6 +208,16 @@ msgid ""
 "use the B<source> option (see below) to make sure that they are stored in "
 "different source directories."
 msgstr ""
+"独自マウントは全て順番に行われるため、2つの独自マウントで互いに「隠す」ような"
+"ことはできません。例えば2つのI<ディレクトリ> /a と /a/b があるとすると、この場"
+"合は常にまず /a がマウントされ、それから /a/b がマウントされます。これは "
+"B<persistence.conf> の他の行の順を問わず成り立ち、異なる保持用メディアにある複"
+"数の B<persistence.conf> ファイルを同時に使う場合でも同様です。しかし、独自マ"
+"ウントではソースディレクトリを別の独自マウントのソースディレクトリ内にすること"
+"は禁止されているため、live-boot により自動生成されたソースディレクトリは同一の"
+"メディアでの /a と /a/b のような「入り組んだ」マウントをサポートしません。この"
+"場合は B<source> オプション (以下参照) を使い、対象ディレクトリが必ず異なる"
+"ソースディレクトリにあるようにしないといけません。"
 
 #. type: Plain text
 #: en/persistence.conf.5:56
@@ -202,6 +229,11 @@ msgid ""
 "on the persistence media. The bootstrapping will not happen when the B<link> "
 "or B<union> options are used (see below)."
 msgstr ""
+"特定の独自マウントのソースディレクトリが保持用メディアに存在しない場合は自動的"
+"に作成され、そのI<ディレクトリ>にふさわしい権限と所有がセットされます。I<ディ"
+"レクトリ>の内容を保持用メディアのソースディレクトリにコピーすることでもこの自"
+"動処理は行われます。B<link> や B<union> オプション (以下参照) を使った場合はこ"
+"の自動処理は行われません。"
 
 #. type: Plain text
 #: en/persistence.conf.5:60
@@ -209,13 +241,14 @@ msgid ""
 "Custom mounts defined in B<persistence.conf> accept the following options in "
 "a coma-separated list:"
 msgstr ""
+"B<persistence.conf> で定義する独自マウントでは以下のオプションをコンマで区切っ"
+"た一覧の形で受け付けます:"
 
 #. type: IP
 #: en/persistence.conf.5:60
-#, fuzzy, no-wrap
-#| msgid "B<module>=I<NAME>"
+#, no-wrap
 msgid "B<source>=I<PATH>"
-msgstr "B<module>=I<名前>"
+msgstr "B<sourcee>=I<パス>"
 
 #. type: Plain text
 #: en/persistence.conf.5:69
@@ -229,6 +262,13 @@ msgid ""
 "the whole media root available (similar to the now deprecated B<home-rw> "
 "type of persistence)."
 msgstr ""
+"指定した場合は保持用メディアのI<パス>に保持内容の変更を保管します。I<パス>は "
+"(その保持用メディアのルートからの) 相対パスを使う必要があり、空白文字や特別な"
+"パスである「.」や「..」については、「.」だけが単体で使われたときにはその保持用"
+"メディアのルートを指しますが、その例外を除いて含めることができません。このオプ"
+"ションが関連するのはほとんどが、これ以外ではエラーを引き起こす入り組んだ独自マ"
+"ウントにしたい場合、またはメディア全体のルートを利用できるようにしたい場合で"
+"す (現在では非推奨となっている B<home-rw> という種類の保持に似ています)。"
 
 #. type: Plain text
 #: en/persistence.conf.5:72
@@ -236,23 +276,26 @@ msgid ""
 "The following options are mutually exclusive (only the last given one will "
 "be in effect):"
 msgstr ""
+"以下のオプションは相互に排他です (効果があるのは最後に指定したものだけです):"
 
 #. type: IP
 #: en/persistence.conf.5:72
 #, no-wrap
 msgid "B<bind>"
-msgstr ""
+msgstr "B<bind>"
 
 #. type: Plain text
 #: en/persistence.conf.5:74
 msgid "Bind-mount the source directory to I<DIR>. This is the default."
 msgstr ""
+"ソースディレクトリをI<ディレクトリ>に対してバインド型のマウントを行います。こ"
+"れはデフォルトです。"
 
 #. type: IP
 #: en/persistence.conf.5:74
 #, no-wrap
 msgid "B<link>"
-msgstr ""
+msgstr "B<link>"
 
 #. type: Plain text
 #: en/persistence.conf.5:83
@@ -265,6 +308,13 @@ msgid ""
 "source; removed links will reappear after a reboot. To permanently add or "
 "delete a file one must do so directly in the source directory."
 msgstr ""
+"ソースディレクトリのディレクトリ構造を保持用メディアのI<ディレクトリ>に作成"
+"し、I<ディレクトリ>の対応する位置からソースディレクトリの各ファイルに向けて"
+"シンボリックリンクを作成します。リンクと同一名の既存のファイルやディレクトリは"
+"全て上書きされます。I<ディレクトリ>内にあるリンクの削除はリンクを削除するだけ"
+"で、ソースの対応するファイルは削除しないことに注意してください。削除したリンク"
+"は再起動後には再び現れます。ファイルを恒久的に追加、削除するにはソースディレク"
+"トリで直接その作業を行わないといけません。"
 
 #. type: Plain text
 #: en/persistence.conf.5:91
@@ -276,12 +326,19 @@ msgid ""
 "when only certain files need to be persistent, not the whole directory "
 "they're in, e.g. some configuration files in a user's home directory."
 msgstr ""
+"事実上、B<link> は既にソースディレクトリにあるファイルだけを保持し、I<ディレク"
+"トリ>にあるそれ以外のファイルは保持しません。保持するファイルをこのオプション"
+"の対象とするには手作業によりソースディレクトリに追加する必要があり、そうするこ"
+"とでI<ディレクトリ>に、既にそこにあるファイルに加えて現れるようになります。こ"
+"のオプションは特定のファイルだけを保持する必要があり、それがあるディレクトリ全"
+"体が必要ではない場合、例えばユーザのホームディレクトリにある設定ファイルの一部"
+"を保持する場合に有用です。"
 
 #. type: IP
 #: en/persistence.conf.5:91
 #, no-wrap
 msgid "B<union>"
-msgstr ""
+msgstr "B<union>"
 
 #. type: Plain text
 #: en/persistence.conf.5:101
@@ -295,19 +352,26 @@ msgid ""
 "file system specified by live-boot's B<union> boot parameter, but is not "
 "supported with B<union=unionmount>."
 msgstr ""
+"結合ファイルシステムの rw ブランチを保持用メディアに保存するため、変更点だけを"
+"持続的に保管します。バインド型のマウントと比較するとこの方法は潜在的にディスク"
+"使用量を減らせる可能性があり、また読み取り専用メディアに追加したファイルを隠し"
+"ません。1つ注意があり、結合後に実際のファイルシステムのルートではなくイメージ"
+"の読み取り専用ファイルシステムからI<ディレクトリ>を使うため、(例えば live-"
+"config により) ブート後に作成されたファイルは結合後には見えなくなります。この"
+"オプションは live-boot の B<union> ブートパラメータにより指定された結合ファイ"
+"ルシステムを使いますが、B<union=unionmount> ではサポートしていません。"
 
 #. type: SH
 #: en/persistence.conf.5:102
 #, no-wrap
 msgid "DIRECTORIES"
-msgstr ""
+msgstr "ディレクトリ"
 
 #. type: IP
 #: en/persistence.conf.5:103
-#, fuzzy, no-wrap
-#| msgid "B<persistence>"
+#, no-wrap
 msgid "B</live/persistence>"
-msgstr "B<persistence>"
+msgstr "B</live/persistence>"
 
 #. type: Plain text
 #: en/persistence.conf.5:109
@@ -317,12 +381,16 @@ msgid ""
 "through this mount, as well as any source directories (which is especially "
 "practical for custom mounts using the B<link> option)."
 msgstr ""
+"保持用ボリュームは全てここで (デバイス名に対応するディレクトリで) マウントされ"
+"ます。B<persistence.conf> ファイルはこのマウントや任意のソースディレクトリか"
+"ら (B<link> オプションを使った独自マウントではこちらが特に実用的) 簡単に編集で"
+"きます。"
 
 #. type: SH
 #: en/persistence.conf.5:110
 #, no-wrap
 msgid "EXAMPLES"
-msgstr ""
+msgstr "例"
 
 #. type: Plain text
 #: en/persistence.conf.5:115
@@ -330,55 +398,57 @@ msgid ""
 "Let's say we have a persistence volume I<VOL> with the a B<persistence.conf> "
 "file containing the following four lines (numbered for ease of reference):"
 msgstr ""
+"保持用ボリューム I<VOL> があり、その B<persistence.conf> ファイルに以下の4行を"
+"収録しているものとしましょう (番号は参照しやすいように付加しています):"
 
 #. type: TP
 #: en/persistence.conf.5:115 en/persistence.conf.5:129
 #, no-wrap
 msgid "1."
-msgstr ""
+msgstr "1."
 
 #. type: Plain text
 #: en/persistence.conf.5:118
 msgid "/home/user1 link,source=config-files/user1"
-msgstr ""
+msgstr "/home/user1 link,source=config-files/user1"
 
 #. type: TP
 #: en/persistence.conf.5:118 en/persistence.conf.5:133
 #, no-wrap
 msgid "2."
-msgstr ""
+msgstr "2."
 
 #. type: Plain text
 #: en/persistence.conf.5:121
 msgid "/home/user2 link,source=config-files/user2"
-msgstr ""
+msgstr "/home/user2 link,source=config-files/user2"
 
 #. type: TP
 #: en/persistence.conf.5:121 en/persistence.conf.5:137
 #, no-wrap
 msgid "3."
-msgstr ""
+msgstr "3."
 
 #. type: Plain text
 #: en/persistence.conf.5:124
 msgid "/home"
-msgstr ""
+msgstr "/home"
 
 #. type: TP
 #: en/persistence.conf.5:124 en/persistence.conf.5:140
 #, no-wrap
 msgid "4."
-msgstr ""
+msgstr "4."
 
 #. type: Plain text
 #: en/persistence.conf.5:127
 msgid "/usr union"
-msgstr ""
+msgstr "/usr union"
 
 #. type: Plain text
 #: en/persistence.conf.5:129
 msgid "The corresponding source directories are:"
-msgstr ""
+msgstr "それぞれに対応するディレクトリ:"
 
 #. type: Plain text
 #: en/persistence.conf.5:133
@@ -386,6 +456,8 @@ msgid ""
 "I<VOL>/config-files/user1 (but it would be I<VOL>/home/user1 without the "
 "B<source> option)"
 msgstr ""
+"I<VOL>/config-files/user1 (ただし B<source> オプションを指定しない場合は "
+"I<VOL>/home/user1)"
 
 #. type: Plain text
 #: en/persistence.conf.5:137
@@ -393,16 +465,18 @@ msgid ""
 "I<VOL>/config-files/user2 (but it would be I<VOL>/home/user2 without the "
 "B<source> option)"
 msgstr ""
+"I<VOL>/config-files/user2 (ただし B<source> オプションを指定しない場合は "
+"I<VOL>/home/user2)"
 
 #. type: Plain text
 #: en/persistence.conf.5:140
 msgid "I<VOL>/home"
-msgstr ""
+msgstr "I<VOL>/home"
 
 #. type: Plain text
 #: en/persistence.conf.5:143
 msgid "I<VOL>/usr"
-msgstr ""
+msgstr "I<VOL>/usr"
 
 #. type: Plain text
 #: en/persistence.conf.5:146
@@ -410,6 +484,8 @@ msgid ""
 "It was necessary to set the B<source> options for 1 and 2, since they "
 "otherwise would become nested with 3's source, which is invalid."
 msgstr ""
+"1と2の例では B<source> オプションをセットする必要があります。そうしないと3の"
+"ソースと入り組んでしまい不正となるためです。"
 
 #. type: Plain text
 #: en/persistence.conf.5:151
@@ -419,78 +495,84 @@ msgid ""
 "is simply bind-mounted on /home. To illustrate what happens for lines 1 and "
 "2, let's say that the following files exist:"
 msgstr ""
+"1行目と2行目の独自マウントが3行目によって隠されるのを回避するため3行目は1行目"
+"と2行目よりも先に処理されます。3行目が処理された時点で I<VOL>/home は単純に "
+"/home に対するバインド型のマウントが行われた状態になります。1行目と2行目で起き"
+"たことを説明するため、以下のファイルが存在するとしましょう:"
 
 #. type: TP
 #: en/persistence.conf.5:151
 #, no-wrap
 msgid "a."
-msgstr ""
+msgstr "a."
 
 #. type: Plain text
 #: en/persistence.conf.5:154
 msgid "I<VOL>/config-files/user1/.emacs"
-msgstr ""
+msgstr "I<VOL>/config-files/user1/.emacs"
 
 #. type: TP
 #: en/persistence.conf.5:154
 #, no-wrap
 msgid "b."
-msgstr ""
+msgstr "b."
 
 #. type: Plain text
 #: en/persistence.conf.5:157
 msgid "I<VOL>/config-files/user2/.bashrc"
-msgstr ""
+msgstr "I<VOL>/config-files/user2/.bashrc"
 
 #. type: TP
 #: en/persistence.conf.5:157
 #, no-wrap
 msgid "c."
-msgstr ""
+msgstr "c."
 
 #. type: Plain text
 #: en/persistence.conf.5:160
 msgid "I<VOL>/config-files/user2/.ssh/config"
-msgstr ""
+msgstr "I<VOL>/config-files/user2/.ssh/config"
 
 #. type: Plain text
 #: en/persistence.conf.5:162
 msgid "Then the following links and directories will be created:"
-msgstr ""
+msgstr "それにより作成されるリンクやディレクトリ:"
 
 #. type: TP
 #: en/persistence.conf.5:162 en/persistence.conf.5:165
 #: en/persistence.conf.5:171
 #, no-wrap
 msgid "Link:"
-msgstr ""
+msgstr "リンク:"
 
 #. type: Plain text
 #: en/persistence.conf.5:165
 msgid "/home/user1/.emacs -E<gt> I<VOL>/config-files/user1/.emacs (from a)"
-msgstr ""
+msgstr "/home/user1/.emacs -E<gt> I<VOL>/config-files/user1/.emacs (a の場合)"
 
 #. type: Plain text
 #: en/persistence.conf.5:168
 msgid "/home/user2/.bashrc -E<gt> I<VOL>/config-files/user2/.bashrc (from b)"
-msgstr ""
+msgstr "/home/user2/.bashrc -E<gt> I<VOL>/config-files/user2/.bashrc (b の場合)"
 
 #. type: TP
 #: en/persistence.conf.5:168
 #, no-wrap
 msgid "Dir:"
-msgstr ""
+msgstr "ディレクトリ:"
 
 #. type: Plain text
 #: en/persistence.conf.5:171
 msgid "/homea/user2/.ssh (from c)"
-msgstr ""
+msgstr "/homea/user2/.ssh (c の場合)"
 
 #. type: Plain text
 #: en/persistence.conf.5:175
 msgid ""
 "/home/user2/.ssh/config -E<gt> I<VOL>/config-files/user2/.ssh/config (from c)"
 msgstr ""
+"/home/user2/.ssh/config -E<gt> I<VOL>/config-files/user2/.ssh/config (c の場"
+"合)"
 
 #. type: Plain text
 #: en/persistence.conf.5:181
@@ -501,6 +583,10 @@ msgid ""
 "don't want a complete directory to be persistent, only certain files in it "
 "or its sub-directories."
 msgstr ""
+"別の主張があるかもしれませんが、上記の B<persistence.conf> ファイルの例では3行"
+"目が既に /home の全てを保持対象としているため1行目と2行目は不要です。B<link> "
+"オプションはディレクトリ全体を保持したいのではなく、そのディレクトリ中やサブ"
+"ディレクトリにある特定のファイルを保持したいという状況を対象としています。"
 
 #. type: Plain text
 #: en/persistence.conf.5:190
@@ -513,10 +599,15 @@ msgid ""
 "compared to bind-mounts, since in the latter case all of /usr would have to "
 "be copied into I<VOL>/usr during the initial bootstrap."
 msgstr ""
+"4行目はそのI<ディレクトリ> (とソースディレクトリ) が他のどの独自マウントとも完"
+"全に分離しているためいつでもマウントできます。マウントすると、I<VOL>/usr は "
+"B<union> オプションが指定されているため rw ブランチになり、元の読み取り専用"
+"ファイルシステムと比較した差分だけが収録されます。そのため、バインド型のマウン"
+"トと比較すると容量の面で非常に効率良くパッケージを /usr にインストールできま"
+"す。これは後者では初期の自動処理で /usr 全体を I<VOL>/usr にコピーする必要があ"
+"るためです。"
 
 #. type: Plain text
 #: en/persistence.conf.5:193
-#, fuzzy
-#| msgid "I<live-tools>(7)"
 msgid "I<live-boot>(7)"
-msgstr "I<live-tools>(7)"
+msgstr "I<live-boot>(7)"
