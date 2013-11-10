@@ -23,8 +23,8 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2013-11-05"
-msgstr "2013-11-05"
+msgid "2013-11-10"
+msgstr "2013-11-10"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
