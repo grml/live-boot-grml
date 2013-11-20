@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 4.0~alpha16-1\n"
-"POT-Creation-Date: 2013-10-15 09:16+0300\n"
-"PO-Revision-Date: 2013-04-13 16:48+0100\n"
+"Project-Id-Version: live-boot 4.0~alpha18-1\n"
+"POT-Creation-Date: 2013-11-20 11:04+0100\n"
+"PO-Revision-Date: 2013-11-10 20:10+0900\n"
 "Last-Translator: Carlos Zuferri <chals@altorricon.com>\n"
 "Language-Team: none\n"
 "Language: de\n"
@@ -24,14 +24,14 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2013-10-15"
-msgstr "15.10.2013"
+msgid "2013-11-20"
+msgstr "20.11.2013"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "4.0~alpha16-1"
-msgstr "4.0~alpha16-1"
+msgid "4.0~alpha18-1"
+msgstr "4.0~alpha18-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
@@ -76,7 +76,7 @@ msgstr ""
 #. type: Plain text
 #: en/live-boot.7:14
 msgid ""
-"At boot time it will look for a (read-only) media containing a \"/live\" "
+"At boot time it will look for a (read-only) medium containing a \"/live\" "
 "directory where a root filesystems (often a compressed filesystem image like "
 "squashfs) is stored. If found, it will create a writable environment, using "
 "aufs, to boot the system from."
@@ -212,9 +212,9 @@ msgstr ""
 #. type: Plain text
 #: en/live-boot.7:50
 msgid ""
-"Another form of netboot by downloading a squashfs image from a given url.  "
-"The fetch method copies the image to ram and the httpfs method uses fuse and "
-"httpfs2 to mount the image in place. Copying to ram requires more memory and "
+"Another form of netboot by downloading a squashfs image from a given URL.  "
+"The fetch method copies the image to RAM and the httpfs method uses FUSE and "
+"httpfs2 to mount the image in place. Copying to RAM requires more memory and "
 "might take a long time for large images. However, it is more likely to work "
 "correctly because it does not require networking afterwards and the system "
 "operates faster once booted because it does not require to contact the "
@@ -225,7 +225,7 @@ msgstr ""
 #: en/live-boot.7:52
 msgid ""
 "Due to current limitations in busybox's wget and DNS resolution, an URL can "
-"not contain a hostname but an IP only."
+"not contain a hostname but an IP address only."
 msgstr ""
 
 #. type: Plain text
@@ -242,13 +242,13 @@ msgstr ""
 #: en/live-boot.7:58
 msgid ""
 "Also note that therefore it's currently not possible to fetch an image from "
-"a namebased virtualhost of an httpd if it is sharing the ip with the main "
-"httpd instance."
+"a name-based virtualhost of an httpd if it is sharing the IP address with "
+"the main httpd instance."
 msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:60
-msgid "You may also use the live iso image in place of the squashfs image."
+msgid "You may also use the live ISO image in place of the squashfs image."
 msgstr ""
 
 #. type: IP
@@ -260,9 +260,9 @@ msgstr ""
 #. type: Plain text
 #: en/live-boot.7:62
 msgid ""
-"Boot from an iSCSI target that has an iso or disk live image as one of its "
+"Boot from an iSCSI target that has an ISO or disk live image as one of its "
 "LUNs. The specified target is searched for a LUN which looks like a live "
-"media. If you use the B<iscsitarget> software iSCSI target solution your "
+"medium. If you use the B<iscsitarget> software iSCSI target solution your "
 "ietd.conf might look like this:"
 msgstr ""
 
@@ -303,7 +303,7 @@ msgstr ""
 #. type: Plain text
 #: en/live-boot.7:73
 msgid ""
-"Allows to use a filesystem from within an iso image that's available on live-"
+"Allows to use a filesystem from within an ISO image that's available on live-"
 "media."
 msgstr ""
 
@@ -399,7 +399,7 @@ msgstr ""
 #: en/live-boot.7:87
 msgid ""
 "live-boot will mount the encrypted rootfs TYPE, asking the passphrase, "
-"useful to build paranoid live systems :-). TYPE supported so far are \"aes\" "
+"useful to build paranoid live systems :-). TYPE supported so far is \"aes\" "
 "for loop-aes encryption type."
 msgstr ""
 
@@ -414,7 +414,7 @@ msgstr ""
 msgid ""
 "This way you could tell live-boot that your image starts at offset BYTES in "
 "the above specified or autodiscovered device, this could be useful to hide "
-"the live system ISO or image inside another iso or image, to create \"clean"
+"the live system ISO or image inside another ISO or image, to create \"clean"
 "\" images."
 msgstr ""
 
@@ -531,10 +531,10 @@ msgstr ""
 #. type: Plain text
 #: en/live-boot.7:107
 msgid ""
-"This parameters allows to set a custom ramdisk size (it's the '-o size' "
+"This parameter allows to set a custom ramdisk size (it's the '-o size' "
 "option of tmpfs mount). By default, there is no ramdisk size set, so the "
 "default of mount applies (currently 50% of available RAM). Note that this "
-"option has no currently no effect when booting with toram."
+"option has currently no effect when booting with toram."
 msgstr ""
 
 #. type: IP

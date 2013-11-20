@@ -353,7 +353,7 @@ setup_unionfs ()
 		live_rootfs="/live/rootfs/${d##*/}"
 		live_rootfs_list="${live_rootfs_list} ${live_rootfs}"
 		mkdir -p "${live_rootfs}"
-		case d in
+		case "${d}" in
 			*.dir)
 				# do nothing # mount -o bind "${d}" "${live_rootfs}"
 				;;

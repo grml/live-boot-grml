@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot VERSION\n"
-"POT-Creation-Date: 2013-10-15 09:16+0300\n"
+"POT-Creation-Date: 2013-11-20 11:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,13 +25,13 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2013-10-15"
+msgid "2013-11-20"
 msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "4.0~alpha16-1"
+msgid "4.0~alpha18-1"
 msgstr ""
 
 #. type: TH
@@ -200,7 +200,7 @@ msgstr ""
 #: en/persistence.conf.5:60
 msgid ""
 "Custom mounts defined in B<persistence.conf> accept the following options in "
-"a coma-separated list:"
+"a comma-separated list:"
 msgstr ""
 
 #. type: IP
