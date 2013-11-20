@@ -4,8 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 4.0~alpha17-1\n"
-"POT-Creation-Date: 2013-11-10 20:10+0900\n"
+"Project-Id-Version: live-boot 4.0~alpha18-1\n"
+"POT-Creation-Date: 2013-11-20 11:04+0100\n"
 "PO-Revision-Date: 2013-11-10 20:10+0900\n"
 "Last-Translator: Carlos Zuferri <chals@altorricon.com>\n"
 "Language-Team: none\n"
@@ -25,14 +25,14 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2013-11-10"
-msgstr "10.11.2013"
+msgid "2013-11-20"
+msgstr "20.11.2013"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "4.0~alpha17-1"
-msgstr "4.0~alpha17-1"
+msgid "4.0~alpha18-1"
+msgstr "4.0~alpha18-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
@@ -75,9 +75,9 @@ msgid ""
 "This includes the Live systems ISOs, netboot tarballs, and usb stick images."
 msgstr ""
 "live-boot es un hook para initramfs-tools, usado para generar un initramfs "
-"capaz de arrancar sistemas en vivo, tales como los creados por I<live-"
-"helper>(7). Esto incluye las ISOs de Live Systems, netboot tarballs y las "
-"imágenes para llaves usb. "
+"capaz de arrancar sistemas en vivo, tales como los creados por I<live-helper>"
+"(7). Esto incluye las ISOs de Live Systems, netboot tarballs y las imágenes "
+"para llaves usb. "
 
 #.  FIXME
 #. type: Plain text

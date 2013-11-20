@@ -1,3 +1,31 @@
+live-boot (4.0~alpha18-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Adding initial Japanese live-boot manpage translation from victory
+    <victory.deb@gmail.com>.
+
+  [ chals ]
+  * Applying patch revising grammar and spelling in live-boot.7 manpage,
+    thanks to victory <victory.deb@gmail.com>.
+  * Updating live-boot translation files from the original English text.
+  * Updating Spanish translation of live-boot.7 manpage.
+
+  [ victory ]
+  * Change plurals to singular: from "a ... media" to "a ... medium".
+  * Update/sync translations.
+
+  [ Daniel Baumann ]
+  * Reading in panic boot parameter when overloading initramfs-tools
+    panic() (Closes: #729041).
+
+  [ victory ]
+  * Translated persistence.conf.5.
+  * [man-ja] Fix a typo on the translation.
+  * Fix a typo: coma -> comma.
+  * Sync translations (0af845c).
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Wed, 20 Nov 2013 11:03:46 +0100
+
 live-boot (4.0~alpha17-1) experimental; urgency=low
 
   [ Daniel Baumann ]

@@ -4,8 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 4.0~alpha17-1\n"
-"POT-Creation-Date: 2013-11-10 20:10+0900\n"
+"Project-Id-Version: live-boot 4.0~alpha18-1\n"
+"POT-Creation-Date: 2013-11-20 11:04+0100\n"
 "PO-Revision-Date: 2013-11-10 20:10+0900\n"
 "Last-Translator: victory <victory.deb@gmail.com>\n"
 "Language-Team: none\n"
@@ -23,14 +23,14 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2013-11-10"
+msgid "2013-11-20"
 msgstr "2013-11-10"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "4.0~alpha17-1"
-msgstr "4.0~alpha17-1"
+msgid "4.0~alpha18-1"
+msgstr "4.0~alpha18-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
