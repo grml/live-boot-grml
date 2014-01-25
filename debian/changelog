@@ -1,3 +1,9 @@
+live-boot (4.0~a13-1+grml.5) unstable; urgency=medium
+
+  * [3b54472] Add support for label "persistence" to forensic mode
+
+ -- Michael Prokop <mika@grml.org>  Sat, 25 Jan 2014 11:45:16 +0100
+
 live-boot (4.0~a13-1+grml.4) unstable; urgency=low
 
   * [3d46167] Add patch to properly boot from mdadm via findiso boot
