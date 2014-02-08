@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 2014\-01\-17 4.0~alpha18\-1 "Live Systems Project"
+.TH LIVE\-BOOT 7 2014\-02\-08 4.0~alpha18\-1 "Live Systems Project"
 
 .SH NAME
 \fBlive\-boot\fP \- System Boot Components
@@ -171,7 +171,7 @@ This parameter allows to set a custom ramdisk size (it's the '\-o size'
 option of tmpfs mount). By default, there is no ramdisk size set, so the
 default of mount applies (currently 50% of available RAM). Note that this
 option has currently no effect when booting with toram.
-.IP \fBswapon\fP 4
+.IP \fBswap=true\fP 4
 This parameter enables usage of local swap partitions.
 .IP \fBpersistence\fP 4
 live\-boot will probe devices for persistence media. These can be partitions
