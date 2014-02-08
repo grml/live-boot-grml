@@ -1,3 +1,13 @@
+live-boot (4.0~alpha19-1) experimental; urgency=low
+
+  * Updating copyright notices for 2014.
+  * Updating swap bootparameter in manpage to match code (Closes:
+    #738146).
+  * Adjusting internal file of the swap component to match its own boot
+    parameter.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Sat, 08 Feb 2014 17:32:16 +0100
+
 live-boot (4.0~alpha18-1) experimental; urgency=low
 
   [ Daniel Baumann ]
