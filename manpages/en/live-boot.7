@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT 7 2013\-11\-20 4.0~alpha18-1 "Live Systems Project"
+.TH LIVE\-BOOT 7 2014\-02\-08 4.0~alpha19-1 "Live Systems Project"
 
 .SH NAME
 \fBlive\-boot\fR \- System Boot Components
@@ -104,7 +104,7 @@ disables the "persistence" feature, useful if the bootloader (like syslinux) has
 Do not prompt to eject the live medium.
 .IP "\fBramdisk\-size\fR" 4
 This parameter allows to set a custom ramdisk size (it's the '\-o size' option of tmpfs mount). By default, there is no ramdisk size set, so the default of mount applies (currently 50% of available RAM). Note that this option has currently no effect when booting with toram.
-.IP "\fBswapon\fR" 4
+.IP "\fBswap=true\fR" 4
 This parameter enables usage of local swap partitions.
 .IP "\fBpersistence\fR" 4
 live\-boot will probe devices for persistence media. These can be partitions (with the correct GPT name), filesystems (with the correct label) or image files (with the correct file name). Overlays are labeled/named "persistence" (see \fIpersistence.conf\fR(5)). Overlay image files are named "persistence".
