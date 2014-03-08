@@ -4,18 +4,32 @@ Priority: optional
 Maintainer: Live Systems Maintainers <debian-live@lists.debian.org>
 Uploaders: Daniel Baumann <mail@daniel-baumann.ch>
 Build-Depends: debhelper (>= 9)
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Homepage: http://live-systems.org/devel/live-boot/
 Vcs-Browser: http://live-systems.org/gitweb/?p=live-boot.git
 Vcs-Git: git://live-systems.org/git/live-boot.git
 
 Package: live-boot
 Architecture: all
-Depends: ${misc:Depends}, live-boot-initramfs-tools | live-boot-backend
-Recommends: live-boot-doc, live-tools, rsync, uuid-runtime
-Suggests: curlftpfs, cryptsetup, httpfs2, unionfs-fuse, wget
-Description: Live System Boot Scripts
- live-boot contains the scripts that configure a live system during the boot
+Depends:
+ ${misc:Depends},
+ live-boot-initramfs-tools | live-boot-backend,
+Recommends:
+ live-boot-doc,
+ live-tools,
+ rsync,
+ uuid-runtime,
+Suggests:
+ curlftpfs,
+ cryptsetup,
+ httpfs2,
+ unionfs-fuse,
+ wget,
+Description: Live System Boot Components
+ The Live Systems project maintains the components to build Debian based Live
+ systems and the official Debian Live images themselves.
+ .
+ live-boot contains the components to configure a live system during the boot
  process (early userspace).
  .
  In addition to live-boot, a backend for the initrd generation is required, such
@@ -25,8 +39,11 @@ Package: live-boot-doc
 Section: doc
 Architecture: all
 Depends: ${misc:Depends}
-Description: Live System Boot Scripts (documentation)
- live-boot contains the scripts that configure a live system during the boot
+Description: Live System Boot Components (documentation)
+ The Live Systems project maintains the components to build Debian based Live
+ systems and the official Debian Live images themselves.
+ .
+ live-boot contains the components to configure a live system during the boot
  process (early userspace).
  .
  This package contains the documentation.
@@ -34,12 +51,18 @@ Description: Live System Boot Scripts (documentation)
 Package: live-boot-initramfs-tools
 Architecture: all
 Depends:
- ${misc:Depends}, busybox | busybox-initramfs, initramfs-tools, udev
+ ${misc:Depends},
+ busybox | busybox-initramfs,
+ initramfs-tools,
+ udev,
 Conflicts: live-boot-backend
 Replaces: live-boot-backend
 Provides: live-boot-backend
-Description: Live System Boot Scripts (initramfs-tools backend)
- live-boot contains the scripts that configure a live system during the boot
+Description: Live System Boot Components (initramfs-tools backend)
+ The Live Systems project maintains the components to build Debian based Live
+ systems and the official Debian Live images themselves.
+ .
+ live-boot contains the components to configure a live system during the boot
  process (early userspace).
  .
  This package contains the initramfs-tools backend.

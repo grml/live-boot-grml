@@ -11,10 +11,10 @@ do
 	fi
 done
 
-for _SCRIPT in /lib/live/boot/????-*
+for _COMONENT in /lib/live/boot/????-*
 do
-	if [ -e "${_SCRIPT}" ]
+	if [ -e "${_COMONENT}" ]
 	then
-		. ${_SCRIPT}
+		. ${_COMONENT}
 	fi
 done
