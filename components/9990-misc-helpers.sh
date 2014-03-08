@@ -2,17 +2,12 @@
 
 #set -e
 
-file_pattern_matches()
-{
-	[ -e "$1" ]
-}
-
 is_live_path()
 {
 	DIRECTORY="${1}/${LIVE_MEDIA_PATH}"
 	for FILESYSTEM in squashfs ext2 ext3 ext4 xfs dir jffs
 	do
-		if file_pattern_matches "${DIRECTORY}/"*.${FILESYSTEM}
+		if ls "${DIRECTORY}/"*.${FILESYSTEM} > /dev/null 2>&1
 		then
 			return 0
 		fi
@@ -81,7 +76,7 @@ is_nice_device ()
 {
 	sysfs_path="${1#/sys}"
 
-	if /sbin/udevadm test-builtin path_id "${sysfs_path}" | egrep -q "ID_PATH=(usb|pci-[^-]*-(ide|sas|scsi|usb|virtio)|platform-sata_mv|platform-orion-ehci|platform-mmc|platform-mxsdhci)"
+	if udevadm info --query=all --path="${sysfs_path}" | egrep -q "DEVTYPE=disk"
 	then
 		return 0
 	elif echo "${sysfs_path}" | grep -q '^/block/vd[a-z]$'
@@ -166,7 +161,7 @@ check_dev ()
 				# Adding lvm support
 				if [ -x /scripts/local-top/lvm2 ]
 				then
-					ROOT="$device" resume="" /scripts/local-top/lvm2
+					ROOT="$device" resume="" /scripts/local-top/lvm2 >>/boot.log
 				fi
 				;;
 
@@ -174,10 +169,10 @@ check_dev ()
 				# Adding raid support
 				if [ -x /scripts/local-top/mdadm ]
 				then
-					cp /conf/conf.d/md /conf/conf.d/md.orig
+					[ -r /conf/conf.d/md ] && cp /conf/conf.d/md /conf/conf.d/md.orig
 					echo "MD_DEVS=$device " >> /conf/conf.d/md
-					/scripts/local-top/mdadm
-					mv /conf/conf.d/md.orig /conf/conf.d/md
+					/scripts/local-top/mdadm >>/boot.log
+					[ -r /conf/conf.d/md.orig ] && mv /conf/conf.d/md.orig /conf/conf.d/md
 				fi
 				;;
 		esac
@@ -199,9 +194,9 @@ check_dev ()
 	if is_supported_fs ${fstype}
 	then
 		devuid=$(blkid -o value -s UUID "$devname")
-		[ -n "$devuid" ] && grep -qs "\<$devuid\>" $tried && continue
+		[ -n "$devuid" ] && grep -qs "\<$devuid\>" /var/lib/live/boot/devices-already-tried-to-mount && continue
 		mount -t ${fstype} -o ro,noatime "${devname}" ${mountpoint} || continue
-		[ -n "$devuid" ] && echo "$devuid" >> $tried
+		[ -n "$devuid" ] && echo "$devuid" >> /var/lib/live/boot/devices-already-tried-to-mount
 
 		if [ -n "${FINDISO}" ]
 		then
@@ -334,21 +329,6 @@ find_livefs ()
 	return 1
 }
 
-really_export ()
-{
-	STRING="${1}"
-	VALUE="$(eval echo -n \${$STRING})"
-
-	if [ -f /live.vars ] && grep -sq "export ${STRING}" /live.vars
-	then
-		sed -i -e 's/\('${STRING}'=\).*$/\1'${VALUE}'/' /live.vars
-	else
-		echo "export ${STRING}=\"${VALUE}\"" >> /live.vars
-	fi
-
-	eval export "${STRING}"="${VALUE}"
-}
-
 is_in_list_separator_helper ()
 {
 	local sep element list
@@ -379,7 +359,7 @@ is_in_comma_sep_list ()
 sys2dev ()
 {
 	sysdev=${1#/sys}
-	echo "/dev/$($udevinfo -q name -p ${sysdev} 2>/dev/null|| echo ${sysdev##*/})"
+	echo "/dev/$(udevadm info -q name -p ${sysdev} 2>/dev/null|| echo ${sysdev##*/})"
 }
 
 subdevices ()
@@ -704,8 +684,9 @@ try_mount ()
 }
 
 # Try to mount $device to the place expected by live-boot. If $device
-# is already mounted somewhere, move it to the expected place. If
-# we're only probing $device (to check if it has custom persistence)
+# is already mounted somewhere, move it to the expected place. If $device
+# ends with a "/" this is a directory path.
+# If we're only probing $device (to check if it has custom persistence)
 # $probe should be set, which suppresses warnings upon failure. On
 # success, print the mount point for $device.
 mount_persistence_media ()
@@ -713,6 +694,20 @@ mount_persistence_media ()
 	local device probe backing old_backing fstype mount_opts
 	device=${1}
 	probe=${2}
+
+	# get_custom_mounts() might call this with a directory path instead
+	# of a block device path. This means we have found sub-directory path
+	# underneath /lib/live/mounts/persistence, so we're done
+	if [ -d "${device}" ]
+	then
+		echo "${device}"
+		return 0
+	fi
+
+	if [ ! -b "${device}" ]
+	then
+		return 1
+	fi
 
 	backing="/live/persistence/$(basename ${device})"
 
@@ -737,15 +732,24 @@ mount_persistence_media ()
 		fi
 	elif [ "${backing}" != "${old_backing}" ]
 	then
-		if mount --move ${old_backing} ${backing} >/dev/null
+		if ! mount --move ${old_backing} ${backing} >/dev/null
 		then
-			echo ${backing}
-			return 0
-		else
 			[ -z "${probe}" ] && log_warning_msg "Failed to move persistence media ${device}"
 			rmdir "${backing}"
 			return 1
 		fi
+		mount_opts="rw,noatime"
+		if [ -n "${PERSISTENCE_READONLY}" ]
+		then
+			mount_opts="ro,noatime"
+		fi
+		if ! mount -o "remount,${mount_opts}" "${backing}" >/dev/null
+		then
+			log_warning_msg "Failed to remount persistence media ${device} writable"
+			# Don't unmount or rmdir the new mountpoint in this case
+		fi
+		echo ${backing}
+		return 0
 	else
 		# This means that $device has already been mounted on
 		# the place expected by live-boot, so we're done.
@@ -895,12 +899,45 @@ probe_for_file_name ()
 
 	for label in ${overlays}
 	do
-		path=${backing}/${PERSISTENCE_PATH}${label}
+		path=${backing}/${PERSISTENCE_PATH}/${label}
 		if [ -f "${path}" ]
 		then
 			local loopdev
 			loopdev=$(setup_loop "${path}" "loop" "/sys/block/loop*")
 			ret="${ret} ${label}=${loopdev}"
+		fi
+	done
+
+	if [ -n "${ret}" ]
+	then
+		echo ${ret}
+	else
+		# unmount and remove mountpoint
+		umount ${backing} > /dev/null 2>&1 || true
+		rmdir ${backing} > /dev/null 2>&1 || true
+	fi
+}
+
+probe_for_directory_name ()
+{
+	local overlays dev ret backing
+	overlays="${1}"
+	dev="${2}"
+
+	ret=""
+	backing="$(mount_persistence_media ${dev} probe)"
+	if [ -z "${backing}" ]
+	then
+	    return
+	fi
+
+	for label in ${overlays}
+	do
+		path=${backing}/${PERSISTENCE_PATH}/${label}
+		if [ -d "${path}" ]
+		then
+			# in this case the "device" ends with a "/"
+			ret="${ret} ${label}=${backing}/${PERSISTENCE_PATH}/${label%%/}/"
 		fi
 	done
 
@@ -938,7 +975,17 @@ find_persistence_media ()
 	white_listed_devices="${2}"
 	ret=""
 
-	black_listed_devices="$(what_is_mounted_on /live/medium) $(what_is_mounted_on /live/findiso) $(what_is_mounted_on /live/fromiso)"
+	#
+	# The devices that are hosting the actual live rootfs should not be
+	# used for persistence storage since otherwise you might mount a
+	# parent directory on top of a sub-directory of the same filesystem
+	# in one union together.
+	#
+	black_listed_devices=""
+	for d in /live/rootfs/* /live/findiso /live/fromiso
+	do
+		black_listed_devices="${black_listed_devices} $(what_is_mounted_on d)"
+	done
 
 	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
@@ -1004,6 +1051,17 @@ find_persistence_media ()
 						result=""
 					fi
 				fi
+				ret="${ret} ${result}"
+				continue
+			fi
+		fi
+
+		# Probe for directory with matching name on mounted partition
+		if is_in_comma_sep_list directory ${PERSISTENCE_STORAGE}
+		then
+			result=$(probe_for_directory_name "${overlays}" ${dev})
+			if [ -n "${result}" ]
+			then
 				ret="${ret} ${result}"
 				continue
 			fi
@@ -1270,11 +1328,6 @@ get_custom_mounts ()
 
 	for device in ${devices}
 	do
-		if [ ! -b "${device}" ]
-		then
-			continue
-		fi
-
 		local device_name backing include_list
 		device_name="$(basename ${device})"
 		backing=$(mount_persistence_media ${device})
@@ -1286,14 +1339,11 @@ get_custom_mounts ()
 		if [ -r "${backing}/${persistence_list}" ]
 		then
 			include_list="${backing}/${persistence_list}"
-		elif [ -r "${backing}/${old_persistence_list}" ]
-		then
-			include_list="${backing}/${old_persistence_list}"
 		else
 			continue
 		fi
 
-		if [ -n "${DEBUG}" ] && [ -e "${include_list}" ]
+		if [ -n "${LIVE_BOOT_DEBUG}" ] && [ -e "${include_list}" ]
 		then
 			cp ${include_list} /live/persistence/${persistence_list}.${device_name}
 		fi

@@ -1,12 +1,12 @@
 # Spanish translations for live-boot package
-# Copyright (C) 2012-2013 Carlos Zuferri «chals» <chals@altorricon.com>
+# Copyright (C) 2012-2014 Carlos Zuferri «chals» <chals@altorricon.com>
 # This file is distributed under the same license as the live-boot package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 4.0~a13-1\n"
-"POT-Creation-Date: 2013-05-27 16:45+0300\n"
-"PO-Revision-Date: 2013-04-13 16:38+0100\n"
+"Project-Id-Version: live-boot 4.0~alpha19-1\n"
+"POT-Creation-Date: 2014-02-08 17:31+0100\n"
+"PO-Revision-Date: 2013-11-10 20:10+0900\n"
 "Last-Translator: Carlos Zuferri <chals@altorricon.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
@@ -22,13 +22,15 @@ msgstr "LIVE-BOOT"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
-msgid "2013-05-27"
-msgstr "27.05.2013"
+#, no-wrap
+msgid "2014-02-08"
+msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
-msgid "4.0~a13-1"
-msgstr "4.0~a13-1"
+#, no-wrap
+msgid "4.0~alpha19-1"
+msgstr "4.0~alpha19-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
@@ -247,7 +249,7 @@ msgstr ""
 #: en/persistence.conf.5:60
 msgid ""
 "Custom mounts defined in B<persistence.conf> accept the following options in "
-"a coma-separated list:"
+"a comma-separated list:"
 msgstr ""
 "Los montajes personalizados definidos en B<persistence.conf> aceptan las "
 "siguientes opciones en una lista separada por comas:"

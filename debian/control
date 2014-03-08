@@ -3,12 +3,14 @@ Section: misc
 Priority: optional
 Maintainer: Grml Team <team@grml.org>
 Build-Depends: debhelper (>= 9), quilt (>= 0.46-7~)
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Homepage: http://live.debian.net/devel/live-boot/
 Vcs-Browser: http://git.grml.org/?p=live-boot-grml.git
 Vcs-Git: git://git.grml.org/live-boot-grml.git
 Origin: Grml
 Bugs: mailto:bugs@grml.org
+Vcs-Browser: http://git.grml.org/?p=live-boot-grml.git;a=summary
+Vcs-Git: git://git.grml.org/live-boot-grml.git
 
 Package: live-boot-grml
 Architecture: all
@@ -18,8 +20,8 @@ Conflicts: live-boot
 Replaces: live-boot
 Provides: live-boot
 Suggests: curlftpfs, cryptsetup, httpfs2, unionfs-fuse, wget
-Description: Live System Boot Scripts
- live-boot contains the scripts that configure a live system during the boot
+Description: Live System Boot Components
+ live-boot contains the components to configure a live system during the boot
  process (early userspace).
  .
  In addition to live-boot, a backend for the initrd generation is required, such
@@ -33,8 +35,11 @@ Package: live-boot-grml-doc
 Section: doc
 Architecture: all
 Depends: ${misc:Depends}
-Description: Live System Boot Scripts (documentation)
- live-boot contains the scripts that configure a live system during the boot
+Description: Live System Boot Components (documentation)
+ The Live Systems project maintains the components to build Debian based Live
+ systems and the official Debian Live images themselves.
+ .
+ live-boot contains the components to configure a live system during the boot
  process (early userspace).
  .
  This package contains the documentation.
@@ -46,12 +51,18 @@ Description: Live System Boot Scripts (documentation)
 Package: live-boot-grml-initramfs-tools
 Architecture: all
 Depends:
- ${misc:Depends}, busybox | busybox-initramfs, initramfs-tools, udev
+ ${misc:Depends},
+ busybox | busybox-initramfs,
+ initramfs-tools,
+ udev,
 Conflicts: live-boot-backend
 Replaces: live-boot-backend
 Provides: live-boot-backend
-Description: Live System Boot Scripts (initramfs-tools backend)
- live-boot contains the scripts that configure a live system during the boot
+Description: Live System Boot Components (initramfs-tools backend)
+ The Live Systems project maintains the components to build Debian based Live
+ systems and the official Debian Live images themselves.
+ .
+ live-boot contains the components to configure a live system during the boot
  process (early userspace).
  .
  This package contains the initramfs-tools backend.

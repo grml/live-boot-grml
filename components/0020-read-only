@@ -4,7 +4,7 @@
 
 Read_only ()
 {
-	for _PARAMETER in ${_CMDLINE}
+	for _PARAMETER in ${LIVE_BOOT_CMDLINE}
 	do
 		case "${_PARAMETER}" in
 			live-boot.read-only=*|read-only=*)

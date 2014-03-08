@@ -25,7 +25,16 @@ maybe_break()
 }
 
 # Override panic from scripts/functions
-panic() {
+panic()
+{
+	for _PARAMETER in ${LIVE_BOOT_CMDLINE}
+	do
+		case "${_PARAMETER}" in
+			panic=*)
+				panic="${_PARAMETER#*verify-checksums=}"
+				;;
+		esac
+	done
 
 	DEB_1="\033[1;31m .''\`.  \033[0m"
 	DEB_2="\033[1;31m: :'  : \033[0m"

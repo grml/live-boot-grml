@@ -1,3 +1,122 @@
+live-boot (4.0~alpha19-1) experimental; urgency=low
+
+  * Updating copyright notices for 2014.
+  * Updating swap bootparameter in manpage to match code (Closes:
+    #738146).
+  * Adjusting internal file of the swap component to match its own boot
+    parameter.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Sat, 08 Feb 2014 17:32:16 +0100
+
+live-boot (4.0~alpha18-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Adding initial Japanese live-boot manpage translation from victory
+    <victory.deb@gmail.com>.
+
+  [ chals ]
+  * Applying patch revising grammar and spelling in live-boot.7 manpage,
+    thanks to victory <victory.deb@gmail.com>.
+  * Updating live-boot translation files from the original English text.
+  * Updating Spanish translation of live-boot.7 manpage.
+
+  [ victory ]
+  * Change plurals to singular: from "a ... media" to "a ... medium".
+  * Update/sync translations.
+
+  [ Daniel Baumann ]
+  * Reading in panic boot parameter when overloading initramfs-tools
+    panic() (Closes: #729041).
+
+  [ victory ]
+  * Translated persistence.conf.5.
+  * [man-ja] Fix a typo on the translation.
+  * Fix a typo: coma -> comma.
+  * Sync translations (0af845c).
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Wed, 20 Nov 2013 11:03:46 +0100
+
+live-boot (4.0~alpha17-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Rewrapping control file.
+
+  [ Michael Prokop ]
+  * Properly boot from mdadm via findiso boot option.
+
+  [ Daniel Baumann ]
+  * Updating to standards version 3.9.5.
+  * Correcting spelling typo in overlay component breaking booting from
+    uncompressed filesystems, thanks to John Bazik <jsb@cs.brown.edu>
+    (Closes: #728250).
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Wed, 30 Oct 2013 02:44:22 +0100
+
+live-boot (4.0~alpha16-1) experimental; urgency=low
+
+  * Updating package descriptions.
+  * Applying patch from Michael Prokop <mika@grml.org> to update udev
+    usage in is_nice_device() for newer udev versions.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Tue, 15 Oct 2013 09:17:35 +0200
+
+live-boot (4.0~a15-1) experimental; urgency=low
+
+  [ Jan Blunck ]
+  * Install components into /lib/live/boot folder.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Fri, 13 Sep 2013 17:21:50 +0200
+
+live-boot (4.0~a14-1) experimental; urgency=low
+
+  [ Daniel Baumann ]
+  * Updating note about overlay file image names in live-boot manpage,
+    thanks to Peter Schaefer <peter.schaefer@physik.hu-berlin.de> (Closes:
+    #701615).
+  * Correcting debug variables through out the code to use the same one.
+  * Allowing to superseed live-boot cmdline through configuration files.
+
+  [ chals ]
+  * Updating Spanish translation of live-boot man page.
+
+  [ Steven Shiau ]
+  * Calculating size for the whole media "/live/image/", not only the dir
+    "/live/image/live/" when using toram.
+
+  [ Daniel Baumann ]
+  * Reorganizing backend in source tree.
+  * Reorganizing frontend in source tree.
+  * Reorganizing components in source tree.
+  * Replace various mentionings of scripts with components.
+  * Updating code to current coding style in a some locations.
+  * Dropping old pre-wheezy udevadm handling.
+  * Dropping old pre-wheezy persistence list handling.
+  * Replacing variable used in one place only with explicit directory for
+    simplicity.
+  * Shortening /etc/mtab conditional creation.
+  * Dropping helper function used in one place only which can be replaced
+    with a simple ls call anyway.
+  * Dropping really_export dead code.
+  * Simplifying /etc/resolv.conf generation a bit.
+  * Updating indenting in network component.
+
+  [ chals ]
+  * Updating the dates in man pages.
+  * Updating Spanish translation of man pages.
+
+  [ Jan Blunck ]
+  * Use PERSISTENCE_PATH with a trailing "/".
+  * Move check for block device to mount_persistence_media().
+  * Remount writable when moving the mountpoint of the persistence device.
+  * Blacklist devices used for /live/rootfs/* insted of /live/medium.
+  * Add support for persistence-storage type "directory".
+
+  [ Daniel Baumann ]
+  * Updating debhelper install file to include additional scripts in new
+    location.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Fri, 13 Sep 2013 14:17:30 +0200
+
 live-boot (4.0~a13-1+grml.5) unstable; urgency=medium
 
   * [3b54472] Add support for label "persistence" to forensic mode

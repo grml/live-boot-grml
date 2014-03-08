@@ -3,14 +3,14 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 2013\-05\-27 4.0~a13\-1 "Proyecto Live Systems"
+.TH LIVE\-BOOT 7 2014\-02\-08 4.0~alpha19\-1 "Proyecto Live Systems"
 
 .SH NOMBRE
-\fBlive\-boot\fP \- Scripts de Arranque del Sistema
+\fBlive\-boot\fP \- Componentes de Arranque del Sistema
 
 .SH DESCRIPCIÓN
-\fBlive\-boot\fP contiene los scripts que configuran un sistema en vivo durante
-el proceso de arranque (early userspace).
+\fBlive\-boot\fP contiene los componentes que configuran un sistema en vivo
+durante el proceso de arranque (early userspace).
 .PP
 .\" FIXME
 live\-boot es un hook para initramfs\-tools, usado para generar un initramfs
@@ -67,12 +67,12 @@ Si no se asigna un valor a debug, puede que no se muestren los mensajes.
 .IP \fBhttpfs\fP=\fIURL\fP 4
 Otra forma de arranque en red mediante la descarga de una imagen squashfs a
 partir de una URL determinada. El método «fetch» copia la imagen en la
-memoria RAM y el método httpfs utiliza fuse y httpfs2 para montar la imagen
+memoria RAM y el método httpfs utiliza FUSE y httpfs2 para montar la imagen
 en su lugar. Copiar en la memoria RAM requiere más memoria y puede tardar
 mucho tiempo con imágenes de gran tamaño. Sin embargo, es más probable que
 funcione correctamente, ya que no requiere el uso de la red después y el
 sistema funciona más rápido una vez iniciado, debido a que ya no necesita
-más ponerse en contacto con el servidor.
+ponerse más en contacto con el servidor.
 .br
 Debido a las limitaciones actuales de busybox, wget y la resolución de DNS,
 una dirección URL no puede contener un nombre de anfitrión, sino sólo una
@@ -84,12 +84,12 @@ Funciona: http://ejemplo.com/ruta/al/sistema_de_ficheros.squashfs
 .br
 Tener en cuenta también que, por lo tanto, no es posible en la actualidad ir
 a buscar una imagen en un host virtual basado en nombre de un httpd si está
-compartiendo la ip con la instancia principal httpd.
+compartiendo la IP con la instancia principal httpd.
 .br
-También se puede utilizar la imagen iso en vivo en lugar de la imagen
+También se puede utilizar la imagen ISO en vivo en lugar de la imagen
 squashfs.
 .IP \fBiscsi\fP=\fIserver\-ip[,server\-port];target\-name\fP 4
-Arranca desde un iSCSI que tiene una iso o una imagen de disco en vivo como
+Arranca desde un iSCSI que tiene una ISO una imagen de disco en vivo como
 uno de sus LUNs. Se busca en el objetivo especificado un LUN que sea similar
 a un medio en vivo. Si se utiliza el software de iSCSI \fBiscsitarget\fP el
 ietd.conf podría ser similar al siguiente:
@@ -105,7 +105,7 @@ Busca el fichero ISO especificado en todos los discos en los que por lo
 general se busca el fichero .squashfs (por lo que no se tiene que saber el
 nombre del dispositivo como en fromiso=....).
 .IP \fBfromiso\fP=\fI/PATH/TO/IMAGE\fP 4
-Permite utilizar un sistema de ficheros desde dentro de una imagen iso que
+Permite utilizar un sistema de ficheros desde dentro de una imagen ISO que
 está disponible en los medios en vivo.
 .IP \fBignore_uuid\fP 4
 No comprobar que cualquier UUID integrado en el initramfs coincida con el
@@ -138,13 +138,13 @@ vivo de tipo extraíble. Tener en cuenta que si se desea restringir aún más
 los medios a sistemas de almacenamiento masivo USB se puede utilizar la
 palabra clave 'removable\-usb'
 .IP {\fBlive\-media\-encryption\fP|\fBencryption\fP}=\fITYPE\fP 4
-live\-boot montará el TYPE rotfs cifrado,  pidiendo la contraseña. Es útil
+live\-boot montará el TYPE rotfs cifrado, pidiendo la contraseña. Es útil
 para crear sistemas en vivo paranoicos :\-) Hasta el momento el TYPE
 soportado es "aes" para cifrado loop\-aes.
 .IP \fBlive\-media\-offset\fP=\fIBYTES\fP 4
 De esta manera se puede especificar a live\-boot que la imagen comienza en
 BYTES en el dispositivo anteriormente especificado, o auto\-descubierto, esto
-podría ser útil para esconder la iso o la imagen dentro de otra iso o
+podría ser útil para esconder la ISO o la imagen dentro de otra ISO o
 imagen, para crear imágenes "limpias".
 .IP \fBlive\-media\-path\fP=\fIPATH\fP 4
 Establece la ruta de acceso al sistema de ficheros en vivo en el medio. De
@@ -179,16 +179,16 @@ Este parámetro permite establecer un tamaño de disco RAM personalizado (que
 es la opción '\-o size' del montaje tmpfs). No hay un tamaño de ramdisk
 predeterminado, por lo que se aplica el valor por defecto (actualmente el
 50% de la RAM disponible). Tener en cuenta que esta opción no tiene
-actualmente ningún efecto cuando se arranca con toram
-.IP \fBswapon\fP 4
+actualmente ningún efecto cuando se arranca con toram.
+.IP \fBswap=true\fP 4
 Este parámetro permite el uso de particiones swap locales.
 .IP \fBpersistence\fP 4
 live\-boot buscará dispositivos con "persistence". Estos pueden ser
 particiones (con el nombre GPT correcto), sistemas de ficheros (con la
 etiqueta correcta) o ficheros imagen (con el nombre de fichero
 correcto). Los overlays tienen la etiqueta/nombre "persistence" (ver
-\fIpersistence.conf\fP(5)). Los ficheros imagen overlay tienen extensiones que
-determinan su sistema de ficheros, por ejemplo, "persistence.ext4".
+\fIpersistence.conf\fP(5)). Los ficheros imagen overlay tienen, como nombre,
+"persistence".
 .IP "\fBpersistence\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
 Esta opción determina qué tipo de cifrado se usa cuando se prueban los
 dispositivos de los medios con persistencia. Si se especifica "none" en la
