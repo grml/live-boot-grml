@@ -1,3 +1,9 @@
+live-boot (4.0~alpha19-1+grml.1) unstable; urgency=medium
+
+  * Sync Debian's 4.0~alpha19-1.
+
+ -- Evgeni Golov <evgeni@grml.org>  Sat, 08 Mar 2014 13:59:28 +0100
+
 live-boot (4.0~alpha19-1) experimental; urgency=low
 
   * Updating copyright notices for 2014.
