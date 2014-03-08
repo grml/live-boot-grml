@@ -6,7 +6,7 @@ grml-specific/grml_defaults.patch
 13_always_display_warnings_and_failures.patch
 15_networking_grml.patch
 16_nodhcp.patch
-19_revert_toram_bootoption_to_expected_behaviour.patch
+reverts/revert_toram_bootoption_to_expected_behaviour.patch
 26_support_dns_bootoption.patch
 27_support_static_ip.patch
 29_support_dns_in_initramfs.patch
@@ -17,5 +17,5 @@ grml-specific/package_rename.patch
 36_support_dhcp_bootoption.patch
 39_persistence_with_forensic.patch
 40_support_multiple_hooks.patch
-41_drop_nameserver_from_ip_option.patch
-42_restore_support_for_old_persistence.patch
+reverts/drop_nameserver_from_ip_option.patch
+reverts/restore_support_for_old_persistence.patch
