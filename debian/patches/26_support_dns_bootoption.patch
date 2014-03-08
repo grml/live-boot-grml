@@ -18,43 +18,6 @@ Index: live-boot-grml/components/9990-networking.sh
  			do
  				if [ -n "$i" ] && [ "$i" != 0.0.0.0 ]
  				then
-Index: live-boot-grml/components/9990-grml-networking.sh
-===================================================================
---- live-boot-grml.orig/components/9990-grml-networking.sh	2014-03-08 13:33:11.615385566 +0100
-+++ live-boot-grml/components/9990-grml-networking.sh	2014-03-08 13:33:11.611386038 +0100
-@@ -28,7 +28,12 @@
- 
- # prepare a new /etc/network/interfaces file (and, possibly, a new /etc/resolv.conf)
- IFFILE="/root/etc/network/interfaces"
--RESOLVCONF="/root/etc/resolv.conf"
-+if [ -L /root/etc/resolv.conf ] ; then
-+  # assume we have resolvconf
-+  RESOLVCONF=/root/etc/resolvconf/resolv.conf.d/base
-+else
-+  RESOLVCONF="/root/etc/resolv.conf"
-+fi
- 
- # config for loopback networking
- cat > $IFFILE << EOF
-@@ -90,4 +95,18 @@
-     echo>> $IFFILE
- done
- 
-+# dns bootoption
-+if [ -n "$DNSSERVER1" ]
-+then
-+	# disable any existing entries
-+	if [ -r $RESOLVCONF ]
-+	then
-+		sed -i 's/nameserver/# nameserver/' $RESOLVCONF
-+	fi
-+	for i in $DNSSERVER1 $DNSSERVER2
-+	do
-+		echo "nameserver $i" >> $RESOLVCONF
-+	done
-+fi
-+
- }
 Index: live-boot-grml/components/9990-cmdline-old
 ===================================================================
 --- live-boot-grml.orig/components/9990-cmdline-old	2014-03-08 13:33:11.615385566 +0100

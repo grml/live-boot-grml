@@ -12,8 +12,8 @@ diff a/scripts/live-bottom/23networking_grml b/scripts/live-bottom/23networking_
 Index: live-boot-grml/components/9990-grml-networking.sh
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ live-boot-grml/components/9990-grml-networking.sh	2014-03-08 13:26:53.959682953 +0100
-@@ -0,0 +1,93 @@
++++ live-boot-grml/components/9990-grml-networking.sh	2014-03-08 16:34:29.800254396 +0100
+@@ -0,0 +1,120 @@
 +#!/bin/sh
 +
 +#set -e
@@ -44,7 +44,12 @@ Index: live-boot-grml/components/9990-grml-networking.sh
 +
 +# prepare a new /etc/network/interfaces file (and, possibly, a new /etc/resolv.conf)
 +IFFILE="/root/etc/network/interfaces"
-+RESOLVCONF="/root/etc/resolv.conf"
++if [ -L /root/etc/resolv.conf ] ; then
++  # assume we have resolvconf
++  RESOLVCONF=/root/etc/resolvconf/resolv.conf.d/base
++else
++  RESOLVCONF="/root/etc/resolv.conf"
++fi
 +
 +# config for loopback networking
 +cat > $IFFILE << EOF
@@ -68,6 +73,14 @@ Index: live-boot-grml/components/9990-grml-networking.sh
 +    netconfig=/run/net-${interface}.conf
 +    if [ -n "$NODHCP" ] || [ -e "${netconfig}" ]; then
 +        method="manual"
++    fi
++
++    # if boot option "nodhcp" is set but also boot option "dhcp" is
++    # set, then dhcp should win over it as we default to dhcp and if
++    # nodhcp is used as default boot option but "dhcp" is added then it
++    # would be confusing to not get a working network setup
++    if [ "$DHCP" = "true" ] ; then
++        method="dhcp"
 +    fi
 +
 +    cat >> $IFFILE << EOF
@@ -106,11 +119,25 @@ Index: live-boot-grml/components/9990-grml-networking.sh
 +    echo>> $IFFILE
 +done
 +
++# dns bootoption
++if [ -n "$DNSSERVER1" ]
++then
++	# disable any existing entries
++	if [ -r $RESOLVCONF ]
++	then
++		sed -i 's/nameserver/# nameserver/' $RESOLVCONF
++	fi
++	for i in $DNSSERVER1 $DNSSERVER2
++	do
++		echo "nameserver $i" >> $RESOLVCONF
++	done
++fi
++
 +}
 Index: live-boot-grml/components/9990-main.sh
 ===================================================================
---- live-boot-grml.orig/components/9990-main.sh	2014-03-08 13:26:53.963682483 +0100
-+++ live-boot-grml/components/9990-main.sh	2014-03-08 13:26:53.959682953 +0100
+--- live-boot-grml.orig/components/9990-main.sh	2014-03-08 16:27:40.668243817 +0100
++++ live-boot-grml/components/9990-main.sh	2014-03-08 16:27:40.664244286 +0100
 @@ -195,6 +195,8 @@
  
  	Swap
@@ -120,3 +147,28 @@ Index: live-boot-grml/components/9990-main.sh
  	case "${UNIONFS}" in
  		unionfs-fuse)
  			umount "${rootmnt}/dev"
+Index: live-boot-grml/components/9990-cmdline-old
+===================================================================
+--- live-boot-grml.orig/components/9990-cmdline-old	2014-03-08 16:27:34.117012248 +0100
++++ live-boot-grml/components/9990-cmdline-old	2014-03-08 16:33:20.536378749 +0100
+@@ -33,6 +33,8 @@
+ 			nodhcp)
+ 				DHCP=""
+ 				export DHCP
++				NODHCP="Yes"
++				export NODHCP
+ 				;;
+ 
+ 			ethdevice=*)
+@@ -150,6 +152,11 @@
+ 				export NFS_COW
+ 				;;
+ 
++			nodhcphostname)
++				NODHCPHOSTNAME="Yes"
++				export NODHCPHOSTNAME
++				;;
++
+ 			nofstab)
+ 				NOFSTAB="true"
+ 				export NOFSTAB
