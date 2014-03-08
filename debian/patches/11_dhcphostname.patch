@@ -11,9 +11,11 @@ Support 'nodhcphostname' option which will disable setting the
 hostname of the booted system according to the DNS information.
 This patch takes care of the netboot case.
 
---- a/scripts/boot/9990-cmdline-old
-+++ b/scripts/boot/9990-cmdline-old
-@@ -140,6 +140,11 @@ Cmdline_old ()
+Index: live-boot-grml/components/9990-cmdline-old
+===================================================================
+--- live-boot-grml.orig/components/9990-cmdline-old	2014-03-08 13:21:20.186833068 +0100
++++ live-boot-grml/components/9990-cmdline-old	2014-03-08 13:21:20.182833537 +0100
+@@ -140,6 +140,11 @@
  				export NFS_COW
  				;;
  

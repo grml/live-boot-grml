@@ -6,9 +6,11 @@
 
 @DPATCH@
 
---- a/scripts/boot/9990-initramfs-tools.sh
-+++ b/scripts/boot/9990-initramfs-tools.sh
-@@ -43,14 +43,20 @@ panic() {
+Index: live-boot-grml/components/9990-initramfs-tools.sh
+===================================================================
+--- live-boot-grml.orig/components/9990-initramfs-tools.sh	2014-03-08 13:20:10.746978063 +0100
++++ live-boot-grml/components/9990-initramfs-tools.sh	2014-03-08 13:20:10.742978533 +0100
+@@ -52,14 +52,20 @@
  	printf "\n\n"
  	printf "  \033[1;37mBOOT FAILED!\033[0m\n"
  	printf "\n"

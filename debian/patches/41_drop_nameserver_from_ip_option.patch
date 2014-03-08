@@ -11,8 +11,8 @@ option inside the ip= boot parameter.
 This violates the ip= handling as documented in
 https://www.kernel.org/doc/Documentation/filesystems/nfs/nfsroot.txt
 
---- a/scripts/boot/9990-netbase.sh
-+++ b/scripts/boot/9990-netbase.sh
+--- a/components/9990-netbase.sh
++++ b/components/9990-netbase.sh
 @@ -44,7 +44,6 @@
  			ifaddress="$(echo ${ifline} | cut -f2 -d ':')"
  			ifnetmask="$(echo ${ifline} | cut -f3 -d ':')"

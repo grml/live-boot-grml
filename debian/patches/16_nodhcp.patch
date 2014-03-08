@@ -6,8 +6,10 @@
 
 @DPATCH@
 
---- a/scripts/boot/9990-cmdline-old
-+++ b/scripts/boot/9990-cmdline-old
+Index: live-boot-grml/components/9990-cmdline-old
+===================================================================
+--- live-boot-grml.orig/components/9990-cmdline-old	2014-03-08 13:28:01.059812396 +0100
++++ live-boot-grml/components/9990-cmdline-old	2014-03-08 13:28:01.055812866 +0100
 @@ -33,6 +33,8 @@
  			nodhcp)
  				DHCP=""

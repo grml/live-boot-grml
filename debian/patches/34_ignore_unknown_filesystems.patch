@@ -1,6 +1,8 @@
---- a/scripts/boot/9990-misc-helpers.sh
-+++ b/scripts/boot/9990-misc-helpers.sh
-@@ -463,6 +463,12 @@
+Index: live-boot-grml/components/9990-misc-helpers.sh
+===================================================================
+--- live-boot-grml.orig/components/9990-misc-helpers.sh	2014-03-08 13:38:26.286476006 +0100
++++ live-boot-grml/components/9990-misc-helpers.sh	2014-03-08 13:38:26.282476475 +0100
+@@ -443,6 +443,12 @@
  		return 1
  	fi
  

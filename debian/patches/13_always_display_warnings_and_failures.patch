@@ -5,10 +5,10 @@
 ## DP: Always display failure and warning messages.
 
 @DPATCH@
-Index: live-boot-grml/scripts/boot/9990-initramfs-tools.sh
+Index: live-boot-grml/components/9990-initramfs-tools.sh
 ===================================================================
---- live-boot-grml.orig/scripts/boot/9990-initramfs-tools.sh	2012-11-28 08:10:50.815614786 +0100
-+++ live-boot-grml/scripts/boot/9990-initramfs-tools.sh	2012-11-28 08:25:12.864563943 +0100
+--- live-boot-grml.orig/components/9990-initramfs-tools.sh	2014-03-08 13:26:25.866978105 +0100
++++ live-boot-grml/components/9990-initramfs-tools.sh	2014-03-08 13:26:25.862978575 +0100
 @@ -2,6 +2,17 @@
  
  #set -e

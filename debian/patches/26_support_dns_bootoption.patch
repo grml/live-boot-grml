@@ -5,11 +5,11 @@
 ## DP: Support dns bootoption. Usage examples: dns=8.8.8.8 / dns=8.8.8.8,1.2.3.4
 
 @DPATCH@
-Index: live-boot-grml/scripts/boot/9990-networking.sh
+Index: live-boot-grml/components/9990-networking.sh
 ===================================================================
---- live-boot-grml.orig/scripts/boot/9990-networking.sh	2013-08-15 08:01:43.007980354 +0200
-+++ live-boot-grml/scripts/boot/9990-networking.sh	2013-08-15 08:01:43.007980354 +0200
-@@ -152,7 +152,7 @@
+--- live-boot-grml.orig/components/9990-networking.sh	2014-03-08 13:33:11.615385566 +0100
++++ live-boot-grml/components/9990-networking.sh	2014-03-08 13:33:11.611386038 +0100
+@@ -151,7 +151,7 @@
  				echo "search ${DNSDOMAIN}" >> /etc/resolv.conf
  			fi
  
@@ -18,10 +18,10 @@ Index: live-boot-grml/scripts/boot/9990-networking.sh
  			do
  				if [ -n "$i" ] && [ "$i" != 0.0.0.0 ]
  				then
-Index: live-boot-grml/scripts/boot/9990-grml-networking.sh
+Index: live-boot-grml/components/9990-grml-networking.sh
 ===================================================================
---- live-boot-grml.orig/scripts/boot/9990-grml-networking.sh	2013-08-15 08:01:43.007980354 +0200
-+++ live-boot-grml/scripts/boot/9990-grml-networking.sh	2013-08-15 08:01:43.007980354 +0200
+--- live-boot-grml.orig/components/9990-grml-networking.sh	2014-03-08 13:33:11.615385566 +0100
++++ live-boot-grml/components/9990-grml-networking.sh	2014-03-08 13:33:11.611386038 +0100
 @@ -28,7 +28,12 @@
  
  # prepare a new /etc/network/interfaces file (and, possibly, a new /etc/resolv.conf)
@@ -55,10 +55,10 @@ Index: live-boot-grml/scripts/boot/9990-grml-networking.sh
 +fi
 +
  }
-Index: live-boot-grml/scripts/boot/9990-cmdline-old
+Index: live-boot-grml/components/9990-cmdline-old
 ===================================================================
---- live-boot-grml.orig/scripts/boot/9990-cmdline-old	2013-08-15 08:01:43.007980354 +0200
-+++ live-boot-grml/scripts/boot/9990-cmdline-old	2013-08-15 08:01:43.007980354 +0200
+--- live-boot-grml.orig/components/9990-cmdline-old	2014-03-08 13:33:11.615385566 +0100
++++ live-boot-grml/components/9990-cmdline-old	2014-03-08 13:33:11.611386038 +0100
 @@ -18,6 +18,19 @@
  				BOOTIF="${_PARAMETER#BOOTIF=}"
  				;;

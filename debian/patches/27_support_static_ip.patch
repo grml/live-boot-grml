@@ -6,21 +6,21 @@
 
 @DPATCH@
 
-Index: live-boot-grml/scripts/boot/9990-networking.sh
+Index: live-boot-grml/components/9990-networking.sh
 ===================================================================
---- live-boot-grml.orig/scripts/boot/9990-networking.sh	2013-08-15 08:04:49.299973806 +0200
-+++ live-boot-grml/scripts/boot/9990-networking.sh	2013-08-15 08:29:13.959972623 +0200
+--- live-boot-grml.orig/components/9990-networking.sh	2014-03-08 13:35:17.832580835 +0100
++++ live-boot-grml/components/9990-networking.sh	2014-03-08 13:35:33.106789237 +0100
 @@ -44,7 +44,7 @@
  
- 			if [ "$bootif_mac" = "$current_mac" ]
- 			then
--				DEVICE=${device##*/}
-+				ETHDEVICE="${device##*/},$ETHDEVICE" # use ethdevice
- 				break
+ 				if [ "$bootif_mac" = "$current_mac" ]
+ 				then
+-					DEVICE=${device##*/}
++					ETHDEVICE="${device##*/},$ETHDEVICE" # use ethdevice
+ 					break
+ 				fi
  			fi
- 		fi
-@@ -53,6 +53,24 @@
- 
+@@ -52,6 +52,24 @@
+ 	fi
  }
  
 +get_ipconfig_para()
@@ -44,7 +44,7 @@ Index: live-boot-grml/scripts/boot/9990-networking.sh
  do_netsetup ()
  {
  	modprobe -q af_packet # For DHCP
-@@ -63,8 +81,20 @@
+@@ -62,8 +80,20 @@
  	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
  	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
  
@@ -67,7 +67,7 @@ Index: live-boot-grml/scripts/boot/9990-networking.sh
  		# See if we can select the device from BOOTIF
  		Device_from_bootif
  
-@@ -74,14 +104,7 @@
+@@ -73,14 +103,7 @@
  		if [ -z "$ETHDEVICE" ]
  		then
  			echo "If you want to boot from a specific device use bootoption ethdevice=..."
@@ -83,7 +83,7 @@ Index: live-boot-grml/scripts/boot/9990-networking.sh
  		fi
  
  		# split args of ethdevice=eth0,eth1 into "eth0 eth1"
-@@ -90,42 +113,29 @@
+@@ -89,42 +112,29 @@
  			devlist="$devlist $device"
  		done
  
@@ -116,21 +116,21 @@ Index: live-boot-grml/scripts/boot/9990-networking.sh
 -			then
 -				export DEVICE="$dev"
 -				break
--			fi
++
++			IPV4ADDR="0.0.0.0"
++			if [ -e "/run/net-${device}.conf" ]; then
++				. /run/net-${device}.conf
+ 			fi
 -		done
 -	else
 -		for interface in ${DEVICE}; do
 -			ipconfig -t "$ETHDEV_TIMEOUT" ${interface} | tee /netboot-${interface}.config
 -
 -			[ -e /run/net-${interface}.conf ] && . /run/net-${interface}.conf
- 
+-
 -			if [ "$IPV4ADDR" != "0.0.0.0" ]
 -			then
 -				break
-+			IPV4ADDR="0.0.0.0"
-+			if [ -e "/run/net-${device}.conf" ]; then
-+				. /run/net-${device}.conf
-+			fi
 +			if [ "${IPV4ADDR}" != "0.0.0.0" ]; then
 +				export DEVICE="$dev $DEVICE"
 +				# break  # exit loop as we just use the irst
@@ -141,10 +141,10 @@ Index: live-boot-grml/scripts/boot/9990-networking.sh
  
  	for interface in ${DEVICE}
  	do
-Index: live-boot-grml/scripts/boot/9990-cmdline-old
+Index: live-boot-grml/components/9990-cmdline-old
 ===================================================================
---- live-boot-grml.orig/scripts/boot/9990-cmdline-old	2013-08-15 08:04:49.299973806 +0200
-+++ live-boot-grml/scripts/boot/9990-cmdline-old	2013-08-15 08:04:49.295973806 +0200
+--- live-boot-grml.orig/components/9990-cmdline-old	2014-03-08 13:35:17.832580835 +0100
++++ live-boot-grml/components/9990-cmdline-old	2014-03-08 13:35:17.828581304 +0100
 @@ -51,9 +51,8 @@
  				;;
  

@@ -6,9 +6,11 @@
 
 @DPATCH@
 
---- a/backends/initramfs-tools/live.hook
-+++ b/backends/initramfs-tools/live.hook
-@@ -16,6 +16,12 @@ do
+Index: live-boot-grml/backend/initramfs-tools/live.hook
+===================================================================
+--- live-boot-grml.orig/backend/initramfs-tools/live.hook	2014-03-08 13:18:27.443095163 +0100
++++ live-boot-grml/backend/initramfs-tools/live.hook	2014-03-08 13:18:27.439095633 +0100
+@@ -16,6 +16,12 @@
  	fi
  done
  
@@ -19,5 +21,5 @@
 +fi
 +
  # Checking live-boot
- if [ ! -e /lib/live/boot ]
+ if [ ! -e /bin/live-boot ]
  then

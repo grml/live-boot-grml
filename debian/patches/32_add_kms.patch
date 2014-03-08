@@ -1,7 +1,7 @@
 Index: live-boot-grml/hooks/kms
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ live-boot-grml/backends/initramfs-tools/kms.hook	2011-12-06 22:09:55.000000000 +0100
++++ live-boot-grml/backend/initramfs-tools/kms.hook	2011-12-06 22:09:55.000000000 +0100
 @@ -0,0 +1,25 @@
 +#!/bin/sh
 +# hook for adding kms modules

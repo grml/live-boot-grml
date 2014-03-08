@@ -1,10 +1,12 @@
 From: Evgeni Golov <evgeni@debian.org>
 Subject: restore support for old persistence media
 
---- a/scripts/boot/9990-aaa-fixme.sh
-+++ b/scripts/boot/9990-aaa-fixme.sh
-@@ -40,7 +40,10 @@
- 	udevinfo='udevinfo'
+Index: live-boot-grml/components/9990-aaa-fixme.sh
+===================================================================
+--- live-boot-grml.orig/components/9990-aaa-fixme.sh	2014-03-08 13:43:19.172121783 +0100
++++ live-boot-grml/components/9990-aaa-fixme.sh	2014-03-08 13:43:19.164122722 +0100
+@@ -26,5 +26,8 @@
+ 	export PATH
  fi
  
 +old_root_overlay_label="live-rw"
@@ -12,11 +14,11 @@ Subject: restore support for old persistence media
  custom_overlay_label="persistence"
 +old_custom_overlay_label="custom-ov"
  persistence_list="persistence.conf"
- old_persistence_list="live-persistence.conf"
- 
---- a/scripts/boot/9990-misc-helpers.sh
-+++ b/scripts/boot/9990-misc-helpers.sh
-@@ -1582,6 +1582,32 @@
+Index: live-boot-grml/components/9990-misc-helpers.sh
+===================================================================
+--- live-boot-grml.orig/components/9990-misc-helpers.sh	2014-03-08 13:43:19.172121783 +0100
++++ live-boot-grml/components/9990-misc-helpers.sh	2014-03-08 13:43:19.168122252 +0100
+@@ -1632,6 +1632,32 @@
  	echo ${used_devices}
  }
  
@@ -49,8 +51,10 @@ Subject: restore support for old persistence media
  is_mountpoint ()
  {
  	directory="$1"
---- a/scripts/boot/9990-overlay.sh
-+++ b/scripts/boot/9990-overlay.sh
+Index: live-boot-grml/components/9990-overlay.sh
+===================================================================
+--- live-boot-grml.orig/components/9990-overlay.sh	2014-03-08 13:43:19.172121783 +0100
++++ live-boot-grml/components/9990-overlay.sh	2014-03-08 13:43:19.168122252 +0100
 @@ -210,7 +210,7 @@
  
  		if is_in_comma_sep_list overlay ${PERSISTENCE_METHOD}

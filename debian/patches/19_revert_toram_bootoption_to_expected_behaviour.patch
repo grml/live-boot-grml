@@ -27,17 +27,8 @@
 @DPATCH@
 
 index d79beed..1b6926e 100755
---- a/scripts/boot/9990-toram-todisk.sh
-+++ b/scripts/boot/9990-toram-todisk.sh
-@@ -10,7 +10,7 @@
- 
- 	if [ -z "${MODULETORAM}" ]
- 	then
--		size=$(fs_size "" ${copyfrom}/${LIVE_MEDIA_PATH} "used")
-+		size=$(fs_size "" ${copyfrom}/ "used")
- 	else
- 		MODULETORAMFILE="${copyfrom}/${LIVE_MEDIA_PATH}/${MODULETORAM}"
- 
+--- a/components/9990-toram-todisk.sh
++++ b/components/9990-toram-todisk.sh
 @@ -86,8 +86,7 @@
  				echo " * Copying whole medium to RAM" 1>/dev/console
  				rsync -a --progress ${copyfrom}/* ${copyto} 1>/dev/console  # "cp -a" from busybox also copies hidden files

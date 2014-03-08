@@ -7,9 +7,11 @@ Date:   Mon Jul 11 12:42:24 2011 +0200
     phram doesn't work on first modprobe, when loading once again it seems
     to work. So let's try it this way.
 
---- a/scripts/boot/9990-main.sh
-+++ b/scripts/boot/9990-main.sh
-@@ -60,6 +60,7 @@
+Index: live-boot-grml/components/9990-main.sh
+===================================================================
+--- live-boot-grml.orig/components/9990-main.sh	2014-03-08 13:38:03.673128454 +0100
++++ live-boot-grml/components/9990-main.sh	2014-03-08 13:38:03.669128922 +0100
+@@ -58,6 +58,7 @@
  				then
  					# We found a memdisk, set up phram
  					modprobe phram phram=memdisk,${MEMDISK}

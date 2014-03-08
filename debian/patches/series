@@ -19,5 +19,3 @@
 40_support_multiple_hooks.patch
 41_drop_nameserver_from_ip_option.patch
 42_restore_support_for_old_persistence.patch
-43_fix_udev_usage_in_is_nice_device.patch
-44_fix_mdadm_usage_for_findiso.patch

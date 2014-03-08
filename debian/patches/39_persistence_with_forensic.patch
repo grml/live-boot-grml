@@ -1,5 +1,5 @@
---- a/scripts/boot/0020-read-only
-+++ b/scripts/boot/0020-read-only
+--- a/components/0020-read-only
++++ b/components/0020-read-only
 @@ -53,4 +53,20 @@
  				;;
  		esac
