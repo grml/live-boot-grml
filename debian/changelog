@@ -1,6 +1,13 @@
 live-boot (4.0~alpha19-1+grml.1) unstable; urgency=medium
 
   * Sync Debian's 4.0~alpha19-1.
+  * update our patches on top of Debian's 4.0~alpha19
+    Droped patches:
+     - 43_fix_udev_usage_in_is_nice_device.patch
+     - 44_fix_mdadm_usage_for_findiso.patch
+  * move Grml-specific patches to a separate subfolder
+  * move reverts/restores of old upstream behaviour to an own subdir
+  * consolidate Grml network related patches into 15_networking_grml.patch
 
  -- Evgeni Golov <evgeni@grml.org>  Sat, 08 Mar 2014 13:59:28 +0100
 
