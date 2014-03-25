@@ -1,0 +1,96 @@
+From 5fff70167b23195380c1e18dd9ac785641ab9f3e Mon Sep 17 00:00:00 2001
+From: Evgeni Golov <evgeni@grml.org>
+Date: Tue, 25 Mar 2014 08:38:58 +0100
+Subject: [PATCH 2/2] support resolvconf in the squashfs
+
+when resolvconf is used in the squashfs, /etc/resolv.conf is a symlink
+to the generated version. depending on the size of the squashfs, the
+moon phase and the charge of the flux capacitor, we sometimes try to
+write to /etc/resolv.conf while it still points to nirvana, as resolvconf
+did not generate it yet.
+
+instead of being racy and writing to a file which will be regenerated
+anyways, let's detect resolvconf and write to its base file instead.
+
+initial detection idea by Mika Prokop <mika@grml.org>
+---
+ components/9990-main.sh    | 12 +++++++++---
+ components/9990-netbase.sh | 15 ++++++++++-----
+ 2 files changed, 19 insertions(+), 8 deletions(-)
+
+diff --git a/components/9990-main.sh b/components/9990-main.sh
+index 83f087f..85b8a1d 100755
+--- a/components/9990-main.sh
++++ b/components/9990-main.sh
+@@ -178,10 +178,16 @@ Live ()
+ 		fi
+ 	fi
+ 
+-	if [ -f /etc/resolv.conf ] && [ ! -s ${rootmnt}/etc/resolv.conf ]
++	if [ -L /root/etc/resolv.conf ] ; then
++		# assume we have resolvconf
++		DNSFILE="${rootmnt}/etc/resolvconf/resolv.conf.d/base"
++	else
++		DNSFILE="${rootmnt}/etc/resolv.conf"
++	fi
++	if [ -f /etc/resolv.conf ] && [ ! -s ${DNSFILE} ]
+ 	then
+-		log_begin_msg "Copying /etc/resolv.conf to ${rootmnt}/etc/resolv.conf"
+-		cp -v /etc/resolv.conf ${rootmnt}/etc/resolv.conf
++		log_begin_msg "Copying /etc/resolv.conf to ${DNSFILE}"
++		cp -v /etc/resolv.conf ${DNSFILE}
+ 		log_end_msg
+ 	fi
+ 
+diff --git a/components/9990-netbase.sh b/components/9990-netbase.sh
+index af3522f..a32a47b 100755
+--- a/components/9990-netbase.sh
++++ b/components/9990-netbase.sh
+@@ -16,7 +16,12 @@ Netbase ()
+ 	log_begin_msg "Preconfiguring networking"
+ 
+ 	IFFILE="/root/etc/network/interfaces"
+-	DNSFILE="/root/etc/resolv.conf"
++	if [ -L /root/etc/resolv.conf ] ; then
++		# assume we have resolvconf
++		DNSFILE="/root/etc/resolvconf/resolv.conf.d/base"
++	else
++		DNSFILE="/root/etc/resolv.conf"
++	fi
+ 
+ 	if [ "${STATICIP}" = "frommedia" ] && [ -e "${IFFILE}" ]
+ 	then
+@@ -102,7 +107,7 @@ EOF
+ 			done
+ 		fi
+ 
+-		if [ ! -f /root/etc/resolv.conf ] || [ -z "$(cat /root/etc/resolv.conf)" ]
++		if [ ! -f "${DNSFILE}" ] || [ -z "$(cat ${DNSFILE})" ]
+ 		then
+ 			if [ -f /netboot.config ]
+ 			then
+@@ -112,7 +117,7 @@ EOF
+ 				rc_search=$(cat netboot.config | awk '/domain/ { print $3 }')
+ 				rc_server0="$(cat netboot.config | awk '/dns0/ { print $5 }')"
+ 
+-cat > /root/etc/resolv.conf << EOF
++cat > $DNSFILE << EOF
+ search ${rc_search}
+ domain ${rc_search}
+ nameserver ${rc_server0}
+@@ -122,10 +127,10 @@ EOF
+ 
+ 				if [ "${rc_server1}" != "0.0.0.0" ]
+ 				then
+-					echo "nameserver ${rc_server1}" >> /root/etc/resolv.conf
++					echo "nameserver ${rc_server1}" >> $DNSFILE
+ 				fi
+ 
+-				cat /root/etc/resolv.conf >> /root/var/log/netboot.config
++				cat $DNSFILE >> /root/var/log/netboot.config
+ 			fi
+ 		fi
+ 	fi
+-- 
+1.9.1
+

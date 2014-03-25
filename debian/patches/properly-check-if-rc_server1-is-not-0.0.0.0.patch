@@ -1,0 +1,26 @@
+From ec970bc1135d4bded85a1e02021bb25adc2629b5 Mon Sep 17 00:00:00 2001
+From: Evgeni Golov <evgeni@grml.org>
+Date: Tue, 25 Mar 2014 08:03:31 +0100
+Subject: [PATCH 1/2] properly check if $rc_server1 is not "0.0.0.0"
+
+`if [ "${rc_server1}" ! = "0.0.0.0" ]` is wrong shell syntax
+---
+ components/9990-netbase.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/components/9990-netbase.sh b/components/9990-netbase.sh
+index 496c3ff..af3522f 100755
+--- a/components/9990-netbase.sh
++++ b/components/9990-netbase.sh
+@@ -120,7 +120,7 @@ EOF
+ 
+ 				rc_server1=$(cat netboot.config | awk '/dns0/ { print $8 }')
+ 
+-				if [ "${rc_server1}" ! = "0.0.0.0" ]
++				if [ "${rc_server1}" != "0.0.0.0" ]
+ 				then
+ 					echo "nameserver ${rc_server1}" >> /root/etc/resolv.conf
+ 				fi
+-- 
+1.9.1
+
