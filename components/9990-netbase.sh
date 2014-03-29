@@ -120,7 +120,7 @@ EOF
 
 				rc_server1=$(cat netboot.config | awk '/dns0/ { print $8 }')
 
-				if [ "${rc_server1}" ! = "0.0.0.0" ]
+				if [ "${rc_server1}" != "0.0.0.0" ]
 				then
 					echo "nameserver ${rc_server1}" >> /root/etc/resolv.conf
 				fi
