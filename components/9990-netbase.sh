@@ -16,7 +16,12 @@ Netbase ()
 	log_begin_msg "Preconfiguring networking"
 
 	IFFILE="/root/etc/network/interfaces"
-	DNSFILE="/root/etc/resolv.conf"
+	if [ -L /root/etc/resolv.conf ] ; then
+		# assume we have resolvconf
+		DNSFILE="/root/etc/resolvconf/resolv.conf.d/base"
+	else
+		DNSFILE="/root/etc/resolv.conf"
+	fi
 
 	if [ "${STATICIP}" = "frommedia" ] && [ -e "${IFFILE}" ]
 	then
@@ -102,7 +107,7 @@ EOF
 			done
 		fi
 
-		if [ ! -f /root/etc/resolv.conf ] || [ -z "$(cat /root/etc/resolv.conf)" ]
+		if [ ! -f "${DNSFILE}" ] || [ -z "$(cat ${DNSFILE})" ]
 		then
 			if [ -f /netboot.config ]
 			then
@@ -112,7 +117,7 @@ EOF
 				rc_search=$(cat netboot.config | awk '/domain/ { print $3 }')
 				rc_server0="$(cat netboot.config | awk '/dns0/ { print $5 }')"
 
-cat > /root/etc/resolv.conf << EOF
+cat > $DNSFILE << EOF
 search ${rc_search}
 domain ${rc_search}
 nameserver ${rc_server0}
@@ -122,10 +127,10 @@ EOF
 
 				if [ "${rc_server1}" != "0.0.0.0" ]
 				then
-					echo "nameserver ${rc_server1}" >> /root/etc/resolv.conf
+					echo "nameserver ${rc_server1}" >> $DNSFILE
 				fi
 
-				cat /root/etc/resolv.conf >> /root/var/log/netboot.config
+				cat $DNSFILE >> /root/var/log/netboot.config
 			fi
 		fi
 	fi
