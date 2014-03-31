@@ -1,3 +1,9 @@
+live-boot (4.0~alpha21-1) unstable; urgency=low
+
+  * Building with dh --parallel.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Mon, 31 Mar 2014 21:55:30 +0200
+
 live-boot (4.0~alpha20-1) unstable; urgency=low
 
   [ Trent W. Buck ]
