@@ -376,7 +376,7 @@ setup_unionfs ()
 	then
 		local custom_mounts
 		custom_mounts="/tmp/custom_mounts.list"
-		rm -rf ${custom_mounts} 2> /dev/null
+		rm -f ${custom_mounts}
 
 		# Gather information about custom mounts from devies detected as overlays
 		get_custom_mounts ${custom_mounts} ${overlay_devices}
@@ -387,7 +387,7 @@ setup_unionfs ()
 		local used_overlays
 		used_overlays=""
 		used_overlays=$(activate_custom_mounts ${custom_mounts})
-		rm ${custom_mounts}
+		rm -f ${custom_mounts}
 
 		# Close unused overlays (e.g. due to missing $persistence_list)
 		for overlay in ${overlay_devices}

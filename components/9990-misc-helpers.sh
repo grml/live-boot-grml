@@ -1422,7 +1422,7 @@ get_custom_mounts ()
 	prev_dest=""
 	# This sort will ensure that a source /a comes right before a source
 	# /a/b so we only need to look at the previous source
-	sort -k2 -b ${custom_mounts} |
+	[ -e ${custom_mounts} ] && sort -k2 -b ${custom_mounts} |
 	while read device source dest options
 	do
 		if echo ${source} | grep -qe "^${prev_source}\(/.*\)\?$"
