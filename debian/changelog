@@ -1,3 +1,9 @@
+live-boot (4.0~alpha21-1+grml.1) UNRELEASED; urgency=medium
+
+  * Import 4.0~alpha21 from Debian.
+
+ -- Evgeni Golov <evgeni@grml.org>  Thu, 10 Apr 2014 08:29:49 +0200
+
 live-boot (4.0~alpha21-1) unstable; urgency=low
 
   * Building with dh --parallel.
