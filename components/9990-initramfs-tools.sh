@@ -31,7 +31,7 @@ panic()
 	do
 		case "${_PARAMETER}" in
 			panic=*)
-				panic="${_PARAMETER#*verify-checksums=}"
+				panic="${_PARAMETER#*panic=}"
 				;;
 		esac
 	done
