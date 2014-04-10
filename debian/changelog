@@ -1,3 +1,21 @@
+live-boot (4.0~alpha21-1) unstable; urgency=low
+
+  * Building with dh --parallel.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Mon, 31 Mar 2014 21:55:30 +0200
+
+live-boot (4.0~alpha20-1) unstable; urgency=low
+
+  [ Trent W. Buck ]
+  * Fix cut-and-paste typo verify-checksums -> panic.
+
+  [ Evgeni Golov ]
+  * Properly check if $rc_server1 is not "0.0.0.0".
+  * Supporting resolvconf in the squashfs.
+  * Do not throw warnings when /tmp/custom_mounts.list does not exist.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Mon, 31 Mar 2014 21:38:22 +0200
+
 live-boot (4.0~alpha19-1+grml.3) unstable; urgency=medium
 
   * [8acc928] try to be smarter when booting a squashfs image from

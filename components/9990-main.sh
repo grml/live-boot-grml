@@ -178,10 +178,16 @@ Live ()
 		fi
 	fi
 
-	if [ -f /etc/resolv.conf ] && [ ! -s ${rootmnt}/etc/resolv.conf ]
+	if [ -L /root/etc/resolv.conf ] ; then
+		# assume we have resolvconf
+		DNSFILE="${rootmnt}/etc/resolvconf/resolv.conf.d/base"
+	else
+		DNSFILE="${rootmnt}/etc/resolv.conf"
+	fi
+	if [ -f /etc/resolv.conf ] && [ ! -s ${DNSFILE} ]
 	then
-		log_begin_msg "Copying /etc/resolv.conf to ${rootmnt}/etc/resolv.conf"
-		cp -v /etc/resolv.conf ${rootmnt}/etc/resolv.conf
+		log_begin_msg "Copying /etc/resolv.conf to ${DNSFILE}"
+		cp -v /etc/resolv.conf ${DNSFILE}
 		log_end_msg
 	fi
 

@@ -5,7 +5,7 @@ build:
 	dh build
 
 %:
-	dh ${@} --with quilt
+	dh ${@} --with quilt --parallel
 
 override_dh_auto_install:
 	dh_auto_install -- DESTDIR=debian/tmp
