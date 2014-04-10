@@ -17,5 +17,3 @@ grml-specific/package_rename.patch
 reverts/drop_nameserver_from_ip_option.patch
 reverts/restore_support_for_old_persistence.patch
 41_vlan_support.patch
-properly-check-if-rc_server1-is-not-0.0.0.0.patch
-support-resolvconf-in-the-squashfs.patch
