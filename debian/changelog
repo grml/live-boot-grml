@@ -1,3 +1,9 @@
+live-boot (4.0.0-1+grml.1) unstable; urgency=medium
+
+  * Import 4.0.0-1 from Debian.
+
+ -- Evgeni Golov <evgeni@grml.org>  Thu, 28 Aug 2014 17:55:20 +0200
+
 live-boot (4.0.0-1) unstable; urgency=low
 
   [ Carlos Zuferri ]
