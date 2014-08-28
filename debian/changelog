@@ -1,3 +1,16 @@
+live-boot (4.0.0-1) unstable; urgency=low
+
+  [ Carlos Zuferri ]
+  * Removing obsolete flag '--no-backups' from po4a options.
+  * Adding '--package-version' to po4a options.
+  * Adding .po integrity check target to manpages/Makefile.
+
+  [ Daniel Baumann ]
+  * Adding plymouth support for LUKS passwort prompt based on a patch from
+    Gaudenz Steinlin <gaudenz@debian.org> (Closes: #754166).
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Wed, 27 Aug 2014 19:52:09 +0200
+
 live-boot (4.0~alpha21-1) unstable; urgency=low
 
   * Building with dh --parallel.
