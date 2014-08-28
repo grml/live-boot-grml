@@ -803,9 +803,30 @@ open_luks_device ()
 
 	load_keymap
 
+	# check for plymouth
+	if [ -x /bin/plymouth ]
+	then
+		_PLYMOUTH="true"
+	fi
+
+	case "${_PLYMOUTH}" in
+		true)
+			plymouth --ping
+
+			cryptkeyscript="plymouth ask-for-password --prompt"
+			# Plymouth will add a : if it is a non-graphical prompt
+			cryptkeyprompt="Please unlock disk ${dev}"
+			;;
+
+		*)
+			cryptkeyscript="/lib/cryptsetup/askpass"
+			cryptkeyprompt="Please unlock disk ${dev}: "
+			;;
+	esac
+
 	while true
 	do
-		/lib/cryptsetup/askpass "Enter passphrase for ${dev}: " | \
+		$cryptkeyscript "$cryptkeyprompt" | \
 			/sbin/cryptsetup -T 1 luksOpen ${dev} ${name} ${opts}
 
 		if [ 0 -eq ${?} ]
@@ -816,11 +837,28 @@ open_luks_device ()
 		fi
 
 		echo >&6
-		echo -n "There was an error decrypting ${dev} ... Retry? [Y/n] " >&6
-		read answer
+		retryprompt="There was an error decrypting ${dev} ... Retry? [Y/n]"
+
+		case "${_PLYMOUTH}" in
+			true)
+				plymouth display-message --text "${retryprompt}"
+				answer=$(plymouth watch-keystroke --keys="YNyn")
+				;;
+
+			*)
+				echo -n "${retryprompt} " >&6
+				read answer
+				;;
+		esac
 
 		if [ "$(echo "${answer}" | cut -b1 | tr A-Z a-z)" = "n" ]
 		then
+			case "${_PLYMOUTH}" in
+				true)
+					plymouth display-message --text ""
+					;;
+			esac
+
 			return 2
 		fi
 	done
