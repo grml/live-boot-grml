@@ -1,4 +1,4 @@
-# Japenese translations for live-boot package
+# Japanese translations for live-boot package
 # Copyright (C) 2013-2014 victory <victory.deb@gmail.com>
 # This file is distributed under the same license as the live-boot package.
 #
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 4.0.0-1\n"
 "POT-Creation-Date: 2014-08-27 19:52+0200\n"
-"PO-Revision-Date: 2013-11-06 04:30+0900\n"
+"PO-Revision-Date: 2014-08-28 02:52+0900\n"
 "Last-Translator: victory <victory.deb@gmail.com>\n"
 "Language-Team: none\n"
 "Language: ja\n"
@@ -24,13 +24,13 @@ msgstr "LIVE-BOOT"
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "2014-08-27"
-msgstr ""
+msgstr "2014-08-27"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "4.0~alpha21-1"
-msgstr ""
+msgstr "4.0~alpha21-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
@@ -189,9 +189,9 @@ msgstr ""
 "リ) を使うことはできません。Live ファイルシステムのI<ディレクトリ>に対するあ"
 "らゆる変更 (ファイルの削除や作成、変更) はそれを有効にした段階でソースディレ"
 "クトリと呼ばれる保持用メディアのI<ディレクトリ>に相当するパスに持続的に保管さ"
-"れます。保持を実現するデフォルトの方法は対応するソースディレクトリをバインド"
-"型のマウントをI<ディレクトリ>に対して単純に行う方法ですが、これはI<オプション"
-">を使うことで変更できます。"
+"れます。保持を実現するデフォルトの方法は対応するソースディレクトリをI<ディレ"
+"クトリ>に対して単純にバインドマウントする方法ですが、これはI<オプション>を使"
+"うことで変更できます。"
 
 #. type: Plain text
 #: en/persistence.conf.5:48
@@ -289,8 +289,8 @@ msgstr "B<bind>"
 #: en/persistence.conf.5:74
 msgid "Bind-mount the source directory to I<DIR>. This is the default."
 msgstr ""
-"ソースディレクトリをI<ディレクトリ>に対してバインド型のマウントを行います。こ"
-"れはデフォルトです。"
+"ソースディレクトリをI<ディレクトリ>にバインドマウントします。これはデフォルト"
+"です。"
 
 #. type: IP
 #: en/persistence.conf.5:74
@@ -354,14 +354,13 @@ msgid ""
 "supported with B<union=unionmount>."
 msgstr ""
 "結合ファイルシステムの rw ブランチを保持用メディアに保存するため、変更点だけ"
-"を持続的に保管します。バインド型のマウントと比較するとこの方法は潜在的にディ"
-"スク使用量を減らせる可能性があり、また読み取り専用メディアに追加したファイル"
-"を隠しません。1つ注意があり、結合後に実際のファイルシステムのルートではなくイ"
-"メージの読み取り専用ファイルシステムからI<ディレクトリ>を使うため、(例えば "
-"live-config により) ブート後に作成されたファイルは結合後には見えなくなりま"
-"す。このオプションは live-boot の B<union> ブートパラメータにより指定された結"
-"合ファイルシステムを使いますが、B<union=unionmount> ではサポートしていませ"
-"ん。"
+"を持続的に保管します。バインドマウントと比較するとこの方法は潜在的にディスク"
+"使用量を減らせる可能性があり、また読み取り専用メディアに追加したファイルを隠"
+"しません。1つ注意があり、結合後に実際のファイルシステムのルートではなくイメー"
+"ジの読み取り専用ファイルシステムからI<ディレクトリ>を使うため、(例えば live-"
+"config により) ブート後に作成されたファイルは結合後には見えなくなります。この"
+"オプションは live-boot の B<union> ブートパラメータにより指定された結合ファイ"
+"ルシステムを使いますが、B<union=unionmount> ではサポートしていません。"
 
 #. type: SH
 #: en/persistence.conf.5:102
@@ -499,8 +498,8 @@ msgid ""
 msgstr ""
 "1行目と2行目の独自マウントが3行目によって隠されるのを回避するため3行目は1行目"
 "と2行目よりも先に処理されます。3行目が処理された時点で I<VOL>/home は単純に /"
-"home に対するバインド型のマウントが行われた状態になります。1行目と2行目で起き"
-"たことを説明するため、以下のファイルが存在するとしましょう:"
+"home に対してバインドマウントした状態になります。1行目と2行目で起きたことを説"
+"明するため、以下のファイルが存在するとしましょう:"
 
 #. type: TP
 #: en/persistence.conf.5:151
@@ -606,10 +605,10 @@ msgstr ""
 "4行目はそのI<ディレクトリ> (とソースディレクトリ) が他のどの独自マウントとも"
 "完全に分離しているためいつでもマウントできます。マウントすると、I<VOL>/usr "
 "は B<union> オプションが指定されているため rw ブランチになり、元の読み取り専"
-"用ファイルシステムと比較した差分だけが収録されます。そのため、バインド型のマ"
-"ウントと比較すると容量の面で非常に効率良くパッケージを /usr にインストールで"
-"きます。これは後者では初期の自動処理で /usr 全体を I<VOL>/usr にコピーする必"
-"要があるためです。"
+"用ファイルシステムと比較した差分だけが収録されます。そのため、バインドマウン"
+"トと比較すると容量の面で非常に効率良くパッケージを /usr にインストールできま"
+"す。これは後者では初期の自動処理で /usr 全体を I<VOL>/usr にコピーする必要が"
+"あるためです。"
 
 #. type: Plain text
 #: en/persistence.conf.5:193
