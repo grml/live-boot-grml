@@ -1,12 +1,12 @@
-# Japenese translations for live-boot package
+# Japanese translations for live-boot package
 # Copyright (C) 2013-2014 victory <victory.deb@gmail.com>
 # This file is distributed under the same license as the live-boot package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 4.0.0-1\n"
-"POT-Creation-Date: 2014-08-27 19:52+0200\n"
-"PO-Revision-Date: 2013-11-10 20:10+0900\n"
+"Project-Id-Version: live-boot\n"
+"POT-Creation-Date: 2014-10-25 14:25+0200\n"
+"PO-Revision-Date: 2014-08-28 02:52+0900\n"
 "Last-Translator: victory <victory.deb@gmail.com>\n"
 "Language-Team: none\n"
 "Language: ja\n"
@@ -23,13 +23,13 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2014-08-27"
+msgid "2014-10-25"
 msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "4.0~alpha21-1"
+msgid "4.0.1-1"
 msgstr ""
 
 #. type: TH
