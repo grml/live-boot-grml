@@ -1,3 +1,20 @@
+live-boot (4.0.1-1) unstable; urgency=low
+
+  [ victory ]
+  * Change a wording and fix a typo in the po header, in Japanese
+    translation.
+
+  [ Daniel Baumann ]
+  * Updating to standards version 3.9.6.
+
+  [ Carlos Zuferri ]
+  * Fixing typo in warning message.
+
+  [ Daniel Baumann ]
+  * Dropping empty German manpage translations.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Sat, 25 Oct 2014 14:26:22 +0200
+
 live-boot (4.0.0-1+grml.1) unstable; urgency=medium
 
   * Import 4.0.0-1 from Debian.
