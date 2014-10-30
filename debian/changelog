@@ -1,3 +1,9 @@
+live-boot (4.0.1-1+grml.2) unstable; urgency=medium
+
+  * stop using /etc/fstab.d
+
+ -- Evgeni Golov <evgeni@debian.org>  Thu, 30 Oct 2014 07:31:08 +0100
+
 live-boot (4.0.1-1+grml.1) unstable; urgency=medium
 
   * Import 4.0.1-1 from Debian.
