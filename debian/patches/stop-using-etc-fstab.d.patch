@@ -1,0 +1,55 @@
+From 4f8f45737d2dd451eafc8fb6cf8d1ce1917015ee Mon Sep 17 00:00:00 2001
+From: Evgeni Golov <evgeni@grml.org>
+Date: Wed, 29 Oct 2014 18:03:06 +0100
+Subject: [PATCH] stop using /etc/fstab.d
+
+/etc/fstab.d support was removed from util-linux in 2.25-4:
+ https://bugs.debian.org/666163
+
+Stop using it, and revert back to good old /etc/fstab.
+---
+ components/3020-swap     | 4 ++--
+ components/9990-fstab.sh | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/components/3020-swap b/components/3020-swap
+index a1bcdbe..f977d0f 100755
+--- a/components/3020-swap
++++ b/components/3020-swap
+@@ -50,8 +50,8 @@ Swap ()
+ 	# Remove all auto swap entries
+ 	if grep -qs "swap swap" /root/etc/fstab.d/swap
+ 	then
+-		grep -v "swap swap" /root/etc/fstab.d/swap > /root/etc/fstab.d/swap.tmp
+-		mv /root/etc/fstab.d/swap.tmp /root/etc/fstab.d/swap
++		grep -v "swap swap" /root/etc/fstab > /root/etc/fstab.tmp
++		mv /root/etc/fstab.tmp /root/etc/fstab
+ 	fi
+ 
+ 	# Add new swap entries
+diff --git a/components/9990-fstab.sh b/components/9990-fstab.sh
+index 5ae9546..a8d9123 100755
+--- a/components/9990-fstab.sh
++++ b/components/9990-fstab.sh
+@@ -15,14 +15,14 @@ Fstab ()
+ 
+ 	log_begin_msg "Configuring fstab"
+ 
+-	if ! grep -qs  "^${UNIONTYPE}" /root/etc/fstab.d/live
++	if ! grep -qs  "^${UNIONTYPE}" /root/etc/fstab
+ 	then
+-		echo "${UNIONTYPE} / ${UNIONTYPE} rw 0 0" >> /root/etc/fstab.d/live
++		echo "${UNIONTYPE} / ${UNIONTYPE} rw 0 0" >> /root/etc/fstab
+ 	fi
+ 
+-	if ! grep -qs "^tmpfs /tmp" /root/etc/fstab.d/live
++	if ! grep -qs "^tmpfs /tmp" /root/etc/fstab
+ 	then
+-		echo "tmpfs /tmp tmpfs nosuid,nodev 0 0" >> /root/etc/fstab.d/live
++		echo "tmpfs /tmp tmpfs nosuid,nodev 0 0" >> /root/etc/fstab
+ 	fi
+ 
+ 	log_end_msg
+-- 
+2.1.1
+
