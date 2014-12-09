@@ -426,7 +426,7 @@ is_supported_fs ()
 		return 0
 	else
 		# Then try to add support for it the gentle way using the initramfs capabilities
-		modprobe ${fstype}
+		modprobe -q -b ${fstype}
 		if grep -q ${fstype} /proc/filesystems
 		then
 			return 0
