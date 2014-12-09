@@ -1415,7 +1415,7 @@ get_custom_mounts ()
 					union|bind)
 						;;
 					*)
-						log_warning_msg "Skipping custom mount with unkown option: ${opt}"
+						log_warning_msg "Skipping custom mount with unknown option: ${opt}"
 						continue 2
 						;;
 				esac
