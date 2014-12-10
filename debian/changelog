@@ -10,6 +10,14 @@ live-boot (4.0.2-1) unstable; urgency=low
 
  -- Daniel Baumann <mail@daniel-baumann.ch>  Wed, 10 Dec 2014 10:36:04 +0100
 
+live-boot (4.0.1-1+grml.3) unstable; urgency=medium
+
+  [ Evgeni Golov ]
+  * [ca03a16] update stop-using-etc-fstab.d.patch to latest upstream
+    version
+
+ -- Michael Prokop <mika@grml.org>  Thu, 13 Nov 2014 09:56:07 +0100
+
 live-boot (4.0.1-1+grml.2) unstable; urgency=medium
 
   * stop using /etc/fstab.d
