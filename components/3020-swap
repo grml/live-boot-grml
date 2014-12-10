@@ -48,15 +48,15 @@ Swap ()
 	done
 
 	# Remove all auto swap entries
-	if grep -qs "swap swap" /root/etc/fstab.d/swap
+	if grep -qs "swap swap" /root/etc/fstab
 	then
-		grep -v "swap swap" /root/etc/fstab.d/swap > /root/etc/fstab.d/swap.tmp
-		mv /root/etc/fstab.d/swap.tmp /root/etc/fstab.d/swap
+		grep -v "swap swap" /root/etc/fstab > /root/etc/fstab.tmp
+		mv /root/etc/fstab.tmp /root/etc/fstab
 	fi
 
 	# Add new swap entries
 	for _DEVICE in ${_SWAP_DEVICES}
 	do
-		echo "${_DEVICE} swap swap defaults 0 0" >> /root/etc/fstab.d/swap
+		echo "${_DEVICE} swap swap defaults 0 0" >> /root/etc/fstab
 	done
 }
