@@ -1,3 +1,15 @@
+live-boot (4.0.2-1) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Dropping usage of /etc/fstab.d since util-linux removed it, thanks to
+    Evgeni Golov <evgeni+git@golov.de> for reporting it.
+
+  [ Jan Blunck ]
+  * Fix spelling of unknown
+  * Suppress annoying but harmless warning about unknown module
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Wed, 10 Dec 2014 10:36:04 +0100
+
 live-boot (4.0.1-1+grml.2) unstable; urgency=medium
 
   * stop using /etc/fstab.d
