@@ -14,7 +14,7 @@ Index: live-boot-grml/components/9990-networking.sh
  			fi
  
 -			for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1}
-+			for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1} ${DNSSERVER1} ${DNSSERVER2}
++			for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1} ${DNSSERVERS}
  			do
  				if [ -n "$i" ] && [ "$i" != 0.0.0.0 ]
  				then
@@ -27,16 +27,10 @@ Index: live-boot-grml/components/9990-cmdline-old
  				;;
  
 +			dns=*)
-+			  	DNSSERVER="${_PARAMETER#*=}"
-+				if echo "${DNSSERVER}" | grep -q , ; then
-+					DNSSERVER1="${DNSSERVER%,*}"
-+					DNSSERVER2="${DNSSERVER#*,}"
-+					export DNSSERVER1 DNSSERVER2
-+				else
-+					DNSSERVER1="$DNSSERVER"
-+					export DNSSERVER1
-+				fi
-+				unset DNSSERVER
++				DNS=${_PARAMETER#dns=}
++				DNSSERVERS=$(echo ${DNS} | sed 's/,/ /g')
++				export DNSSERVERS
++				unset DNS
 +				;;
 +
  			bootid=*)
