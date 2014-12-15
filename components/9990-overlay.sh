@@ -299,6 +299,9 @@ setup_unionfs ()
 		fi || panic "mount ${UNIONTYPE} on ${unionmountpoint} failed with option ${unionmountopts}"
 	done
 
+	# Remove persistence depending on boot parameter
+	Remove_persistence
+
 	# Correct the permissions of /:
 	chmod 0755 "${rootmnt}"
 
