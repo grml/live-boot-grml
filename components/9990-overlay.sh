@@ -117,6 +117,8 @@ setup_unionfs ()
 				log_begin_msg "Mounting \"${image}\" on \"${mpoint}\" via \"${backdev}\""
 				mount -t "${fstype}" -o ro,noatime "${backdev}" "${mpoint}" || panic "Can not mount ${backdev} (${image}) on ${mpoint}"
 				log_end_msg
+			else
+				log_warning_msg "Could not find image '${image}'. Most likely it is listed in a .module file, perhaps by mistake."
 			fi
 		done
 	else
