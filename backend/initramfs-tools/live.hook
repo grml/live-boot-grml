@@ -107,7 +107,7 @@ manual_add_modules unlzma
 
 # Filesystem: aufs/overlayfs/unionfs
 manual_add_modules aufs
-manual_add_modules overlayfs
+manual_add_modules overlay
 manual_add_modules unionfs
 
 # Filesystem: unionfs-fuse
