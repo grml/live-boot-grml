@@ -105,7 +105,7 @@ manual_add_modules squashfs
 manual_add_modules sqlzma
 manual_add_modules unlzma
 
-# Filesystem: aufs/overlayfs/unionfs
+# Filesystem: aufs/overlay/unionfs
 manual_add_modules aufs
 manual_add_modules overlay
 manual_add_modules unionfs
