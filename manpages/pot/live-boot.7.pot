@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 4.0.2-1\n"
-"POT-Creation-Date: 2014-12-10 10:35+0100\n"
+"POT-Creation-Date: 2015-01-04 21:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2014-12-10"
+msgid "2015-01-04"
 msgstr ""
 
 #. type: TH
@@ -735,7 +735,7 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:135
 #, no-wrap
-msgid "B<union>=aufs|unionfs"
+msgid "B<union>=aufs|overlay"
 msgstr ""
 
 #.  FIXME
@@ -743,7 +743,7 @@ msgstr ""
 #: en/live-boot.7:138
 msgid ""
 "By default, live-boot uses aufs. With this parameter, you can switch to "
-"unionfs."
+"overlay."
 msgstr ""
 
 #.  FIXME

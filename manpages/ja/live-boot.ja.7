@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BOOT 7 2014\-12\-10 4.0.2\-1 "Live システムプロジェクト"
+.TH LIVE\-BOOT 7 2015\-01\-04 4.0.2\-1 "Live システムプロジェクト"
 
 .SH 名前
 \fBlive\-boot\fP \- システム起動構成要素
@@ -183,9 +183,9 @@ live\-boot
 .IP \fBtoram\fP 4
 このパラメータを追加すると、live\-boot はルートファイルシステムをマウントする前に読み取り専用メディア全体をそのコンピュータの RAM
 にコピーしようとします。その読み取り専用メディアで利用している容量により、これには多くの RAM が必要となるかもしれません。
-.IP \fBunion\fP=aufs|unionfs 4
+.IP \fBunion\fP=aufs|overlay 4
 .\" FIXME
-デフォルトで live\-boot は aufs を利用します。このパラメータにより unionfs に切り替えることができます。
+デフォルトで live\-boot は aufs を利用します。このパラメータにより overlay に切り替えることができます。
 
 .\" FIXME
 .SH "ファイル (古い情報)"

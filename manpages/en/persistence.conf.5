@@ -1,4 +1,4 @@
-.TH LIVE\-BOOT conf 2014\-12\-10 4.0.2-1 "Live Systems Project"
+.TH LIVE\-BOOT conf 2015\-01\-04 4.0.2-1 "Live Systems Project"
 
 .SH NAME
 \fBpersistence.conf\fR \- Configuration file for persistence media in
@@ -96,8 +96,7 @@ read-only media. One caveat is that the union will use \fIDIR\fR from
 the image's read-only file system, not the real file system root, so
 files created after boot (e.g. by live-config) will not appear in the
 union. This option will use the union file system specified by
-live-boot's \fBunion\fR boot parameter, but is not supported with
-\fBunion=unionmount\fR.
+live-boot's \fBunion\fR boot parameter.
 
 .SH DIRECTORIES
 .IP "\fB/live/persistence\fR" 4

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot 4.0.2-1\n"
-"POT-Creation-Date: 2014-12-10 10:35+0100\n"
+"POT-Creation-Date: 2015-01-04 21:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2014-12-10"
+msgid "2015-01-04"
 msgstr ""
 
 #. type: TH
@@ -59,34 +59,34 @@ msgid "OPTIONS"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:154 en/persistence.conf.5:191
+#: en/live-boot.7:154 en/persistence.conf.5:190
 #, no-wrap
 msgid "SEE ALSO"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:158 en/persistence.conf.5:195
+#: en/live-boot.7:158 en/persistence.conf.5:194
 msgid "I<live-build>(7)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:160 en/persistence.conf.5:197
+#: en/live-boot.7:160 en/persistence.conf.5:196
 msgid "I<live-config>(7)"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:162 en/persistence.conf.5:199
+#: en/live-boot.7:162 en/persistence.conf.5:198
 msgid "I<live-tools>(7)"
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:163 en/persistence.conf.5:200
+#: en/live-boot.7:163 en/persistence.conf.5:199
 #, no-wrap
 msgid "HOMEPAGE"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:165 en/persistence.conf.5:202
+#: en/live-boot.7:165 en/persistence.conf.5:201
 msgid ""
 "More information about live-boot and the Live Systems project can be found "
 "on the homepage at E<lt>I<http://live-systems.org/>E<gt> and in the manual "
@@ -94,13 +94,13 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:166 en/persistence.conf.5:203
+#: en/live-boot.7:166 en/persistence.conf.5:202
 #, no-wrap
 msgid "BUGS"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:168 en/persistence.conf.5:205
+#: en/live-boot.7:168 en/persistence.conf.5:204
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
 "the Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
@@ -109,13 +109,13 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/live-boot.7:169 en/persistence.conf.5:206
+#: en/live-boot.7:169 en/persistence.conf.5:205
 #, no-wrap
 msgid "AUTHOR"
 msgstr ""
 
 #. type: Plain text
-#: en/live-boot.7:170 en/persistence.conf.5:207
+#: en/live-boot.7:170 en/persistence.conf.5:206
 msgid ""
 "live-boot was written by Daniel Baumann E<lt>I<mail@daniel-baumann.ch>E<gt>."
 msgstr ""
@@ -276,7 +276,7 @@ msgid "B<union>"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:101
+#: en/persistence.conf.5:100
 msgid ""
 "Save the rw branch of a union on the persistence media, so only the changes "
 "are stored persistently. This can potentially reduce disk usage compared to "
@@ -284,24 +284,23 @@ msgid ""
 "caveat is that the union will use I<DIR> from the image's read-only file "
 "system, not the real file system root, so files created after boot (e.g. by "
 "live-config) will not appear in the union. This option will use the union "
-"file system specified by live-boot's B<union> boot parameter, but is not "
-"supported with B<union=unionmount>."
+"file system specified by live-boot's B<union> boot parameter."
 msgstr ""
 
 #. type: SH
-#: en/persistence.conf.5:102
+#: en/persistence.conf.5:101
 #, no-wrap
 msgid "DIRECTORIES"
 msgstr ""
 
 #. type: IP
-#: en/persistence.conf.5:103
+#: en/persistence.conf.5:102
 #, no-wrap
 msgid "B</live/persistence>"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:109
+#: en/persistence.conf.5:108
 msgid ""
 "All persistence volumes will be mounted here (in a directory corresponding "
 "to the device name). The B<persistence.conf> file can easily be edited "
@@ -310,100 +309,100 @@ msgid ""
 msgstr ""
 
 #. type: SH
-#: en/persistence.conf.5:110
+#: en/persistence.conf.5:109
 #, no-wrap
 msgid "EXAMPLES"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:115
+#: en/persistence.conf.5:114
 msgid ""
 "Let's say we have a persistence volume I<VOL> with the a B<persistence.conf> "
 "file containing the following four lines (numbered for ease of reference):"
 msgstr ""
 
 #. type: TP
-#: en/persistence.conf.5:115 en/persistence.conf.5:129
+#: en/persistence.conf.5:114 en/persistence.conf.5:128
 #, no-wrap
 msgid "1."
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:118
+#: en/persistence.conf.5:117
 msgid "/home/user1 link,source=config-files/user1"
 msgstr ""
 
 #. type: TP
-#: en/persistence.conf.5:118 en/persistence.conf.5:133
+#: en/persistence.conf.5:117 en/persistence.conf.5:132
 #, no-wrap
 msgid "2."
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:121
+#: en/persistence.conf.5:120
 msgid "/home/user2 link,source=config-files/user2"
 msgstr ""
 
 #. type: TP
-#: en/persistence.conf.5:121 en/persistence.conf.5:137
+#: en/persistence.conf.5:120 en/persistence.conf.5:136
 #, no-wrap
 msgid "3."
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:124
+#: en/persistence.conf.5:123
 msgid "/home"
 msgstr ""
 
 #. type: TP
-#: en/persistence.conf.5:124 en/persistence.conf.5:140
+#: en/persistence.conf.5:123 en/persistence.conf.5:139
 #, no-wrap
 msgid "4."
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:127
+#: en/persistence.conf.5:126
 msgid "/usr union"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:129
+#: en/persistence.conf.5:128
 msgid "The corresponding source directories are:"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:133
+#: en/persistence.conf.5:132
 msgid ""
 "I<VOL>/config-files/user1 (but it would be I<VOL>/home/user1 without the "
 "B<source> option)"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:137
+#: en/persistence.conf.5:136
 msgid ""
 "I<VOL>/config-files/user2 (but it would be I<VOL>/home/user2 without the "
 "B<source> option)"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:140
+#: en/persistence.conf.5:139
 msgid "I<VOL>/home"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:143
+#: en/persistence.conf.5:142
 msgid "I<VOL>/usr"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:146
+#: en/persistence.conf.5:145
 msgid ""
 "It was necessary to set the B<source> options for 1 and 2, since they "
 "otherwise would become nested with 3's source, which is invalid."
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:151
+#: en/persistence.conf.5:150
 msgid ""
 "Line 3 will be taken care of before line 1 and 2 in order to prevent custom "
 "mounts 1 and 2 from being hidden by 3. When line 3 is handled, I<VOL>/home "
@@ -412,79 +411,79 @@ msgid ""
 msgstr ""
 
 #. type: TP
-#: en/persistence.conf.5:151
+#: en/persistence.conf.5:150
 #, no-wrap
 msgid "a."
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:154
+#: en/persistence.conf.5:153
 msgid "I<VOL>/config-files/user1/.emacs"
 msgstr ""
 
 #. type: TP
-#: en/persistence.conf.5:154
+#: en/persistence.conf.5:153
 #, no-wrap
 msgid "b."
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:157
+#: en/persistence.conf.5:156
 msgid "I<VOL>/config-files/user2/.bashrc"
 msgstr ""
 
 #. type: TP
-#: en/persistence.conf.5:157
+#: en/persistence.conf.5:156
 #, no-wrap
 msgid "c."
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:160
+#: en/persistence.conf.5:159
 msgid "I<VOL>/config-files/user2/.ssh/config"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:162
+#: en/persistence.conf.5:161
 msgid "Then the following links and directories will be created:"
 msgstr ""
 
 #. type: TP
-#: en/persistence.conf.5:162 en/persistence.conf.5:165
-#: en/persistence.conf.5:171
+#: en/persistence.conf.5:161 en/persistence.conf.5:164
+#: en/persistence.conf.5:170
 #, no-wrap
 msgid "Link:"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:165
+#: en/persistence.conf.5:164
 msgid "/home/user1/.emacs -E<gt> I<VOL>/config-files/user1/.emacs (from a)"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:168
+#: en/persistence.conf.5:167
 msgid "/home/user2/.bashrc -E<gt> I<VOL>/config-files/user2/.bashrc (from b)"
 msgstr ""
 
 #. type: TP
-#: en/persistence.conf.5:168
+#: en/persistence.conf.5:167
 #, no-wrap
 msgid "Dir:"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:171
+#: en/persistence.conf.5:170
 msgid "/homea/user2/.ssh (from c)"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:175
+#: en/persistence.conf.5:174
 msgid ""
 "/home/user2/.ssh/config -E<gt> I<VOL>/config-files/user2/.ssh/config (from c)"
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:181
+#: en/persistence.conf.5:180
 msgid ""
 "One could argue, though, that lines 1 and 2 in the example B<persistence."
 "conf> file above are unnecessary since line 3 already would make all of /"
@@ -494,7 +493,7 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:190
+#: en/persistence.conf.5:189
 msgid ""
 "Line 4 can be mounted at any time since its I<DIR> (and source directory) is "
 "completely disjoint from all the other custom mounts. When mounted, I<VOL>/"
@@ -506,6 +505,6 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: en/persistence.conf.5:193
+#: en/persistence.conf.5:192
 msgid "I<live-boot>(7)"
 msgstr ""
