@@ -9,7 +9,7 @@ setup_unionfs ()
 	addimage_directory="${3}"
 
 	case ${UNIONTYPE} in
-		aufs|unionfs|overlay)
+		aufs|overlay)
 			if ! cut -f2 /proc/filesystems | grep -q "^${UNIONTYPE}\$"
 			then
 				panic "${UNIONTYPE} not available."
