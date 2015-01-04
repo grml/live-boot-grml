@@ -1,3 +1,23 @@
+live-boot (5.0~a1-1) experimental; urgency=low
+
+  [ Tails developers ]
+  * Fixing name of overlayfs kernel module for inclusion in the initramfs
+    (Closes: #773868).
+
+  [ Daniel Baumann ]
+  * Using 'overlay' instead of 'overlayfs' everywhere, without backwards
+    compatibility (Closes: #773881).
+  * Dropping unionfs-fuse support:
+  * Dropping unionfs support, long superseeded with aufs.
+  * Dropping unionmount support, superseeded with overlay in mainline
+    kernel.
+  * Updating manpages for union= boot parameter.
+  * Simplifying code a bit after removal of no longer supported overlay
+    alternatives.
+  * Updating year in copyright notices to 2015.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Sun, 04 Jan 2015 21:50:28 +0100
+
 live-boot (4.0.2-1) unstable; urgency=low
 
   [ Daniel Baumann ]
