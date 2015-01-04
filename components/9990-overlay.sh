@@ -114,17 +114,8 @@ setup_unionfs ()
 						;;
 				esac
 
-				case "${UNIONTYPE}" in
-					unionmount)
-						mpoint="${rootmnt}"
-						rootfslist="${rootmnt} ${rootfslist}"
-						;;
-
-					*)
-						mpoint="${croot}/${imagename}"
-						rootfslist="${mpoint} ${rootfslist}"
-						;;
-				esac
+				mpoint="${croot}/${imagename}"
+				rootfslist="${mpoint} ${rootfslist}"
 
 				mkdir -p "${mpoint}"
 				log_begin_msg "Mounting \"${image}\" on \"${mpoint}\" via \"${backdev}\""
@@ -254,27 +245,24 @@ setup_unionfs ()
 		cow_mountopt="rw,noatime,mode=755"
 	fi
 
-	if [ "${UNIONTYPE}" != "unionmount" ]
+	if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
 	then
-		if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
-		then
-			mount -t tmpfs -o rw,noatime,mode=755 tmpfs "/live/overlay"
-			root_backing="/live/persistence/$(basename ${cowdevice})-root"
-			mkdir -p ${root_backing}
-		else
-			root_backing="/live/overlay"
-		fi
+		mount -t tmpfs -o rw,noatime,mode=755 tmpfs "/live/overlay"
+		root_backing="/live/persistence/$(basename ${cowdevice})-root"
+		mkdir -p ${root_backing}
+	else
+		root_backing="/live/overlay"
+	fi
 
-		if [ "${cow_fstype}" = "nfs" ]
-		then
-			log_begin_msg \
-				"Trying nfsmount ${nfs_cow_opts} ${cowdevice} ${root_backing}"
-			nfsmount ${nfs_cow_opts} ${cowdevice} ${root_backing} || \
-				panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on ${root_backing}"
-		else
-			mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} ${root_backing} || \
-				panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on ${root_backing}"
-		fi
+	if [ "${cow_fstype}" = "nfs" ]
+	then
+		log_begin_msg \
+			"Trying nfsmount ${nfs_cow_opts} ${cowdevice} ${root_backing}"
+		nfsmount ${nfs_cow_opts} ${cowdevice} ${root_backing} || \
+			panic "Can not mount ${cowdevice} (n: ${cow_fstype}) on ${root_backing}"
+	else
+		mount -t ${cow_fstype} -o ${cow_mountopt} ${cowdevice} ${root_backing} || \
+			panic "Can not mount ${cowdevice} (o: ${cow_fstype}) on ${root_backing}"
 	fi
 
 	rootfscount=$(echo ${rootfslist} |wc -w)
@@ -301,31 +289,17 @@ setup_unionfs ()
 		cow_dirs="/"
 	fi
 
-	if [ "${cow_fstype}" != "tmpfs" ] && [ "${cow_dirs}" != "/" ] && [ "${UNIONTYPE}" = "unionmount" ]
-	then
-		true # FIXME: Maybe it does, I don't really know.
-		#panic "unionmount does not support subunions (${cow_dirs})."
-	fi
-
 	for dir in ${cow_dirs}; do
 		unionmountpoint="${rootmnt}${dir}"
 		mkdir -p ${unionmountpoint}
-		if [ "${UNIONTYPE}" = "unionmount" ]
+		cow_dir="/live/overlay${dir}"
+		rootfs_dir="${rootfs}${dir}"
+		mkdir -p ${cow_dir}
+		if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
 		then
-			# FIXME: handle PERSISTENCE_READONLY
-			unionmountopts="-t ${cow_fstype} -o noatime,union,${cow_mountopt} ${cowdevice}"
-			# unionmount only works with util-linux mount
-			mount.util-linux $unionmountopts "${unionmountpoint}"
+			do_union ${unionmountpoint} ${cow_dir} ${root_backing} ${rootfs_dir}
 		else
-			cow_dir="/live/overlay${dir}"
-			rootfs_dir="${rootfs}${dir}"
-			mkdir -p ${cow_dir}
-			if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
-			then
-				do_union ${unionmountpoint} ${cow_dir} ${root_backing} ${rootfs_dir}
-			else
-				do_union ${unionmountpoint} ${cow_dir} ${rootfs_dir}
-			fi
+			do_union ${unionmountpoint} ${cow_dir} ${rootfs_dir}
 		fi || panic "mount ${UNIONTYPE} on ${unionmountpoint} failed with option ${unionmountopts}"
 	done
 
