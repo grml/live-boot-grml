@@ -1292,16 +1292,22 @@ do_union ()
 			rw_opt="rw"
 			ro_opt="rr+wh"
 			noxino_opt="noxino"
+
+			unionmountopts="-o noatime,${noxino_opt},dirs=${unionrw}=${rw_opt}"
+			if [ -n "${unionro}" ]
+			then
+				for rofs in ${unionro}
+				do
+					unionmountopts="${unionmountopts}:${rofs}=${ro_opt}"
+				done
+			fi
+			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 			;;
 
-		*)
+		overlay)
 			rw_opt="rw"
 			ro_opt="ro"
-			;;
-	esac
 
-	case "${UNIONTYPE}" in
-		overlay)
 			# XXX: can multiple unionro be used? (overlay only handles two dirs, but perhaps they can be chained?)
 			# XXX: and can unionro be optional? i.e. can overlay skip lowerdir?
 			if echo ${unionro} | grep -q " "
@@ -1312,18 +1318,6 @@ do_union ()
 				panic "overlay needs at least one lower filesystem (read-only branch)."
 			fi
 			unionmountopts="-o noatime,lowerdir=${unionro},upperdir=${unionrw}"
-			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
-			;;
-
-		*)
-			unionmountopts="-o noatime,${noxino_opt},dirs=${unionrw}=${rw_opt}"
-			if [ -n "${unionro}" ]
-			then
-				for rofs in ${unionro}
-				do
-					unionmountopts="${unionmountopts}:${rofs}=${ro_opt}"
-				done
-			fi
 			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 			;;
 	esac

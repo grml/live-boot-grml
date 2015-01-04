@@ -8,16 +8,12 @@ setup_unionfs ()
 	rootmnt="${2}"
 	addimage_directory="${3}"
 
-	case ${UNIONTYPE} in
-		aufs|overlay)
-			if ! cut -f2 /proc/filesystems | grep -q "^${UNIONTYPE}\$"
-			then
-				panic "${UNIONTYPE} not available."
-			fi
+	if ! cut -f2 /proc/filesystems | grep -q "^${UNIONTYPE}\$"
+	then
+		panic "${UNIONTYPE} not available."
+	fi
 
-			modprobe -q -b ${UNIONTYPE}
-			;;
-	esac
+	modprobe -q -b ${UNIONTYPE}
 
 	# run-init can't deal with images in a subdir, but we're going to
 	# move all of these away before it runs anyway.  No, we're not,
