@@ -1294,11 +1294,6 @@ do_union ()
 			noxino_opt="noxino"
 			;;
 
-		unionfs-fuse)
-			rw_opt="RW"
-			ro_opt="RO"
-			;;
-
 		*)
 			rw_opt="rw"
 			ro_opt="ro"
@@ -1306,22 +1301,6 @@ do_union ()
 	esac
 
 	case "${UNIONTYPE}" in
-		unionfs-fuse)
-			unionmountopts="-o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid"
-			unionmountopts="${unionmountopts} ${unionrw}=${rw_opt}"
-			if [ -n "${unionro}" ]
-			then
-				for rofs in ${unionro}
-				do
-					unionmountopts="${unionmountopts}:${rofs}=${ro_opt}"
-				done
-			fi
-			( sysctl -w fs.file-max=391524 ; ulimit -HSn 16384
-			unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
-			( mkdir -p /run/sendsigs.omit.d
-			pidof unionfs-fuse >> /run/sendsigs.omit.d/unionfs-fuse || true )
-			;;
-
 		overlay)
 			# XXX: can multiple unionro be used? (overlay only handles two dirs, but perhaps they can be chained?)
 			# XXX: and can unionro be optional? i.e. can overlay skip lowerdir?

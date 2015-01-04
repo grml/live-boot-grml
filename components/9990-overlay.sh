@@ -10,21 +10,12 @@ setup_unionfs ()
 
 	case ${UNIONTYPE} in
 		aufs|unionfs|overlay)
-			modprobe -q -b ${UNIONTYPE}
-
-			if ! cut -f2 /proc/filesystems | grep -q "^${UNIONTYPE}\$" && [ -x /bin/unionfs-fuse ]
+			if ! cut -f2 /proc/filesystems | grep -q "^${UNIONTYPE}\$"
 			then
-				echo "${UNIONTYPE} not available, falling back to unionfs-fuse."
-				echo "This might be really slow."
-
-				UNIONTYPE="unionfs-fuse"
+				panic "${UNIONTYPE} not available."
 			fi
-			;;
-	esac
 
-	case "${UNIONTYPE}" in
-		unionfs-fuse)
-			modprobe fuse
+			modprobe -q -b ${UNIONTYPE}
 			;;
 	esac
 
@@ -358,15 +349,7 @@ setup_unionfs ()
 				# do nothing # mount -o bind "${d}" "${live_rootfs}"
 				;;
 			*)
-				case "${UNIONTYPE}" in
-					unionfs-fuse)
-						mount -o bind "${d}" "${live_rootfs}"
-						;;
-
-					*)
-						mount -o move "${d}" "${live_rootfs}"
-						;;
-				esac
+				mount -o move "${d}" "${live_rootfs}"
 				;;
 		esac
 	done
