@@ -1318,12 +1318,10 @@ do_union ()
 				panic "overlay needs at least one lower filesystem (read-only branch)."
 			fi
 			unionmountopts="-o noatime,lowerdir=${unionro},upperdir=${unionrw}"
-			# Ref: kiwi from OpenSuse kiwi-7.02.18-1.1
-			# overlayfs in version >= v22 behaves differently
-			# + renamed from overlayfs to overlay
-			# + requires a workdir to become mounted
-			# + requires workdir and upperdir to reside under the same mount
-			# + requires workdir and upperdir to be in separate subdirs
+			# overlayfs requires:
+			# + a workdir to become mounted
+			# + workdir and upperdir to reside under the same mount
+			# + workdir and upperdir to be in separate directories
 			mkdir ${unionrw}/rw
 			mkdir ${unionrw}/work
 			unionmountopts="-o noatime,lowerdir=${unionro},upperdir=${unionrw}/rw,workdir=${unionrw}/work"
