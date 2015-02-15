@@ -1305,9 +1305,6 @@ do_union ()
 			;;
 
 		overlay)
-			rw_opt="rw"
-			ro_opt="ro"
-
 			# XXX: can multiple unionro be used? (overlay only handles two dirs, but perhaps they can be chained?)
 			# XXX: and can unionro be optional? i.e. can overlay skip lowerdir?
 			if echo ${unionro} | grep -q " "
