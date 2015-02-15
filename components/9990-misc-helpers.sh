@@ -1301,7 +1301,6 @@ do_union ()
 					unionmountopts="${unionmountopts}:${rofs}=${ro_opt}"
 				done
 			fi
-			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 			;;
 
 		overlay)
@@ -1321,9 +1320,10 @@ do_union ()
 			mkdir "${unionrw}/rw"
 			mkdir "${unionrw}/work"
 			unionmountopts="-o noatime,lowerdir=${unionro},upperdir=${unionrw}/rw,workdir=${unionrw}/work"
-			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 			;;
 	esac
+
+	mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 }
 
 get_custom_mounts ()
