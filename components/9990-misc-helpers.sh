@@ -1317,7 +1317,6 @@ do_union ()
 			then
 				panic "overlay needs at least one lower filesystem (read-only branch)."
 			fi
-			unionmountopts="-o noatime,lowerdir=${unionro},upperdir=${unionrw}"
 			# overlayfs requires:
 			# + a workdir to become mounted
 			# + workdir and upperdir to reside under the same mount
