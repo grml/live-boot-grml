@@ -1,12 +1,12 @@
 # Japanese translations for live-boot package
-# Copyright (C) 2013-2014 victory <victory.deb@gmail.com>
+# Copyright (C) 2013-2015 victory <victory.deb@gmail.com>
 # This file is distributed under the same license as the live-boot package.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot\n"
 "POT-Creation-Date: 2015-01-04 21:50+0100\n"
-"PO-Revision-Date: 2014-08-28 02:52+0900\n"
+"PO-Revision-Date: 2015-01-05 05:50+0900\n"
 "Last-Translator: victory <victory.deb@gmail.com>\n"
 "Language-Team: none\n"
 "Language: ja\n"
@@ -24,13 +24,13 @@ msgstr "LIVE-BOOT"
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "2015-01-04"
-msgstr ""
+msgstr "2015-01-04"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "5.0~a1-1"
-msgstr ""
+msgstr "5.0~a1-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
@@ -343,16 +343,6 @@ msgstr "B<union>"
 
 #. type: Plain text
 #: en/persistence.conf.5:100
-#, fuzzy
-#| msgid ""
-#| "Save the rw branch of a union on the persistence media, so only the "
-#| "changes are stored persistently. This can potentially reduce disk usage "
-#| "compared to bind-mounts, and will not hide files added to the read-only "
-#| "media. One caveat is that the union will use I<DIR> from the image's read-"
-#| "only file system, not the real file system root, so files created after "
-#| "boot (e.g. by live-config) will not appear in the union. This option will "
-#| "use the union file system specified by live-boot's B<union> boot "
-#| "parameter, but is not supported with B<union=unionmount>."
 msgid ""
 "Save the rw branch of a union on the persistence media, so only the changes "
 "are stored persistently. This can potentially reduce disk usage compared to "
@@ -369,7 +359,7 @@ msgstr ""
 "ジの読み取り専用ファイルシステムからI<ディレクトリ>を使うため、(例えば live-"
 "config により) ブート後に作成されたファイルは結合後には見えなくなります。この"
 "オプションは live-boot の B<union> ブートパラメータにより指定された結合ファイ"
-"ルシステムを使いますが、B<union=unionmount> ではサポートしていません。"
+"ルシステムを使います。"
 
 #. type: SH
 #: en/persistence.conf.5:101

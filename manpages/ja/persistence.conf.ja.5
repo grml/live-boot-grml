@@ -52,13 +52,10 @@ live\-boot が「persistence」というラベル (GPT の名前やファイル�
 事実上、\fBlink\fP
 は既にソースディレクトリにあるファイルだけを保持し、\fIディレクトリ\fPにあるそれ以外のファイルは保持しません。保持するファイルをこのオプションの対象とするには手作業によりソースディレクトリに追加する必要があり、そうすることで\fIディレクトリ\fPに、既にそこにあるファイルに加えて現れるようになります。このオプションは特定のファイルだけを保持する必要があり、それがあるディレクトリ全体が必要ではない場合、例えばユーザのホームディレクトリにある設定ファイルの一部を保持する場合に有用です。
 .IP \fBunion\fP 4
-Save the rw branch of a union on the persistence media, so only the changes
-are stored persistently. This can potentially reduce disk usage compared to
-bind\-mounts, and will not hide files added to the read\-only media. One
-caveat is that the union will use \fIDIR\fP from the image's read\-only file
-system, not the real file system root, so files created after boot (e.g. by
-live\-config) will not appear in the union. This option will use the union
-file system specified by live\-boot's \fBunion\fP boot parameter.
+結合ファイルシステムの rw
+ブランチを保持用メディアに保存するため、変更点だけを持続的に保管します。バインドマウントと比較するとこの方法は潜在的にディスク使用量を減らせる可能性があり、また読み取り専用メディアに追加したファイルを隠しません。1つ注意があり、結合後に実際のファイルシステムのルートではなくイメージの読み取り専用ファイルシステムから\fIディレクトリ\fPを使うため、(例えば
+live\-config により) ブート後に作成されたファイルは結合後には見えなくなります。このオプションは live\-boot の \fBunion\fP
+ブートパラメータにより指定された結合ファイルシステムを使います。
 
 .SH ディレクトリ
 .IP \fB/live/persistence\fP 4
