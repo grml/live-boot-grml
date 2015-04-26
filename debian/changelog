@@ -1,3 +1,16 @@
+live-boot (5.0~a2-1) unstable; urgency=low
+
+  [ Tom Jampen ]
+  * Adding command line parameter to remove persistence.
+
+  [ Gaudenz Steinlin ]
+  * Modprobe filesystem modules before checking support.
+
+  [ victory ]
+  * Unfuzzy Japanese translation.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Sun, 26 Apr 2015 20:11:46 +0200
+
 live-boot (5.0~a1-1) experimental; urgency=low
 
   [ Tails developers ]
