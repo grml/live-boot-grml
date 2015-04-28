@@ -24,6 +24,10 @@ Select_eth_device ()
 	# we want to do some basic IP
 	modprobe -q af_packet
 
+	# Ensure all our net modules get loaded so we can actually compare MAC addresses...
+	udevadm trigger
+	udevadm settle
+
 	# Available Ethernet interfaces ?
 	l_interfaces=""
 
