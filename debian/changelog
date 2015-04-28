@@ -1,3 +1,21 @@
+live-boot (5.0~a3-1) unstable; urgency=low
+
+  [ Tails developers ]
+  * Patch by Steven Shiau <steven@nchc.org.tw>. The only changes so far
+    are:
+  * Removing attempt to mount overlayfs in an obsolete way.
+  * Cleaning up comment to keep only the part that's relevant here.
+  * Adding missing quotes.
+  * Removing obsolete code.
+  * Removing unused variables.
+  * Refactoring duplicate identical call to mount.
+
+  [ Daniel Baumann ]
+  * Waiting until all ethernet devices are up on multi-nic machines,
+    thanks to Chris Read <chris.read@gmail.com> (Closes: #744777).
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Tue, 28 Apr 2015 07:19:16 +0200
+
 live-boot (5.0~a2-1) unstable; urgency=low
 
   [ Tom Jampen ]
