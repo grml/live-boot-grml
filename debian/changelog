@@ -1,3 +1,21 @@
+live-boot (5.0~a4-1) unstable; urgency=low
+
+  [ Tails developers ]
+  * Logging a warning when an expected image file is missing.
+  * Patch by Steven Shiau <steven@nchc.org.tw>. The only changes so far
+    are:
+  * Removing attempt to mount overlayfs in an obsolete way.
+  * Cleaning up comment to keep only the part that's relevant here.
+  * Adding missing quotes.
+  * Removing obsolete code.
+  * Refactoring duplicate identical call to mount.
+
+  [ Daniel Baumann ]
+  * Switching default union filesystem to overlay, wheezy systems can use
+    union=aufs for the time being.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Sun, 17 May 2015 21:04:01 +0200
+
 live-boot (5.0~a3-1) unstable; urgency=low
 
   [ Tails developers ]
