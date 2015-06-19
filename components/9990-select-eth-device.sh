@@ -49,21 +49,32 @@ Select_eth_device ()
 			return
 		fi
 
-		# If user force to use specific device, write it
-		for ARGUMENT in ${LIVE_BOOT_CMDLINE}
-		do
-			case "${ARGUMENT}" in
-				live-netdev=*)
-				NETDEV="${ARGUMENT#live-netdev=}"
-				echo "DEVICE=$NETDEV" >> /conf/param.conf
-				echo "Found live-netdev parameter, forcing to to use network device $NETDEV."
-				return
-				;;
-			esac
-		done
-	else
-		l_interfaces="$DEVICE"
-	fi
+                # If user force to use specific device, write it
+                for ARGUMENT in ${LIVE_BOOT_CMDLINE}
+                do
+                        case "${ARGUMENT}" in
+                                live-netdev=*)
+                                NETDEV="${ARGUMENT#live-netdev=}"
+                                # net device could be specified by MAC address
+                                hex="[0-9A-Fa-f][0-9A-Fa-f]"
+                                case "${NETDEV}" in
+                                    ${hex}:${hex}:${hex}:${hex}:${hex}:${hex})
+                                        # MAC address; record it and select later
+                                        netdev_mac_addr="${NETDEV}"
+                                        ;;
+                                    *)
+                                        # interface name
+                                        echo "DEVICE=$NETDEV" >> /conf/param.conf
+                                        echo "Found live-netdev parameter, forcing to to use network device $NETDEV."
+                                        return
+                                        ;;
+                                esac
+                                ;;
+                        esac
+                done
+        else
+                l_interfaces="$DEVICE"
+        fi
 
 	found_eth_dev=""
 	while true
@@ -79,30 +90,40 @@ Select_eth_device ()
 
 		echo ''
 
-		for step in 1 2 3 4 5
-		do
-			for interface in $l_interfaces
-			do
-				carrier=$(cat /sys/class/net/$interface/carrier \
-					2>/dev/null)
-				# link detected
+                for step in 1 2 3 4 5
+                do
+                        for interface in $l_interfaces
+                        do
+                            if [ -z "$netdev_mac_addr" ]; then
+                                carrier=$(cat /sys/class/net/$interface/carrier \
+                                        2>/dev/null)
+                                # link detected
 
-				case "${carrier}" in
-					1)
-						echo "Connected $interface found"
-						# inform initrd's init script :
-						found_eth_dev="$found_eth_dev $interface"
-						;;
-				esac
-			done
-			if [ -n "$found_eth_dev" ]
-			then
-				echo "DEVICE='$found_eth_dev'" >> /conf/param.conf
-				return
-			else
-				# wait a bit
-				sleep 1
-			fi
-		done
-	done
+                                case "${carrier}" in
+                                        1)
+                                                echo "Connected $interface found"
+                                                # inform initrd's init script :
+                                                found_eth_dev="$found_eth_dev $interface"
+                                                ;;
+                                esac
+                            else
+                                # MAC addr given, check for that
+                                mac_addr=$(ifconfig "$interface" \
+                                                  | grep HWaddr \
+                                                  | { read _ _ _ _ mac_addr; echo $mac_addr; })
+                                if [ "$mac_addr" = "$netdev_mac_addr" ]; then
+                                    found_eth_dev="$interface"
+                                fi
+                            fi
+                        done
+                        if [ -n "$found_eth_dev" ]
+                        then
+                                echo "DEVICE='$found_eth_dev'" >> /conf/param.conf
+                                return
+                        else
+                                # wait a bit
+                                sleep 1
+                        fi
+                done
+        done
 }
