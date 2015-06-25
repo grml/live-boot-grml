@@ -23,7 +23,6 @@ Suggests:
  curlftpfs,
  cryptsetup,
  httpfs2,
- unionfs-fuse,
  wget,
 Description: Live System Boot Components
  The Live Systems project maintains the components to build Debian based Live
