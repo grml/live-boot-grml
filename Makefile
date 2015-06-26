@@ -55,8 +55,8 @@ install:
 	cp frontend/* $(DESTDIR)/bin
 
 	# Installing docs
-	mkdir -p $(DESTDIR)/usr/share/doc/live-boot
-	cp -r COPYING $(DESTDIR)/usr/share/doc/live-boot
+	mkdir -p $(DESTDIR)/usr/share/doc/live-boot-grml
+	cp -r COPYING $(DESTDIR)/usr/share/doc/live-boot-grml
 
 	# Installing manpages
 	for MANPAGE in manpages/en/*; \
@@ -90,7 +90,7 @@ uninstall:
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr > /dev/null 2>&1 || true
 
 	# Uninstalling docs
-	rm -rf $(DESTDIR)/usr/share/doc/live-boot
+	rm -rf $(DESTDIR)/usr/share/doc/live-boot-grml
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/doc > /dev/null 2>&1 || true
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share > /dev/null 2>&1 || true
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr > /dev/null 2>&1 || true
