@@ -47,9 +47,13 @@ install:
 
 	# Installing executables
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/hooks
-	cp backend/initramfs-tools/live.hook $(DESTDIR)/usr/share/initramfs-tools/hooks/live
+	for f in backend/initramfs-tools/*.hook; do \
+		cp $${f} $(DESTDIR)/usr/share/initramfs-tools/hooks/$$(basename $${f} .hook); \
+	done
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/scripts
-	cp backend/initramfs-tools/live.script $(DESTDIR)/usr/share/initramfs-tools/scripts/live
+	for f in backend/initramfs-tools/*.script; do \
+		cp $${f} $(DESTDIR)/usr/share/initramfs-tools/scripts/$$(basename $${f} .script); \
+	done
 
 	mkdir -p $(DESTDIR)/bin
 	cp frontend/* $(DESTDIR)/bin
