@@ -67,10 +67,39 @@ for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*; d
         method="dhcp"
     fi
 
-    cat >> $IFFILE << EOF
+    if [ -n "$VLANS" ] ; then
+      modprobe 8021q
+
+      # vlan=<vid>:<phydevice>
+      for line in $(echo $VLANS | sed 's/ /\n'/) ; do
+        vlandev=${line#*:}
+        vlanid=${line%:*}
+
+        if [ -n "$vlandev" ] && [ -n "$vlanid" ] ; then
+          case "$vlandev" in
+            "$interface")
+              vlan_raw_dev=$interface
+              interface="${vlandev}.${vlanid}"
+              ;;
+          esac
+        fi
+      done
+    fi
+
+    if [ -n "$vlan_raw_dev" ] ; then
+      cat >> $IFFILE << EOF
+auto ${interface}
+iface ${interface} inet ${method}
+        vlan-raw-device $vlan_raw_dev
+EOF
+    else
+      cat >> $IFFILE << EOF
 allow-hotplug ${interface}
 iface ${interface} inet ${method}
 EOF
+    fi
+
+    unset vlandev vlanid vlan_raw_dev # unset variables to have clean state for next device
 
     # DNS for resolvconf and /etc/resolv.conf
     if [ -e "${netconfig}" ]; then
