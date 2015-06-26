@@ -18,6 +18,19 @@ Cmdline_old ()
 				BOOTIF="${_PARAMETER#BOOTIF=}"
 				;;
 
+			dns=*)
+			  	DNSSERVER="${_PARAMETER#*=}"
+				if echo "${DNSSERVER}" | grep -q , ; then
+					DNSSERVER1="${DNSSERVER%,*}"
+					DNSSERVER2="${DNSSERVER#*,}"
+					export DNSSERVER1 DNSSERVER2
+				else
+					DNSSERVER1="$DNSSERVER"
+					export DNSSERVER1
+				fi
+				unset DNSSERVER
+				;;
+
 			bootid=*)
 				BOOTID="${_PARAMETER#bootid=}"
 				export BOOTID
