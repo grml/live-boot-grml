@@ -58,6 +58,7 @@ Live ()
 				then
 					# We found a memdisk, set up phram
 					modprobe phram phram=memdisk,${MEMDISK}
+					modprobe phram phram=memdisk,${MEMDISK}
 
 					# Load mtdblock, the memdisk will be /dev/mtdblock0
 					modprobe mtdblock
