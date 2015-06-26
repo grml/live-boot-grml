@@ -15,7 +15,6 @@ Architecture: all
 Depends:
  ${misc:Depends},
  live-boot-grml-initramfs-tools | live-boot-backend,
- genext2fs,
 Recommends:
  live-boot-grml-doc,
  live-tools,
