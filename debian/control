@@ -12,12 +12,25 @@ Bugs: mailto:bugs@grml.org
 
 Package: live-boot-grml
 Architecture: all
-Depends: ${misc:Depends}, genext2fs, live-boot-grml-initramfs-tools | live-boot-backend
-Recommends: live-boot-grml-doc, live-tools, eject, file, rsync, uuid-runtime
+Depends:
+ ${misc:Depends},
+ live-boot-grml-initramfs-tools | live-boot-backend,
+ genext2fs,
+Recommends:
+ live-boot-grml-doc,
+ live-tools,
+ eject,
+ file,
+ rsync,
+ uuid-runtime,
+Suggests:
+ curlftpfs,
+ cryptsetup,
+ httpfs2,
+ wget,
 Conflicts: live-boot
 Replaces: live-boot
 Provides: live-boot
-Suggests: curlftpfs, cryptsetup, httpfs2, unionfs-fuse, wget
 Description: Live System Boot Components
  live-boot contains the components to configure a live system during the boot
  process (early userspace).

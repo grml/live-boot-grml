@@ -1292,51 +1292,7 @@ do_union ()
 			rw_opt="rw"
 			ro_opt="rr+wh"
 			noxino_opt="noxino"
-			;;
 
-		unionfs-fuse)
-			rw_opt="RW"
-			ro_opt="RO"
-			;;
-
-		*)
-			rw_opt="rw"
-			ro_opt="ro"
-			;;
-	esac
-
-	case "${UNIONTYPE}" in
-		unionfs-fuse)
-			unionmountopts="-o cow -o noinitgroups -o default_permissions -o allow_other -o use_ino -o suid"
-			unionmountopts="${unionmountopts} ${unionrw}=${rw_opt}"
-			if [ -n "${unionro}" ]
-			then
-				for rofs in ${unionro}
-				do
-					unionmountopts="${unionmountopts}:${rofs}=${ro_opt}"
-				done
-			fi
-			( sysctl -w fs.file-max=391524 ; ulimit -HSn 16384
-			unionfs-fuse ${unionmountopts} "${unionmountpoint}" ) && \
-			( mkdir -p /run/sendsigs.omit.d
-			pidof unionfs-fuse >> /run/sendsigs.omit.d/unionfs-fuse || true )
-			;;
-
-		overlayfs)
-			# XXX: can multiple unionro be used? (overlayfs only handles two dirs, but perhaps they can be chained?)
-			# XXX: and can unionro be optional? i.e. can overlayfs skip lowerdir?
-			if echo ${unionro} | grep -q " "
-			then
-				panic "Multiple lower filesystems are currently not supported with overlayfs (unionro = ${unionro})."
-			elif [ -z "${unionro}"	]
-			then
-				panic "Overlayfs needs at least one lower filesystem (read-only branch)."
-			fi
-			unionmountopts="-o noatime,lowerdir=${unionro},upperdir=${unionrw}"
-			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
-			;;
-
-		*)
 			unionmountopts="-o noatime,${noxino_opt},dirs=${unionrw}=${rw_opt}"
 			if [ -n "${unionro}" ]
 			then
@@ -1345,9 +1301,29 @@ do_union ()
 					unionmountopts="${unionmountopts}:${rofs}=${ro_opt}"
 				done
 			fi
-			mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
+			;;
+
+		overlay)
+			# XXX: can multiple unionro be used? (overlay only handles two dirs, but perhaps they can be chained?)
+			# XXX: and can unionro be optional? i.e. can overlay skip lowerdir?
+			if echo ${unionro} | grep -q " "
+			then
+				panic "Multiple lower filesystems are currently not supported with overlay (unionro = ${unionro})."
+			elif [ -z "${unionro}"	]
+			then
+				panic "overlay needs at least one lower filesystem (read-only branch)."
+			fi
+			# overlayfs requires:
+			# + a workdir to become mounted
+			# + workdir and upperdir to reside under the same mount
+			# + workdir and upperdir to be in separate directories
+			mkdir "${unionrw}/rw"
+			mkdir "${unionrw}/work"
+			unionmountopts="-o noatime,lowerdir=${unionro},upperdir=${unionrw}/rw,workdir=${unionrw}/work"
 			;;
 	esac
+
+	mount -t ${UNIONTYPE} ${unionmountopts} ${UNIONTYPE} "${unionmountpoint}"
 }
 
 get_custom_mounts ()

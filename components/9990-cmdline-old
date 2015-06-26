@@ -266,7 +266,7 @@ Cmdline_old ()
 
 	if [ -z "${UNIONTYPE}" ]
 	then
-		UNIONTYPE="aufs"
+		UNIONTYPE="overlay"
 		export UNIONTYPE
 	fi
 

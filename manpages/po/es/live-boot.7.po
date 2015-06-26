@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot\n"
-"POT-Creation-Date: 2014-12-10 10:35+0100\n"
+"POT-Creation-Date: 2015-04-28 07:19+0200\n"
 "PO-Revision-Date: 2013-11-10 20:10+0900\n"
 "Last-Translator: Carlos Zuferri <chals@altorricon.com>\n"
 "Language-Team: none\n"
@@ -25,13 +25,13 @@ msgstr "LIVE-BOOT"
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2014-12-10"
+msgid "2015-04-28"
 msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "4.0.2-1"
+msgid "5.0~a3-1"
 msgstr ""
 
 #. type: TH
@@ -901,18 +901,18 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:135
 #, no-wrap
-msgid "B<union>=aufs|unionfs"
-msgstr "B<union>=aufs|unionfs"
+msgid "B<union>=aufs|overlay"
+msgstr "B<union>=aufs|overlay"
 
 #.  FIXME
 #. type: Plain text
 #: en/live-boot.7:138
 msgid ""
 "By default, live-boot uses aufs. With this parameter, you can switch to "
-"unionfs."
+"overlay."
 msgstr ""
 "Por defecto, live-boot usa aufs. Con este parámetro, se puede cambiar a "
-"unionfs."
+"overlay."
 
 #.  FIXME
 #. type: SH
@@ -1002,7 +1002,7 @@ msgid "B<persistence.conf>"
 msgstr "B<persistence.conf>"
 
 #. type: SH
-#: en/live-boot.7:154 en/persistence.conf.5:191
+#: en/live-boot.7:154 en/persistence.conf.5:190
 #, no-wrap
 msgid "SEE ALSO"
 msgstr "VER ADEMÁS"
@@ -1013,28 +1013,28 @@ msgid "I<persistence.conf>(5)"
 msgstr "I<persistence.conf>(5)"
 
 #. type: Plain text
-#: en/live-boot.7:158 en/persistence.conf.5:195
+#: en/live-boot.7:158 en/persistence.conf.5:194
 msgid "I<live-build>(7)"
 msgstr "I<live-build>(7)"
 
 #. type: Plain text
-#: en/live-boot.7:160 en/persistence.conf.5:197
+#: en/live-boot.7:160 en/persistence.conf.5:196
 msgid "I<live-config>(7)"
 msgstr "I<live-config>(7)"
 
 #. type: Plain text
-#: en/live-boot.7:162 en/persistence.conf.5:199
+#: en/live-boot.7:162 en/persistence.conf.5:198
 msgid "I<live-tools>(7)"
 msgstr "I<live-tools>(7)"
 
 #. type: SH
-#: en/live-boot.7:163 en/persistence.conf.5:200
+#: en/live-boot.7:163 en/persistence.conf.5:199
 #, no-wrap
 msgid "HOMEPAGE"
 msgstr "PÁGINA WEB"
 
 #. type: Plain text
-#: en/live-boot.7:165 en/persistence.conf.5:202
+#: en/live-boot.7:165 en/persistence.conf.5:201
 msgid ""
 "More information about live-boot and the Live Systems project can be found "
 "on the homepage at E<lt>I<http://live-systems.org/>E<gt> and in the manual "
@@ -1045,13 +1045,13 @@ msgstr ""
 "manual en E<lt>I<http://live-systems.org/manual/>E<gt>."
 
 #. type: SH
-#: en/live-boot.7:166 en/persistence.conf.5:203
+#: en/live-boot.7:166 en/persistence.conf.5:202
 #, no-wrap
 msgid "BUGS"
 msgstr "ERRORES"
 
 #. type: Plain text
-#: en/live-boot.7:168 en/persistence.conf.5:205
+#: en/live-boot.7:168 en/persistence.conf.5:204
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
 "the Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
@@ -1064,13 +1064,13 @@ msgstr ""
 "Systems a la dirección E<lt>I<debian-live@lists.debian.org>E<gt>."
 
 #. type: SH
-#: en/live-boot.7:169 en/persistence.conf.5:206
+#: en/live-boot.7:169 en/persistence.conf.5:205
 #, no-wrap
 msgid "AUTHOR"
 msgstr "AUTOR"
 
 #. type: Plain text
-#: en/live-boot.7:170 en/persistence.conf.5:207
+#: en/live-boot.7:170 en/persistence.conf.5:206
 msgid ""
 "live-boot was written by Daniel Baumann E<lt>I<mail@daniel-baumann.ch>E<gt>."
 msgstr ""

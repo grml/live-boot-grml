@@ -105,16 +105,9 @@ manual_add_modules squashfs
 manual_add_modules sqlzma
 manual_add_modules unlzma
 
-# Filesystem: aufs/overlayfs/unionfs
+# Filesystem: aufs/overlay
 manual_add_modules aufs
-manual_add_modules overlayfs
-manual_add_modules unionfs
-
-# Filesystem: unionfs-fuse
-if [ -x /usr/bin/unionfs-fuse ]
-then
-	copy_exec /usr/bin/unionfs-fuse /bin
-fi
+manual_add_modules overlay
 
 # Filesystem: vfat
 manual_add_modules nls_cp437
