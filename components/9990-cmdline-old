@@ -18,6 +18,11 @@ Cmdline_old ()
 				BOOTIF="${_PARAMETER#BOOTIF=}"
 				;;
 
+			bootid=*)
+				BOOTID="${_PARAMETER#bootid=}"
+				export BOOTID
+				;;
+
 			dhcp)
 				# Force dhcp even while netbooting
 				# Use for debugging in case somebody works on fixing dhclient
@@ -77,6 +82,11 @@ Cmdline_old ()
 			isofrom=*|fromiso=*)
 				FROMISO="${_PARAMETER#*=}"
 				export FROMISO
+				;;
+
+			ignore_bootid)
+				IGNORE_BOOTID="Yes"
+				export IGNORE_BOOTID
 				;;
 
 			ignore_uuid)
