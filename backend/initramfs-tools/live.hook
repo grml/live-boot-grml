@@ -16,6 +16,12 @@ do
 	fi
 done
 
+# Grml version information:
+if [ -r /etc/grml_version ]
+then
+       cp /etc/grml_version "${DESTDIR}"/etc
+fi
+
 # Checking live-boot
 if [ ! -e /bin/live-boot ]
 then
