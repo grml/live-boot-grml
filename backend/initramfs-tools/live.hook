@@ -221,23 +221,26 @@ fi
 
 # Some experimental stuff
 
-case "${LIVE_DNS}" in
-	true)
-		[ "${QUIET}" ] || echo -n " dns"
+[ "${QUIET}" ] || echo -n " dns"
 
-		# /lib/libnss_dns.so.*:a   DNS
-		# /lib/libnss_files.so.*:  /etc/hosts and /etc/passwd
-		# /lib/libnss_compat.so.*: /etc/passwd
+# /lib/libnss_dns.so.*:a   DNS
+# /lib/libnss_files.so.*:  /etc/hosts and /etc/passwd
+# /lib/libnss_compat.so.*: /etc/passwd
 
-		for _SHLIB in $(find /lib -name 'libnss_dns.so.*')
-		do
-			copy_exec "${_SHLIB}"
-		done
+for _SHLIB in $(find /lib -name 'libnss_dns.so.*')
+do
+	copy_exec "${_SHLIB}"
+done
 
-		# might be needed if /etc/hosts is used
-		#mkdir -p "${DESTDIR}/etc"
-		#cp -p /etc/nsswitch.conf "${DESTDIR}/etc"
-		;;
-esac
+# might be needed if /etc/hosts is used
+#mkdir -p "${DESTDIR}/etc"
+#cp -p /etc/nsswitch.conf "${DESTDIR}/etc"
+
+# vlan support
+if [ -x /sbin/vconfig ]
+then
+	copy_exec /sbin/vconfig
+	manual_add_modules 8021q
+fi
 
 [ "${QUIET}" ] || echo .
