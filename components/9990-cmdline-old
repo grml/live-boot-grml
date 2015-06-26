@@ -51,9 +51,8 @@ Cmdline_old ()
 				;;
 
 			ethdevice=*)
-				DEVICE="${_PARAMETER#ethdevice=}"
-				ETHDEVICE="${DEVICE}"
-				export DEVICE ETHDEVICE
+				ETHDEVICE="${_PARAMETER#ethdevice=}"
+				export ETHDEVICE
 				;;
 
 			ethdevice-timeout=*)
@@ -110,13 +109,9 @@ Cmdline_old ()
 				;;
 
 			ip=*)
-				STATICIP="${_PARAMETER#ip=}"
-
-				if [ -z "${STATICIP}" ]
-				then
-					STATICIP="frommedia"
-				fi
-
+				# copy complete ip=args into staticip, and
+				# keep multiple uses.
+				STATICIP="${STATICIP} ${_PARAMETER}"
 				export STATICIP
 				;;
 
