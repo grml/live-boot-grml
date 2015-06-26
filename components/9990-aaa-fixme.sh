@@ -26,5 +26,8 @@ then
 	export PATH
 fi
 
+old_root_overlay_label="live-rw"
+old_home_overlay_label="home-rw"
 custom_overlay_label="persistence"
+old_custom_overlay_label="custom-ov"
 persistence_list="persistence.conf"
