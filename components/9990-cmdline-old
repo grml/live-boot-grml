@@ -33,6 +33,8 @@ Cmdline_old ()
 			nodhcp)
 				DHCP=""
 				export DHCP
+				NODHCP="Yes"
+				export NODHCP
 				;;
 
 			ethdevice=*)
@@ -148,6 +150,11 @@ Cmdline_old ()
 			nfsoverlay=*)
 				NFS_COW="${_PARAMETER#nfsoverlay=}"
 				export NFS_COW
+				;;
+
+			nodhcphostname)
+				NODHCPHOSTNAME="Yes"
+				export NODHCPHOSTNAME
 				;;
 
 			nofstab)
