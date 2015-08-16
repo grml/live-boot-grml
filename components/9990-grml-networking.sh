@@ -133,14 +133,14 @@ EOF
 done
 
 # dns bootoption
-if [ -n "$DNSSERVER1" ]
+if [ -n "$DNSSERVERS" ]
 then
 	# disable any existing entries
 	if [ -r $RESOLVCONF ]
 	then
 		sed -i 's/nameserver/# nameserver/' $RESOLVCONF
 	fi
-	for i in $DNSSERVER1 $DNSSERVER2
+	for i in $DNSSERVERS
 	do
 		echo "nameserver $i" >> $RESOLVCONF
 	done
