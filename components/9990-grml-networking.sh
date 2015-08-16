@@ -94,7 +94,7 @@ iface ${interface} inet ${method}
 EOF
     else
       cat >> $IFFILE << EOF
-allow-hotplug ${interface}
+auto ${interface}
 iface ${interface} inet ${method}
 EOF
     fi
