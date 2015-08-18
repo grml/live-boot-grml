@@ -1,4 +1,4 @@
-live-boot (5.0~a4-1+grml.1) UNRELEASED; urgency=medium
+live-boot (5.0~a4-1+grml.1) unstable; urgency=medium
 
   [ Evgeni Golov ]
   * Import 5.0~a4-1 from Debian.
@@ -10,13 +10,14 @@ live-boot (5.0~a4-1+grml.1) UNRELEASED; urgency=medium
   * [5f1c62a] create a single debian patch :/
   * [214cc03] use auto instead of allow-hotplug in generated /e/n/interfaces
     (Closes: issue1568)
-  * [6795067] backport Allow-selecting-boot-eth-dev-by-MAC-address.patch from upstream
+  * [6795067] backport Allow-selecting-boot-eth-dev-by-MAC-address.patch
+    from upstream
 
   [ Laurens Vanderhoven ]
   * [5eb34d4] Allow +2 nameserver entries for dns= boot option
     (Closes: issue1234)
 
- -- Evgeni Golov <evgeni@grml.org>  Tue, 18 Aug 2015 13:04:08 +0200
+ -- Evgeni Golov <evgeni@grml.org>  Tue, 18 Aug 2015 14:14:10 +0200
 
 live-boot (5.0~a4-1) unstable; urgency=low
 
