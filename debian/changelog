@@ -1,3 +1,23 @@
+live-boot (5.0~a4-1+grml.1) UNRELEASED; urgency=medium
+
+  [ Evgeni Golov ]
+  * Import 5.0~a4-1 from Debian.
+  * [3a7cc5f] drop stop-using-etc-fstab.d.patch, applied upstream
+  * [ee5831d] Drop genext2fs from Depends, live-snapshot is long gone
+  * [8e37c83] update 15_networking_grml.patch against live-boot 5.0
+  * [600ec8b] do not run dh with quilt, we have source format 3.0
+  * [26c670d] drop patches, we have everything in git now
+  * [5f1c62a] create a single debian patch :/
+  * [214cc03] use auto instead of allow-hotplug in generated /e/n/interfaces
+    (Closes: issue1568)
+  * [6795067] backport Allow-selecting-boot-eth-dev-by-MAC-address.patch from upstream
+
+  [ Laurens Vanderhoven ]
+  * [5eb34d4] Allow +2 nameserver entries for dns= boot option
+    (Closes: issue1234)
+
+ -- Evgeni Golov <evgeni@grml.org>  Tue, 18 Aug 2015 13:04:08 +0200
+
 live-boot (5.0~a4-1) unstable; urgency=low
 
   [ Tails developers ]
