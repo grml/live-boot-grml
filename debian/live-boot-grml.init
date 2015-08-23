@@ -200,7 +200,7 @@ do_stop ()
 				eject -p -m /live/image >/dev/null 2>&1
 			fi
 
-			if [ ${NOPROMPT} = "cd" ]
+			if [ "${NOPROMPT}" = "cd" ]
 			then
 				prompt=
 			fi
