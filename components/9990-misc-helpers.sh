@@ -114,7 +114,7 @@ check_dev ()
 				ISO_DEVICE=$(dirname ${ISO_DEVICE})
 				[ -b "$ISO_DEVICE" ] && break
 				i=$(($i -1))
-		        done
+			done
 		fi
 
 		if [ "$ISO_DEVICE" = "/" ]
@@ -1074,18 +1074,18 @@ find_persistence_media ()
 			result=$(probe_for_file_name "${overlays}" ${dev})
 			if [ -n "${result}" ]
 			then
-			        local loopdevice
+				local loopdevice
 				loopdevice=${result##*=}
-			        if is_in_comma_sep_list luks ${PERSISTENCE_ENCRYPTION} && is_luks_partition ${loopdevice}
+				if is_in_comma_sep_list luks ${PERSISTENCE_ENCRYPTION} && is_luks_partition ${loopdevice}
 				then
-				        local luksfile
+					local luksfile
 					luksfile=""
 					if luksfile=$(open_luks_device "${loopdevice}")
 					then
-					        result=${result%%=*}
+						result=${result%%=*}
 						result="${result}=${luksfile}"
 					else
-					        losetup -d $loopdevice
+						losetup -d $loopdevice
 						result=""
 					fi
 				fi
