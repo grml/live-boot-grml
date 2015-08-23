@@ -83,7 +83,7 @@ do_httpmount ()
 	then
 		if [ -d "${alt_mountpoint}" ]
 		then
-		        umount "${alt_mountpoint}"
+			umount "${alt_mountpoint}"
 			rmdir "${alt_mountpoint}"
 		fi
 		umount "${mountpoint}"

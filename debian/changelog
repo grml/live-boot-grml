@@ -1,3 +1,18 @@
+live-boot (5.0~a5-1) unstable; urgency=low
+
+  [ Richard Nelson ]
+  * Adjusting whitespace to tabs on components/9990-overlay.sh
+  * Adjusting whitespace to tabs on components/9990-misc-helpers.sh
+  * Adjusting whitespace to tabs on components/9990-mount-http.sh
+
+  [ Daniel Baumann ]
+  * Wrap and sort debian control file.
+
+  [ Steven Shiau ]
+  * Support predictable network interface names.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Sun, 23 Aug 2015 10:55:32 +0200
+
 live-boot (5.0~a4-1+grml.1) unstable; urgency=medium
 
   [ Evgeni Golov ]

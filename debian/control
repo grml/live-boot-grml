@@ -13,8 +13,8 @@ Bugs: mailto:bugs@grml.org
 Package: live-boot-grml
 Architecture: all
 Depends:
- ${misc:Depends},
  live-boot-grml-initramfs-tools | live-boot-backend,
+ ${misc:Depends},
 Recommends:
  live-boot-grml-doc,
  live-tools,
@@ -23,8 +23,8 @@ Recommends:
  rsync,
  uuid-runtime,
 Suggests:
- curlftpfs,
  cryptsetup,
+ curlftpfs,
  httpfs2,
  wget,
 Conflicts: live-boot
@@ -44,7 +44,8 @@ Description: Live System Boot Components
 Package: live-boot-grml-doc
 Section: doc
 Architecture: all
-Depends: ${misc:Depends}
+Depends:
+ ${misc:Depends},
 Description: Live System Boot Components (documentation)
  The Live Systems project maintains the components to build Debian based Live
  systems and the official Debian Live images themselves.
@@ -61,13 +62,16 @@ Description: Live System Boot Components (documentation)
 Package: live-boot-grml-initramfs-tools
 Architecture: all
 Depends:
- ${misc:Depends},
  busybox | busybox-initramfs,
  initramfs-tools,
  udev,
-Conflicts: live-boot-backend
-Replaces: live-boot-backend
-Provides: live-boot-backend
+ ${misc:Depends},
+Conflicts:
+ live-boot-backend,
+Replaces:
+ live-boot-backend,
+Provides:
+ live-boot-backend,
 Description: Live System Boot Components (initramfs-tools backend)
  The Live Systems project maintains the components to build Debian based Live
  systems and the official Debian Live images themselves.
