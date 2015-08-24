@@ -1646,32 +1646,6 @@ activate_custom_mounts ()
 	echo ${used_devices}
 }
 
-fix_backwards_compatibility ()
-{
-	local device dir opt backing include_list
-	device=${1}
-	dir=${2}
-	opt=${3}
-
-	if [ -n "${PERSISTENCE_READONLY}" ]
-	then
-		return
-	fi
-
-	backing="$(mount_persistence_media ${device})"
-	if [ -z "${backing}" ]
-	then
-		return
-	fi
-
-	include_list="${backing}/${persistence_list}"
-	if [ ! -r "${include_list}" ] && [ ! -r "${backing}/${old_persistence_list}" ]
-	then
-		echo "# persistence backwards compatibility:
-${dir} ${opt},source=." > "${include_list}"
-	fi
-}
-
 is_mountpoint ()
 {
 	directory="$1"
