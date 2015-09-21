@@ -1,15 +1,15 @@
-# Spanish translations for live-boot package
-# Copyright (C) 2012-2014 Carlos Zuferri «chals» <chals@altorricon.com>
+# French translations for live-boot manpages
+# Copyright (C) 2015 Olivier Humbert <trebmuh@tuxfamily.org>
 # This file is distributed under the same license as the live-boot package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot\n"
+"Project-Id-Version: live-boot 5.0~a5-1\n"
 "POT-Creation-Date: 2015-09-22 10:09+0200\n"
-"PO-Revision-Date: 2013-11-10 20:10+0900\n"
-"Last-Translator: Carlos Zuferri <chals@altorricon.com>\n"
+"PO-Revision-Date: 2015-09-21 14:10+0200\n"
+"Last-Translator: Olivier Humbert <trebmuh@tuxfamily.org>\n"
 "Language-Team: none\n"
-"Language: es\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,43 +24,43 @@ msgstr "LIVE-BOOT"
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "2015-09-22"
-msgstr ""
+msgstr "22.09.2015"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "5.0~a5-1"
-msgstr ""
+msgstr "5.0~a5-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "Live Systems Project"
-msgstr "Proyecto Live Systems"
+msgstr "Projet Live Systems"
 
 #. type: SH
 #: en/live-boot.7:3 en/persistence.conf.5:3
 #, no-wrap
 msgid "NAME"
-msgstr "NOMBRE"
+msgstr "NOM"
 
 #. type: SH
 #: en/live-boot.7:6 en/persistence.conf.5:7
 #, no-wrap
 msgid "DESCRIPTION"
-msgstr "DESCRIPCIÓN"
+msgstr "DESCRIPTION"
 
 #. type: SH
 #: en/live-boot.7:28 en/persistence.conf.5:57
 #, no-wrap
 msgid "OPTIONS"
-msgstr "OPCIONES"
+msgstr "OPTIONS"
 
 #. type: SH
 #: en/live-boot.7:154 en/persistence.conf.5:190
 #, no-wrap
 msgid "SEE ALSO"
-msgstr "VER ADEMÁS"
+msgstr "VOIR AUSSI"
 
 #. type: Plain text
 #: en/live-boot.7:158 en/persistence.conf.5:194
@@ -81,7 +81,7 @@ msgstr "I<live-tools>(7)"
 #: en/live-boot.7:163 en/persistence.conf.5:199
 #, no-wrap
 msgid "HOMEPAGE"
-msgstr "PÁGINA WEB"
+msgstr "PAGE D'ACCUEIL"
 
 #. type: Plain text
 #: en/live-boot.7:165 en/persistence.conf.5:201
@@ -90,15 +90,15 @@ msgid ""
 "on the homepage at E<lt>I<http://live-systems.org/>E<gt> and in the manual "
 "at E<lt>I<http://live-systems.org/manual/>E<gt>."
 msgstr ""
-"Se puede encontrar más información acerca de live-boot y el proyecto Live "
-"Systems en la página web E<lt>I<http://live-systems.org/>E<gt> y en el "
-"manual en E<lt>I<http://live-systems.org/manual/>E<gt>."
+"Davantage d'informations à propos de live-boot et du projet Live Systems "
+"peuvent être trouvées sur la page E<lt>I<http://live-systems.org/>E<gt> et "
+"dans le manuel sur E<lt>I<http://live-systems.org/manual/>E<gt>."
 
 #. type: SH
 #: en/live-boot.7:166 en/persistence.conf.5:202
 #, no-wrap
 msgid "BUGS"
-msgstr "ERRORES"
+msgstr "BOGUES"
 
 #. type: Plain text
 #: en/live-boot.7:168 en/persistence.conf.5:204
@@ -108,31 +108,32 @@ msgid ""
 "writing a mail to the Live Systems mailing list at E<lt>I<debian-live@lists."
 "debian.org>E<gt>."
 msgstr ""
-"Se puede notificar los fallos enviando un informe de errores sobre el "
-"paquete live-boot al Sistema de Seguimiento de Errores en E<lt>I<http://bugs."
-"debian.org/>E<gt> o escribiendo un mensaje a la lista de correo de Live "
-"Systems a la dirección E<lt>I<debian-live@lists.debian.org>E<gt>."
+"Les bogues peuvent être signalés en soumettant un rapport de bogue pour le "
+"paquet live-boot dans le BTS à E<lt>I<http://bugs.debian.org/>E<gt> ou par "
+"l'écriture d'un courriel à la liste de diffusion Live Systems à "
+"E<lt>I<debian-live@lists.debian.org>E<gt>."
 
 #. type: SH
 #: en/live-boot.7:169 en/persistence.conf.5:205
 #, no-wrap
 msgid "AUTHOR"
-msgstr "AUTOR"
+msgstr "AUTEUR"
 
 #. type: Plain text
 #: en/live-boot.7:170 en/persistence.conf.5:206
 msgid ""
 "live-boot was written by Daniel Baumann E<lt>I<mail@daniel-baumann.ch>E<gt>."
 msgstr ""
-"live-boot fue escrito por Daniel Baumann E<lt>I<mail@daniel-baumann.ch>E<gt>."
+"live-images a été écrit par Daniel Baumann E<lt>I<mail@daniel-baumann."
+"ch>E<gt>."
 
 #. type: Plain text
 #: en/persistence.conf.5:6
 msgid ""
 "B<persistence.conf> - Configuration file for persistence media in live-boot"
 msgstr ""
-"B<persistence.conf> - Fichero para configurar medios de almacenamiento con "
-"persistencia en live-boot"
+"B<persistence.conf> - Fichier de configuration pour le media de persistance "
+"dans live-boot"
 
 #. type: Plain text
 #: en/persistence.conf.5:13
@@ -143,12 +144,12 @@ msgid ""
 "file stored on the root of its file system. Any such labeled volume must "
 "have such a file, or it will be ignored."
 msgstr ""
-"Si live-boot prueba un volumen persistente con la etiqueta (o nombre GPT, o "
-"nombre de fichero, aunque a partir de este momento nos referiremos a él como "
-"simplemente \"etiqueta\") \"persistence\", la persistencia de ese volumen es "
-"completamente personalizable a través del fichero B<persistence.conf> "
-"almacenado en la raíz de su sistema de ficheros. Cualquier volumen esa "
-"etiqueta debe tener uno de esos ficheros, o si no será ignorado."
+"Si live-boot sondes un volume de persistance avec l'étiquette (ou le nom GPT "
+"ou le nom de fichier, mais à partir de maintenant nous dirons juste "
+"\"étiquette\") \"persistence\", ce volume de persistance est complètement "
+"personnalisable à travers le fichier  B<persistence.conf> stockée à la "
+"racine de son système de fichier. Tout volume ainsi étiquetté doit avoir un "
+"fichier comme ceci, ou il sera ignoré."
 
 #. type: Plain text
 #: en/persistence.conf.5:17
@@ -157,9 +158,9 @@ msgid ""
 "a \"#\" (used for comments), both which will be ignored. A so called "
 "\"custom mount\" has the format:"
 msgstr ""
-"El formato de B<persistence.conf> permite añadir líneas vacias o líneas que "
-"comiencen por \"#\" (usado para los comentarios), ambos serán ignorados. Un "
-"\"montaje personalizado\" tiene el formato:"
+"Le format de B<persistence.conf> permet les lignes vides et les lignes "
+"commençant avec un \"#\" (utilisé pour les commentaires), les deux seront "
+"ignorés. Un \"montage personnalisé\" a le format :"
 
 #. type: Plain text
 #: en/persistence.conf.5:20
@@ -172,8 +173,8 @@ msgid ""
 "which roughly translates to \"make I<DIR> persistence in the way described "
 "by the list of I<OPTION>s\"."
 msgstr ""
-"lo que se traduce como \"hacer I<DIR> persistente en la forma descrita en la "
-"lista de I<OPTION>s\"."
+"qui se traduit grossièrement par \"fabrique I<DIR> la persistance selon le "
+"chemin décrit par la liste d'I<OPTION>s\"."
 
 #. type: Plain text
 #: en/persistence.conf.5:35
@@ -187,16 +188,15 @@ msgid ""
 "simply bind-mount the corresponding source directory to I<DIR>, but this can "
 "be changed through the use of I<OPTION>s."
 msgstr ""
-"Para cada uno de los montajes personalizados I<DIR> debe ser una ruta "
-"absoluta que no puede contener espacios en blanco ni los componentes "
-"especiales . y .. además no puede ser /live (o ninguno de sus sub-"
-"directorios) ni /. Una vez activados, todos los cambios (creación, "
-"modificación y borrado de ficheros) en I<DIR> en el sistema de ficheros en "
-"vivo, son guardados de forma persistente en una ruta equivalente a I<DIR> en "
-"el medio persistente, llamado el directorio de origen. La manera de "
-"conseguir la persistencia por defecto es simplemente hacer un montaje "
-"enlazado (bind-mount N.del T.) del directorio de origen al I<DIR>, aunque "
-"esto se puede cambiar utilizando las opciones I<OPTION>s."
+"Pour chaque montage personnalisé I<DIR> doit être un chemin absolu qui ne "
+"peut pas contenir d'espaces blanc ou les composants de chemins . et .. , et "
+"ne peut pas être /live (ou un de ses sous-répertoires). Une fois activé, "
+"toutes les modifications (effacement de fichier, création et modification) "
+"dans I<DIR> sur le système de fichier live sont emmagasinées de façon "
+"persistante dans un chemin équivalent à I<DIR> sur le média de persitance, "
+"appelé le répertoire source. Le moyen par défaut pour accomplir la "
+"persistance est simplement de bind-monter le répertoire source correspondant "
+"à I<DIR>, mais ceci peut être modifié à travers l'utilisation d'I<OPTION>s."
 
 #. type: Plain text
 #: en/persistence.conf.5:48
@@ -213,19 +213,19 @@ msgid ""
 "use the B<source> option (see below) to make sure that they are stored in "
 "different source directories."
 msgstr ""
-"Todos los montajes personalizados serán montados en orden de tal manera que "
-"dos montajes personalizados no se \"escondan\" uno al otro. Por ejemplo, si "
-"tenemos los dos I<DIR>:s /a y /a/b siempre /a será montado en primer lugar, "
-"después /a/b. Esto siempre es así sin importar el orden en que aparezcan las "
-"líneas en B<persistence.conf> o incluso si se usan varios ficheros "
-"B<persistence.conf> en medios persistentes distintos al mismo tiempo. Sin "
-"embargo, no está permitido que un montaje personalizado tenga su directorio "
-"de origen en el interior del directorio de origen de otro montaje "
-"personalizado, ya que los directorios de origen que live-boot crea "
-"automáticamente no tienen soporte para montajes \"anidados\" como /a y /a/b "
-"en el mismo medio. En este caso se debe usar la opción B<source> (ver "
-"debajo) para asegurarse de que se almacenan en directorios de origen "
-"diferentes."
+"Tous les montages personnalisés seront réalisés dans un ordre qui ne "
+"permettent pas à deux montages personnalisés de se \"cacher\" l'un l'autre. "
+"Par exemple, si nous avons les deux I<DIR>:s /a et /a/b , /a sera toujours "
+"monté en premier, puis /a/b. Ceci sera toujours vrai quelque soit l'ordre "
+"des lignes dans B<persistence.conf>, ou si plusieurs fichiers B<persistence."
+"conf> sur différents média de persistance sont utilisés au même moment. "
+"Néanmoins, il est interdit aux montages personnalisés d'avoir leurs "
+"répertoires source à l'intérieur du répertoire source d'un autre montage "
+"personnalisé, ainsi les répertoires source qui sont auto-créés par live-boot "
+"ne prennent pas en charge les montages \"emboîtés\" comme /a et /a/b sur le "
+"même média. Dans ce cas, vous devez utiliser l'option B<source> (voir ci-"
+"dessous) pour être certains qu'ils ne sont pas emmagasinés dans différents "
+"répertoires source."
 
 #. type: Plain text
 #: en/persistence.conf.5:56
@@ -237,13 +237,12 @@ msgid ""
 "on the persistence media. The bootstrapping will not happen when the B<link> "
 "or B<union> options are used (see below)."
 msgstr ""
-"Cuando un directorio de origen no existe en los medios con persistencia para "
-"un montaje personalizado en particular, se creará automáticamente, y los "
-"permisos y sus propietarios se establecen de forma óptima de acuerdo a "
-"I<DIR>. También se realiza una preinstalación (bootstrap N. del T.) copiando "
-"los contenidos de I<DIR> en su directorio de origen en el medio con "
-"persistencia. La preinstalación no se realiza cuando se utilizan las "
-"opciones B<link> o B<union> (ver debajo)."
+"Lorsqu'un répertoire source n'existe pas sur le média de persistance pour un "
+"montage personnalisé donné, il sera créé automatiquement, et les permissions "
+"et la propriété seront paramétrées avec optimisme en accord avec I<DIR>. Il "
+"sera également amorcé en copiant le contenu du I<DIR> dans son répertoire "
+"source sur le média de persistance. L'amorçage ne se passera pas lorsque les "
+"options B<link> ou B<union> sont utilisées (voir ci-dessous)."
 
 #. type: Plain text
 #: en/persistence.conf.5:60
@@ -251,8 +250,8 @@ msgid ""
 "Custom mounts defined in B<persistence.conf> accept the following options in "
 "a comma-separated list:"
 msgstr ""
-"Los montajes personalizados definidos en B<persistence.conf> aceptan las "
-"siguientes opciones en una lista separada por comas:"
+"Les montages personnalisés défini dans  B<persistence.conf> acceptent les "
+"options suivantes dans une liste séparée par des commas :"
 
 #. type: IP
 #: en/persistence.conf.5:60
@@ -272,15 +271,15 @@ msgid ""
 "the whole media root available (similar to the now deprecated B<home-rw> "
 "type of persistence)."
 msgstr ""
-"Cuando se especifica, se guardan los cambios persistentes en I<PATH> en los "
-"medios con persistencia. I<PATH> debe ser una ruta relativa (respecto a la "
-"raíz del medio persistente) que no puede contener espacios en blanco o los "
-"componentes especiales . o .. con la excepción de que puede ser "
-"simplemente . lo que significa la raíz del medio persistente. Esta opción es "
-"relevante si se desea anidar montajes personalizados, lo que de otro modo "
-"produciría errores, o si se desea hacer que toda la raíz del medio esté "
-"disponible (de forma similar al ahora obsoleto tipo de persistencia B<home-"
-"rw>)"
+"Lorsqu'indiqué, emmagasine les modifications persistantes dans I<PATH> sur "
+"le média de persistance. I<PATH> doit être un chemin relatif (au regard de "
+"la racine du média de persistance) qui ne peut pas contenit d'espaces blancs "
+"ou de composants de chemins spéciaux comme . ou .. , avec l'exception qu'il "
+"peut simplement s'agir de . qui signifie : la racine du média de persistance."
+"Cette option est principalement utile si vous voulez imbriquer des montages "
+"personnalisés qui, autrement, causeraient des erreurs, ou si vous voulez "
+"rendre disponible la racine du média en entier (équivalent à au - maintenant "
+"déprécié - type de persistance B<home-rw>)."
 
 #. type: Plain text
 #: en/persistence.conf.5:72
@@ -288,8 +287,8 @@ msgid ""
 "The following options are mutually exclusive (only the last given one will "
 "be in effect):"
 msgstr ""
-"Las siguientes opciones son mutuamente exclusivas (únicamente la última "
-"tendrá efecto):"
+"Les options suivantes sont mutuellement exclusives (uniquement la dernière "
+"donnée sera effective) :"
 
 #. type: IP
 #: en/persistence.conf.5:72
@@ -300,9 +299,7 @@ msgstr "B<bind>"
 #. type: Plain text
 #: en/persistence.conf.5:74
 msgid "Bind-mount the source directory to I<DIR>. This is the default."
-msgstr ""
-"Montar de forma enlazada el directorio de origen a I<DIR>. Esto es así por "
-"defecto."
+msgstr "Bind-monte le répertoire source dans I<DIR>. Ceci est le défaut."
 
 #. type: IP
 #: en/persistence.conf.5:74
@@ -321,15 +318,15 @@ msgid ""
 "source; removed links will reappear after a reboot. To permanently add or "
 "delete a file one must do so directly in the source directory."
 msgstr ""
-"Crea la estructura de directorios del directorio de origen en el medio "
-"persistente en I<DIR> y crea los enlaces simbólicos desde el lugar "
-"correspondiente en I<DIR> a cada fichero en el directorio de origen. Si los "
-"directorios o ficheros contienen el mismo nombre, al igual que cualquier "
-"otro enlace, serán sobrescritos. Tener en cuenta que los enlaces en I<DIR> "
-"sólo eliminan el enlace, no el fichero correspondiente en el directorio; los "
-"enlaces eliminados reaparecerán tras reiniciar. Para añadir o eliminar un "
-"fichero de forma permanente se debe hacer directamente en el directorio de "
-"origen."
+"Crée la structure de répertoire du répertoire source sur le média de "
+"persistance dans I<DIR> et crée des liens symboliques depuis l'emplacement "
+"correspondant dans I<DIR> pour chaque fichier dans le répertoire source. Les "
+"fichiers ou répertoire existants avec le même nom aussi bien que tout lien "
+"seront écrasés. Notez que l'effacement des liens dans I<DIR> supprimera "
+"uniquement le lien, pas le fichier correspondant dans la source; les liens "
+"supprimés réapparaîtront après un redémarrage. Pour ajouter ou supprimer un "
+"fichier de façon permanente, on doit le faire directement dans le répertoire "
+"source."
 
 #. type: Plain text
 #: en/persistence.conf.5:91
@@ -341,14 +338,14 @@ msgid ""
 "when only certain files need to be persistent, not the whole directory "
 "they're in, e.g. some configuration files in a user's home directory."
 msgstr ""
-"B<link> tan sólo hará persistentes los ficheros que ya se encuentran en el "
-"directorio de origen, y no cualquier otro fichero en I<DIR>. Estos ficheros "
-"deben ser añadidos manualmente en el directorio de origen pare utilizar esta "
-"opción y ellos aparecerán en I<DIR> además de los ficheros que ya se "
-"encuentran allí. Esta opción es útil cuando sólo es necesario hacer "
-"persistentes ciertos ficheros y no todo el directorio en el que se "
-"encuentran, por ejemplo, algunos ficheros de configuración en el directorio "
-"home de un usuario."
+"En réalité, B<link> rendra persistants uniquement les fichiers déjà présents "
+"dans le répertoire source, aucun autre fichier dans I<DIR>. Ces fichiers "
+"doivent être ajoutés manuellement au répertoire source pour pouvoir utiliser "
+"cette option, et ils apparaîtront dans I<DIR> en addition des fichiers déjà "
+"présents. Cette option est utile lorsque seulement certain fichiers doivent "
+"être persistants, et pas l'ensemble du répertoire dans lequel ils se "
+"trouvent, par exemple certains fichiers de configuration dans le répertoire "
+"de l'utilisateur."
 
 #. type: IP
 #: en/persistence.conf.5:91
@@ -367,21 +364,21 @@ msgid ""
 "live-config) will not appear in the union. This option will use the union "
 "file system specified by live-boot's B<union> boot parameter."
 msgstr ""
-"Guardar la rama rw de una unión en un medio persistente, de modo que los "
-"cambios son guardados de forma persistente. Potencialmente esto puede "
-"reducir el uso del disco comparado con los montajes enlazados, y no "
-"esconderá los ficheros añadidos a los medios de sólo lectura. Un buen truco "
-"es que la unión utilizará el I<DIR> del sistema de ficheros de sólo lectura "
-"de la imagen y no de la raíz del sistema de ficheros real, por eso los "
-"ficheros que se crean después del arranque (por ejemplo live-config) no "
-"aparecerán en la unión. Esta opción utilizará el sistema de ficheros unión "
-"especificado por el parámetro de arranque B<union> de live-boot."
+"Sauvegarde la branche rw d'un union sur le média de persistance, ainsi, "
+"seuls les modifications sont emmagasinnées de façon persistante. Ceci peut "
+"potentiellement réduire l'utilisation du disque comparé aux montages-bind, "
+"et ne cachera pas les fichiers ajoutés au média en lecture seule. Un "
+"avertissement est que l'union utilisera I<DIR> depuis le système de fichier "
+"en lecture seule de l'image, pas le système de fichier racine réel, et donc "
+"les fichiers créés après le démarrage (par exemple par live-config) "
+"n'apparaîtront pas dans l'union. Cette option utilisera le système de "
+"fichier union spécifié par le paramètre de démarrage B<union> de live-boot."
 
 #. type: SH
 #: en/persistence.conf.5:101
 #, no-wrap
 msgid "DIRECTORIES"
-msgstr "DIRECTORIOS"
+msgstr "RÉPERTOIRES"
 
 #. type: IP
 #: en/persistence.conf.5:102
@@ -397,17 +394,17 @@ msgid ""
 "through this mount, as well as any source directories (which is especially "
 "practical for custom mounts using the B<link> option)."
 msgstr ""
-"Aquí se montarán todos los volumenes persistentes (en un directorio que "
-"corresponda con el nombre del dispositivo). El fichero B<persistence.conf> "
-"se puede editar fácilmente a través de este montaje, así como cualquier "
-"directorio de origen (esto resulta especialmente práctico para los montajes "
-"personalizados usando la opción B<link>)."
+"Tous les volumes de persistance seront montés ici (dans le répertoire "
+"correspondant au nom de périphérique). Le fichier B<persistence.conf> peut "
+"être facilement édité à travers ce montage, de la même façon que tout "
+"répertoire source (ce qui est spécialement pratique pour les montages "
+"personnalisés utilisant l'option B<link>)."
 
 #. type: SH
 #: en/persistence.conf.5:109
 #, no-wrap
 msgid "EXAMPLES"
-msgstr "EJEMPLOS"
+msgstr "EXEMPLES"
 
 #. type: Plain text
 #: en/persistence.conf.5:114
@@ -415,9 +412,9 @@ msgid ""
 "Let's say we have a persistence volume I<VOL> with the a B<persistence.conf> "
 "file containing the following four lines (numbered for ease of reference):"
 msgstr ""
-"Si tenemos un volumen con persistencia I<VOL> con un fichero B<persistence."
-"conf>que contiene las cuatro lineas siguientes (numeradas para una mejor "
-"referencia):"
+"Disons que nous avons un volume persistant I<VOL> avec un fichier "
+"B<persistence.conf> contenantles quatre lignes suivantes (numérotée pour "
+"faciliter leur référencement) :"
 
 #. type: TP
 #: en/persistence.conf.5:114 en/persistence.conf.5:128
@@ -466,7 +463,7 @@ msgstr "/usr union"
 #. type: Plain text
 #: en/persistence.conf.5:128
 msgid "The corresponding source directories are:"
-msgstr "Los directorios de origen correspondientes son:"
+msgstr "Les répertoires source correspondant sont :"
 
 #. type: Plain text
 #: en/persistence.conf.5:132
@@ -474,7 +471,7 @@ msgid ""
 "I<VOL>/config-files/user1 (but it would be I<VOL>/home/user1 without the "
 "B<source> option)"
 msgstr ""
-"I<VOL>/config-files/user1 (pero sería I<VOL>/home/user1 sin la opción "
+"I<VOL>/config-files/user1 (mais ce serait I<VOL>/home/user1 sans l'option "
 "B<source>)"
 
 #. type: Plain text
@@ -483,7 +480,7 @@ msgid ""
 "I<VOL>/config-files/user2 (but it would be I<VOL>/home/user2 without the "
 "B<source> option)"
 msgstr ""
-"I<VOL>/config-files/user2 (pero sería I<VOL>/home/user2 sin la opción "
+"I<VOL>/config-files/user2 (mais ce serait I<VOL>/home/user2 sans l'option "
 "B<source>)"
 
 #. type: Plain text
@@ -502,8 +499,9 @@ msgid ""
 "It was necessary to set the B<source> options for 1 and 2, since they "
 "otherwise would become nested with 3's source, which is invalid."
 msgstr ""
-"Era necesario establecer las opciones B<source> para 1 y 2, ya que de otro "
-"modo resultarían anidados con el origen de 3, lo cual no es válido."
+"Il était nécessaire de paramétrer les options B<source> pour 1 et 2, "
+"puisqu'autrement ils seraient devenus imbriqués avec la source du 3, ce qui "
+"est invalide."
 
 #. type: Plain text
 #: en/persistence.conf.5:150
@@ -513,11 +511,11 @@ msgid ""
 "is simply bind-mounted on /home. To illustrate what happens for lines 1 and "
 "2, let's say that the following files exist:"
 msgstr ""
-"La línea 3 será tenida en cuenta antes que las líneas 1 y 3 para evitar que "
-"los montajes personalizados 1 y 2 resulten escondidos por 3. Cuando se "
-"procesa la línea 3, I<VOL>/home es simplemente montado en unión a /home. "
-"Para ilustrar lo que sucede con las líneas 1 y 2, digamos que los siguientes "
-"ficheros existen: "
+"La ligne 3 sera prise en compte avant les lignes 1 et 2 afin d'éviter que "
+"les montages personnalisés 1 et 2 ne soient cachés par 3. Lorsque la ligne 3 "
+"est prise en charge, I<VOL>/home est simplement bind-monté sur /home. Pour "
+"illustrer ce qu'il se passe pour les lignes 1 et 2, disons que les fichiers "
+"suivants existent :"
 
 #. type: TP
 #: en/persistence.conf.5:150
@@ -555,42 +553,44 @@ msgstr "I<VOL>/config-files/user2/.ssh/config"
 #. type: Plain text
 #: en/persistence.conf.5:161
 msgid "Then the following links and directories will be created:"
-msgstr "Entonces se crearán los siguientes enlaces y directorios:"
+msgstr "Puis que les liens et les répertoires suivant seront créés :"
 
 #. type: TP
 #: en/persistence.conf.5:161 en/persistence.conf.5:164
 #: en/persistence.conf.5:170
 #, no-wrap
 msgid "Link:"
-msgstr "Enlace:"
+msgstr "Liens :"
 
 #. type: Plain text
 #: en/persistence.conf.5:164
 msgid "/home/user1/.emacs -E<gt> I<VOL>/config-files/user1/.emacs (from a)"
-msgstr "/home/user1/.emacs -E<gt> I<VOL>/config-files/user1/.emacs (de a)"
+msgstr "/home/user1/.emacs -E<gt> I<VOL>/config-files/user1/.emacs (depuis a)"
 
 #. type: Plain text
 #: en/persistence.conf.5:167
 msgid "/home/user2/.bashrc -E<gt> I<VOL>/config-files/user2/.bashrc (from b)"
-msgstr "/home/user2/.bashrc -E<gt> I<VOL>/config-files/user2/.bashrc (de b)"
+msgstr ""
+"/home/user2/.bashrc -E<gt> I<VOL>/config-files/user2/.bashrc (depuis b)"
 
 #. type: TP
 #: en/persistence.conf.5:167
 #, no-wrap
 msgid "Dir:"
-msgstr "Directorio:"
+msgstr "Rép :"
 
 #. type: Plain text
 #: en/persistence.conf.5:170
 msgid "/homea/user2/.ssh (from c)"
-msgstr "/homea/user2/.ssh (de c)"
+msgstr "/homea/user2/.ssh (depuis c)"
 
 #. type: Plain text
 #: en/persistence.conf.5:174
 msgid ""
 "/home/user2/.ssh/config -E<gt> I<VOL>/config-files/user2/.ssh/config (from c)"
 msgstr ""
-"/home/user2/.ssh/config -E<gt> I<VOL>/config-files/user2/.ssh/config (de c)"
+"/home/user2/.ssh/config -E<gt> I<VOL>/config-files/user2/.ssh/config (depuis "
+"c)"
 
 #. type: Plain text
 #: en/persistence.conf.5:180
@@ -601,12 +601,12 @@ msgid ""
 "don't want a complete directory to be persistent, only certain files in it "
 "or its sub-directories."
 msgstr ""
-"Se podría decir, sin embargo, que las líneas 1 y 2 en el fichero de ejemplo "
-"B<persistence.conf> anterior son innecesarias ya que la línea 3 ya crearía "
-"el directorio /home persistente. La opción  B<link> se utiliza en "
-"situaciones en las que no se desea guardar de forma persistente un "
-"directorio completo, sino únicamente algunos ficheros o subdirectorios "
-"incluidos en él."
+"On pourrait dire que les lignes 1 et 2 dans l'exemple de fichier "
+"B<persistence.conf> ci-dessus sont non-nécessaires puisque la ligne 3 "
+"rendrait déjà presistant l'entierté de /home. L'option B<link> est pensée "
+"pour les situations où vous ne voulez pas que tout le répertoire soit "
+"persistant, mais seulement certains de fichiers y étant présents ou ses sous-"
+"répertoires."
 
 #. type: Plain text
 #: en/persistence.conf.5:189
@@ -619,14 +619,14 @@ msgid ""
 "compared to bind-mounts, since in the latter case all of /usr would have to "
 "be copied into I<VOL>/usr during the initial bootstrap."
 msgstr ""
-"La línea 4 se puede montar en cualquier momento ya que su I<DIR> (y su "
-"directorio de origen) es completamente independiente de todos los otros "
-"montajes personalizados. Cuando se monta, I<VOL>/usr será la rama rw debido "
-"a la opción B<union> y tan sólo contendrá la diferencia en comparación con "
-"el sistema de ficheros subyacente de sólo lectura. Por eso los paquetes "
-"pueden ser instalados en /usr con gran eficiencia de espacio comparado con "
-"los montajes enlazados, ya que en este último caso el contenido de /usr "
-"tendría que ser copiado en I<VOL>/usr durante la preinstalación inicial."
+"La ligne 4 peut être montée n'importe quand puisque son I<DIR> (et "
+"répertoire source) est complètement disjoint de tous les autres montages "
+"personnalisés. Lorsque monté, I<VOL>/usr sera la branche rw à cause de "
+"l'option B<union>, et contiendra seulement la différence comparée au système "
+"de fichier en lecture seule sous-jascent. En conséquence, les paquets "
+"pourront être installés dans /usr avec une grande efficacité d'empreinte "
+"d'espace comparé aux montages-bind, puisque dans ce dernier cas, tout le "
+"contenu de /usr devra être copié dans I<VOL>/usr pendant l'amorçage inital."
 
 #. type: Plain text
 #: en/persistence.conf.5:192
