@@ -2,14 +2,13 @@ Source: live-boot
 Section: misc
 Priority: optional
 Maintainer: Live Systems Maintainers <debian-live@lists.debian.org>
-Uploaders:
- Daniel Baumann <mail@daniel-baumann.ch>,
+Uploaders: Iain R. Learmonth <irl@debian.org>
 Build-Depends:
  debhelper (>= 9),
 Standards-Version: 3.9.6
-Homepage: http://live-systems.org/devel/live-boot/
-Vcs-Browser: http://live-systems.org/gitweb/?p=live-boot.git
-Vcs-Git: git://live-systems.org/git/live-boot.git
+Homepage: https://debian-live.alioth.debian.org/live-boot/
+Vcs-Browser: https://anonscm.debian.org/cgit/debian-live/live-boot.git
+Vcs-Git: https://anonscm.debian.org/git/debian-live/live-boot.git
 
 Package: live-boot
 Architecture: all
