@@ -33,6 +33,8 @@ Cmdline_old ()
 			nodhcp)
 				DHCP=""
 				export DHCP
+				NODHCP="true"
+				export NODHCP
 				;;
 
 			ethdevice=*)
