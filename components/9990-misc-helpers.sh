@@ -420,6 +420,12 @@ is_supported_fs ()
 		return 1
 	fi
 
+	# get_fstype might report "unknown" or "swap", ignore it as no such kernel module exists
+	if [ "${fstype}" = "unknown" ] || [ "${fstype}" = "swap" ]
+	then
+		return 1
+	fi
+
 	# Try to look if it is already supported by the kernel
 	if grep -q ${fstype} /proc/filesystems
 	then
