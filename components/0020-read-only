@@ -54,7 +54,7 @@ Read_only ()
 		esac
 	done
 
-	if grep -qe persistence /proc/cmdline
+	if grep -qw persistence /proc/cmdline
 		then
 		printf " * Persistence mode enabled, searching for persistency related devices to unlock\n" >/dev/console
 
