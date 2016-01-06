@@ -1,0 +1,224 @@
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH LIVE\-BOOT conf 22.09.2015 5.0~a5\-1 "Projet Live Systems"
+
+.SH NOM
+\fBpersistence.conf\fP \- Fichier de configuration pour le media de persistance
+dans live\-boot
+
+.SH DESCRIPTION
+Si live\-boot sondes un volume de persistance avec l'étiquette (ou le nom GPT
+ou le nom de fichier, mais à partir de maintenant nous dirons juste
+"étiquette") "persistence", ce volume de persistance est complètement
+personnalisable à travers le fichier  \fBpersistence.conf\fP stockée à la
+racine de son système de fichier. Tout volume ainsi étiquetté doit avoir un
+fichier comme ceci, ou il sera ignoré.
+.PP
+Le format de \fBpersistence.conf\fP permet les lignes vides et les lignes
+commençant avec un "#" (utilisé pour les commentaires), les deux seront
+ignorés. Un "montage personnalisé" a le format :
+.PP
+.RS
+\fIDIR\fP [\fIOPTION\fP]...
+.RE
+.PP
+qui se traduit grossièrement par "fabrique \fIDIR\fP la persistance selon le
+chemin décrit par la liste d'\fIOPTION\fPs".
+.PP
+Pour chaque montage personnalisé \fIDIR\fP doit être un chemin absolu qui ne
+peut pas contenir d'espaces blanc ou les composants de chemins . et .. , et
+ne peut pas être /live (ou un de ses sous\-répertoires). Une fois activé,
+toutes les modifications (effacement de fichier, création et modification)
+dans \fIDIR\fP sur le système de fichier live sont emmagasinées de façon
+persistante dans un chemin équivalent à \fIDIR\fP sur le média de persitance,
+appelé le répertoire source. Le moyen par défaut pour accomplir la
+persistance est simplement de bind\-monter le répertoire source correspondant
+à \fIDIR\fP, mais ceci peut être modifié à travers l'utilisation d'\fIOPTION\fPs.
+.PP
+Tous les montages personnalisés seront réalisés dans un ordre qui ne
+permettent pas à deux montages personnalisés de se "cacher" l'un
+l'autre. Par exemple, si nous avons les deux \fIDIR\fP:s /a et /a/b , /a sera
+toujours monté en premier, puis /a/b. Ceci sera toujours vrai quelque soit
+l'ordre des lignes dans \fBpersistence.conf\fP, ou si plusieurs fichiers
+\fBpersistence.conf\fP sur différents média de persistance sont utilisés au
+même moment. Néanmoins, il est interdit aux montages personnalisés d'avoir
+leurs répertoires source à l'intérieur du répertoire source d'un autre
+montage personnalisé, ainsi les répertoires source qui sont auto\-créés par
+live\-boot ne prennent pas en charge les montages "emboîtés" comme /a et /a/b
+sur le même média. Dans ce cas, vous devez utiliser l'option \fBsource\fP (voir
+ci\-dessous) pour être certains qu'ils ne sont pas emmagasinés dans
+différents répertoires source.
+.PP
+Lorsqu'un répertoire source n'existe pas sur le média de persistance pour un
+montage personnalisé donné, il sera créé automatiquement, et les permissions
+et la propriété seront paramétrées avec optimisme en accord avec \fIDIR\fP. Il
+sera également amorcé en copiant le contenu du \fIDIR\fP dans son répertoire
+source sur le média de persistance. L'amorçage ne se passera pas lorsque les
+options \fBlink\fP ou \fBunion\fP sont utilisées (voir ci\-dessous).
+
+.SH OPTIONS
+Les montages personnalisés défini dans  \fBpersistence.conf\fP acceptent les
+options suivantes dans une liste séparée par des commas :
+.IP \fBsource\fP=\fIPATH\fP 4
+Lorsqu'indiqué, emmagasine les modifications persistantes dans \fIPATH\fP sur
+le média de persistance. \fIPATH\fP doit être un chemin relatif (au regard de
+la racine du média de persistance) qui ne peut pas contenit d'espaces blancs
+ou de composants de chemins spéciaux comme . ou .. , avec l'exception qu'il
+peut simplement s'agir de . qui signifie : la racine du média de
+persistance.Cette option est principalement utile si vous voulez imbriquer
+des montages personnalisés qui, autrement, causeraient des erreurs, ou si
+vous voulez rendre disponible la racine du média en entier (équivalent à au
+\- maintenant déprécié \- type de persistance \fBhome\-rw\fP).
+.PP
+Les options suivantes sont mutuellement exclusives (uniquement la dernière
+donnée sera effective) :
+.IP \fBbind\fP 4
+Bind\-monte le répertoire source dans \fIDIR\fP. Ceci est le défaut.
+.IP \fBlink\fP 4
+Crée la structure de répertoire du répertoire source sur le média de
+persistance dans \fIDIR\fP et crée des liens symboliques depuis l'emplacement
+correspondant dans \fIDIR\fP pour chaque fichier dans le répertoire source. Les
+fichiers ou répertoire existants avec le même nom aussi bien que tout lien
+seront écrasés. Notez que l'effacement des liens dans \fIDIR\fP supprimera
+uniquement le lien, pas le fichier correspondant dans la source; les liens
+supprimés réapparaîtront après un redémarrage. Pour ajouter ou supprimer un
+fichier de façon permanente, on doit le faire directement dans le répertoire
+source.
+.IP
+En réalité, \fBlink\fP rendra persistants uniquement les fichiers déjà présents
+dans le répertoire source, aucun autre fichier dans \fIDIR\fP. Ces fichiers
+doivent être ajoutés manuellement au répertoire source pour pouvoir utiliser
+cette option, et ils apparaîtront dans \fIDIR\fP en addition des fichiers déjà
+présents. Cette option est utile lorsque seulement certain fichiers doivent
+être persistants, et pas l'ensemble du répertoire dans lequel ils se
+trouvent, par exemple certains fichiers de configuration dans le répertoire
+de l'utilisateur.
+.IP \fBunion\fP 4
+Sauvegarde la branche rw d'un union sur le média de persistance, ainsi,
+seuls les modifications sont emmagasinnées de façon persistante. Ceci peut
+potentiellement réduire l'utilisation du disque comparé aux montages\-bind,
+et ne cachera pas les fichiers ajoutés au média en lecture seule. Un
+avertissement est que l'union utilisera \fIDIR\fP depuis le système de fichier
+en lecture seule de l'image, pas le système de fichier racine réel, et donc
+les fichiers créés après le démarrage (par exemple par live\-config)
+n'apparaîtront pas dans l'union. Cette option utilisera le système de
+fichier union spécifié par le paramètre de démarrage \fBunion\fP de live\-boot.
+
+.SH RÉPERTOIRES
+.IP \fB/live/persistence\fP 4
+Tous les volumes de persistance seront montés ici (dans le répertoire
+correspondant au nom de périphérique). Le fichier \fBpersistence.conf\fP peut
+être facilement édité à travers ce montage, de la même façon que tout
+répertoire source (ce qui est spécialement pratique pour les montages
+personnalisés utilisant l'option \fBlink\fP).
+
+.SH EXEMPLES
+
+Disons que nous avons un volume persistant \fIVOL\fP avec un fichier
+\fBpersistence.conf\fP contenantles quatre lignes suivantes (numérotée pour
+faciliter leur référencement) :
+.TP  7
+1.
+/home/user1 link,source=config\-files/user1
+.TP 
+2.
+/home/user2 link,source=config\-files/user2
+.TP 
+3.
+/home
+.TP 
+4.
+/usr union
+.PP
+Les répertoires source correspondant sont :
+.TP  7
+1.
+\fIVOL\fP/config\-files/user1 (mais ce serait \fIVOL\fP/home/user1 sans l'option
+\fBsource\fP)
+.TP 
+2.
+\fIVOL\fP/config\-files/user2 (mais ce serait \fIVOL\fP/home/user2 sans l'option
+\fBsource\fP)
+.TP 
+3.
+\fIVOL\fP/home
+.TP 
+4.
+\fIVOL\fP/usr
+.PP
+Il était nécessaire de paramétrer les options \fBsource\fP pour 1 et 2,
+puisqu'autrement ils seraient devenus imbriqués avec la source du 3, ce qui
+est invalide.
+.PP
+La ligne 3 sera prise en compte avant les lignes 1 et 2 afin d'éviter que
+les montages personnalisés 1 et 2 ne soient cachés par 3. Lorsque la ligne 3
+est prise en charge, \fIVOL\fP/home est simplement bind\-monté sur /home. Pour
+illustrer ce qu'il se passe pour les lignes 1 et 2, disons que les fichiers
+suivants existent :
+.TP  7
+a.
+\fIVOL\fP/config\-files/user1/.emacs
+.TP 
+b.
+\fIVOL\fP/config\-files/user2/.bashrc
+.TP 
+c.
+\fIVOL\fP/config\-files/user2/.ssh/config
+.PP
+Puis que les liens et les répertoires suivant seront créés :
+.TP  7
+Liens :
+/home/user1/.emacs \-> \fIVOL\fP/config\-files/user1/.emacs (depuis a)
+.TP 
+Liens :
+/home/user2/.bashrc \-> \fIVOL\fP/config\-files/user2/.bashrc (depuis b)
+.TP 
+Rép :
+/homea/user2/.ssh (depuis c)
+.TP 
+Liens :
+/home/user2/.ssh/config \-> \fIVOL\fP/config\-files/user2/.ssh/config (depuis
+c)
+.PP
+On pourrait dire que les lignes 1 et 2 dans l'exemple de fichier
+\fBpersistence.conf\fP ci\-dessus sont non\-nécessaires puisque la ligne 3
+rendrait déjà presistant l'entierté de /home. L'option \fBlink\fP est pensée
+pour les situations où vous ne voulez pas que tout le répertoire soit
+persistant, mais seulement certains de fichiers y étant présents ou ses
+sous\-répertoires.
+.PP
+La ligne 4 peut être montée n'importe quand puisque son \fIDIR\fP (et
+répertoire source) est complètement disjoint de tous les autres montages
+personnalisés. Lorsque monté, \fIVOL\fP/usr sera la branche rw à cause de
+l'option \fBunion\fP, et contiendra seulement la différence comparée au système
+de fichier en lecture seule sous\-jascent. En conséquence, les paquets
+pourront être installés dans /usr avec une grande efficacité d'empreinte
+d'espace comparé aux montages\-bind, puisque dans ce dernier cas, tout le
+contenu de /usr devra être copié dans \fIVOL\fP/usr pendant l'amorçage inital.
+
+.SH "VOIR AUSSI"
+\fIlive\-boot\fP(7)
+.PP
+\fIlive\-build\fP(7)
+.PP
+\fIlive\-config\fP(7)
+.PP
+\fIlive\-tools\fP(7)
+
+.SH "PAGE D'ACCUEIL"
+Davantage d'informations à propos de live\-boot et du projet Live Systems
+peuvent être trouvées sur la page <\fIhttp://live\-systems.org/\fP> et
+dans le manuel sur <\fIhttp://live\-systems.org/manual/\fP>.
+
+.SH BOGUES
+Les bogues peuvent être signalés en soumettant un rapport de bogue pour le
+paquet live\-boot dans le BTS à <\fIhttp://bugs.debian.org/\fP> ou par
+l'écriture d'un courriel à la liste de diffusion Live Systems à
+<\fIdebian\-live@lists.debian.org\fP>.
+
+.SH AUTEUR
+live\-images a été écrit par Daniel Baumann
+<\fImail@daniel\-baumann.ch\fP>.

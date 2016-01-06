@@ -1,15 +1,15 @@
-# Japanese translations for live-boot package
-# Copyright (C) 2013-2014 victory <victory.deb@gmail.com>
+# French translations for live-boot manpages
+# Copyright (C) 2015 Olivier Humbert <trebmuh@tuxfamily.org>
 # This file is distributed under the same license as the live-boot package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot\n"
+"Project-Id-Version: live-boot 5.0~a5-1\n"
 "POT-Creation-Date: 2015-09-22 10:09+0200\n"
-"PO-Revision-Date: 2014-08-28 02:52+0900\n"
-"Last-Translator: victory <victory.deb@gmail.com>\n"
+"PO-Revision-Date: 2015-09-21 14:10+0200\n"
+"Last-Translator: Olivier Humbert <trebmuh@tuxfamily.org>\n"
 "Language-Team: none\n"
-"Language: ja\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,38 +22,38 @@ msgstr "LIVE-BOOT"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "2015-09-22"
-msgstr "2015-01-04"
+msgstr "22.09.2015"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "5.0~a5-1"
-msgstr "5.0~a1-1"
+msgstr "5.0~a5-1"
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
 msgid "Live Systems Project"
-msgstr "Live システムプロジェクト"
+msgstr "Projet Live Systems"
 
 #. type: SH
 #: en/live-boot.7:3 en/persistence.conf.5:3
 #, no-wrap
 msgid "NAME"
-msgstr "名前"
+msgstr "NOM"
 
 #. type: Plain text
 #: en/live-boot.7:5
 msgid "B<live-boot> - System Boot Components"
-msgstr "B<live-boot> - システム起動構成要素"
+msgstr "B<live-boot> - Composants de démarrage du système"
 
 #. type: SH
 #: en/live-boot.7:6 en/persistence.conf.5:7
 #, no-wrap
 msgid "DESCRIPTION"
-msgstr "説明"
+msgstr "DESCRIPTION"
 
 #. type: Plain text
 #: en/live-boot.7:8
@@ -61,8 +61,8 @@ msgid ""
 "B<live-boot> contains the components that configure a live system during the "
 "boot process (early userspace)."
 msgstr ""
-"B<live-boot> はブートプロセス中 (早期ユーザ空間) に Live システムを設定する構"
-"成要素を収録しています。"
+"B<live-boot> comprend les composants qui configure un système live pendant "
+"le processus de démarrage (espace utilisateur primitif)."
 
 #.  FIXME
 #. type: Plain text
@@ -72,10 +72,10 @@ msgid ""
 "capable to boot live systems, such as those created by I<live-helper>(7). "
 "This includes the Live systems ISOs, netboot tarballs, and usb stick images."
 msgstr ""
-"live-boot は initramfs-tools 用のフックで、例えば I<live-helper>(7) で作成し"
-"た Live システムをブートできる initramfs を生成するのに利用します。これには "
-"Live システムの ISO やネットワーク経由でブートするための tar アーカイブ、USB "
-"メモリ用のイメージ等があります。"
+"live-boot est un hameçon (hook) pour initramfs-tools, utilisé pour générer "
+"un initramfs capable de démarrer les systèmes live, comme ceux créés par "
+"I<live-helper>(7). Ceci comprends les ISOs Live Systems, les paquets tar de "
+"démarrage par le net (netboot), et les images de clef USB."
 
 #.  FIXME
 #. type: Plain text
@@ -86,23 +86,26 @@ msgid ""
 "squashfs) is stored. If found, it will create a writable environment, using "
 "aufs, to boot the system from."
 msgstr ""
-"これはブート時に root ファイルシステム (squashfs 等圧縮ファイルシステムのイ"
-"メージであることが多い) が置かれている「/live」ディレクトリを収録する (読み取"
-"り専用の) メディアを検索します。見つけた場合は aufs を使って書き込み可能な環"
-"境を作成してシステムを起動します。"
+"Au moment du démarrage, il recherchera un médium (en lecture seule) "
+"contenant un répertoire \"/live\" où est placé un système de fichier racine "
+"(souvent une image d'un système de fichier compressé comme squashfs). Si "
+"ceci est trouvé, il créera un environnement enregistrable en utilisant aufs, "
+"pour démarrer le système à partir de lui."
 
 #. type: SH
 #: en/live-boot.7:15
 #, no-wrap
 msgid "CONFIGURATION"
-msgstr "設定"
+msgstr "CONFIGURATION"
 
 #. type: Plain text
 #: en/live-boot.7:17
 msgid ""
 "B<live-boot> can be configured through a boot parameter or a configuration "
 "file."
-msgstr "B<live-boot> はブートパラメータまたは設定ファイル経由で設定できます。"
+msgstr ""
+"B<live-boot> peut être configuré à travers un paramètre de démarrage ou un "
+"fichier de configuration."
 
 #. type: Plain text
 #: en/live-boot.7:19
@@ -110,23 +113,22 @@ msgid ""
 "To configure the live-boot parameters used by default in a live image, see "
 "the --bootappend-live option in the I<lb_config>(1) manual page."
 msgstr ""
-"Live イメージで利用されるデフォルトの live-boot パラメータを設定する場合は "
-"I<lb_config>(1) マニュアルページの --bootappend-live オプションを見てくださ"
-"い。"
+"Pour configurer les paramètres de live-boot utilisés par défaut dans l'image "
+"live, voir l'option --bootappend-live dans la page de manuel I<lb_config>(1)."
 
 #. type: SS
 #: en/live-boot.7:20
 #, no-wrap
 msgid "Kernel Parameters"
-msgstr "カーネルパラメータ"
+msgstr "Paramètres du noyau"
 
 #. type: Plain text
 #: en/live-boot.7:22
 msgid ""
 "B<live-boot> is only activated if 'boot=live' was used as a kernel parameter."
 msgstr ""
-"B<live-boot> はカーネルパラメータとして「boot=live」が利用された場合にのみ有"
-"効になります。"
+"B<live-boot> est activé uniquement si 'boot=live' a été utilisé en tant que "
+"paramètre du noyau."
 
 #. type: Plain text
 #: en/live-boot.7:24
@@ -134,14 +136,14 @@ msgid ""
 "In addition, there are some more boot parameters to influence the behaviour, "
 "see below."
 msgstr ""
-"さらに、挙動に影響するブートパラメータが他にもいくつかあります。下記を見てく"
-"ださい。"
+"De plus, il y a plusieurs autres paramètres de démarrage pour influencer le "
+"comportement, voir ci-dessous."
 
 #. type: SS
 #: en/live-boot.7:25
 #, no-wrap
 msgid "Configuration Files"
-msgstr "設定ファイル"
+msgstr "Fichiers de configurations"
 
 #. type: Plain text
 #: en/live-boot.7:27
@@ -151,27 +153,28 @@ msgid ""
 "live/boot.conf, /etc/live/boot/*), or on the live media (live/boot.conf, "
 "live/boot/*)."
 msgstr ""
-"B<live-boot> は設定ファイルを利用して設定 (但し有効化しない) できます。この設"
-"定ファイルは root ファイルシステム自体 (/etc/live/boot.conf、 /etc/live/boot/"
-"*)、または Live メディア (live/boot.conf、 live/boot/*) に配置できます。"
+"B<live-boot> peut être configuré (mais pas activé) à travers des fichiers de "
+"configuration. Ces fichiers peuvent être placés soit dans le système de "
+"fichier racine lui-même (/etc/live/boot.conf, /etc/live/boot/*), ou sur le "
+"média live (live/boot.conf, live/boot/*)."
 
 #. type: SH
 #: en/live-boot.7:28 en/persistence.conf.5:57
 #, no-wrap
 msgid "OPTIONS"
-msgstr "オプション"
+msgstr "OPTIONS"
 
 #.  FIXME
 #. type: Plain text
 #: en/live-boot.7:31
 msgid "B<live-boot> currently features the following parameters."
-msgstr "B<live-boot> では以下のパラメータが現在有効です。"
+msgstr "B<live-boot> fourni actuellement les paramètres suivants."
 
 #. type: IP
 #: en/live-boot.7:31
 #, no-wrap
 msgid "B<access>=I<ACCESS>"
-msgstr "B<access>=I<アクセス>"
+msgstr "B<access>=I<ACCESS>"
 
 #. type: Plain text
 #: en/live-boot.7:33
@@ -181,16 +184,16 @@ msgid ""
 "v2=moderate visual impairment, v3=blindness, m1=minor motor difficulties, "
 "m2=moderate motor difficulties."
 msgstr ""
-"物理的または視覚的に障害のあるユーザ向けのアクセシビリティレベルをセットしま"
-"す。I<アクセス>に入るのは v1、v2、v3、m1、m2 のどれかでないといけません。v1="
-"軽度の視覚障害、 v2=中程度の視覚障害、 v3=盲目、 m1=運動神経に些細な難あり、 "
-"m2=運動神経に中程度の難あり。"
+"Met en place le niveau d'accessibilité pour les utilisateurs physiquement ou "
+"visuellement handicapés. ACCESS doit être un des v1, v2, v3, m1, or m2. "
+"v1=handicap visuel faible, v2=handicap visuel modéré, v3=cessité visuelle, "
+"m1=difficultés moteur faibles m2=difficultés moteur modérées."
 
 #. type: IP
 #: en/live-boot.7:33
 #, no-wrap
 msgid "B<console>=I<TTY,SPEED>"
-msgstr "B<console>=I<TTY,速度>"
+msgstr "B<console>=I<TTY,SPEED>"
 
 #. type: Plain text
 #: en/live-boot.7:35
@@ -198,8 +201,8 @@ msgid ""
 "Set the default console to be used with the \"live-getty\" option. Example: "
 "\"console=ttyS0,115200\""
 msgstr ""
-"「live-getty」オプションで利用するデフォルトのコンソールをセットします。例: "
-"「console=ttyS0,115200」"
+"Paramètre la console par défaut étant utilisée avec l'option \"live-getty\". "
+"Exemple : \"console=ttyS0,115200\"."
 
 #. type: IP
 #: en/live-boot.7:35
@@ -210,17 +213,19 @@ msgstr "B<debug>"
 #. type: Plain text
 #: en/live-boot.7:37
 msgid "Makes initramfs boot process more verbose."
-msgstr "initramfs ブートプロセスの出力をもっと冗長にします。"
+msgstr "Rend le processus de démarrage initramfs plus verbeux."
 
 #. type: Plain text
 #: en/live-boot.7:39
 msgid "Use: debug=1"
-msgstr "debug=1 としてください"
+msgstr "Utiliser : debug=1"
 
 #. type: Plain text
 #: en/live-boot.7:41
 msgid "Without setting debug to a value the messages may not be shown."
-msgstr "debug に値をセットしないとメッセージは表示されないかもしれません。"
+msgstr ""
+"Si debug n'est pas paramétré à une valeur, les messages pourraient ne pas "
+"être affichés. "
 
 #. type: IP
 #: en/live-boot.7:41
@@ -245,13 +250,14 @@ msgid ""
 "operates faster once booted because it does not require to contact the "
 "server anymore."
 msgstr ""
-"指定した URL から squashfs イメージをダウンロードしてネットワーク経由でブート"
-"する別のやり方で、この取得方法ではイメージを RAM にコピーし、httpfs を使う方"
-"法では FUSE と httpfs2 を使ってイメージを適切な位置にマウントします。RAM への"
-"コピーにはさらに多くのメモリが必要で、大きなイメージでは多少時間がかかるかも"
-"しれません。しかしその後はネットワークを必要としないため正常に動作する可能性"
-"が高くなり、それ以上サーバとやりとりする必要がないためブート後はそのシステム"
-"は高速に動作します。"
+"Une autre forme de démarrage par le net en téléchargeant une image squashfs "
+"depuis une URL donnée. La méthode fetch copie l'image dans la RAM et la "
+"méthode httpfs utilise FUSE et httpfs2 pour monter l'image en place. La "
+"copier dans la RAM nécessite davantage de mémoire et pourrait prendre du "
+"temps pour des images volumineuses. Ceci dit, ça devrait mieux fonctionner "
+"correctement car cela ne nécessite pas de réseau ensuite et le système "
+"fonctionne plus vite une fois démarré car il n'a plus besoin de contacter un "
+"serveur."
 
 #. type: Plain text
 #: en/live-boot.7:52
@@ -259,18 +265,20 @@ msgid ""
 "Due to current limitations in busybox's wget and DNS resolution, an URL can "
 "not contain a hostname but an IP address only."
 msgstr ""
-"busybox の現在の wget 及び DNS 解決の制限のために URL にはホスト名を使えず、"
-"IPアドレスにしか対応していません。"
+"À cause des limitations actuelles de la version wget de busybox et de sa "
+"résolution DNS, une URL ne peut pas contenir un hostname mais uniquement une "
+"adresse IP."
 
 #. type: Plain text
 #: en/live-boot.7:54
 msgid "Not working: http://example.com/path/to/your_filesystem.squashfs"
-msgstr "機能しない: http://example.com/path/to/your_filesystem.squashfs"
+msgstr ""
+"Ne fonctionne pas : http://example.com/path/to/your_filesystem.squashfs"
 
 #. type: Plain text
 #: en/live-boot.7:56
 msgid "Working: http://1.2.3.4/path/to/your_filesystem.squashfs"
-msgstr "機能する: http://1.2.3.4/path/to/your_filesystem.squashfs"
+msgstr "Fonctionne : http://1.2.3.4/path/to/your_filesystem.squashfs"
 
 #. type: Plain text
 #: en/live-boot.7:58
@@ -279,21 +287,22 @@ msgid ""
 "a name-based virtualhost of an httpd if it is sharing the IP address with "
 "the main httpd instance."
 msgstr ""
-"また、そのため httpd の名前ベースのバーチャルホストからイメージを取得すること"
-"は、httpd のそのホストの設定で同一のIPアドレスを共有している場合は現在不可能"
-"であることにも注意してください。"
+"Notez également que par conséquent, il n'est actuellement pas possible "
+"d'attraper une image depuis un virtualhost basé-sur-un-nom d'un httpd s'il "
+"partage l'adresse IP avec l'instance httpd principale."
 
 #. type: Plain text
 #: en/live-boot.7:60
 msgid "You may also use the live ISO image in place of the squashfs image."
 msgstr ""
-"また、squashfs イメージの適切な位置にある Live ISO イメージも利用できます。"
+"Vous voudrez également utiliser l'image ISO live à la place de l'image "
+"squashfs."
 
 #. type: IP
 #: en/live-boot.7:60
 #, no-wrap
 msgid "B<iscsi>=I<server-ip[,server-port];target-name>"
-msgstr "B<iscsi>=I<サーバのIPアドレス[,サーバのポート];対象の名前>"
+msgstr "B<iscsi>=I<server-ip[,server-port];target-name>"
 
 #. type: Plain text
 #: en/live-boot.7:62
@@ -303,16 +312,15 @@ msgid ""
 "medium. If you use the B<iscsitarget> software iSCSI target solution your "
 "ietd.conf might look like this:"
 msgstr ""
-"LUN (Logical Unit Number、論理ユニット番号) が iso またはディスクの Live イ"
-"メージを指している iSCSI ターゲットからのブートで、指定されたターゲットは "
-"LUN のうち Live メディアらしきものから検索されます。B<iscsitarget> ソフトウェ"
-"アを使って iSCSI ターゲットを判定している場合の ietd.conf はこのようになりま"
-"す:"
+"Démarrer depuis une cible iSCSI qui a une image ISO ou disque en tant que "
+"l'un de ces LUNs. La cible spécifiée est recherchée pour un LUN qui "
+"ressemble à un medium live medium. Si vous utilisez la solution cible iSCSI "
+"logiciel B<iscsitarget> , votre ietd.conf devrait ressembler à ça :"
 
 #. type: Plain text
 #: en/live-boot.7:64
 msgid "# The target-name you specify in the iscsi= parameter"
-msgstr "# iscsi= パラメータで指定したターゲットの名前"
+msgstr "# Le nom-cible que vous spécifiez dans le paramètre iscsi="
 
 #. type: Plain text
 #: en/live-boot.7:69
@@ -323,17 +331,16 @@ msgid ""
 "  # If you want to boot multiple machines you might want to look at tuning some parameters like\n"
 "  # Wthreads or MaxConnections\n"
 msgstr ""
-"Target E<lt>ターゲットの名前E<gt>\n"
-"  Lun 0 Path=E<lt>live-image.iso のパスE<gt>,Type=fileio,IOMode=ro\n"
-"  # 複数のマシンのブートに使いたい場合は\n"
-"  # Wthreads や MaxConnections のような一部の\n"
-"  # パラメータを調整してみるのもいいかもしれません。\n"
+"Cible E<lt>target-nameE<gt>\n"
+"  Lun 0 Path=E<lt>chemin-vers-votre-image-live.isoE<gt>,Type=fileio,IOMode=ro\n"
+"  # Si vous voulez démarrez de multiples machines, vous pourriez vouloir   jeter un oeil aux réglages de certains paramètres comme\n"
+"  # Wthreads ou MaxConnections\n"
 
 #. type: IP
 #: en/live-boot.7:69
 #, no-wrap
 msgid "B<findiso>=I</PATH/TO/IMAGE>"
-msgstr "B<findiso>=I</イメージ/への/パス>"
+msgstr "B<findiso>=I</PATH/TO/IMAGE>"
 
 #. type: Plain text
 #: en/live-boot.7:71
@@ -341,15 +348,15 @@ msgid ""
 "Look for the specified ISO file on all disks where it usually looks for the ."
 "squashfs file (so you don't have to know the device name as in fromiso=....)."
 msgstr ""
-".squashfs ファイルを通常検索する位置にある全ディスクから、指定した ISO ファイ"
-"ルを検索します (そのため fromiso=... で指定するデバイス名を知っている必要はあ"
-"りません)。"
+"Regarder pour le fichier ISO spécifié sur tous les disques quandil regarde "
+"habituellement pour le fichier squashfs (donc vous n'avez pas besoin de "
+"connaître le nom de périphérique comme dans fromiso=....)."
 
 #. type: IP
 #: en/live-boot.7:71
 #, no-wrap
 msgid "B<fromiso>=I</PATH/TO/IMAGE>"
-msgstr "B<fromiso>=I</イメージ/への/パス>"
+msgstr "B<fromiso>=I</PATH/TO/IMAGE>"
 
 #. type: Plain text
 #: en/live-boot.7:73
@@ -357,8 +364,8 @@ msgid ""
 "Allows to use a filesystem from within an ISO image that's available on live-"
 "media."
 msgstr ""
-"Live メディア上で利用可能な ISO イメージ内からファイルシステムを利用できるよ"
-"うにします。"
+"Permet d'utiliser un système de fichier venant de l'intérieur d'une image "
+"ISO qui est disponible sur live-media."
 
 #. type: IP
 #: en/live-boot.7:73
@@ -373,9 +380,9 @@ msgid ""
 "medium. live-boot may be told to generate a UUID by setting "
 "LIVE_GENERATE_UUID=1 when building the initramfs."
 msgstr ""
-"検出したメディアに合う initramfs に埋め込まれた UUID の確認を一切行いません。"
-"initramfs のビルド時に LIVE_GENERATE_UUID=1 を設定して UUID を生成するように "
-"live-boot に指示しているかもしれません。"
+"Ne pas vérifierque chaque UUID embarqué dans le initramfs correspond au "
+"medium découvert. On peut dire à live-boot de générer un UUID en paramétrant "
+"LIVE_GENERATE_UUID=1 lors de la construction de l'initramfs."
 
 #. type: IP
 #: en/live-boot.7:75
@@ -390,14 +397,15 @@ msgid ""
 "compared to the value found in md5sum.txt found in the root directory of the "
 "live media."
 msgstr ""
-"指定するとブート中に Live メディアの MD5 サムを計算し、その Live メディアの"
-"ルートディレクトリにある md5sum.txt 中の値と比較します。"
+"Si spécifié, une somme MD5 est calculée sur le média live pendant le "
+"démarragea et est comparée à une valeur présente dans md5sum.txt dans le "
+"répertoire racine du média live."
 
 #. type: IP
 #: en/live-boot.7:77
 #, no-wrap
 msgid "B<ip>=[I<DEVICE>]:[I<CLIENT_IP>]:[I<NETMASK>]:[I<GATEWAY_IP>]:[I<NAMESERVER>] [,[I<DEVICE>]:[I<CLIENT_IP>]:[I<NETMASK>]:[I<GATEWAY_IP>]:[I<NAMESERVER>]]"
-msgstr "B<ip>=[I<デバイス>]:[I<クライアントのIPアドレス>]:[I<ネットマスク>]:[I<ゲートウェイのIPアドレス>]:[I<ネームサーバ>] [,[I<デバイス>]:[I<クライアントのIPアドレス>]:[I<ネットマスク>]:[I<ゲートウェイのIPアドレス>]:[I<ネームサーバ>]]"
+msgstr "B<ip>=[I<DEVICE>]:[I<CLIENT_IP>]:[I<NETMASK>]:[I<GATEWAY_IP>]:[I<NAMESERVER>] [,[I<DEVICE>]:[I<CLIENT_IP>]:[I<NETMASK>]:[I<GATEWAY_IP>]:[I<NAMESERVER>]]"
 
 #. type: Plain text
 #: en/live-boot.7:79
@@ -408,16 +416,17 @@ msgid ""
 "boot param specification (e.g. ip=10.0.0.1::10.0.0.254:255.255.255.0::"
 "eth0,:::::eth1:dhcp)."
 msgstr ""
-"ブート時に設定するインターフェイスの名前とオプションを指定できます。dhcp (デ"
-"フォルト) を使いたい場合は指定しないでください。将来のリリースでは公式のカー"
-"ネルブートパラメータの仕様に倣って変更される (例えば "
-"ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp) かもしれません。"
+"Vous laisse spécifier le(s) nom(s) et les options de l'(les) interface(s) "
+"qui devraient être configurées au moment du démarrage. Ne pas spécifier ceci "
+"si vous voulez utiliser dhcp (défaut). Ceci sera modifié dans une version "
+"future pour refléter la spécification des paramètres de démarrage du noyau "
+"officiel (e.g. ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp)."
 
 #. type: IP
 #: en/live-boot.7:79
 #, no-wrap
 msgid "B<ip>=[I<frommedia>]"
-msgstr "B<ip>=[I<読み込み元メディア>]"
+msgstr "B<ip>=[I<frommedia>]"
 
 #. type: Plain text
 #: en/live-boot.7:81
@@ -426,15 +435,15 @@ msgid ""
 "the system will use the (must be) media-preconfigured /etc/network/"
 "interfaces instead."
 msgstr ""
-"この変数をセットすると dhcp 及び固定のネットワーク設定は単に飛ばされ、システ"
-"ムはメディアで事前に設定されている (設定されていないといけません) /etc/"
-"network/interfaces を代わりに利用します。"
+"Si cette variable est paramétrée, dhcp et la configuration statique sont "
+"simplement sautées et le système utilisera à la place les interfaces (qui "
+"doivent être) préconfigurées /etc/network/."
 
 #. type: IP
 #: en/live-boot.7:81
 #, no-wrap
 msgid "{B<live-media>|B<bootfrom>}=I<DEVICE>"
-msgstr "{B<live-media>|B<bootfrom>}=I<デバイス>"
+msgstr "{B<live-media>|B<bootfrom>}=I<DEVICE>"
 
 #. type: Plain text
 #: en/live-boot.7:83
@@ -444,10 +453,11 @@ msgid ""
 "filesystem should reside. If it did not find something usable, the normal "
 "scan for block devices is performed."
 msgstr ""
-"この2つは等価で、どちらかを指定すると live-boot はまずこのデバイスについて読"
-"み取り専用のルートファイルシステムが存在するであろう「/live」ディレクトリを検"
-"索します。それで使えそうなものが見つからない場合は通常のブロックデバイスの走"
-"査が行われます。"
+"Si vous spécifiez une des ces deux formes équivalentes, live-boot essaiera "
+"en premier de trouver ce périphérique le répertoire \"/live\" où le système "
+"de fichier racine en lecture seule devrait être. Si il ne trouve pas quelque "
+"chose d'utilisable, le scan normal pour les périphériques blocks est "
+"effectué."
 
 #. type: Plain text
 #: en/live-boot.7:85
@@ -457,16 +467,17 @@ msgid ""
 "Note that if you want to further restrict the media to usb mass storage "
 "only, you can use the 'removable-usb' keyword."
 msgstr ""
-"実際のデバイス名を指定する代わりに「removable」というキーワードを使って、検索"
-"対象とする Live メディアを脱着可能なものだけに限定することができます。メディ"
-"アを USB 大容量記憶装置だけにさらに限定したい場合は「removable-usb」という"
-"キーワードを使えることに注目してください。"
+"Plutôt que de spécifié un nom de périphérique actuel, le mot-clef "
+"'removable' peut être utilisé pour limiter la recherche des médias live "
+"acceptables au type removable uniquement. Notez que si vous voulez "
+"restreindre d'avantage les médias aux seuls périphériques de stockage USB, "
+"vous pouvez utiliser le mot-clef 'removable-usb'."
 
 #. type: IP
 #: en/live-boot.7:85
 #, no-wrap
 msgid "{B<live-media-encryption>|B<encryption>}=I<TYPE>"
-msgstr "{B<live-media-encryption>|B<encryption>}=I<暗号化の種類>"
+msgstr "{B<live-media-encryption>|B<encryption>}=I<TYPE>"
 
 #. type: Plain text
 #: en/live-boot.7:87
@@ -475,15 +486,15 @@ msgid ""
 "useful to build paranoid live systems :-). TYPE supported so far is \"aes\" "
 "for loop-aes encryption type."
 msgstr ""
-"live-boot はパスフレーズを質問することで暗号化する種類の rootfs をマウントで"
-"きます。凝った Live システムをビルドするのに有用です :-)。これまでのところサ"
-"ポートしているのは loop-aes 暗号化を指示する「aes」です。"
+"live-boot montera le TYPE rootfs encrypté, en demandant une phrase-mot-de-"
+"passe, utile pour construire des systèmes live paranoïaques :-).Le TYPE "
+"supporté pour l'instant est \"aes\" pour un type d'encryptage loop-aes. "
 
 #. type: IP
 #: en/live-boot.7:87
 #, no-wrap
 msgid "B<live-media-offset>=I<BYTES>"
-msgstr "B<live-media-offset>=I<バイト数>"
+msgstr "B<live-media-offset>=I<BYTES>"
 
 #. type: Plain text
 #: en/live-boot.7:89
@@ -493,16 +504,16 @@ msgid ""
 "the live system ISO or image inside another ISO or image, to create \"clean"
 "\" images."
 msgstr ""
-"このようにして、上記で指定したまたは自動検出したデバイスの、指定バイト数だけ"
-"ずれた位置からイメージが開始することを live-boot に指示できます。他の ISO や"
-"イメージの中にある Live システムの ISO やイメージを見えないようにして「クリー"
-"ン」なイメージを作成するのに有用かもしれません。"
+"De cette façon, vous pouvez dire à live-boot que votre image démarre à "
+"l'offset BYTES dans le périphérique spécifié ci-dessus ou auto-découvert, "
+"qui pourra être utile pour cacher l'ISO du système live ou l'image à "
+"l'intérieur d'une autr ISO ou image, pour créer des image \"propre\"."
 
 #. type: IP
 #: en/live-boot.7:89
 #, no-wrap
 msgid "B<live-media-path>=I<PATH>"
-msgstr "B<live-media-path>=I<パス>"
+msgstr "B<live-media-path>=I<PATH>"
 
 #. type: Plain text
 #: en/live-boot.7:91
@@ -511,15 +522,15 @@ msgid ""
 "'/live' and you should not change that unless you have customized your media "
 "accordingly."
 msgstr ""
-"メディア上の Live ファイルシステムへのパスをセットします。このデフォルト値は"
-"「/live」で、合わせてメディアを独自化していない限りこの値を変更すべきではあり"
-"ません。"
+"Paramètre le chemin vers le système de fichier live sur le médium. Par "
+"défaut, il est paramétré sur '/live' et vous ne devriez pas changer ceci "
+"sauf si vous avez personnalisé votre média en conséquence."
 
 #. type: IP
 #: en/live-boot.7:91
 #, no-wrap
 msgid "B<live-media-timeout>=I<SECONDS>"
-msgstr "B<live-media-timeout>=I<秒数>"
+msgstr "B<live-media-timeout>=I<SECONDS>"
 
 #. type: Plain text
 #: en/live-boot.7:93
@@ -527,14 +538,14 @@ msgid ""
 "Set the timeout in seconds for the device specified by \"live-media=\" to "
 "become ready before giving up."
 msgstr ""
-"「live-media=」により指定したデバイスがその処理をあきらめるまでの制限時間を秒"
-"数で指示します。"
+"Paramètre le temps d'expiration en secondes pour le périphérique spécifié "
+"par \"live-media=\" à être prêt avant de laisser tomber."
 
 #. type: IP
 #: en/live-boot.7:93
 #, no-wrap
 msgid "B<module>=I<NAME>"
-msgstr "B<module>=I<名前>"
+msgstr "B<module>=I<NAME>"
 
 #. type: Plain text
 #: en/live-boot.7:95
@@ -543,9 +554,9 @@ msgid ""
 "another file could be specified without the extension \".module\"; it should "
 "be placed on \"/live\" directory of the live medium."
 msgstr ""
-"デフォルトとなっているオプションのファイル「filesystem.module」(以下参照) を"
-"使う代わりに別のファイルを拡張子「.module」を外して指定することができます。こ"
-"れは Live メディアの「/live」ディレクトリに配置すべきです。"
+"Plutôt que d'utiliser le fichier optionnel par défaut \"filesystem.module"
+"\" (voir ci-dessous), un autre fichier peut être spécifié sans l'extension "
+"\".module\"; il devra être placé dans le répertoire \"/live\" du médium live."
 
 #. type: IP
 #: en/live-boot.7:95
@@ -560,10 +571,10 @@ msgid ""
 "\" (with optional \"nfsopts=\"), should specify where is the location of the "
 "root filesystem.  With no args, will try cifs first, and if it fails nfs."
 msgstr ""
-"ネットワークマウントを行うことを live-boot に指示します。(オプションの"
-"「nfsopts=」で) パラメータ「nfsroot=」によりルートファイルシステムが置かれて"
-"いる場所を指定します。引数を付けない場合はまず cifs を試し、それが失敗した場"
-"合は nfs を試します。"
+"Ceci dit à live-boot d'effectuer un montage réseau. Le paramètre \"nfsroot="
+"\"(avec l'optionnel \"nfsopts=\"), devrait spécifier où est l'emplacement du "
+"système de fichier racine. En l'absence d'arguments, il essaiera cifs en "
+"premier puis, s'il échoue, nfs."
 
 #. type: IP
 #: en/live-boot.7:97
@@ -574,13 +585,13 @@ msgstr "B<nfsopts>="
 #. type: Plain text
 #: en/live-boot.7:99
 msgid "This lets you specify custom nfs options."
-msgstr "これを使って nfs オプションを指定できます。"
+msgstr "Ceci vous permet de spécifier des options nfs personnalisées."
 
 #. type: IP
 #: en/live-boot.7:99
 #, no-wrap
 msgid "B<nofastboot>"
-msgstr "B<nofastboot>"
+msgstr ""
 
 #. type: Plain text
 #: en/live-boot.7:101
@@ -589,10 +600,10 @@ msgid ""
 "fstab. If you have static filesystems on your harddisk and you want them to "
 "be checked at boot time, use this parameter, otherwise they are skipped."
 msgstr ""
-"このパラメータは /etc/fstab にあるファイルシステムのチェックがデフォルトで無"
-"効化されているのを無効にします。ハードディスクに静的ファイルシステムがあり、"
-"ブート時にそれをチェックさせたい場合はこのパラメータを使ってください。使わな"
-"い場合はファイルシステムのチェックは飛ばされます。"
+"Ce paramètre désactive la désactivation par défaut du système de fichier "
+"dans /etc/fstab. Si vous avez des système de fichier statiques sur votre "
+"disque dur et vous voulez qu'ils soient vérifiés au moment du démarrage, "
+"utilisez ce paramètre, sinon ils sont sautés."
 
 #. type: IP
 #: en/live-boot.7:101
@@ -606,8 +617,8 @@ msgid ""
 "disables the \"persistence\" feature, useful if the bootloader (like "
 "syslinux) has been installed with persistence enabled."
 msgstr ""
-"「保持 (persistence)」機能を無効化します。ブートローダ (syslinux のようなも"
-"の) が保持機能を有効にしてインストールされている場合に有用です。"
+"désactive la fonctionnalité \"persistance\", utile si le bootloader (comme "
+"syslinux) a été installé avec la persistance activée."
 
 #. type: IP
 #: en/live-boot.7:103 en/live-boot.7:125
@@ -618,7 +629,7 @@ msgstr "B<noeject>"
 #. type: Plain text
 #: en/live-boot.7:105
 msgid "Do not prompt to eject the live medium."
-msgstr "Live メディアを取り出すかどうか確認しません。"
+msgstr "Ne pas demander pour l'éjection du médium live."
 
 #. type: IP
 #: en/live-boot.7:105
@@ -634,11 +645,11 @@ msgid ""
 "default of mount applies (currently 50% of available RAM). Note that this "
 "option has currently no effect when booting with toram."
 msgstr ""
-"このパラメータにより独自の RAM ディスクサイズ (tmpfs マウント時の「-o サイ"
-"ズ」オプション) をセットできます。デフォルトでは RAM ディスクサイズはセットさ"
-"れていないため、マウント時のデフォルト値が適用されます (現在は利用可能な RAM "
-"の 50%)。toram を指定してブートした場合、このオプションは現在のところ効果がな"
-"いことに注意してください"
+"Ce paramètre permet de paramétrer un taille de ramdisk personnalisée (c'est "
+"l'option '-o size' du montage tmpfs). Par défaut, il n'y a pas de taille de "
+"ramdisk paramétrée, donc le montage par défaut s'applique (en fait : 50% de "
+"la RAM disponible). Notez que cette option n'a actuellement aucun effet lors "
+"d'un démarrage avec toram."
 
 #. type: IP
 #: en/live-boot.7:107
@@ -649,7 +660,7 @@ msgstr "B<swap=true>"
 #. type: Plain text
 #: en/live-boot.7:109
 msgid "This parameter enables usage of local swap partitions."
-msgstr "このパラメータはローカルのスワップパーティションの利用を有効にします。"
+msgstr "Ce paramètre active l'utilisation de partition swap locales."
 
 #. type: IP
 #: en/live-boot.7:109
@@ -666,18 +677,18 @@ msgid ""
 "\" (see I<persistence.conf>(5)). Overlay image files are named \"persistence"
 "\"."
 msgstr ""
-"live-boot は保持用メディアのデバイスを調査します。このデバイスにはパーティ"
-"ション (GPT (GUID Partition Table、GUIDパーティションテーブル) の名前を正しく"
-"指定) やファイルシステム (ラベルの名前を正しく指定)、イメージファイル (ファイ"
-"ル名を正しく指定) を使えます。保存先は「persistence」(I<persistence.conf>(5) "
-"参照) という名前/ラベルになります。保存先のイメージファイルは「persistence」"
-"という名前になります。"
+"live-boot sondera les périphériques pour les média de persistance. Ceux-ci "
+"pourront être des partitions (avec un nom GPT correct), des systèmes de "
+"fichier (avec une étiquette correcte) ou des fichiers image (avec un nom de "
+"fichier correct). Les récouvrements sont étiquettés/nommés \"persistence"
+"\" (voir I<persistence.conf>(5)). Les fichiers images de recouvrement sont "
+"nommés \"persistence\"."
 
 #. type: IP
 #: en/live-boot.7:111
 #, no-wrap
 msgid "B<persistence-encryption>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
-msgstr "B<persistence-encryption>=I<種類1>,I<種類2> ... I<種類n>"
+msgstr "B<persistence-encryption>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
 
 #. type: Plain text
 #: en/live-boot.7:113
@@ -688,11 +699,13 @@ msgid ""
 "media. Whenever a device containing encrypted media is probed the user will "
 "be prompted for the passphrase. The default value is \"none\"."
 msgstr ""
-"このオプションは保持用メディアのデバイス調査時に利用を許可する暗号化の種類を"
-"決定します。「none」が一覧にある場合は暗号化されていないメディアを許可しま"
-"す。「luks」が一覧にある場合は LUKS により暗号化されているメディアを許可しま"
-"す。暗号化されているメディアがデバイスにある場合はそのメディアの調査時にパス"
-"フレーズをユーザに質問します。デフォルト値は「none」です。"
+"Cette option détermine quels sont les types d'encryptage que nous autorisons "
+"à être utilisés lors du sondage des périphérique pour les médias de "
+"persistance. Si \"none\" (aucun) n'est dans la liste, nous autorisons les "
+"médias non-cryptés; si \"luks\" est dans la liste, nous autorisons les "
+"médias encryptés-LUKS. À chaque fois qu'un périphérique contenant un média "
+"encrypté est sondé, il sera demandé la phrase-mot-de-passe à l'utilisateur. "
+"La valeur par défaut est \"none\"."
 
 #. type: IP
 #: en/live-boot.7:113
@@ -708,16 +721,17 @@ msgid ""
 "further restrict the media to usb mass storage only, you can use the "
 "'removable-usb' keyword."
 msgstr ""
-"「removable」というキーワードを指定すると、live-boot は保持用パーティションを"
-"脱着可能なメディアからのみ検索します。メディアを USB 大容量記憶装置だけにさら"
-"に限定したい場合は「removable-usb」というキーワードを使えることに注目してくだ"
-"さい。"
+"Si vous spécifiez le mot-clef 'removable', live-boot essaiera de trouver les "
+"partitions de persistance sur les périphériques enlevables uniquement. Notez "
+"que si vous voulez davantage restreindre les médias à des périphériques de "
+"stockage de masse USB uniquement, vous pouvez utiliser le mot-clef "
+"'removable-usb'."
 
 #. type: IP
 #: en/live-boot.7:115
 #, no-wrap
 msgid "B<persistence-method>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
-msgstr "B<persistence-method>=I<種類1>,I<種類2> ... I<種類n>"
+msgstr "B<persistence-method>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
 
 #. type: Plain text
 #: en/live-boot.7:117
@@ -726,15 +740,15 @@ msgid ""
 "\"overlay\" is in the list, we consider overlays (i.e. \"live-rw\" and "
 "\"home-rw\"). The default is \"overlay\"."
 msgstr ""
-"このオプションは許可する保持用メディアの種類を決定します。「overlay」が一覧に"
-"ある場合はオーバーレイと見なします (つまり「live-rw」と「home-rw」)。デフォル"
-"ト値は「overlay」です。"
+"Cette option détermine quels types de média de persistance nous autorisons "
+"If \"overlay\" est dans la liste, nous considérons les récouvrements  (i.e. "
+"\"live-rw\" et \"home-rw\"). Le défaut est \"overlay\"."
 
 #. type: IP
 #: en/live-boot.7:117
 #, no-wrap
 msgid "B<persistence-path>=I<PATH>"
-msgstr "B<persistence-path>=I<パス>"
+msgstr "B<persistence-path>=I<PATH>"
 
 #. type: Plain text
 #: en/live-boot.7:119
@@ -743,9 +757,10 @@ msgid ""
 "partition, with this parameter, the path can be configured so that you can "
 "have multiple directories on the same partition to store persistency files."
 msgstr ""
-"live-boot は保持用ファイルをパーティションのルートディレクトリから検索しま"
-"す。このパラメータを使ってパスを設定すると同一のパーティションの複数のディレ"
-"クトリを保持用ファイルの保管先にできます。"
+"live-boot recherchera pour des fichiers de persistance dans le répertoire "
+"racine d'une partition, avec ce paramètre, le chemin pourra être configuré "
+"de manière à ce que vous puissiez avoir des répertoires multiples sur la "
+"même partition pour emmagasiner des fichiers de persistance."
 
 #. type: IP
 #: en/live-boot.7:119
@@ -759,14 +774,15 @@ msgid ""
 "Filesystem changes are not saved back to persistence media. In particular, "
 "overlays and netboot NFS mounts are mounted read-only."
 msgstr ""
-"ファイルシステムの変更は保持用メディアには残されません。特にオーバーレイと"
-"ネットワーク経由のブート用の NFS マウントは読み取り専用でマウントされます。"
+"Les modifications de système de fichier ne sont pas sauvegardés dans le "
+"média de persistance. En particulier, les montages NFS netboot et overlays "
+"sont montés en lecture-seule. "
 
 #. type: IP
 #: en/live-boot.7:121
 #, no-wrap
 msgid "B<persistence-storage>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
-msgstr "B<persistence-storage>=I<種類1>,I<種類2> ... I<種類n>"
+msgstr "B<persistence-storage>=I<TYPE1>,I<TYPE2> ... I<TYPEn>"
 
 #. type: Plain text
 #: en/live-boot.7:123
@@ -777,17 +793,18 @@ msgid ""
 "filesystems will be probed for archives and image files with matching "
 "filenames. The default is \"file,filesystem\"."
 msgstr ""
-"このオプションは保持用メディアの調査時に対象とする保持用記憶装置の種類を決定"
-"します。「filesystem」が一覧にある場合はラベルが該当するファイルシステムを利"
-"用します。「file」が一覧にある場合は全ファイルシステムについてファイル名が該"
-"当するアーカイブやイメージファイルを調査します。デフォルト値は「file,"
-"filesystem」です。"
+"Cette option détermine quels sont les types de stockage de persistance à "
+"considérer lors d'un sondage pour le média de persistance. Si \"filesystem\" "
+"est dans la liste, les systèmes de fichier avec des étiquettes "
+"correspondantes seront utilisés; si \"file\" est dans la liste, tous les "
+"systèmes de fichier seront sondés pour archives et fichiers image avec des "
+"noms de fichier correspondant. Le défaut est \"file,filesystem\"."
 
 #. type: IP
 #: en/live-boot.7:123
 #, no-wrap
 msgid "B<persistence-label>=I<LABEL>"
-msgstr "B<persistence-label>=I<ラベル>"
+msgstr "B<persistence-label>=I<LABEL>"
 
 #. type: Plain text
 #: en/live-boot.7:125
@@ -796,9 +813,9 @@ msgid ""
 "searching for persistent storage. LABEL can be any valid filename, partition "
 "label, or GPT name."
 msgstr ""
-"live-boot は保持用記憶装置の検索時に「persistence」の代わりにここで指定した"
-"「ラベル」を使います。「ラベル」はファイル名やパーティションのラベル、GPT の"
-"名前として有効な任意のものを使えます。"
+"live-boot utilisera le nom \"LABEL\" à la place de \"persistence\" lorsqu'il "
+"cherchera pour un stockage persistant. LABEL peut être tout nom de fichier "
+"valide, étiquette de partition ou nom GPT."
 
 #. type: Plain text
 #: en/live-boot.7:127
@@ -806,8 +823,8 @@ msgid ""
 "This option causes live-boot to reboot without attempting to eject the media "
 "and without asking the user to remove the boot media."
 msgstr ""
-"このオプションを使うと live-boot はメディアを取り出さず、ブート用メディアを削"
-"除するかユーザに質問することもなくリブートします。"
+"Cette option fait en sorte que live-boot redémarre sans essayer d'éjecter le "
+"média et sans demander à l'utilisateur de retirer le média de démarrage."
 
 #. type: IP
 #: en/live-boot.7:127
@@ -823,10 +840,10 @@ msgid ""
 "could lead to problems by applications like \"mono\" which store binary "
 "paths on installation."
 msgstr ""
-"このパラメータを使うと live-boot は「/」で「/lib/live」上の (ほとんどの場合圧"
-"縮されている) ro ファイルシステムを提示します。これはインストール時にバイナリ"
-"のパスを記憶する「mono」のようなアプリケーションで問題を起こす可能性があるた"
-"めデフォルトでは有効にされていません。"
+"Avec ce paramètre, live-boot montrera sur \"/\" les systèmes de fichier ro "
+"(essentiellement compressés) sur \"/lib/live\". Ceci n'est pas activé par "
+"défaut car ça pourrait conduire à des problèmes avec des applications comme "
+"\"mono\" qui stocke des chemins binaires lors de l'installation."
 
 #. type: IP
 #: en/live-boot.7:129
@@ -840,14 +857,14 @@ msgid ""
 "If you boot with the normal quiet parameter, live-boot hides most messages "
 "of its own. When adding silent, it hides all."
 msgstr ""
-"通常の quiet パラメータを付けてブートすると live-boot が出すほとんどのメッ"
-"セージを非表示にします。「silent」を付けると全て非表示にします。"
+"Si vous démarrez avec le paramètre quiet normal, live-boot caches la plupart "
+"de ses messages. Lorsque de l'ajout de silent, il cache tout."
 
 #. type: IP
 #: en/live-boot.7:131
 #, no-wrap
 msgid "B<todisk>=I<DEVICE>"
-msgstr "B<todisk>=I<デバイス>"
+msgstr "B<todisk>=I<DEVICE>"
 
 #. type: Plain text
 #: en/live-boot.7:133
@@ -858,11 +875,12 @@ msgid ""
 "just specify the \"live-media=DEVICE\" boot parameter with the same DEVICE "
 "used this time."
 msgstr ""
-"このパラメータを追加すると、live-boot はルートファイルシステムをマウントする"
-"前に読み取り専用メディア全体を指定したデバイスにコピーしようとします。これに"
-"は恐らく多くの RAM が必要となります。以後のブートではこの段階を飛ばして、今回"
-"そのデバイスで使ったのと同一の「live-media=デバイス」ブートパラメータを単に指"
-"定するようにしてください。"
+"À l'ajout de ce paramètre, live-boot essaiera de copier le média en lecture-"
+"seule entièrement vers le périphérique spécifié avant de monter le système "
+"de fichier racine. Il nécessite probablement un bon paquet d'espace libre. "
+"Les démarrages suivant devraient alors sauter cette étape et simplement "
+"spécifier le paramètre de démarrage \"live-media=DEVICE\" avec le même "
+"DEVICE utilisé cette fois."
 
 #. type: IP
 #: en/live-boot.7:133
@@ -877,10 +895,10 @@ msgid ""
 "to the computer's RAM before mounting the root filesystem. This could need a "
 "lot of ram, according to the space used by the read-only media."
 msgstr ""
-"このパラメータを追加すると、live-boot はルートファイルシステムをマウントする"
-"前に読み取り専用メディア全体をそのコンピュータの RAM にコピーしようとします。"
-"その読み取り専用メディアで利用している容量により、これには多くの RAM が必要と"
-"なるかもしれません。"
+"À l'ajout de ce paramètre, live-boot essaiera de copier l'entiereté du média "
+"en lecture-seule vers la RAM de l'ordinateur avant de monter le système de "
+"fichier racine. Ceci pourrait nécessiter beaucoup de RAM, en fonction de "
+"l'espace utilisé par le média en lecture-seule."
 
 #. type: IP
 #: en/live-boot.7:135
@@ -895,15 +913,15 @@ msgid ""
 "By default, live-boot uses aufs. With this parameter, you can switch to "
 "overlay."
 msgstr ""
-"デフォルトで live-boot は aufs を利用します。このパラメータにより overlay に"
-"切り替えることができます。"
+"Par défaut, live-boot utilise aufs. Avec ce paramètre, vous pouvez changer "
+"ceci pour overlay."
 
 #.  FIXME
 #. type: SH
 #: en/live-boot.7:140
 #, no-wrap
 msgid "FILES (old)"
-msgstr "ファイル (古い情報)"
+msgstr "FICHIERS (ancien)"
 
 #. type: IP
 #: en/live-boot.7:141
@@ -916,7 +934,9 @@ msgstr "B</etc/live.conf>"
 msgid ""
 "Some variables can be configured via this config file (inside the live "
 "system)."
-msgstr "一部の変数はこの (Live システム中の) 設定ファイルにより設定できます。"
+msgstr ""
+"Certaines variables peuvent être configurées à l'aide de ce fichier de "
+"configuration (à l'intérieur du système live)."
 
 #. type: IP
 #: en/live-boot.7:143
@@ -937,19 +957,21 @@ msgid ""
 "below /overlay.  Without this file, any images in the \"/live\" directory "
 "are loaded in alphanumeric order."
 msgstr ""
-"この (Live メディア内の) オプションのファイルは「/live」ディレクトリ中のディ"
-"スクイメージに対応するファイル名を空白文字または復帰文字で区切った一覧を収録"
-"します。このファイルが存在する場合はその中の一覧にあるイメージだけがルート "
-"aufs に統合され、その一覧の順に読み込まれます。このファイルの最初の項目が /"
-"overlay 直下で aufs の「最下位の」マウントポイント、この一覧の最後のファイル"
-"が /overlay 直下で aufs の「最上位の」マウントポイントとなります。このファイ"
-"ルがない場合は「/live」ディレクトリにあるイメージを英数字順に読み込みます。"
+"Ce fichier optionnel (à l'intérieur du média live) contient une liste de "
+"noms de fichier séparés-par-un-caractère-de-retour ou une espace-blanc "
+"correspondants aux images disque dans le répertoire \"/live\". Si ce fichier "
+"existe, uniquement les images listées ici seront fusionnées dans le aufs "
+"racine, et elles seront chargées dans l'ordre de cette liste. La première "
+"entrée dans ce fichier sera le point \"le plus bas\" dans le aufs, et le "
+"dernier fichier dans cette liste sera en \"haut\" du aufs, directement en "
+"dessous de /overlay. Sans ce fichier, toute image dans le répertoire \"/live"
+"\" sont chargées par ordre alphanumérique."
 
 #. type: SH
 #: en/live-boot.7:147
 #, no-wrap
 msgid "FILES"
-msgstr "ファイル"
+msgstr "FICHIERS"
 
 #. type: IP
 #: en/live-boot.7:148
@@ -985,7 +1007,7 @@ msgstr "B<persistence.conf>"
 #: en/live-boot.7:154 en/persistence.conf.5:190
 #, no-wrap
 msgid "SEE ALSO"
-msgstr "関連項目"
+msgstr "VOIR AUSSI"
 
 #. type: Plain text
 #: en/live-boot.7:156
@@ -1011,7 +1033,7 @@ msgstr "I<live-tools>(7)"
 #: en/live-boot.7:163 en/persistence.conf.5:199
 #, no-wrap
 msgid "HOMEPAGE"
-msgstr "ホームページ"
+msgstr "PAGE D'ACCUEIL"
 
 #. type: Plain text
 #: en/live-boot.7:165 en/persistence.conf.5:201
@@ -1020,15 +1042,15 @@ msgid ""
 "on the homepage at E<lt>I<http://live-systems.org/>E<gt> and in the manual "
 "at E<lt>I<http://live-systems.org/manual/>E<gt>."
 msgstr ""
-"live-boot 及び Live システムプロジェクトについてのさらなる情報は、"
-"E<lt>I<http://live-systems.org/>E<gt> のホームページや E<lt>I<http://live-"
-"systems.org/manual/>E<gt> のマニュアルにあります。"
+"Davantage d'informations à propos de live-boot et du projet Live Systems "
+"peuvent être trouvées sur la page E<lt>I<http://live-systems.org/>E<gt> et "
+"dans le manuel sur E<lt>I<http://live-systems.org/manual/>E<gt>."
 
 #. type: SH
 #: en/live-boot.7:166 en/persistence.conf.5:202
 #, no-wrap
 msgid "BUGS"
-msgstr "バグ"
+msgstr "BOGUES"
 
 #. type: Plain text
 #: en/live-boot.7:168 en/persistence.conf.5:204
@@ -1038,21 +1060,21 @@ msgid ""
 "writing a mail to the Live Systems mailing list at E<lt>I<debian-live@lists."
 "debian.org>E<gt>."
 msgstr ""
-"バグは E<lt>I<http://bugs.debian.org/>E<gt> にあるバグ追跡システムに live-"
-"boot パッケージのバグ報告として提出するか、E<lt>I<debian-live@lists.debian."
-"org>E<gt> にある Live システムのメーリングリスト宛てにメールを書くことにより"
-"報告できます。"
+"Les bogues peuvent être signalés en soumettant un rapport de bogue pour le "
+"paquet live-boot dans le BTS à E<lt>I<http://bugs.debian.org/>E<gt> ou par "
+"l'écriture d'un courriel à la liste de diffusion Live Systems à "
+"E<lt>I<debian-live@lists.debian.org>E<gt>."
 
 #. type: SH
 #: en/live-boot.7:169 en/persistence.conf.5:205
 #, no-wrap
 msgid "AUTHOR"
-msgstr "作者"
+msgstr "AUTEUR"
 
 #. type: Plain text
 #: en/live-boot.7:170 en/persistence.conf.5:206
 msgid ""
 "live-boot was written by Daniel Baumann E<lt>I<mail@daniel-baumann.ch>E<gt>."
 msgstr ""
-"live-boot は Daniel Baumann さん E<lt>I<mail@daniel-baumann.ch>E<gt> により書"
-"かれました。"
+"live-images a été écrit par Daniel Baumann E<lt>I<mail@daniel-baumann."
+"ch>E<gt>."

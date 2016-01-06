@@ -6,8 +6,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: live-boot 5.0~a3-1\n"
-"POT-Creation-Date: 2015-04-28 07:19+0200\n"
+"Project-Id-Version: live-boot 5.0~a5-1\n"
+"POT-Creation-Date: 2015-09-22 10:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,13 +25,13 @@ msgstr ""
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "2015-04-28"
+msgid "2015-09-22"
 msgstr ""
 
 #. type: TH
 #: en/live-boot.7:1 en/persistence.conf.5:1
 #, no-wrap
-msgid "5.0~a3-1"
+msgid "5.0~a5-1"
 msgstr ""
 
 #. type: TH

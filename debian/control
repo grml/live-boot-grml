@@ -2,26 +2,27 @@ Source: live-boot
 Section: misc
 Priority: optional
 Maintainer: Live Systems Maintainers <debian-live@lists.debian.org>
-Uploaders: Daniel Baumann <mail@daniel-baumann.ch>
-Build-Depends: debhelper (>= 9)
+Uploaders: Iain R. Learmonth <irl@debian.org>
+Build-Depends:
+ debhelper (>= 9),
 Standards-Version: 3.9.6
-Homepage: http://live-systems.org/devel/live-boot/
-Vcs-Browser: http://live-systems.org/gitweb/?p=live-boot.git
-Vcs-Git: git://live-systems.org/git/live-boot.git
+Homepage: https://debian-live.alioth.debian.org/live-boot/
+Vcs-Browser: https://anonscm.debian.org/cgit/debian-live/live-boot.git
+Vcs-Git: https://anonscm.debian.org/git/debian-live/live-boot.git
 
 Package: live-boot
 Architecture: all
 Depends:
- ${misc:Depends},
  live-boot-initramfs-tools | live-boot-backend,
+ ${misc:Depends},
 Recommends:
  live-boot-doc,
  live-tools,
  rsync,
  uuid-runtime,
 Suggests:
- curlftpfs,
  cryptsetup,
+ curlftpfs,
  httpfs2,
  wget,
 Description: Live System Boot Components
@@ -37,7 +38,8 @@ Description: Live System Boot Components
 Package: live-boot-doc
 Section: doc
 Architecture: all
-Depends: ${misc:Depends}
+Depends:
+ ${misc:Depends},
 Description: Live System Boot Components (documentation)
  The Live Systems project maintains the components to build Debian based Live
  systems and the official Debian Live images themselves.
@@ -50,13 +52,16 @@ Description: Live System Boot Components (documentation)
 Package: live-boot-initramfs-tools
 Architecture: all
 Depends:
- ${misc:Depends},
  busybox | busybox-initramfs,
  initramfs-tools,
  udev,
-Conflicts: live-boot-backend
-Replaces: live-boot-backend
-Provides: live-boot-backend
+ ${misc:Depends},
+Conflicts:
+ live-boot-backend,
+Replaces:
+ live-boot-backend,
+Provides:
+ live-boot-backend,
 Description: Live System Boot Components (initramfs-tools backend)
  The Live Systems project maintains the components to build Debian based Live
  systems and the official Debian Live images themselves.
