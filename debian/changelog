@@ -1,3 +1,13 @@
+live-boot (1:20151213+grml.1) UNRELEASED; urgency=medium
+
+  * Merge latest Debian changes.
+  * [aea94ce] add gbp.conf
+  * [9f0266a] fix "unexpected operator" error when stopping live-boot
+  * [83abdd6] Revert "restore support for old persistence media"
+  * [f0db64b] use pristine-tar by default
+
+ -- Evgeni Golov <evgeni@grml.org>  Wed, 06 Jan 2016 18:07:09 +0100
+
 live-boot (1:20151213) unstable; urgency=medium
 
   [ Iain R. Learmonth ]
@@ -20,16 +30,6 @@ live-boot (5.0~a5-2) unstable; urgency=low
   * Removing myself from uploaders, lost trust in Debian (#804315).
 
  -- Daniel Baumann <mail@daniel-baumann.ch>  Fri, 20 Nov 2015 13:04:24 +0100
-
-live-boot (5.0~a5-1+grml.1) UNRELEASED; urgency=medium
-
-  [ Evgeni Golov ]
-  * [aea94ce] add gbp.conf
-  * [9f0266a] fix "unexpected operator" error when stopping live-boot
-  * [83abdd6] Revert "restore support for old persistence media"
-  * [f0db64b] use pristine-tar by default
-
- -- Evgeni Golov <evgeni@grml.org>  Mon, 24 Aug 2015 21:04:50 +0200
 
 live-boot (5.0~a5-1) unstable; urgency=low
 
