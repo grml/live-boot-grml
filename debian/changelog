@@ -1,3 +1,27 @@
+live-boot (1:20151213) unstable; urgency=medium
+
+  [ Iain R. Learmonth ]
+  * Change to native package.
+  * debian/control:
+   - Added myself to uploaders.
+   - Updated Vcs-* and Homepage fields.
+
+  [ trebmuh ]
+  * Adding French translation for live-boot manpage and prep for
+    persistence.conf.
+
+  [ Carlos Zuferri ]
+  * Using 'Live Systems Project' as default project in .pot files.
+
+ -- Iain R. Learmonth <irl@debian.org>  Sun, 13 Dec 2015 16:12:07 +0000
+
+live-boot (5.0~a5-2) unstable; urgency=low
+
+  * Removing myself from uploaders, lost trust in Debian (#804315).
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Fri, 20 Nov 2015 13:04:24 +0100
+>>>>>>> debian
+
 live-boot (5.0~a5-1+grml.1) UNRELEASED; urgency=medium
 
   [ Evgeni Golov ]

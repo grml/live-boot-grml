@@ -1,0 +1,306 @@
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH LIVE\-BOOT 7 22.09.2015 5.0~a5\-1 "Projet Live Systems"
+
+.SH NOM
+\fBlive\-boot\fP \- Composants de démarrage du système
+
+.SH DESCRIPTION
+\fBlive\-boot\fP comprend les composants qui configure un système live pendant
+le processus de démarrage (espace utilisateur primitif).
+.PP
+.\" FIXME
+live\-boot est un hameçon (hook) pour initramfs\-tools, utilisé pour générer
+un initramfs capable de démarrer les systèmes live, comme ceux créés par
+\fIlive\-helper\fP(7). Ceci comprends les ISOs Live Systems, les paquets tar de
+démarrage par le net (netboot), et les images de clef USB.
+.PP
+.\" FIXME
+Au moment du démarrage, il recherchera un médium (en lecture seule)
+contenant un répertoire "/live" où est placé un système de fichier racine
+(souvent une image d'un système de fichier compressé comme squashfs). Si
+ceci est trouvé, il créera un environnement enregistrable en utilisant aufs,
+pour démarrer le système à partir de lui.
+
+.SH CONFIGURATION
+\fBlive\-boot\fP peut être configuré à travers un paramètre de démarrage ou un
+fichier de configuration.
+.PP
+Pour configurer les paramètres de live\-boot utilisés par défaut dans l'image
+live, voir l'option \-\-bootappend\-live dans la page de manuel
+\fIlb_config\fP(1).
+
+.SS "Paramètres du noyau"
+\fBlive\-boot\fP est activé uniquement si 'boot=live' a été utilisé en tant que
+paramètre du noyau.
+.PP
+De plus, il y a plusieurs autres paramètres de démarrage pour influencer le
+comportement, voir ci\-dessous.
+
+.SS "Fichiers de configurations"
+\fBlive\-boot\fP peut être configuré (mais pas activé) à travers des fichiers de
+configuration. Ces fichiers peuvent être placés soit dans le système de
+fichier racine lui\-même (/etc/live/boot.conf, /etc/live/boot/*), ou sur le
+média live (live/boot.conf, live/boot/*).
+
+.SH OPTIONS
+.\" FIXME
+\fBlive\-boot\fP fourni actuellement les paramètres suivants.
+.IP \fBaccess\fP=\fIACCESS\fP 4
+Met en place le niveau d'accessibilité pour les utilisateurs physiquement ou
+visuellement handicapés. ACCESS doit être un des v1, v2, v3, m1, or
+m2. v1=handicap visuel faible, v2=handicap visuel modéré, v3=cessité
+visuelle, m1=difficultés moteur faibles m2=difficultés moteur modérées.
+.IP \fBconsole\fP=\fITTY,SPEED\fP 4
+Paramètre la console par défaut étant utilisée avec l'option
+"live\-getty". Exemple : "console=ttyS0,115200".
+.IP \fBdebug\fP 4
+Rend le processus de démarrage initramfs plus verbeux.
+.br
+Utiliser : debug=1
+.br
+Si debug n'est pas paramétré à une valeur, les messages pourraient ne pas
+être affichés.
+.IP \fBfetch\fP=\fIURL\fP 4
+.IP \fBhttpfs\fP=\fIURL\fP 4
+Une autre forme de démarrage par le net en téléchargeant une image squashfs
+depuis une URL donnée. La méthode fetch copie l'image dans la RAM et la
+méthode httpfs utilise FUSE et httpfs2 pour monter l'image en place. La
+copier dans la RAM nécessite davantage de mémoire et pourrait prendre du
+temps pour des images volumineuses. Ceci dit, ça devrait mieux fonctionner
+correctement car cela ne nécessite pas de réseau ensuite et le système
+fonctionne plus vite une fois démarré car il n'a plus besoin de contacter un
+serveur.
+.br
+À cause des limitations actuelles de la version wget de busybox et de sa
+résolution DNS, une URL ne peut pas contenir un hostname mais uniquement une
+adresse IP.
+.br
+Ne fonctionne pas : http://example.com/path/to/your_filesystem.squashfs
+.br
+Fonctionne : http://1.2.3.4/path/to/your_filesystem.squashfs
+.br
+Notez également que par conséquent, il n'est actuellement pas possible
+d'attraper une image depuis un virtualhost basé\-sur\-un\-nom d'un httpd s'il
+partage l'adresse IP avec l'instance httpd principale.
+.br
+Vous voudrez également utiliser l'image ISO live à la place de l'image
+squashfs.
+.IP \fBiscsi\fP=\fIserver\-ip[,server\-port];target\-name\fP 4
+Démarrer depuis une cible iSCSI qui a une image ISO ou disque en tant que
+l'un de ces LUNs. La cible spécifiée est recherchée pour un LUN qui
+ressemble à un medium live medium. Si vous utilisez la solution cible iSCSI
+logiciel \fBiscsitarget\fP , votre ietd.conf devrait ressembler à ça :
+.br
+# Le nom\-cible que vous spécifiez dans le paramètre iscsi=
+.br
+Cible <target\-name>
+  Lun 0 Path=<chemin\-vers\-votre\-image\-live.iso>,Type=fileio,IOMode=ro
+  # Si vous voulez démarrez de multiples machines, vous pourriez vouloir   jeter un oeil aux réglages de certains paramètres comme
+  # Wthreads ou MaxConnections
+.IP \fBfindiso\fP=\fI/PATH/TO/IMAGE\fP 4
+Regarder pour le fichier ISO spécifié sur tous les disques quandil regarde
+habituellement pour le fichier squashfs (donc vous n'avez pas besoin de
+connaître le nom de périphérique comme dans fromiso=....).
+.IP \fBfromiso\fP=\fI/PATH/TO/IMAGE\fP 4
+Permet d'utiliser un système de fichier venant de l'intérieur d'une image
+ISO qui est disponible sur live\-media.
+.IP \fBignore_uuid\fP 4
+Ne pas vérifierque chaque UUID embarqué dans le initramfs correspond au
+medium découvert. On peut dire à live\-boot de générer un UUID en paramétrant
+LIVE_GENERATE_UUID=1 lors de la construction de l'initramfs.
+.IP \fBverify\-checksums\fP 4
+Si spécifié, une somme MD5 est calculée sur le média live pendant le
+démarragea et est comparée à une valeur présente dans md5sum.txt dans le
+répertoire racine du média live.
+.IP "\fBip\fP=[\fIDEVICE\fP]:[\fICLIENT_IP\fP]:[\fINETMASK\fP]:[\fIGATEWAY_IP\fP]:[\fINAMESERVER\fP] [,[\fIDEVICE\fP]:[\fICLIENT_IP\fP]:[\fINETMASK\fP]:[\fIGATEWAY_IP\fP]:[\fINAMESERVER\fP]]" 4
+Vous laisse spécifier le(s) nom(s) et les options de l'(les) interface(s)
+qui devraient être configurées au moment du démarrage. Ne pas spécifier ceci
+si vous voulez utiliser dhcp (défaut). Ceci sera modifié dans une version
+future pour refléter la spécification des paramètres de démarrage du noyau
+officiel (e.g. ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp).
+.IP \fBip\fP=[\fIfrommedia\fP] 4
+Si cette variable est paramétrée, dhcp et la configuration statique sont
+simplement sautées et le système utilisera à la place les interfaces (qui
+doivent être) préconfigurées /etc/network/.
+.IP {\fBlive\-media\fP|\fBbootfrom\fP}=\fIDEVICE\fP 4
+Si vous spécifiez une des ces deux formes équivalentes, live\-boot essaiera
+en premier de trouver ce périphérique le répertoire "/live" où le système de
+fichier racine en lecture seule devrait être. Si il ne trouve pas quelque
+chose d'utilisable, le scan normal pour les périphériques blocks est
+effectué.
+.br
+Plutôt que de spécifié un nom de périphérique actuel, le mot\-clef
+\&'removable' peut être utilisé pour limiter la recherche des médias live
+acceptables au type removable uniquement. Notez que si vous voulez
+restreindre d'avantage les médias aux seuls périphériques de stockage USB,
+vous pouvez utiliser le mot\-clef 'removable\-usb'.
+.IP {\fBlive\-media\-encryption\fP|\fBencryption\fP}=\fITYPE\fP 4
+live\-boot montera le TYPE rootfs encrypté, en demandant une
+phrase\-mot\-de\-passe, utile pour construire des systèmes live paranoïaques
+:\-).Le TYPE supporté pour l'instant est "aes" pour un type d'encryptage
+loop\-aes.
+.IP \fBlive\-media\-offset\fP=\fIBYTES\fP 4
+De cette façon, vous pouvez dire à live\-boot que votre image démarre à
+l'offset BYTES dans le périphérique spécifié ci\-dessus ou auto\-découvert,
+qui pourra être utile pour cacher l'ISO du système live ou l'image à
+l'intérieur d'une autr ISO ou image, pour créer des image "propre".
+.IP \fBlive\-media\-path\fP=\fIPATH\fP 4
+Paramètre le chemin vers le système de fichier live sur le médium. Par
+défaut, il est paramétré sur '/live' et vous ne devriez pas changer ceci
+sauf si vous avez personnalisé votre média en conséquence.
+.IP \fBlive\-media\-timeout\fP=\fISECONDS\fP 4
+Paramètre le temps d'expiration en secondes pour le périphérique spécifié
+par "live\-media=" à être prêt avant de laisser tomber.
+.IP \fBmodule\fP=\fINAME\fP 4
+Plutôt que d'utiliser le fichier optionnel par défaut "filesystem.module"
+(voir ci\-dessous), un autre fichier peut être spécifié sans l'extension
+".module"; il devra être placé dans le répertoire "/live" du médium live.
+.IP \fBnetboot\fP[=nfs|cifs] 4
+Ceci dit à live\-boot d'effectuer un montage réseau. Le paramètre
+"nfsroot="(avec l'optionnel "nfsopts="), devrait spécifier où est
+l'emplacement du système de fichier racine. En l'absence d'arguments, il
+essaiera cifs en premier puis, s'il échoue, nfs.
+.IP \fBnfsopts\fP= 4
+Ceci vous permet de spécifier des options nfs personnalisées.
+.IP \fBnofastboot\fP 4
+Ce paramètre désactive la désactivation par défaut du système de fichier
+dans /etc/fstab. Si vous avez des système de fichier statiques sur votre
+disque dur et vous voulez qu'ils soient vérifiés au moment du démarrage,
+utilisez ce paramètre, sinon ils sont sautés.
+.IP \fBnopersistence\fP 4
+désactive la fonctionnalité "persistance", utile si le bootloader (comme
+syslinux) a été installé avec la persistance activée.
+.IP \fBnoeject\fP 4
+Ne pas demander pour l'éjection du médium live.
+.IP \fBramdisk\-size\fP 4
+Ce paramètre permet de paramétrer un taille de ramdisk personnalisée (c'est
+l'option '\-o size' du montage tmpfs). Par défaut, il n'y a pas de taille de
+ramdisk paramétrée, donc le montage par défaut s'applique (en fait : 50% de
+la RAM disponible). Notez que cette option n'a actuellement aucun effet lors
+d'un démarrage avec toram.
+.IP \fBswap=true\fP 4
+Ce paramètre active l'utilisation de partition swap locales.
+.IP \fBpersistence\fP 4
+live\-boot sondera les périphériques pour les média de persistance. Ceux\-ci
+pourront être des partitions (avec un nom GPT correct), des systèmes de
+fichier (avec une étiquette correcte) ou des fichiers image (avec un nom de
+fichier correct). Les récouvrements sont étiquettés/nommés "persistence"
+(voir \fIpersistence.conf\fP(5)). Les fichiers images de recouvrement sont
+nommés "persistence".
+.IP "\fBpersistence\-encryption\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
+Cette option détermine quels sont les types d'encryptage que nous autorisons
+à être utilisés lors du sondage des périphérique pour les médias de
+persistance. Si "none" (aucun) n'est dans la liste, nous autorisons les
+médias non\-cryptés; si "luks" est dans la liste, nous autorisons les médias
+encryptés\-LUKS. À chaque fois qu'un périphérique contenant un média encrypté
+est sondé, il sera demandé la phrase\-mot\-de\-passe à l'utilisateur. La valeur
+par défaut est "none".
+.IP \fBpersistence\-media\fP={\fIremovable\fP|\fIremovable\-usb\fP} 4
+Si vous spécifiez le mot\-clef 'removable', live\-boot essaiera de trouver les
+partitions de persistance sur les périphériques enlevables uniquement. Notez
+que si vous voulez davantage restreindre les médias à des périphériques de
+stockage de masse USB uniquement, vous pouvez utiliser le mot\-clef
+\&'removable\-usb'.
+.IP "\fBpersistence\-method\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
+Cette option détermine quels types de média de persistance nous autorisons
+If "overlay" est dans la liste, nous considérons les récouvrements
+(i.e. "live\-rw" et "home\-rw"). Le défaut est "overlay".
+.IP \fBpersistence\-path\fP=\fIPATH\fP 4
+live\-boot recherchera pour des fichiers de persistance dans le répertoire
+racine d'une partition, avec ce paramètre, le chemin pourra être configuré
+de manière à ce que vous puissiez avoir des répertoires multiples sur la
+même partition pour emmagasiner des fichiers de persistance.
+.IP \fBpersistence\-read\-only\fP 4
+Les modifications de système de fichier ne sont pas sauvegardés dans le
+média de persistance. En particulier, les montages NFS netboot et overlays
+sont montés en lecture\-seule.
+.IP "\fBpersistence\-storage\fP=\fITYPE1\fP,\fITYPE2\fP ... \fITYPEn\fP" 4
+Cette option détermine quels sont les types de stockage de persistance à
+considérer lors d'un sondage pour le média de persistance. Si "filesystem"
+est dans la liste, les systèmes de fichier avec des étiquettes
+correspondantes seront utilisés; si "file" est dans la liste, tous les
+systèmes de fichier seront sondés pour archives et fichiers image avec des
+noms de fichier correspondant. Le défaut est "file,filesystem".
+.IP \fBpersistence\-label\fP=\fILABEL\fP 4
+live\-boot utilisera le nom "LABEL" à la place de "persistence" lorsqu'il
+cherchera pour un stockage persistant. LABEL peut être tout nom de fichier
+valide, étiquette de partition ou nom GPT.
+.IP \fBnoeject\fP 4
+Cette option fait en sorte que live\-boot redémarre sans essayer d'éjecter le
+média et sans demander à l'utilisateur de retirer le média de démarrage.
+.IP \fBshowmounts\fP 4
+Avec ce paramètre, live\-boot montrera sur "/" les systèmes de fichier ro
+(essentiellement compressés) sur "/lib/live". Ceci n'est pas activé par
+défaut car ça pourrait conduire à des problèmes avec des applications comme
+"mono" qui stocke des chemins binaires lors de l'installation.
+.IP \fBsilent\fP 4
+Si vous démarrez avec le paramètre quiet normal, live\-boot caches la plupart
+de ses messages. Lorsque de l'ajout de silent, il cache tout.
+.IP \fBtodisk\fP=\fIDEVICE\fP 4
+À l'ajout de ce paramètre, live\-boot essaiera de copier le média en
+lecture\-seule entièrement vers le périphérique spécifié avant de monter le
+système de fichier racine. Il nécessite probablement un bon paquet d'espace
+libre. Les démarrages suivant devraient alors sauter cette étape et
+simplement spécifier le paramètre de démarrage "live\-media=DEVICE" avec le
+même DEVICE utilisé cette fois.
+.IP \fBtoram\fP 4
+À l'ajout de ce paramètre, live\-boot essaiera de copier l'entiereté du média
+en lecture\-seule vers la RAM de l'ordinateur avant de monter le système de
+fichier racine. Ceci pourrait nécessiter beaucoup de RAM, en fonction de
+l'espace utilisé par le média en lecture\-seule.
+.IP \fBunion\fP=aufs|overlay 4
+.\" FIXME
+Par défaut, live\-boot utilise aufs. Avec ce paramètre, vous pouvez changer
+ceci pour overlay.
+
+.\" FIXME
+.SH "FICHIERS (ancien)"
+.IP \fB/etc/live.conf\fP 4
+Certaines variables peuvent être configurées à l'aide de ce fichier de
+configuration (à l'intérieur du système live).
+.IP \fBlive/filesystem.module\fP 4
+.\" FIXME
+Ce fichier optionnel (à l'intérieur du média live) contient une liste de
+noms de fichier séparés\-par\-un\-caractère\-de\-retour ou une espace\-blanc
+correspondants aux images disque dans le répertoire "/live". Si ce fichier
+existe, uniquement les images listées ici seront fusionnées dans le aufs
+racine, et elles seront chargées dans l'ordre de cette liste. La première
+entrée dans ce fichier sera le point "le plus bas" dans le aufs, et le
+dernier fichier dans cette liste sera en "haut" du aufs, directement en
+dessous de /overlay. Sans ce fichier, toute image dans le répertoire "/live"
+sont chargées par ordre alphanumérique.
+
+.SH FICHIERS
+.IP \fB/etc/live/boot.conf\fP 4
+.IP \fB/etc/live/boot/*\fP 4
+.IP \fBlive/boot.conf\fP 4
+.IP \fBlive/boot/*\fP 4
+.IP \fBpersistence.conf\fP 4
+
+.SH "VOIR AUSSI"
+\fIpersistence.conf\fP(5)
+.PP
+\fIlive\-build\fP(7)
+.PP
+\fIlive\-config\fP(7)
+.PP
+\fIlive\-tools\fP(7)
+
+.SH "PAGE D'ACCUEIL"
+Davantage d'informations à propos de live\-boot et du projet Live Systems
+peuvent être trouvées sur la page <\fIhttp://live\-systems.org/\fP> et
+dans le manuel sur <\fIhttp://live\-systems.org/manual/\fP>.
+
+.SH BOGUES
+Les bogues peuvent être signalés en soumettant un rapport de bogue pour le
+paquet live\-boot dans le BTS à <\fIhttp://bugs.debian.org/\fP> ou par
+l'écriture d'un courriel à la liste de diffusion Live Systems à
+<\fIdebian\-live@lists.debian.org\fP>.
+
+.SH AUTEUR
+live\-images a été écrit par Daniel Baumann
+<\fImail@daniel\-baumann.ch\fP>.
