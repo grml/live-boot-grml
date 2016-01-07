@@ -1,11 +1,18 @@
-live-boot (1:20151213+grml.1) UNRELEASED; urgency=medium
+live-boot (1:20151213+grml.1) unstable; urgency=medium
 
+  [ Evgeni Golov ]
   * Merge latest Debian changes.
   * [aea94ce] add gbp.conf
   * [9f0266a] fix "unexpected operator" error when stopping live-boot
   * [83abdd6] Revert "restore support for old persistence media"
+  * [09d8468] remove debian/patches
+  * [0c43d97] make package native as in Debian
+  * [1a226f4] Revert "use auto instead of allow-hotplug in generated /e/n/interfaces"
 
- -- Evgeni Golov <evgeni@grml.org>  Wed, 06 Jan 2016 18:07:09 +0100
+  [ Riccardo Murri ]
+  * [3f6c7f2] Allow selecting boot eth dev by MAC address
+
+ -- Evgeni Golov <evgeni@grml.org>  Thu, 07 Jan 2016 08:47:27 +0100
 
 live-boot (1:20151213) unstable; urgency=medium
 
