@@ -49,6 +49,7 @@ EOF
 			ifaddress="$(echo ${ifline} | cut -f2 -d ':')"
 			ifnetmask="$(echo ${ifline} | cut -f3 -d ':')"
 			ifgateway="$(echo ${ifline} | cut -f4 -d ':')"
+			nameserver="$(echo ${ifline} | cut -f5 -d ':')"
 
 cat >> "${IFFILE}" << EOF
 allow-hotplug ${ifname}
@@ -65,6 +66,17 @@ cat >> "${IFFILE}" << EOF
 
 EOF
 
+			fi
+
+			if [ -n "${nameserver}" ]
+			then
+				if [ -e "${DNSFILE}" ]
+				then
+					grep -v ^nameserver "${DNSFILE}" > "${DNSFILE}.tmp"
+					mv "${DNSFILE}.tmp" "${DNSFILE}"
+				fi
+
+				echo "nameserver ${nameserver}" >> "${DNSFILE}"
 			fi
 		done
 	else

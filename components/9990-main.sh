@@ -192,8 +192,7 @@ Live ()
 	Netbase
 
 	Swap
-
-	Grml_Networking
+	#Grml_Networking
 
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-

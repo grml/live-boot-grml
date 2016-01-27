@@ -885,17 +885,17 @@ msgstr ""
 #. type: IP
 #: en/live-boot.7:135
 #, no-wrap
-msgid "B<union>=aufs|overlay"
-msgstr "B<union>=aufs|overlay"
+msgid "B<union>=overlay|aufs"
+msgstr "B<union>=overlay|aufs"
 
 #.  FIXME
 #. type: Plain text
 #: en/live-boot.7:138
 msgid ""
-"By default, live-boot uses aufs. With this parameter, you can switch to "
-"overlay."
+"By default, live-boot uses overlay. With this parameter, you can switch to "
+"aufs."
 msgstr ""
-"デフォルトで live-boot は aufs を利用します。このパラメータにより overlay に"
+"デフォルトで live-boot は overlay を利用します。このパラメータにより aufs に"
 "切り替えることができます。"
 
 #.  FIXME

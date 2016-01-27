@@ -25,6 +25,9 @@ do_httpmount ()
 						mount -t ramfs ram "${mountpoint}"
 						mkdir -p "${dest}"
 					fi
+					case "${url}" in
+						*:///*) url="${url%%:///*}://${ROOTSERVER}/${url##*:///}" ;;
+					esac
 					if [ "${webfile}" = "FETCH" ]
 					then
 						case "$url" in

@@ -45,8 +45,9 @@ Cmdline_old ()
 				;;
 
 			ethdevice=*)
-				ETHDEVICE="${_PARAMETER#ethdevice=}"
-				export ETHDEVICE
+				DEVICE="${_PARAMETER#ethdevice=}"
+				ETHDEVICE="${DEVICE}"
+				export DEVICE ETHDEVICE
 				;;
 
 			ethdevice-timeout=*)
@@ -92,20 +93,19 @@ Cmdline_old ()
 				export FROMISO
 				;;
 
-			ignore_bootid)
-				IGNORE_BOOTID="Yes"
-				export IGNORE_BOOTID
-				;;
-
 			ignore_uuid)
 				IGNORE_UUID="true"
 				export IGNORE_UUID
 				;;
 
 			ip=*)
-				# copy complete ip=args into staticip, and
-				# keep multiple uses.
-				STATICIP="${STATICIP} ${_PARAMETER}"
+				STATICIP="${_PARAMETER#ip=}"
+
+				if [ -z "${STATICIP}" ]
+				then
+					STATICIP="frommedia"
+				fi
+
 				export STATICIP
 				;;
 

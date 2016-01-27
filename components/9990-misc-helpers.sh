@@ -1333,15 +1333,14 @@ do_union ()
 			;;
 
 		overlay)
-			# XXX: can multiple unionro be used? (overlay only handles two dirs, but perhaps they can be chained?)
-			# XXX: and can unionro be optional? i.e. can overlay skip lowerdir?
-			if echo ${unionro} | grep -q " "
-			then
-				panic "Multiple lower filesystems are currently not supported with overlay (unionro = ${unionro})."
-			elif [ -z "${unionro}"	]
+			# XXX: can unionro be optional? i.e. can overlay skip lowerdir?
+			if [ -z "${unionro}" ]
 			then
 				panic "overlay needs at least one lower filesystem (read-only branch)."
 			fi
+			# Multiple lower layers can now be given using the the colon (":") as a
+			# separator character between the directory names.
+			unionro="$(echo ${unionro} | sed -e 's| |:|g')"
 			# overlayfs requires:
 			# + a workdir to become mounted
 			# + workdir and upperdir to reside under the same mount

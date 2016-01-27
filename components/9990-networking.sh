@@ -44,30 +44,12 @@ Device_from_bootif ()
 
 				if [ "$bootif_mac" = "$current_mac" ]
 				then
-					ETHDEVICE="${device##*/},$ETHDEVICE" # use ethdevice
+					DEVICE=${device##*/}
 					break
 				fi
 			fi
 		done
 	fi
-}
-
-get_ipconfig_para()
-{
-	if [ $# != 1 ] ; then
-		echo "Missin parameter for $0"
-		return
-	fi
-	devname=$1
-	for ip in ${STATICIP} ; do
-		case $ip in
-			*:$devname:*)
-			echo $ip
-			return
-			;;
-		esac
-	done
-	echo $devname
 }
 
 do_netsetup ()
@@ -80,20 +62,8 @@ do_netsetup ()
 	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
 	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
 
-	# Our modus operandi for getting a working network setup is this:
-	# * If ip=* is set, pass that to ipconfig and be done
-	# * Else, try dhcp on all devices in this order:
-	#   ethdevice= bootif= <all interfaces>
-
-	ALLDEVICES="$(cd /sys/class/net/ && ls -1 2>/dev/null | grep -v '^lo$' )"
-
-	# Turn on all interfaces before doing anything, to avoid timing problems
-	# during link negotiation.
-	echo "Net: Turning on all device links..."
-	for device in ${ALLDEVICES}; do
-		ipconfig -c none -d $device -t 1 2>/dev/null >/dev/null
-	done
-
+	if [ -z "${NETBOOT}" ] && [ -z "${FETCH}" ] && [ -z "${HTTPFS}" ] && [ -z "${FTPFS}" ]
+	then
 		# See if we can select the device from BOOTIF
 		Device_from_bootif
 
@@ -103,7 +73,14 @@ do_netsetup ()
 		if [ -z "$ETHDEVICE" ]
 		then
 			echo "If you want to boot from a specific device use bootoption ethdevice=..."
-			ETHDEVICE="$ALLDEVICES"
+			for device in /sys/class/net/*
+			do
+				dev=${device##*/}
+				if [ "$dev" != "lo" ]
+				then
+					ETHDEVICE="$ETHDEVICE $dev"
+				fi
+			done
 		fi
 
 		# split args of ethdevice=eth0,eth1 into "eth0 eth1"
@@ -112,29 +89,42 @@ do_netsetup ()
 			devlist="$devlist $device"
 		done
 
-		for dev in $devlist ; do
-			param="$(get_ipconfig_para $dev)"
-			if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] ; then
-				echo "Ignoring network device $dev due to nodhcp." | tee -a /boot.log
-				continue
+		# this is tricky (and ugly) because ipconfig sometimes just hangs/runs into
+		# an endless loop; if execution fails give it two further tries, that's
+		# why we use '$devlist $devlist $devlist' for the other for loop
+		for dev in $devlist $devlist $devlist
+		do
+			echo "Executing ipconfig -t $ETHDEV_TIMEOUT $dev"
+			ipconfig -t "$ETHDEV_TIMEOUT" $dev | tee -a /netboot.config &
+			jobid=$!
+			sleep "$ETHDEV_TIMEOUT" ; sleep 1
+			if [ -r /proc/"$jobid"/status ]
+			then
+				echo "Killing job $jobid for device $dev as ipconfig ran into recursion..."
+				kill -9 $jobid
 			fi
-			echo "Executing ipconfig -t $ETHDEV_TIMEOUT $param"
-			ipconfig -t "$ETHDEV_TIMEOUT" "$param" | tee -a /netboot.config
 
 			# if configuration of device worked we should have an assigned
 			# IP address, if so let's use the device as $DEVICE for later usage.
 			# simple and primitive approach which seems to work fine
-
-			IPV4ADDR="0.0.0.0"
-			if [ -e "/run/net-${device}.conf" ]; then
-				. /run/net-${device}.conf
-			fi
-			if [ "${IPV4ADDR}" != "0.0.0.0" ]; then
-				export DEVICE="$dev $DEVICE"
-				# break  # exit loop as we just use the irst
+			if ifconfig $dev | grep -q 'inet.*addr:'
+			then
+				export DEVICE="$dev"
+				break
 			fi
 		done
-	unset devlist
+	else
+		for interface in ${DEVICE}; do
+			ipconfig -t "$ETHDEV_TIMEOUT" ${interface} | tee /netboot-${interface}.config
+
+			[ -e /run/net-${interface}.conf ] && . /run/net-${interface}.conf
+
+			if [ "$IPV4ADDR" != "0.0.0.0" ]
+			then
+				break
+			fi
+		done
+	fi
 
 	for interface in ${DEVICE}
 	do
