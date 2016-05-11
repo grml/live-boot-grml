@@ -1,5 +1,6 @@
-live-boot (1:20160511) UNRELEASED; urgency=medium
+live-boot (1:20160511) unstable; urgency=medium
 
+  * Team upload.
   * Update build system to rely on "dpkg-parsechangelog -S Version" instead
     of outdated VERSION file.
   * No longer modify PATH to point to /root and thus stop using executables
