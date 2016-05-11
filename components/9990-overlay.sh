@@ -274,7 +274,7 @@ setup_unionfs ()
 			panic "only one RO file system supported with exposedroot: ${rootfslist}"
 		fi
 
-		mount --bind ${rootfs} ${rootmnt} || \
+		mount -o bind ${rootfs} ${rootmnt} || \
 			panic "bind mount of ${rootfs} failed"
 
 		if [ -z "${SKIP_UNION_MOUNTS}" ]
