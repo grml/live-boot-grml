@@ -132,8 +132,8 @@ If you boot with the normal quiet parameter, live\-boot hides most messages of i
 Adding this parameter, live\-boot will try to copy the entire read\-only media to the specified device before mounting the root filesystem. It probably needs a lot of free space. Subsequent boots should then skip this step and just specify the "live\-media=DEVICE" boot parameter with the same DEVICE used this time.
 .IP "\fBtoram\fR" 4
 Adding this parameter, live\-boot will try to copy the whole read\-only media to the computer's RAM before mounting the root filesystem. This could need a lot of ram, according to the space used by the read\-only media.
-.IP "\fBunion\fR=aufs|overlay\fR" 4
-By default, live\-boot uses aufs. With this parameter, you can switch to overlay.
+.IP "\fBunion\fR=overlay|aufs\fR" 4
+By default, live\-boot uses overlay. With this parameter, you can switch to aufs.
 .\" FIXME
 
 .\" FIXME

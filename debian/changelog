@@ -1,11 +1,16 @@
-live-boot (1:20151213+grml.1) UNRELEASED; urgency=medium
+live-boot (1:20160511) unstable; urgency=medium
 
-  * Merge latest Debian changes.
-  * [aea94ce] add gbp.conf
-  * [9f0266a] fix "unexpected operator" error when stopping live-boot
-  * [83abdd6] Revert "restore support for old persistence media"
+  * Team upload.
+  * Update build system to rely on "dpkg-parsechangelog -S Version" instead
+    of outdated VERSION file.
+  * No longer modify PATH to point to /root and thus stop using executables
+    from /root. Closes: #823069
+  * Drop debian/source/local-options as the only option it contained was
+    not applicable to 3.0 (native) source format.
+  * Drop debian/source/options and dh_builddeb override as XZ compression is
+    the default now.
 
- -- Evgeni Golov <evgeni@grml.org>  Wed, 06 Jan 2016 18:07:09 +0100
+ -- Raphaël Hertzog <hertzog@debian.org>  Wed, 11 May 2016 11:40:37 +0200
 
 live-boot (1:20151213) unstable; urgency=medium
 

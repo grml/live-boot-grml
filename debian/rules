@@ -24,9 +24,6 @@ override_dh_auto_install:
 	chmod a+rx debian/live-boot-grml-initramfs-tools/usr/share/initramfs-tools/scripts/*
 	chmod a+rx debian/live-boot-grml-initramfs-tools/usr/share/initramfs-tools/hooks/*
 
-override_dh_builddeb:
-	dh_builddeb -- -Zxz
-
 override_dh_install:
 	dh_install --fail-missing
 

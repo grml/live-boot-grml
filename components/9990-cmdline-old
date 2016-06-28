@@ -17,19 +17,12 @@ Cmdline_old ()
 			BOOTIF=*)
 				BOOTIF="${_PARAMETER#BOOTIF=}"
 				;;
-
 			dns=*)
 				DNS=${_PARAMETER#dns=}
 				DNSSERVERS=$(echo ${DNS} | sed 's/,/ /g')
 				export DNSSERVERS
 				unset DNS
 				;;
-
-			bootid=*)
-				BOOTID="${_PARAMETER#bootid=}"
-				export BOOTID
-				;;
-
 			dhcp)
 				# Force dhcp even while netbooting
 				# Use for debugging in case somebody works on fixing dhclient
