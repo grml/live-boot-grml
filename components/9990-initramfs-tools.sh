@@ -2,17 +2,6 @@
 
 #set -e
 
-# we definitely want this stuff visible
-log_failure_msg()
-{
-        printf "Failure: $@\n"
-}
-
-log_warning_msg()
-{
-        printf "Warning: $@\n"
-}
-
 log_wait_msg ()
 {
 	# Print a message and wait for enter
@@ -67,10 +56,9 @@ panic()
 
 	printf "  Please file a bug at your distributors bug tracking system, making\n"
 	printf "  sure to note the exact version, name and distribution of the image\n"
-	printf "  you were attempting to boot.\n\n"
+	printf "  you were attempting to boot, as well as the content of /proc/cmdline.\n\n"
 
-	if [ -r /etc/grml_version ]
-	then
+	if [ -r /etc/grml_version ]; then
 		GRML_VERSION="$(cat /etc/grml_version)"
 		printf "  $GRML_VERSION\n\n"
 	fi
