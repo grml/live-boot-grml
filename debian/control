@@ -32,6 +32,9 @@ Conflicts: live-boot
 Replaces: live-boot
 Provides: live-boot
 Description: Live System Boot Components
+ The Live Systems project maintains the components to build Debian based Live
+ systems and the official Debian Live images themselves.
+ .
  live-boot contains the components to configure a live system during the boot
  process (early userspace).
  .

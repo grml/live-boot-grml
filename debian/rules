@@ -1,9 +1,5 @@
 #!/usr/bin/make -f
 
-build:
-	# regular build.
-	dh build
-
 %:
 	dh ${@} --parallel
 
@@ -12,20 +8,10 @@ override_dh_auto_install:
 
 	# Removing useless files
 	rm -f debian/tmp/usr/share/doc/live-boot-grml/COPYING
-	rm -f debian/lib/live/boot/FIXME
 
 	# live-boot-initramfs-tools
 	mkdir -p debian/live-boot-grml-initramfs-tools/usr/share
 	mv debian/tmp/usr/share/initramfs-tools debian/live-boot-grml-initramfs-tools/usr/share
 
-	# this is needed because dpatch doesn't do file modes on diffs
-	# and we can't execute this fix during build stage as new files
-	# might be installed during dh_quilt_patch
-	chmod a+rx debian/live-boot-grml-initramfs-tools/usr/share/initramfs-tools/scripts/*
-	chmod a+rx debian/live-boot-grml-initramfs-tools/usr/share/initramfs-tools/hooks/*
-
 override_dh_install:
 	dh_install --fail-missing
-
-override_dh_installinit:
-	dh_installinit -p live-boot-grml --no-restart-on-upgrade --no-start --update-rcd-params='start 89 0 6 .'
