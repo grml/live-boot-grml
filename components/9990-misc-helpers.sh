@@ -478,7 +478,7 @@ is_supported_fs ()
 
 get_fstype ()
 {
-	/sbin/blkid -s TYPE -o value $1 2>/dev/null
+	blkid -s TYPE -o value $1 2>/dev/null
 }
 
 where_is_mounted ()
@@ -536,7 +536,7 @@ base_path ()
 {
 	testpath="${1}"
 	mounts="$(awk '{print $2}' /proc/mounts)"
-	testpath="$(busybox realpath ${testpath})"
+	testpath="$(realpath ${testpath})"
 
 	while true
 	do
@@ -654,7 +654,7 @@ setup_loop ()
 					echo "${passphrase}" > /tmp/passphrase
 					unset passphrase
 					exec 9</tmp/passphrase
-					/sbin/losetup ${options} -e "${encryption}" -p 9 "${dev}" "${fspath}"
+					losetup ${options} -e "${encryption}" -p 9 "${dev}" "${fspath}"
 					error=${?}
 					exec 9<&-
 					rm -f /tmp/passphrase
@@ -761,7 +761,7 @@ mount_persistence_media ()
 		fi
 	elif [ "${backing}" != "${old_backing}" ]
 	then
-		if ! mount --move ${old_backing} ${backing} >/dev/null
+		if ! mount -o move ${old_backing} ${backing} >/dev/null
 		then
 			[ -z "${probe}" ] && log_warning_msg "Failed to move persistence media ${device}"
 			rmdir "${backing}"
@@ -801,7 +801,7 @@ close_persistence_media ()
 
 	if is_active_luks_mapping ${device}
 	then
-		/sbin/cryptsetup luksClose ${device}
+		cryptsetup luksClose ${device}
 	fi
 }
 
@@ -815,7 +815,7 @@ open_luks_device ()
 		opts="${opts} --readonly"
 	fi
 
-	if /sbin/cryptsetup status "${name}" >/dev/null 2>&1
+	if cryptsetup status "${name}" >/dev/null 2>&1
 	then
 		re="^[[:space:]]*device:[[:space:]]*\([^[:space:]]*\)$"
 		opened_dev=$(cryptsetup status ${name} 2>/dev/null | grep "${re}" | sed "s|${re}|\1|")
@@ -856,7 +856,7 @@ open_luks_device ()
 	while true
 	do
 		$cryptkeyscript "$cryptkeyprompt" | \
-			/sbin/cryptsetup -T 1 luksOpen ${dev} ${name} ${opts}
+			cryptsetup -T 1 luksOpen ${dev} ${name} ${opts}
 
 		if [ 0 -eq ${?} ]
 		then
@@ -897,14 +897,14 @@ get_gpt_name ()
 {
     local dev
     dev="${1}"
-    /sbin/blkid -s PART_ENTRY_NAME -p -o value ${dev} 2>/dev/null
+    blkid -s PART_ENTRY_NAME -p -o value ${dev} 2>/dev/null
 }
 
 is_gpt_device ()
 {
     local dev
     dev="${1}"
-    [ "$(/sbin/blkid -s PART_ENTRY_SCHEME -p -o value ${dev} 2>/dev/null)" = "gpt" ]
+    [ "$(blkid -s PART_ENTRY_SCHEME -p -o value ${dev} 2>/dev/null)" = "gpt" ]
 }
 
 probe_for_gpt_name ()
@@ -944,7 +944,7 @@ probe_for_fs_label ()
 
 	for label in ${overlays}
 	do
-		if [ "$(/sbin/blkid -s LABEL -o value $dev 2>/dev/null)" = "${label}" ]
+		if [ "$(blkid -s LABEL -o value $dev 2>/dev/null)" = "${label}" ]
 		then
 			echo "${label}=${dev}"
 		fi
@@ -1137,7 +1137,7 @@ find_persistence_media ()
 		# Close luks device if it isn't used
 		if [ -z "${result}" ] && [ -n "${luks_device}" ] && is_active_luks_mapping "${luks_device}"
 		then
-			/sbin/cryptsetup luksClose "${luks_device}"
+			cryptsetup luksClose "${luks_device}"
 		fi
 	done
 
@@ -1168,13 +1168,13 @@ get_mac ()
 is_luks_partition ()
 {
 	device="${1}"
-	/sbin/cryptsetup isLuks "${device}" 1>/dev/null 2>&1
+	cryptsetup isLuks "${device}" 1>/dev/null 2>&1
 }
 
 is_active_luks_mapping ()
 {
 	device="${1}"
-	/sbin/cryptsetup status "${device}" 1>/dev/null 2>&1
+	cryptsetup status "${device}" 1>/dev/null 2>&1
 }
 
 get_luks_backing_device ()
@@ -1333,15 +1333,14 @@ do_union ()
 			;;
 
 		overlay)
-			# XXX: can multiple unionro be used? (overlay only handles two dirs, but perhaps they can be chained?)
-			# XXX: and can unionro be optional? i.e. can overlay skip lowerdir?
-			if echo ${unionro} | grep -q " "
-			then
-				panic "Multiple lower filesystems are currently not supported with overlay (unionro = ${unionro})."
-			elif [ -z "${unionro}"	]
+			# XXX: can unionro be optional? i.e. can overlay skip lowerdir?
+			if [ -z "${unionro}" ]
 			then
 				panic "overlay needs at least one lower filesystem (read-only branch)."
 			fi
+			# Multiple lower layers can now be given using the the colon (":") as a
+			# separator character between the directory names.
+			unionro="$(echo ${unionro} | sed -e 's| |:|g')"
 			# overlayfs requires:
 			# + a workdir to become mounted
 			# + workdir and upperdir to reside under the same mount
@@ -1614,7 +1613,7 @@ activate_custom_mounts ()
 			do_union ${dest} ${source} ${rootfs_dest_backing}
 		elif [ -n "${opt_bind}" ] && [ -z "${PERSISTENCE_READONLY}" ]
 		then
-			mount --bind "${source}" "${dest}"
+			mount -o bind "${source}" "${dest}"
 		elif [ -n "${opt_bind}" -o -n "${opt_union}" ] && [ -n "${PERSISTENCE_READONLY}" ]
 		then
 			# bind-mount and union mount are handled the same

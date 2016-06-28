@@ -11,7 +11,7 @@
 set -e
 
 PROGRAM="LIVE\\\-BOOT"
-VERSION="$(cat ../VERSION)"
+VERSION="$(dpkg-parsechangelog -S Version)"
 
 DATE="$(LC_ALL=C date +%Y\\\\-%m\\\\-%d)"
 

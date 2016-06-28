@@ -39,6 +39,9 @@ cp -a /bin/live-boot /lib/live/boot "${DESTDIR}/bin"
 mkdir -p "${DESTDIR}/lib/live"
 cp -a /lib/live/boot "${DESTDIR}/lib/live"
 
+mkdir -p "${DESTDIR}/etc/live"
+cp -a /etc/live/boot.conf /etc/live/boot "${DESTDIR}/etc/live"
+
 # klibc dependencies
 for FILE in /lib/libacl* /lib/libblkid* /lib/libuuid* /lib/libdevmapper* /lib/libattr*
 do

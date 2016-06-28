@@ -17,7 +17,6 @@ Cmdline_old ()
 			BOOTIF=*)
 				BOOTIF="${_PARAMETER#BOOTIF=}"
 				;;
-
 			dns=*)
 				DNS=${_PARAMETER#dns=}
 				DNSSERVERS=$(echo ${DNS} | sed 's/,/ /g')
