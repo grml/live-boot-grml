@@ -1,9 +1,5 @@
 #!/usr/bin/make -f
 
-build:
-	# regular build.
-	dh build
-
 %:
 	dh ${@} --parallel
 
