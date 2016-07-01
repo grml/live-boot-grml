@@ -26,6 +26,3 @@ override_dh_auto_install:
 
 override_dh_install:
 	dh_install --fail-missing
-
-override_dh_installinit:
-	dh_installinit -p live-boot-grml --no-restart-on-upgrade --no-start --update-rcd-params='start 89 0 6 .'
