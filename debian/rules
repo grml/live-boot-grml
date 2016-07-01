@@ -14,11 +14,5 @@ override_dh_auto_install:
 	mkdir -p debian/live-boot-grml-initramfs-tools/usr/share
 	mv debian/tmp/usr/share/initramfs-tools debian/live-boot-grml-initramfs-tools/usr/share
 
-	# this is needed because dpatch doesn't do file modes on diffs
-	# and we can't execute this fix during build stage as new files
-	# might be installed during dh_quilt_patch
-	chmod a+rx debian/live-boot-grml-initramfs-tools/usr/share/initramfs-tools/scripts/*
-	chmod a+rx debian/live-boot-grml-initramfs-tools/usr/share/initramfs-tools/hooks/*
-
 override_dh_install:
 	dh_install --fail-missing
