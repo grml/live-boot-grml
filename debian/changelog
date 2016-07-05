@@ -1,3 +1,53 @@
+live-boot (1:20160511+grml.1) unstable; urgency=medium
+
+  The "capetown AKA debconf16" release
+
+  [ Evgeni Golov ]
+  * [d7a4f37] allow the use of multiple initramfs hooks and scripts again
+  * [16ee41d] make copying libnss_dns.so.* unconditionally
+  * [11a6c11] fix detection of (no)persistence option in read-only mode
+  * [03fc557] update manpages with default overlay filesystem
+
+  [ Ulrich Dangel ]
+  * [f747483] Add kms modules to initramfs
+
+  [ Michael Prokop ]
+  * [1799c46] Try loading phram module twice to fix loading issue.
+  * [ac5eb22] Revert toram bootoption to expected behaviour.
+  * [e3cbd82] Enable write-mode for persistency related devices in
+    readonly/forensic mode
+  * [da50dd4] ignore "unknown" filesystems in is_supported_fs()
+  * [6f465dd] Support dns bootoption.
+  * [de513c1] Drop deprecated live-boot-grml init script
+  * [a00236b] debian/rules: drop deprecated build target
+  * [54c3318] debian/rules: drop dpatch workaround which is no longer
+    needed
+  * [a4eba80] Drop dpkg trigger for update-initramfs
+  * [010800e] Adjust permissions of backend/initramfs-tools/kms.hook
+  * [7da805e] Bump Standards-Version to 3.9.8
+  * [50ff238] Revert "Copy /etc/live/boot{,.conf} to initramfs"
+
+  [ Wolfgang Scheicher ]
+  * [30b31df] Enable multiple lower layers for overlayfs
+
+  [ Russell Stuart ]
+  * [4ec4294] default the host in fetch urls to be ROOTSERVER if it is
+    blank (Closes: #800498)
+
+  [ Raphaël Hertzog ]
+  * [e81e9c6] Update build system to rely on "dpkg-parsechangelog -S
+    Version" instead of outdated VERSION file.
+  * [e75ad2c] Fix typo in variable name
+  * [3d23fca] No longer modify PATH to point to /root (Closes: #823069)
+  * [cbf1f9d] Some fixups to ensure we work with busybox/klibc-utils
+  * [3d30fee] Drop debian/source/*options and dh_builddeb override
+  * [40bb20f] Prepare for release
+
+  [ Kristian Klausen ]
+  * [b98d289] Copy /etc/live/boot{,.conf} to initramfs
+
+ -- Michael Prokop <mika@grml.org>  Tue, 05 Jul 2016 19:36:14 +0200
+
 live-boot (1:20160511) unstable; urgency=medium
 
   * Team upload.
