@@ -1,3 +1,14 @@
+live-boot (1:20170112) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Kristian Klausen ]
+  * Add "nls_ascii" module in the initrd so that we can access FAT
+    partitions. Closes: #850532
+  * Copy /etc/live/boot.conf and /etc/live/boot to the initrd.
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Thu, 12 Jan 2017 15:40:25 +0100
+
 live-boot (1:20160511) unstable; urgency=medium
 
   * Team upload.
