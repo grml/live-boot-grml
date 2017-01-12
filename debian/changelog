@@ -4,6 +4,8 @@ live-boot (1:20170112) unstable; urgency=medium
   * Team upload.
   * Fix nodhcp option to actually force DHCP off. Closes: #785345
     Thanks to Frank Lillo for the report and Evgeni Golov for the patch.
+  * Improve 9990-misc-helpers.sh when /sys/block/ is empty.
+    Closes: #847802
 
   [ Kristian Klausen ]
   * Add "nls_ascii" module in the initrd so that we can access FAT
