@@ -1192,6 +1192,10 @@ removable_dev ()
 
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
 	do
+		if [ ! -d "${sysblock}" ]; then
+			continue
+		fi
+
 		dev_ok=
 		if [ "$(cat ${sysblock}/removable)" = "1" ]
 		then
@@ -1237,6 +1241,10 @@ non_removable_dev ()
 
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
 	do
+		if [ ! -d "${sysblock}" ]; then
+			continue
+		fi
+
 		if [ "$(cat ${sysblock}/removable)" = "0" ]
 		then
 			case "${output_format}" in

@@ -68,7 +68,11 @@ EOF
 			fi
 		done
 	else
-		if [ -z "${NETBOOT}" ] || [ -n "${DHCP}" ]
+		if [ -n "${NODHCP}" ]
+		then
+			# force DHCP off
+			method="manual"
+		elif [ -z "${NETBOOT}" ] || [ -n "${DHCP}" ]
 		then
 			# default, dhcp assigned
 			method="dhcp"

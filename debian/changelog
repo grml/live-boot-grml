@@ -1,3 +1,20 @@
+live-boot (1:20170112) unstable; urgency=medium
+
+  [ Raphaël Hertzog ]
+  * Team upload.
+  * Fix nodhcp option to actually force DHCP off. Closes: #785345
+    Thanks to Frank Lillo for the report and Evgeni Golov for the patch.
+  * Improve 9990-misc-helpers.sh when /sys/block/ is empty.
+    Closes: #847802
+  * Multiple cleanups to appease lintian.
+
+  [ Kristian Klausen ]
+  * Add "nls_ascii" module in the initrd so that we can access FAT
+    partitions. Closes: #850532
+  * Copy /etc/live/boot.conf and /etc/live/boot to the initrd.
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Thu, 12 Jan 2017 16:59:49 +0100
+
 live-boot (1:20160511+grml.1) unstable; urgency=medium
 
   The "capetown AKA debconf16" release

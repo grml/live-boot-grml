@@ -39,6 +39,16 @@ cp -a /bin/live-boot /lib/live/boot "${DESTDIR}/bin"
 mkdir -p "${DESTDIR}/lib/live"
 cp -a /lib/live/boot "${DESTDIR}/lib/live"
 
+mkdir -p "${DESTDIR}/etc/live"
+if [ -e /etc/live/boot.conf ]
+then
+	cp -a /etc/live/boot.conf "${DESTDIR}/etc/live"
+fi
+if [ -e /etc/live/boot ]
+then
+	cp -a /etc/live/boot "${DESTDIR}/etc/live"
+fi
+
 # klibc dependencies
 for FILE in /lib/libacl* /lib/libblkid* /lib/libuuid* /lib/libdevmapper* /lib/libattr*
 do
@@ -119,6 +129,7 @@ manual_add_modules overlay
 manual_add_modules nls_cp437
 manual_add_modules nls_iso8859-1
 manual_add_modules nls_utf8
+manual_add_modules nls_ascii
 manual_add_modules vfat
 
 # Filesystem: ntfs
