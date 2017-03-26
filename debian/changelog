@@ -1,19 +1,24 @@
-live-boot (1:20170112) unstable; urgency=medium
-
-  [ Raphaël Hertzog ]
-  * Team upload.
-  * Fix nodhcp option to actually force DHCP off. Closes: #785345
-    Thanks to Frank Lillo for the report and Evgeni Golov for the patch.
-  * Improve 9990-misc-helpers.sh when /sys/block/ is empty.
-    Closes: #847802
-  * Multiple cleanups to appease lintian.
+live-boot (1:20170112+grml.1) unstable; urgency=medium
 
   [ Kristian Klausen ]
-  * Add "nls_ascii" module in the initrd so that we can access FAT
-    partitions. Closes: #850532
-  * Copy /etc/live/boot.conf and /etc/live/boot to the initrd.
+  * [d73c5d5] Check /etc/live/boot.conf exist before trying copy
+  * [c409a25] Add FAT ascii iocharset support via adding the
+    "nls_ascii" module to the initrd (Closes: #850532)
 
- -- Raphaël Hertzog <hertzog@debian.org>  Thu, 12 Jan 2017 16:59:49 +0100
+  [ Raphaël Hertzog ]
+  * [7d04ce6] Fix typo in nls_ascii module (nls_asci -> nls_ascii)
+  * [061976c] Add missing changelog entries
+  * [2690692] Improve removable_dev() in 9990-misc-helpers.sh when
+    /sys/block/ is empty (Closes: #847802)
+  * [d78be8a] Multiple cleanups to appease lintian.
+  * [4ccc833] Prepare release to unstable
+  * [aac9014] Only copy /etc/live/boot if it exists
+
+  [ Evgeni Golov ]
+  * [b88a8da] fix nodhcp option to actually force DHCP off. Thanks to
+    Frank Lillo <frank.lillo@gecoinc.com> (Closes: #785345)
+
+ -- Michael Prokop <mika@grml.org>  Sun, 26 Mar 2017 10:19:17 +0200
 
 live-boot (1:20160511+grml.1) unstable; urgency=medium
 
