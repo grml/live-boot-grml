@@ -28,7 +28,7 @@ fi
 [ "${QUIET}" ] || echo -n " core"
 
 mkdir -p "${DESTDIR}/bin"
-cp -a /bin/live-boot /lib/live/boot "${DESTDIR}/bin"
+cp -a /bin/live-boot "${DESTDIR}/bin"
 
 mkdir -p "${DESTDIR}/lib/live"
 cp -a /lib/live/boot "${DESTDIR}/lib/live"

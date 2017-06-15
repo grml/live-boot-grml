@@ -1,3 +1,11 @@
+live-boot (1:20170113) UNRELEASED; urgency=medium
+
+  * Do not duplicate files in /lib/live/boot/ and /bin/boot/ in the initrd.
+    Closes: #864385 Thanks to Daniel Reichelt <debian@nachtgeist.net> for the
+    patch.
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Thu, 15 Jun 2017 14:53:30 +0200
+
 live-boot (1:20170112) unstable; urgency=medium
 
   [ Raphaël Hertzog ]
