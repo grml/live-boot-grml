@@ -173,10 +173,10 @@ then
 fi
 
 # Program: udev
-if [ -x /sbin/udevadm ]
+if [ -x /bin/udevadm ]
 then
 	[ "${QUIET}" ] || echo -n " udev"
-	copy_exec /sbin/udevadm
+	copy_exec /bin/udevadm
 fi
 
 # Program: wget

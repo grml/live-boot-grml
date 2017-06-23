@@ -3,6 +3,8 @@ live-boot (1:20170113) UNRELEASED; urgency=medium
   * Do not duplicate files in /lib/live/boot/ and /bin/boot/ in the initrd.
     Closes: #864385 Thanks to Daniel Reichelt <debian@nachtgeist.net> for the
     patch.
+  * Take into account the fact that udevadm is now in /bin and no longer in
+    /sbin. Closes: #852570
 
  -- Raphaël Hertzog <hertzog@debian.org>  Thu, 15 Jun 2017 14:53:30 +0200
 
