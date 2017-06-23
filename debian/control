@@ -5,7 +5,7 @@ Maintainer: Live Systems Maintainers <debian-live@lists.debian.org>
 Uploaders: Iain R. Learmonth <irl@debian.org>, Raphaël Hertzog <hertzog@debian.org>
 Build-Depends:
  debhelper (>= 10),
-Standards-Version: 3.9.8
+Standards-Version: 4.0.0
 Homepage: https://debian-live.alioth.debian.org/live-boot/
 Vcs-Browser: https://anonscm.debian.org/cgit/debian-live/live-boot.git
 Vcs-Git: https://anonscm.debian.org/git/debian-live/live-boot.git

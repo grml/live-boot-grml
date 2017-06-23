@@ -7,6 +7,7 @@ live-boot (1:20170623) unstable; urgency=medium
     /sbin. Closes: #852570
   * Add myself to Uploaders.
   * Bump debhelper compat to 10.
+  * Bump Standards-Version to 4.0.0.
 
  -- Raphaël Hertzog <hertzog@debian.org>  Fri, 23 Jun 2017 14:41:06 +0200
 
