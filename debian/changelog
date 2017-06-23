@@ -8,6 +8,7 @@ live-boot (1:20170623) unstable; urgency=medium
   * Add myself to Uploaders.
   * Bump debhelper compat to 10.
   * Bump Standards-Version to 4.0.0.
+  * Fix spelling errors in live-boot(7).
 
  -- Raphaël Hertzog <hertzog@debian.org>  Fri, 23 Jun 2017 14:41:06 +0200
 

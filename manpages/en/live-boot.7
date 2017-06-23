@@ -69,19 +69,19 @@ Target <target-name>
 .IP "\fBfindiso\fR=\fI/PATH/TO/IMAGE\fI" 4
 Look for the specified ISO file on all disks where it usually looks for the .squashfs file (so you don't have to know the device name as in fromiso=....).
 .IP "\fBfromiso\fR=\fI/PATH/TO/IMAGE\fI" 4
-Allows to use a filesystem from within an ISO image that's available on live-media.
+Use a filesystem from within an ISO image that's available on live-media.
 .IP "\fBignore_uuid\fR" 4
 Do not check that any UUID embedded in the initramfs matches the discovered medium. live\-boot may be told to generate a UUID by setting LIVE_GENERATE_UUID=1 when building the initramfs.
 .IP "\fBverify\-checksums\fR" 4
 If specified, an MD5 sum is calculated on the live media during boot and compared to the value found in md5sum.txt found in the root directory of the live media.
 .IP "\fBip\fR=[\fIDEVICE\fR]:[\fICLIENT_IP\fR]:[\fINETMASK\fR]:[\fIGATEWAY_IP\fR]:[\fINAMESERVER\fR] [,[\fIDEVICE\fR]:[\fICLIENT_IP\fR]:[\fINETMASK\fR]:[\fIGATEWAY_IP\fR]:[\fINAMESERVER\fR]]" 4
-Let you specify the name(s) and the options of the interface(s) that should be configured at boot time. Do not specify this if you want to use dhcp (default). It will be changed in a future release to mimick official kernel boot param specification (e.g. ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp).
+Let you specify the name(s) and the options of the interface(s) that should be configured at boot time. Do not specify this if you want to use dhcp (default). It will be changed in a future release to mimic official kernel boot param specification (e.g. ip=10.0.0.1::10.0.0.254:255.255.255.0::eth0,:::::eth1:dhcp).
 .IP "\fBip\fR=[\fIfrommedia\fR]" 4
 If this variable is set, dhcp and static configuration are just skipped and the system will use the (must be) media\-preconfigured /etc/network/interfaces instead.
 .IP "{\fBlive\-media\fR|\fBbootfrom\fR}=\fIDEVICE\fR" 4
 If you specify one of this two equivalent forms, live\-boot will first try to find this device for the "/live" directory where the read\-only root filesystem should reside. If it did not find something usable, the normal scan for block devices is performed.
 .br
-Instead of specifing an actual device name, the keyword 'removable' can be used to limit the search of acceptable live media to removable type only. Note that if you want to further restrict the media to usb mass storage only, you can use the 'removable\-usb' keyword.
+Instead of specifying an actual device name, the keyword 'removable' can be used to limit the search of acceptable live media to removable type only. Note that if you want to further restrict the media to usb mass storage only, you can use the 'removable\-usb' keyword.
 .IP "{\fBlive\-media\-encryption\fR|\fBencryption\fR}=\fITYPE\fI" 4
 live\-boot will mount the encrypted rootfs TYPE, asking the passphrase, useful to build paranoid live systems :\-). TYPE supported so far is "aes" for loop\-aes encryption type.
 .IP "\fBlive\-media\-offset\fR=\fIBYTES\fR" 4
@@ -103,13 +103,13 @@ disables the "persistence" feature, useful if the bootloader (like syslinux) has
 .IP "\fBnoeject\fR" 4
 Do not prompt to eject the live medium.
 .IP "\fBramdisk\-size\fR" 4
-This parameter allows to set a custom ramdisk size (it's the '\-o size' option of tmpfs mount). By default, there is no ramdisk size set, so the default of mount applies (currently 50% of available RAM). Note that this option has currently no effect when booting with toram.
+This parameter defines a custom ramdisk size (it's the '\-o size' option of tmpfs mount). By default, there is no ramdisk size set, so the default of mount applies (currently 50% of available RAM). Note that this option has currently no effect when booting with toram.
 .IP "\fBswap=true\fR" 4
 This parameter enables usage of local swap partitions.
 .IP "\fBpersistence\fR" 4
 live\-boot will probe devices for persistence media. These can be partitions (with the correct GPT name), filesystems (with the correct label) or image files (with the correct file name). Overlays are labeled/named "persistence" (see \fIpersistence.conf\fR(5)). Overlay image files are named "persistence".
 .IP "\fBpersistence\-encryption\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
-This option determines which types of encryption that we allow to be used when probing devices for persistence media. If "none" is in the list, we allow unencrypted media; if "luks" is in the list, we allow LUKS\-encrypted media. Whenever a device containing encrypted media is probed the user will be prompted for the passphrase. The default value is "none".
+This option determines which types of encryption that are allowed to be used when probing devices for persistence media. If "none" is in the list, we allow unencrypted media; if "luks" is in the list, we allow LUKS\-encrypted media. Whenever a device containing encrypted media is probed the user will be prompted for the passphrase. The default value is "none".
 .IP "\fBpersistence\-media\fR={\fIremovable\fR|\fIremovable\-usb\fR}" 4
 If you specify the keyword 'removable', live\-boot will try to find persistence partitions on removable media only. Note that if you want to further restrict the media to usb mass storage only, you can use the 'removable\-usb' keyword.
 .IP "\fBpersistence\-method\fR=\fITYPE1\fR,\fITYPE2\fR ... \fITYPEn\fR" 4
