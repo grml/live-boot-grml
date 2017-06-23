@@ -5,6 +5,7 @@ live-boot (1:20170623) unstable; urgency=medium
     patch.
   * Take into account the fact that udevadm is now in /bin and no longer in
     /sbin. Closes: #852570
+  * Add myself to Uploaders.
 
  -- Raphaël Hertzog <hertzog@debian.org>  Fri, 23 Jun 2017 14:41:06 +0200
 
