@@ -164,10 +164,6 @@ then
 	copy_exec /usr/bin/eject /bin
 fi
 
-# Program: mount
-# fuse does not work with klibc mount
-copy_exec /bin/mount /bin/mount.util-linux
-
 [ "${QUIET}" ] || echo -n " utils"
 
 # Feature: Verify Checksums
