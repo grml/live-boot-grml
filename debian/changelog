@@ -1,3 +1,10 @@
+live-boot (1:20171121) UNRELEASED; urgency=medium
+
+  * Fix read-only persistence mode with overlayfs. Closes: #877776
+    Thanks to Ronny Standtke <ronny.standtke@fhnw.ch> for the patch.
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Tue, 21 Nov 2017 15:27:37 +0100
+
 live-boot (1:20170623) unstable; urgency=medium
 
   * Do not duplicate files in /lib/live/boot/ and /bin/boot/ in the initrd.

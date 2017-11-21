@@ -1615,6 +1615,13 @@ activate_custom_mounts ()
 			mkdir -p ${cow_dir}
 			chown_ref "${source}" "${cow_dir}"
 			chmod_ref "${source}" "${cow_dir}"
+			if [ "${UNIONTYPE}" = "overlay" ]
+			then
+				# When we use overlay we add the "/rw" postfix to our source when using it
+				# as upper layer. Therefore we also have to add it here when using it as
+				# the lower layer.
+				source="${source}/rw"
+			fi
 			do_union ${dest} ${cow_dir} ${source} ${rootfs_dest_backing}
 		fi
 
