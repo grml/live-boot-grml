@@ -179,13 +179,6 @@ then
 	copy_exec /bin/udevadm
 fi
 
-# Program: wget
-if [ -x /usr/bin/wget ]
-then
-	[ "${QUIET}" ] || echo -n " wget"
-	copy_exec /usr/bin/wget /bin
-fi
-
 # Program: blockdev
 if [ -x /sbin/blockdev ]
 then
