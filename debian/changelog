@@ -2,6 +2,9 @@ live-boot (1:20171121) UNRELEASED; urgency=medium
 
   * Fix read-only persistence mode with overlayfs. Closes: #877776
     Thanks to Ronny Standtke <ronny.standtke@fhnw.ch> for the patch.
+  * Add a small warning in the long description that the
+    package must not be installed on a regular system, but only in
+    a live image. Closes: #884886
 
  -- Raphaël Hertzog <hertzog@debian.org>  Tue, 21 Nov 2017 15:27:37 +0100
 

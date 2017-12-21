@@ -30,7 +30,8 @@ Description: Live System Boot Components
  systems and the official Debian Live images themselves.
  .
  live-boot contains the components to configure a live system during the boot
- process (early userspace).
+ process (early userspace). Do not install this package on your regular system,
+ it is only meant to be used in a live image.
  .
  In addition to live-boot, a backend for the initrd generation is required, such
  as live-boot-initramfs-tools.
@@ -67,6 +68,7 @@ Description: Live System Boot Components (initramfs-tools backend)
  systems and the official Debian Live images themselves.
  .
  live-boot contains the components to configure a live system during the boot
- process (early userspace).
+ process (early userspace). Do not install this package on your regular system,
+ it is only meant to be used in a live image.
  .
  This package contains the initramfs-tools backend.
