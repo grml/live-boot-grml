@@ -110,7 +110,7 @@ setup_unionfs ()
 						;;
 				esac
 
-				mpoint="${croot}/${imagename}"
+				mpoint=$(trim_path "${croot}/${imagename}")
 				rootfslist="${mpoint} ${rootfslist}"
 
 				mkdir -p "${mpoint}"
@@ -288,9 +288,9 @@ setup_unionfs ()
 	fi
 
 	for dir in ${cow_dirs}; do
-		unionmountpoint="${rootmnt}${dir}"
+		unionmountpoint=$(trim_path "${rootmnt}${dir}")
 		mkdir -p ${unionmountpoint}
-		cow_dir="/live/overlay${dir}"
+		cow_dir=$(trim_path "/live/overlay${dir}")
 		rootfs_dir="${rootfs}${dir}"
 		mkdir -p ${cow_dir}
 		if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
