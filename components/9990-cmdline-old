@@ -161,6 +161,11 @@ Cmdline_old ()
 				ramdisk_size="${_PARAMETER#ramdisk-size=}"
 				;;
 
+			overlay-size=*)
+				OVERLAY_SIZE="${_PARAMETER#overlay-size=}"
+				export OVERLAY_SIZE
+				;;
+
 			persistence)
 				PERSISTENCE="true"
 				export PERSISTENCE

@@ -240,12 +240,12 @@ setup_unionfs ()
 	then
 		cowdevice="tmpfs"
 		cow_fstype="tmpfs"
-		cow_mountopt="rw,noatime,mode=755"
+		cow_mountopt="rw,noatime,mode=755,size=${OVERLAY_SIZE:-50%}"
 	fi
 
 	if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
 	then
-		mount -t tmpfs -o rw,noatime,mode=755 tmpfs "/live/overlay"
+		mount -t tmpfs -o rw,noatime,mode=755,size=${OVERLAY_SIZE:-50%} tmpfs "/live/overlay"
 		root_backing="/live/persistence/$(basename ${cowdevice})-root"
 		mkdir -p ${root_backing}
 	else
