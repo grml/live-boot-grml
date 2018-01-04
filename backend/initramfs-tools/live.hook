@@ -53,12 +53,15 @@ do
 done
 
 # udev dependencies
-for FILE in /lib/udev/*_id
-do
-	copy_exec "${FILE}"
-done
+if [ "${MINIMAL:-}" != "y" ]
+then
+	for FILE in /lib/udev/*_id
+	do
+		copy_exec "${FILE}"
+	done
+fi
 
-if [ -e /lib/udev/rules.d/60-cdrom_id.rules ]
+if [ -e /lib/udev/rules.d/60-cdrom_id.rules ] && [ "${DISABLE_CDROM:-}" != "y" ]
 then
 	mkdir -p "${DESTDIR}/lib/udev/rules.d"
 	cp -p /lib/udev/rules.d/60-cdrom_id.rules "${DESTDIR}/lib/udev/rules.d"
@@ -103,7 +106,7 @@ manual_add_modules hfsplus
 # Filesystem: jffs2
 manual_add_modules jffs2
 
-if [ -x /usr/bin/rsync ]
+if [ -x /usr/bin/rsync ] && [ "${MINIMAL:-}" != "y" ]
 then
 	copy_exec /usr/bin/rsync /bin
 fi
@@ -120,25 +123,37 @@ manual_add_modules aufs
 manual_add_modules overlay
 
 # Filesystem: vfat
-manual_add_modules nls_cp437
-manual_add_modules nls_iso8859-1
-manual_add_modules nls_utf8
-manual_add_modules nls_ascii
-manual_add_modules vfat
+if [ "${DISABLE_FAT:-}" != "y" ]
+then
+	manual_add_modules nls_cp437
+	manual_add_modules nls_iso8859-1
+	manual_add_modules nls_utf8
+	manual_add_modules nls_ascii
+	manual_add_modules vfat
+fi
 
 # Filesystem: ntfs
-manual_add_modules ntfs
+if [ "${DISABLE_NTFS:-}" != "y" ]
+then
+	manual_add_modules ntfs
+fi
 
 [ "${QUIET}" ] || echo -n " devices"
 # Hardware: cdrom
-manual_add_modules ide-cd
-manual_add_modules ide-generic
-manual_add_modules ohci1394
-manual_add_modules sbp2
-manual_add_modules sr_mod
+if [ "${DISABLE_CDROM:-}" != "y" ]
+then
+	manual_add_modules ide-cd
+	manual_add_modules ide-generic
+	manual_add_modules ohci1394
+	manual_add_modules sbp2
+	manual_add_modules sr_mod
+fi
 
 # Hardware: usb
-manual_add_modules sd_mod
+if [ "${DISABLE_USB:-}" != "y" ]
+then
+	manual_add_modules sd_mod
+fi
 
 # Hardware: network
 auto_add_modules net
@@ -187,24 +202,27 @@ then
 fi
 
 # FUSE kernel module
-manual_add_modules fuse
+if [ "${DISABLE_FUSE:-n}" != "y" ]
+then
+	manual_add_modules fuse
 
-# FUSE filesystem: httpfs2
-if [ -x /usr/bin/httpfs2_ssl ]
-then
-	[ "${QUIET}" ] || echo -n " httpfs:ssl"
-	copy_exec /usr/bin/httpfs2_ssl /bin/httpfs
-elif [ -x /usr/bin/httpfs2 ]
-then
-	[ "${QUIET}" ] || echo -n " httpfs"
-	copy_exec /usr/bin/httpfs2 /bin/httpfs
-fi
+	# FUSE filesystem: httpfs2
+	if [ -x /usr/bin/httpfs2_ssl ]
+	then
+		[ "${QUIET}" ] || echo -n " httpfs:ssl"
+		copy_exec /usr/bin/httpfs2_ssl /bin/httpfs
+	elif [ -x /usr/bin/httpfs2 ]
+	then
+		[ "${QUIET}" ] || echo -n " httpfs"
+		copy_exec /usr/bin/httpfs2 /bin/httpfs
+	fi
 
-# FUSE filesystem: curlftpfs
-if [ -x /usr/bin/curlftpfs ]
-then
-	[ "${QUIET}" ] || echo -n " ftpfs"
-	copy_exec /usr/bin/curlftpfs /bin
+	# FUSE filesystem: curlftpfs
+	if [ -x /usr/bin/curlftpfs ]
+	then
+		[ "${QUIET}" ] || echo -n " ftpfs"
+		copy_exec /usr/bin/curlftpfs /bin
+	fi
 fi
 
 # iSCSI

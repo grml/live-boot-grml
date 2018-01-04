@@ -24,6 +24,31 @@ In addition, there are some more boot parameters to influence the behaviour, see
 
 .SS Configuration Files
 \fBlive\-boot\fR can be configured (but not activated) through configuration files. Those files can be placed either in the root filesystem itself (/etc/live/boot.conf, /etc/live/boot/*), or on the live media (live/boot.conf, live/boot/*).
+These environment variables can only be set in the configuration files:
+
+.TP
+\fBDISABLE_CDROM\fR=[\fIy\fR|\fIn\fR]
+Disable support for booting from CD-ROMs.  If set to '\fIy\fR' mkinitramfs will build an initramfs without the kernel modules for reading CD-ROMs.
+
+.TP
+\fBDISABLE_FAT\fR=[\fIy\fR|\fIn\fR]
+Disable support for booting from FAT file systems.  If set to '\fIy\fR' mkinitramfs will build an initramfs without the kernel module vfat and some nls_* modules.
+
+.TP
+\fBDISABLE_FUSE\fR=[\fIy\fR|\fIn\fR]
+Disable support for booting from FUSE-based file systems.  If set to '\fIy\fR' mkinitramfs will build an initramfs without the kernel module fuse and file systems that depend on it (like curlftpfs and httpfs2).
+
+.TP
+\fBDISABLE_NTFS\fR=[\fIy\fR|\fIn\fR]
+Disable support for booting from NTFS file systems.  If set to '\fIy\fR' mkinitramfs will build an initramfs without the kernel module ntfs.
+
+.TP
+\fBDISABLE_USB\fR=[\fIy\fR|\fIn\fR]
+Disable support for booting from USB devices.  If set to '\fIy\fR' mkinitramfs will build an initramfs without the kernel module sd_mod.
+
+.TP
+\fBMINIMAL\fR=[\fIy\fR|\fIn\fR]
+Build a minimal initramfs.  If set to '\fIy\fR' mkinitramfs will build an initramfs without some udev scripts and without rsync.
 
 .SH OPTIONS
 \fBlive\-boot\fR currently features the following parameters.
