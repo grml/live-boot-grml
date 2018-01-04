@@ -128,20 +128,6 @@ Live ()
 		mount_images_in_directory "${livefs_root}" "${rootmnt}" "${mac}"
 	fi
 
-	# At this point /root should contain the final root filesystem.
-	# Move all mountpoints below /live into /root/lib/live/mount.
-	# This has to be done after mounting the root filesystem to /
-	# otherwise these mount points won't be accessible from the running system.
-	for _MOUNT in $(cat /proc/mounts | cut -f 2 -d " " | grep -e "^/live/")
-	do
-		local newmount
-		newmount="${rootmnt}/lib/live/mount/${_MOUNT#/live/}"
-		mkdir -p "${newmount}"
-		mount -o move "${_MOUNT}" "${newmount}" > /dev/null 2>&1 || \
-		mount -o bind "${_MOUNT}" "${newmount}" > /dev/null || \
-		log_warning_msg "W: failed to move or bindmount ${_MOUNT} to ${newmount}"
-	done
-
 	if [ -n "${ROOT_PID}" ]
 	then
 		echo "${ROOT_PID}" > "${rootmnt}"/lib/live/root.pid
@@ -162,10 +148,10 @@ Live ()
 	then
 		losetup -d /dev/loop0
 
-		if is_mountpoint /root/lib/live/mount/findiso
+		if is_mountpoint /run/live/findiso
 		then
-			umount /root/lib/live/mount/findiso
-			rmdir --ignore-fail-on-non-empty /root/lib/live/mount/findiso \
+			umount /run/live/findiso
+			rmdir --ignore-fail-on-non-empty /run/live/findiso \
 				>/dev/null 2>&1 || true
 		fi
 	fi

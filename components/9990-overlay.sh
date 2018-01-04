@@ -15,12 +15,7 @@ setup_unionfs ()
 		panic "${UNIONTYPE} not available."
 	fi
 
-	# run-init can't deal with images in a subdir, but we're going to
-	# move all of these away before it runs anyway.  No, we're not,
-	# put them in / since move-mounting them into / breaks mono and
-	# some other apps.
-
-	croot="/"
+	croot="/run/live/rootfs"
 
 	# Let's just mount the read-only file systems first
 	rootfslist=""
@@ -135,8 +130,7 @@ setup_unionfs ()
 
 	# tmpfs file systems
 	touch /etc/fstab
-	mkdir -p /live/overlay
-	mount -t tmpfs tmpfs /live/overlay
+	mkdir -p /run/live/overlay
 
 	# Looking for persistence devices or files
 	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
@@ -246,10 +240,10 @@ setup_unionfs ()
 	if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
 	then
 		mount -t tmpfs -o rw,noatime,mode=755,size=${OVERLAY_SIZE:-50%} tmpfs "/live/overlay"
-		root_backing="/live/persistence/$(basename ${cowdevice})-root"
+		root_backing="/run/live/persistence/$(basename ${cowdevice})-root"
 		mkdir -p ${root_backing}
 	else
-		root_backing="/live/overlay"
+		root_backing="/run/live/overlay"
 	fi
 
 	if [ "${cow_fstype}" = "nfs" ]
@@ -290,7 +284,7 @@ setup_unionfs ()
 	for dir in ${cow_dirs}; do
 		unionmountpoint=$(trim_path "${rootmnt}${dir}")
 		mkdir -p ${unionmountpoint}
-		cow_dir=$(trim_path "/live/overlay${dir}")
+		cow_dir=$(trim_path "/run/live/overlay${dir}")
 		rootfs_dir="${rootfs}${dir}"
 		mkdir -p ${cow_dir}
 		if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
@@ -313,22 +307,6 @@ setup_unionfs ()
 		chmod 1777 "${rootmnt}"/tmp
 	fi
 
-	live_rootfs_list=""
-	for d in ${rootfslist}
-	do
-		live_rootfs="/live/rootfs/${d##*/}"
-		live_rootfs_list="${live_rootfs_list} ${live_rootfs}"
-		mkdir -p "${live_rootfs}"
-		case "${d}" in
-			*.dir)
-				# do nothing # mount -o bind "${d}" "${live_rootfs}"
-				;;
-			*)
-				mount -o move "${d}" "${live_rootfs}"
-				;;
-		esac
-	done
-
 	# Adding custom persistence
 	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
 	then
@@ -339,7 +317,7 @@ setup_unionfs ()
 		# Gather information about custom mounts from devies detected as overlays
 		get_custom_mounts ${custom_mounts} ${overlay_devices}
 
-		[ -n "${LIVE_BOOT_DEBUG}" ] && cp ${custom_mounts} "/lib/live/mount/persistence"
+		[ -n "${LIVE_BOOT_DEBUG}" ] && cp ${custom_mounts} "/run/live/persistence"
 
 		# Now we do the actual mounting (and symlinking)
 		local used_overlays
@@ -356,9 +334,4 @@ setup_unionfs ()
 			fi
 		done
 	fi
-
-	# ensure that a potentially stray tmpfs gets removed
-	# otherways, initramfs-tools is unable to remove /live
-	# and fails to boot
-	umount /live/overlay > /dev/null 2>&1 || true
 }

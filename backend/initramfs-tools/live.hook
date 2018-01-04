@@ -8,7 +8,7 @@ set -e
 
 # Reading configuration file from filesystem and live-media
 for _FILE in /etc/live/boot.conf /etc/live/boot/* \
-	     /lib/live/mount/media/live/boot.conf /lib/live/mount/media/live/boot/*
+	     /run/live/medium/live/boot.conf /run/live/medium/live/boot/*
 do
 	if [ -e "${_FILE}" ]
 	then

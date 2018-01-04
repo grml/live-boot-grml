@@ -203,9 +203,9 @@ check_dev ()
 			if [ -f ${mountpoint}/${FINDISO} ]
 			then
 				umount ${mountpoint}
-				mkdir -p /live/findiso
-				mount -t ${fstype} -o ro,noatime "${devname}" /live/findiso
-				loopdevname=$(setup_loop "/live/findiso/${FINDISO}" "loop" "/sys/block/loop*" 0 "")
+				mkdir -p /run/live/findiso
+				mount -t ${fstype} -o ro,noatime "${devname}" /run/live/findiso
+				loopdevname=$(setup_loop "/run/live/findiso/${FINDISO}" "loop" "/sys/block/loop*" 0 "")
 				devname="${loopdevname}"
 				mount -t iso9660 -o ro,noatime "${devname}" ${mountpoint}
 			else
@@ -703,7 +703,7 @@ mount_persistence_media ()
 
 	# get_custom_mounts() might call this with a directory path instead
 	# of a block device path. This means we have found sub-directory path
-	# underneath /lib/live/mounts/persistence, so we're done
+	# underneath /run/live/persistence, so we're done
 	if [ -d "${device}" ]
 	then
 		echo "${device}"
@@ -715,7 +715,7 @@ mount_persistence_media ()
 		return 1
 	fi
 
-	backing="/live/persistence/$(basename ${device})"
+	backing="/run/live/persistence/$(basename ${device})"
 
 	mkdir -p "${backing}"
 	old_backing="$(where_is_mounted ${device})"
@@ -1383,9 +1383,9 @@ get_custom_mounts ()
 				continue
 			fi
 
-			if trim_path ${dir} | grep -q -e "^[^/]" -e "^/lib" -e "^/lib/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
+			if trim_path ${dir} | grep -q -e "^[^/]" -e "^/lib" -e "^/run/live\(/.*\)\?$" -e "^/\(.*/\)\?\.\.\?\(/.*\)\?$"
 			then
-				log_warning_msg "Skipping unsafe custom mount ${dir}: must be an absolute path containing neither the \".\" nor \"..\" special dirs, and cannot be \"/lib\", or \"/lib/live\" or any of its sub-directories."
+				log_warning_msg "Skipping unsafe custom mount ${dir}: must be an absolute path containing neither the \".\" nor \"..\" special dirs, and cannot be \"/lib\", or \"/run/live\" or any of its sub-directories."
 				continue
 			fi
 
@@ -1575,11 +1575,11 @@ activate_custom_mounts ()
 		local cow_dir links_source
 		if [ -n "${opt_link}" ] && [ -z "${PERSISTENCE_READONLY}" ]
 		then
-			link_files ${source} ${dest} "s|^/live/|/lib/live/mount/|"
+			link_files ${source} ${dest} ""
 		elif [ -n "${opt_link}" ] && [ -n "${PERSISTENCE_READONLY}" ]
 		then
-			mkdir -p ${rootmnt}/lib/live/mount/persistence
-			links_source=$(mktemp -d ${rootmnt}/lib/live/mount/persistence/links-source-XXXXXX)
+			mkdir -p /run/live/persistence
+			links_source=$(mktemp -d /run/live/persistence/links-source-XXXXXX)
 			chown_ref ${source} ${links_source}
 			chmod_ref ${source} ${links_source}
 			# We put the cow dir in the below strange place to
@@ -1587,7 +1587,7 @@ activate_custom_mounts ()
 			# has its own directory and isn't nested with some
 			# other custom mount (if so that mount's files would
 			# be linked, causing breakage.
-			cow_dir="/live/overlay/lib/live/mount/persistence/$(basename ${links_source})"
+			cow_dir="/run/live/overlay/run/live/persistence/$(basename ${links_source})"
 			mkdir -p ${cow_dir}
 			chown_ref "${source}" "${cow_dir}"
 			chmod_ref "${source}" "${cow_dir}"
@@ -1604,7 +1604,7 @@ activate_custom_mounts ()
 			# bind-mount and union mount are handled the same
 			# in read-only mode, but note that rootfs_dest_backing
 			# is non-empty (and necessary) only for unions
-			cow_dir="/live/overlay/${dest}"
+			cow_dir="/run/live/overlay/${dest}"
 			if [ -e "${cow_dir}" ] && [ -z "${opt_link}" ]
 			then
 				# If an earlier custom mount has files here
