@@ -1,12 +1,32 @@
 live-boot (1:20171121) UNRELEASED; urgency=medium
 
+  [ Raphaël Hertzog ]
   * Fix read-only persistence mode with overlayfs. Closes: #877776
     Thanks to Ronny Standtke <ronny.standtke@fhnw.ch> for the patch.
   * Add a small warning in the long description that the
     package must not be installed on a regular system, but only in
     a live image. Closes: #884886
 
- -- Raphaël Hertzog <hertzog@debian.org>  Tue, 21 Nov 2017 15:27:37 +0100
+  [ Steve McIntyre ]
+  * Repo moved to salsa
+
+  [ Benjamin Drung ]
+  * Don't replace busybox's wget by the true wget.
+    It was likely done for https support but since buster the busybox
+    provided wget has https support too. We save a lot of space by
+    doing so (8 Mb). (Closes: #885455)
+  * Avoid double slashes in some paths (Closes: #885453)
+  * Support setting upperdir tmpfs size with overlay-size boot parameter
+    (Closes: #885466)
+  * Simplify mount point handling by using /run/live instead of /lib/live/mount
+    (Closes: #886328)
+  * Add configuration variables to build a stripped down initrd
+    (Closes: #886337)
+
+  [ Daniel Reichelt ]
+  * Use klibc's mount again for fuse mounts (Closes: #868559)
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Fri, 23 Feb 2018 19:21:00 +0100
 
 live-boot (1:20170623) unstable; urgency=medium
 
