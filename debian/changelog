@@ -1,4 +1,4 @@
-live-boot (1:20171121) UNRELEASED; urgency=medium
+live-boot (1:20171121) UNRELEASED; urgency=low
 
   [ Raphaël Hertzog ]
   * Fix read-only persistence mode with overlayfs. Closes: #877776
