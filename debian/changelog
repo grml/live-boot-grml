@@ -6,6 +6,8 @@ live-boot (1:20171121) UNRELEASED; urgency=medium
   * Add a small warning in the long description that the
     package must not be installed on a regular system, but only in
     a live image. Closes: #884886
+  * Strip comments from checksums files passed to "shaXsum -c"
+    Thanks to Andreas Heinlein for the report (Closes: #856482)
 
   [ Steve McIntyre ]
   * Repo moved to salsa
@@ -26,7 +28,7 @@ live-boot (1:20171121) UNRELEASED; urgency=medium
   [ Daniel Reichelt ]
   * Use klibc's mount again for fuse mounts (Closes: #868559)
 
- -- Raphaël Hertzog <hertzog@debian.org>  Fri, 23 Feb 2018 19:21:00 +0100
+ -- Raphaël Hertzog <hertzog@debian.org>  Sat, 24 Feb 2018 17:59:46 +0100
 
 live-boot (1:20170623) unstable; urgency=medium
 
