@@ -239,7 +239,7 @@ setup_unionfs ()
 
 	if [ -n "${PERSISTENCE_READONLY}" ] && [ "${cowdevice}" != "tmpfs" ]
 	then
-		mount -t tmpfs -o rw,noatime,mode=755,size=${OVERLAY_SIZE:-50%} tmpfs "/live/overlay"
+		mount -t tmpfs -o rw,noatime,mode=755,size=${OVERLAY_SIZE:-50%} tmpfs "/run/live/overlay"
 		root_backing="/run/live/persistence/$(basename ${cowdevice})-root"
 		mkdir -p ${root_backing}
 	else
