@@ -89,20 +89,10 @@ do_netsetup ()
 			devlist="$devlist $device"
 		done
 
-		# this is tricky (and ugly) because ipconfig sometimes just hangs/runs into
-		# an endless loop; if execution fails give it two further tries, that's
-		# why we use '$devlist $devlist $devlist' for the other for loop
-		for dev in $devlist $devlist $devlist
+		for dev in $devlist
 		do
 			echo "Executing ipconfig -t $ETHDEV_TIMEOUT $dev"
-			ipconfig -t "$ETHDEV_TIMEOUT" $dev | tee -a /netboot.config &
-			jobid=$!
-			sleep "$ETHDEV_TIMEOUT" ; sleep 1
-			if [ -r /proc/"$jobid"/status ]
-			then
-				echo "Killing job $jobid for device $dev as ipconfig ran into recursion..."
-				kill -9 $jobid
-			fi
+			ipconfig -t "$ETHDEV_TIMEOUT" $dev | tee -a /netboot.config
 
 			# if configuration of device worked we should have an assigned
 			# IP address, if so let's use the device as $DEVICE for later usage.
