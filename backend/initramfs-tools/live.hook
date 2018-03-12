@@ -53,7 +53,7 @@ do
 done
 
 # udev dependencies
-if [ "${MINIMAL:-}" != "y" ]
+if [ "${MINIMAL:-}" != "true" ] &&  [ "${MINIMAL:-}" != "yes" ]
 then
 	for FILE in /lib/udev/*_id
 	do
@@ -61,7 +61,8 @@ then
 	done
 fi
 
-if [ -e /lib/udev/rules.d/60-cdrom_id.rules ] && [ "${DISABLE_CDROM:-}" != "y" ]
+if [ -e /lib/udev/rules.d/60-cdrom_id.rules ] && [ "${DISABLE_CDROM:-}" != "true" ] && \
+	[ "${DISABLE_CDROM:-}" != "yes" ]
 then
 	mkdir -p "${DESTDIR}/lib/udev/rules.d"
 	cp -p /lib/udev/rules.d/60-cdrom_id.rules "${DESTDIR}/lib/udev/rules.d"
@@ -106,7 +107,7 @@ manual_add_modules hfsplus
 # Filesystem: jffs2
 manual_add_modules jffs2
 
-if [ -x /usr/bin/rsync ] && [ "${MINIMAL:-}" != "y" ]
+if [ -x /usr/bin/rsync ] && [ "${MINIMAL:-}" != "true" ] && [ "${MINIMAL:-}" != "yes" ]
 then
 	copy_exec /usr/bin/rsync /bin
 fi
@@ -123,7 +124,7 @@ manual_add_modules aufs
 manual_add_modules overlay
 
 # Filesystem: vfat
-if [ "${DISABLE_FAT:-}" != "y" ]
+if [ "${DISABLE_FAT:-}" != "true" ] &&  [ "${DISABLE_FAT:-}" != "yes" ]
 then
 	manual_add_modules nls_cp437
 	manual_add_modules nls_iso8859-1
@@ -133,14 +134,14 @@ then
 fi
 
 # Filesystem: ntfs
-if [ "${DISABLE_NTFS:-}" != "y" ]
+if [ "${DISABLE_NTFS:-}" != "true" ] && [ "${DISABLE_NTFS:-}" != "yes" ]
 then
 	manual_add_modules ntfs
 fi
 
 [ "${QUIET}" ] || echo -n " devices"
 # Hardware: cdrom
-if [ "${DISABLE_CDROM:-}" != "y" ]
+if [ "${DISABLE_CDROM:-}" != "true" ] && [ "${DISABLE_CDROM:-}" != "yes" ]
 then
 	manual_add_modules ide-cd
 	manual_add_modules ide-generic
@@ -150,7 +151,7 @@ then
 fi
 
 # Hardware: usb
-if [ "${DISABLE_USB:-}" != "y" ]
+if [ "${DISABLE_USB:-}" != "true" ] && [ "${DISABLE_USB:-}" != "yes" ]
 then
 	manual_add_modules sd_mod
 fi
@@ -198,7 +199,7 @@ then
 fi
 
 # FUSE kernel module
-if [ "${DISABLE_FUSE:-n}" != "y" ]
+if [ "${DISABLE_FUSE:-n}" != "true" ] && [ "${DISABLE_FUSE:-n}" != "yes" ]
 then
 	manual_add_modules fuse
 
