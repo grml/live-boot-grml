@@ -95,6 +95,7 @@ is_nice_device ()
 
 check_dev ()
 {
+	local force fix
 	sysdev="${1}"
 	devname="${2}"
 	skip_uuid_check="${3}"
@@ -195,6 +196,33 @@ check_dev ()
 	then
 		devuid=$(blkid -o value -s UUID "$devname")
 		[ -n "$devuid" ] && grep -qs "\<$devuid\>" /var/lib/live/boot/devices-already-tried-to-mount && continue
+
+		for _PARAMETER in ${LIVE_BOOT_CMDLINE}
+		do
+			case "${_PARAMETER}" in
+				forcefsck)
+					FORCEFSCK="true"
+					;;
+			esac
+		done
+
+		if [ "${PERSISTENCE_FSCK}" = "true" ] ||  [ "${PERSISTENCE_FSCK}" = "yes" ] || [ "${FORCEFSCK}" = "true" ]
+		then
+			force=""
+			if [ "$FORCEFSCK" = "true" ]
+			then
+				force="-f"
+			fi
+
+			fix="-a"
+			if [ "$FSCKFIX" = "true" ] || [ "$FSCKFIX" = "yes" ]
+			then
+				fix="-y"
+			fi
+
+			fsck $fix $force ${devname} >> fsck.log 2>&1
+		fi
+
 		mount -t ${fstype} -o ro,noatime "${devname}" ${mountpoint} || continue
 		[ -n "$devuid" ] && echo "$devuid" >> /var/lib/live/boot/devices-already-tried-to-mount
 

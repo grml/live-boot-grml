@@ -50,6 +50,14 @@ Disable support for booting from USB devices.  If set to '\fIy\fR' mkinitramfs w
 \fBMINIMAL\fR=[\fIy\fR|\fIn\fR]
 Build a minimal initramfs.  If set to '\fIy\fR' mkinitramfs will build an initramfs without some udev scripts and without rsync.
 
+.TP
+\fBPERSISTENCE_FSCK\fR=[\fItrue\fR|\fIfalse\fR]
+Run fsck on persistance filesystem on boot. Will attempt to repair errors. The execution log will be saved in /var/log/live/fsck.log.
+
+.TP
+\fBFSCKFIX\fR=[\fItrue\fR|\fIfalse\fR]
+If PERSISTENCE_FSCK or forcefsck are set, will pass -y to fsck to stop it from asking questions interactively and assume yes to all queries.
+
 .SH OPTIONS
 \fBlive\-boot\fR currently features the following parameters.
 .\" FIXME
@@ -93,6 +101,8 @@ Target <target-name>
   # Wthreads or MaxConnections
 .IP "\fBfindiso\fR=\fI/PATH/TO/IMAGE\fI" 4
 Look for the specified ISO file on all disks where it usually looks for the .squashfs file (so you don't have to know the device name as in fromiso=....).
+.IP "\fBforcefsck\fR" 4
+Run fsck on persistance filesystem on boot. Will attempt to repair errors. The execution log will be saved in /var/log/live/fsck.log.
 .IP "\fBfromiso\fR=\fI/PATH/TO/IMAGE\fI" 4
 Use a filesystem from within an ISO image that's available on live-media.
 .IP "\fBignore_uuid\fR" 4
