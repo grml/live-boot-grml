@@ -107,7 +107,7 @@ do_netsetup ()
 			# if configuration of device worked we should have an assigned
 			# IP address, if so let's use the device as $DEVICE for later usage.
 			# simple and primitive approach which seems to work fine
-			if ifconfig $dev | grep -q 'inet.*addr:'
+			if ifconfig $dev | grep -q -E 'inet.*addr:|inet [0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*'
 			then
 				export DEVICE="$dev"
 				break
