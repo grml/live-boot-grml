@@ -28,7 +28,19 @@ live-boot (1:20171121) UNRELEASED; urgency=low
   [ Daniel Reichelt ]
   * Use klibc's mount again for fuse mounts (Closes: #868559)
 
- -- Raphaël Hertzog <hertzog@debian.org>  Sat, 24 Feb 2018 17:59:46 +0100
+  [ raizo62 ]
+  * Update DNSFILE even if DNSFILE contains only commented or empty lines
+
+  [ Sameer Agrawal ]
+  * Fix ifconfig parsing (Closes: #892772)
+
+  [ Chas Williams ]
+  * Add back persistance fsck option
+
+  [ Luca Boccassi ]
+  * Use true|false instead of y|n for environment variables
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Tue, 13 Mar 2018 10:51:31 +0100
 
 live-boot (1:20170623) unstable; urgency=medium
 
