@@ -111,10 +111,10 @@ Live ()
 	then
 		losetup -d /dev/loop0
 
-		if is_mountpoint /live/fromiso
+		if is_mountpoint /run/live/fromiso
 		then
-			umount /live/fromiso
-			rmdir --ignore-fail-on-non-empty /live/fromiso \
+			umount /run/live/fromiso
+			rmdir --ignore-fail-on-non-empty /run/live/fromiso \
 				>/dev/null 2>&1 || true
 		fi
 	fi

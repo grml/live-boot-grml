@@ -125,10 +125,10 @@ check_dev ()
 			fs_type=$(get_fstype "${ISO_DEVICE}")
 			if is_supported_fs ${fs_type}
 			then
-				mkdir /live/fromiso
-				mount -t $fs_type "$ISO_DEVICE" /live/fromiso
+				mkdir /run/live/fromiso
+				mount -t $fs_type "$ISO_DEVICE" /run/live/fromiso
 				ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
-				loopdevname=$(setup_loop "/live/fromiso/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
+				loopdevname=$(setup_loop "/run/live/fromiso/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
 				devname="${loopdevname}"
 			else
 				echo "Warning: unable to mount $ISO_DEVICE." >>/boot.log
@@ -1054,7 +1054,7 @@ find_persistence_media ()
 	# in one union together.
 	#
 	black_listed_devices=""
-	for d in /run/live/rootfs/* /live/findiso /live/fromiso
+	for d in /run/live/rootfs/* /run/live/findiso /run/live/fromiso
 	do
 		black_listed_devices="${black_listed_devices} $(what_is_mounted_on d)"
 	done
