@@ -1054,7 +1054,7 @@ find_persistence_media ()
 	# in one union together.
 	#
 	black_listed_devices=""
-	for d in /live/rootfs/* /live/findiso /live/fromiso
+	for d in /run/live/rootfs/* /live/findiso /live/fromiso
 	do
 		black_listed_devices="${black_listed_devices} $(what_is_mounted_on d)"
 	done
@@ -1369,7 +1369,7 @@ do_union ()
 
 get_custom_mounts ()
 {
-	# Side-effect: leaves $devices with persistence.conf mounted in /live/persistence
+	# Side-effect: leaves $devices with persistence.conf mounted in /run/live/persistence
 	# Side-effect: prints info to file $custom_mounts
 
 	local custom_mounts devices bindings links
@@ -1400,7 +1400,7 @@ get_custom_mounts ()
 
 		if [ -n "${LIVE_BOOT_DEBUG}" ] && [ -e "${include_list}" ]
 		then
-			cp ${include_list} /live/persistence/${persistence_list}.${device_name}
+			cp ${include_list} /run/live/persistence/${persistence_list}.${device_name}
 		fi
 
 		while read dir options # < ${include_list}
@@ -1585,7 +1585,7 @@ activate_custom_mounts ()
 		rootfs_dest_backing=""
 		if [ -n "${opt_link}" ] || [ -n "${opt_union}" ]
 		then
-			for d in /live/rootfs/*
+			for d in /run/live/rootfs/*
 			do
 				if [ -n "${rootmnt}" ]
 				then
