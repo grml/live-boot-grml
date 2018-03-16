@@ -120,7 +120,24 @@ check_dev ()
 
 		if [ "$ISO_DEVICE" = "/" ]
 		then
-			echo "Warning: device for bootoption fromiso= ($FROMISO) not found.">>/boot.log
+			# not a block device, check if it's an iso file, for
+			# example an ISO when booting on an ONIE system
+			if echo "${FROMISO}" | grep -q "\.iso$"
+			then
+				fs_type=$(get_fstype "${FROMISO}")
+				if is_supported_fs ${fs_type}
+				then
+					mkdir /run/live/fromiso
+					mount -t $fs_type "${FROMISO}" /run/live/fromiso
+					if [ "$?" != 0 ]
+					then
+						echo "Warning: unable to mount ${FROMISO}." >>/boot.log
+					fi
+					devname="/run/live/fromiso"
+				fi
+			else
+				echo "Warning: device for bootoption fromiso= ($FROMISO) not found.">>/boot.log
+			fi
 		else
 			fs_type=$(get_fstype "${ISO_DEVICE}")
 			if is_supported_fs ${fs_type}
