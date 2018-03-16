@@ -174,6 +174,13 @@ Live ()
 		panic "A wrong rootfs was mounted."
 	fi
 
+	# avoid breaking existing user scripts that rely on the old path
+	# this includes code that checks what is mounted on /lib/live/mount/*
+	# (eg: grep /lib/live /proc/mount)
+	# XXX: to be removed before the bullseye release
+	mkdir -p ${rootmnt}/lib/live/mount
+	mount --rbind /run/live ${rootmnt}/lib/live/mount
+
 	Fstab
 	Netbase
 
