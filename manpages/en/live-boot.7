@@ -104,7 +104,9 @@ Look for the specified ISO file on all disks where it usually looks for the .squ
 .IP "\fBforcefsck\fR" 4
 Run fsck on persistance filesystem on boot. Will attempt to repair errors. The execution log will be saved in /var/log/live/fsck.log.
 .IP "\fBfromiso\fR=\fI/PATH/TO/IMAGE\fI" 4
-Use a filesystem from within an ISO image that's available on live-media.
+Use a filesystem from within an ISO image that's available on live-media. The first part of the argument should be the block device where the image is stored, followed by the path and filename (e.g. fromiso=/dev/sda1/live/image.iso).
+.br
+Alternatively, it can be used to boot from an ISO embedded into an initrd (e.g. fromiso=/live/image.iso).
 .IP "\fBignore_uuid\fR" 4
 Do not check that any UUID embedded in the initramfs matches the discovered medium. live\-boot may be told to generate a UUID by setting LIVE_GENERATE_UUID=1 when building the initramfs.
 .IP "\fBverify\-checksums\fR" 4
