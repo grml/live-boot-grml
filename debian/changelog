@@ -35,7 +35,7 @@ live-boot (1:20171121) UNRELEASED; urgency=low
   * Fix ifconfig parsing (Closes: #892772)
 
   [ Chas Williams ]
-  * Add back persistance fsck option
+  * Add back persistence fsck option
 
   [ Luca Boccassi ]
   * Use true|false instead of y|n for environment variables
