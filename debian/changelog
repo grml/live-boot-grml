@@ -1,4 +1,4 @@
-live-boot (1:20171121) UNRELEASED; urgency=low
+live-boot (1:20180328) unstable; urgency=low
 
   [ Raphaël Hertzog ]
   * Fix read-only persistence mode with overlayfs. Closes: #877776
@@ -36,11 +36,33 @@ live-boot (1:20171121) UNRELEASED; urgency=low
 
   [ Chas Williams ]
   * Add back persistence fsck option
+  * Remove workaround for ipconfig issues
+
+  [ Benjamin Drung ]
+  * Remove sourcing /scripts/functions in components
+  * Support live-{top,premount,bottom} hooks (Closes: #884355)
 
   [ Luca Boccassi ]
-  * Use true|false instead of y|n for environment variables
+  * Add backward compatibility rbind mount /lib/live/mount -> /run/live.
+    The paths used in the current released versions of live-boot are a
+    form of public API, and existing applications and scripts might rely
+    on them. Do a recursive bind mount of the new path on the previous one
+    so that they do not break on upgrade (see #886328).
+    This backward-compatible mount point will be deprecated and removed
+    before the Bullseye (Debian 11) release. Users are recommended to start
+    migrating to the new /run/live path as soon as possible.
 
- -- Raphaël Hertzog <hertzog@debian.org>  Tue, 13 Mar 2018 10:51:31 +0100
+  [ Erik Ziegenbalg ]
+  * fromiso: add support for local ISO (ONIE)
+
+  [ Luca Boccassi ]
+  * Clarify FROMISO documentation in live-boot manpage
+  * Use HTTPS in debian/copyright (policy 4.0.0).
+  * Remove dead link to live-systems.org from debian/copyright.
+  * Bump Standards-Version to 4.1.3, no changes.
+  * Add myself to Uploaders.
+
+ -- Luca Boccassi <bluca@debian.org>  Wed, 28 Mar 2018 20:07:39 +0100
 
 live-boot (1:20170623) unstable; urgency=medium
 
