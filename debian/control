@@ -2,7 +2,8 @@ Source: live-boot
 Section: misc
 Priority: optional
 Maintainer: Live Systems Maintainers <debian-live@lists.debian.org>
-Uploaders: Iain R. Learmonth <irl@debian.org>, Raphaël Hertzog <hertzog@debian.org>
+Uploaders: Iain R. Learmonth <irl@debian.org>, Raphaël Hertzog <hertzog@debian.org>,
+ Luca Boccassi <bluca@debian.org>
 Build-Depends:
  debhelper (>= 10),
 Standards-Version: 4.1.3
