@@ -40,6 +40,7 @@ Description: Live System Boot Components
 Package: live-boot-doc
 Section: doc
 Architecture: all
+Multi-Arch: foreign
 Depends:
  ${misc:Depends},
 Description: Live System Boot Components (documentation)
