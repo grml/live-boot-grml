@@ -131,6 +131,22 @@ do_netsetup ()
 			HWADDR="$(cat /sys/class/net/${interface}/address)"
 		fi
 
+		# Only create /etc/hosts if FQDN is known (to let 'hostname -f' query
+		# this file). Otherwise DNS will be queried to determine the FQDN.
+		if [ ! -e "/etc/hosts" ] && [ -n "${DNSDOMAIN}" ]
+		then
+			echo "Creating /etc/hosts"
+			cat > /etc/hosts <<EOF
+127.0.0.1	localhost
+127.0.1.1	${HOSTNAME}.${DNSDOMAIN}	${HOSTNAME}
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+		fi
+
 		if [ ! -e "/etc/resolv.conf" ]
 		then
 			echo "Creating /etc/resolv.conf"

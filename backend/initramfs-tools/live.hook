@@ -240,13 +240,15 @@ fi
 # /lib/libnss_files.so.*:  /etc/hosts and /etc/passwd
 # /lib/libnss_compat.so.*: /etc/passwd
 
-for _SHLIB in $(find /lib -name 'libnss_dns.so.*')
+for _SHLIB in $(find /lib -name 'libnss_dns.so.*' -o -name 'libnss_files.so.*')
 do
 	copy_exec "${_SHLIB}"
 done
 
-# might be needed if /etc/hosts is used
-#mkdir -p "${DESTDIR}/etc"
-#cp -p /etc/nsswitch.conf "${DESTDIR}/etc"
+if [ ! -e "${DESTDIR}/etc/nsswitch.conf" ]
+then
+	# Needed to make "hostname -f" honor the domainname provided by DHCP
+	echo "hosts: files dns" > "${DESTDIR}/etc/nsswitch.conf"
+fi
 
 [ "${QUIET}" ] || echo .
