@@ -84,7 +84,7 @@ do_netsetup ()
 		fi
 
 		# split args of ethdevice=eth0,eth1 into "eth0 eth1"
-		for device in $(echo $ETHDEVICE | sed 's/,/ /g')
+		for device in $(echo "$ETHDEVICE" | sed 's/,/ /g')
 		do
 			devlist="$devlist $device"
 		done
@@ -92,12 +92,12 @@ do_netsetup ()
 		for dev in $devlist
 		do
 			echo "Executing ipconfig -t $ETHDEV_TIMEOUT $dev"
-			ipconfig -t "$ETHDEV_TIMEOUT" $dev | tee -a /netboot.config
+			ipconfig -t "$ETHDEV_TIMEOUT" "$dev" | tee -a /netboot.config
 
 			# if configuration of device worked we should have an assigned
 			# IP address, if so let's use the device as $DEVICE for later usage.
 			# simple and primitive approach which seems to work fine
-			if ifconfig $dev | grep -q -E 'inet.*addr:|inet [0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*'
+			if ifconfig "$dev" | grep -q -E 'inet.*addr:|inet [0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*'
 			then
 				export DEVICE="$dev"
 				break
@@ -105,9 +105,9 @@ do_netsetup ()
 		done
 	else
 		for interface in ${DEVICE}; do
-			ipconfig -t "$ETHDEV_TIMEOUT" ${interface} | tee /netboot-${interface}.config
+			ipconfig -t "$ETHDEV_TIMEOUT" "${interface}" | tee "/netboot-${interface}.config"
 
-			[ -e /run/net-${interface}.conf ] && . /run/net-${interface}.conf
+			[ -e "/run/net-${interface}.conf" ] && . "/run/net-${interface}.conf"
 
 			if [ "$IPV4ADDR" != "0.0.0.0" ]
 			then
@@ -121,14 +121,14 @@ do_netsetup ()
 		# source relevant ipconfig output
 		OLDHOSTNAME=${HOSTNAME}
 
-		[ -e /run/net-${interface}.conf ] && . /run/net-${interface}.conf
+		[ -e "/run/net-${interface}.conf" ] && . "/run/net-${interface}.conf"
 
-		[ -z ${HOSTNAME} ] && HOSTNAME=${OLDHOSTNAME}
+		[ -z "${HOSTNAME}" ] && HOSTNAME="${OLDHOSTNAME}"
 		export HOSTNAME
 
 		if [ -n "${interface}" ]
 		then
-			HWADDR="$(cat /sys/class/net/${interface}/address)"
+			HWADDR="$(cat "/sys/class/net/${interface}/address")"
 		fi
 
 		# Only create /etc/hosts if FQDN is known (to let 'hostname -f' query
