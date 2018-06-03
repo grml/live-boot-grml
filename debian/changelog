@@ -1,3 +1,15 @@
+live-boot (1:20180603) unstable; urgency=medium
+
+  [ Luca Boccassi ]
+  * Mark live-boot-doc as Multi-Arch: foreign
+  * Remove --parallel from dh to fix Lintian Warning.
+
+  [ Benjamin Drung ]
+  * Fix resolving FQDN given by DHCP
+  * Double quote to prevent globbing and word splitting
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Sun, 03 Jun 2018 23:00:11 +0200
+
 live-boot (1:20180328) unstable; urgency=low
 
   [ Raphaël Hertzog ]
