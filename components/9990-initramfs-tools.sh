@@ -2,17 +2,6 @@
 
 #set -e
 
-# we definitely want this stuff visible
-log_failure_msg()
-{
-        printf "Failure: $@\n"
-}
-
-log_warning_msg()
-{
-        printf "Warning: $@\n"
-}
-
 log_wait_msg ()
 {
 	# Print a message and wait for enter

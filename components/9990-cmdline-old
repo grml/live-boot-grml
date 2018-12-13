@@ -39,13 +39,14 @@ Cmdline_old ()
 			nodhcp)
 				DHCP=""
 				export DHCP
-				NODHCP="Yes"
+				NODHCP="true"
 				export NODHCP
 				;;
 
 			ethdevice=*)
-				ETHDEVICE="${_PARAMETER#ethdevice=}"
-				export ETHDEVICE
+				DEVICE="${_PARAMETER#ethdevice=}"
+				ETHDEVICE="${DEVICE}"
+				export DEVICE ETHDEVICE
 				;;
 
 			ethdevice-timeout=*)
@@ -102,9 +103,13 @@ Cmdline_old ()
 				;;
 
 			ip=*)
-				# copy complete ip=args into staticip, and
-				# keep multiple uses.
-				STATICIP="${STATICIP} ${_PARAMETER}"
+				STATICIP="${_PARAMETER#ip=}"
+
+				if [ -z "${STATICIP}" ]
+				then
+					STATICIP="frommedia"
+				fi
+
 				export STATICIP
 				;;
 

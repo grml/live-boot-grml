@@ -1669,7 +1669,7 @@ live-boot (3.0~a19-1+grml.00) unstable; urgency=low
     * [86ca4d5] Remove old manpage live-snapshot.it.1.txt
     * [7fb9e91] Support comma delimited devices in live-media-path
     * [6b21c57] Depend on the same live-boot-initramfs-tools/live-boot-backend version.
-  
+
     [ Christian Hofstaedtler ]
     * Rename packages to not clash with Debian.
     * Resynced with Debian.

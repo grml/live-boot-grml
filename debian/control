@@ -19,8 +19,6 @@ Depends:
 Recommends:
  live-boot-grml-doc,
  live-tools,
- eject,
- file,
  rsync,
  uuid-runtime,
 Suggests:
