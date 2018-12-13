@@ -1,3 +1,21 @@
+live-boot (1:20180603+grml.1) unstable; urgency=medium
+
+  * [f35e0cf] Sync with Debian's upstream
+    (https://salsa.debian.org/live-team/live-boot/),
+    git commit 7130a2c0b.
+  * [c8a5e53] Minimize delta to Debian's upstream/master
+  * [27bc786] Support debian_networking boot option to use Debian's
+    network behavior
+  * [52474b4] 9990-grml-networking.sh:
+    * By displaying "Preconfiguring Grml networking" it's more
+      explicit that we're running the 9990-grml-networking.sh code
+    * It's not the 23networking live-initramfs hook since quite some time,
+      update the comment for generation of /etc/network/interfaces
+    * Support also new style network device names by iterating over
+      /sys/class/net/* and skipping only the loopback interface
+
+ -- Michael Prokop <mika@grml.org>  Fri, 14 Dec 2018 15:40:36 +0100
+
 live-boot (1:20180603) unstable; urgency=medium
 
   [ Luca Boccassi ]
