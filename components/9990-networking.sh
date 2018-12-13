@@ -44,30 +44,12 @@ Device_from_bootif ()
 
 				if [ "$bootif_mac" = "$current_mac" ]
 				then
-					ETHDEVICE="${device##*/},$ETHDEVICE" # use ethdevice
+					DEVICE=${device##*/}
 					break
 				fi
 			fi
 		done
 	fi
-}
-
-get_ipconfig_para()
-{
-	if [ $# != 1 ] ; then
-		echo "Missin parameter for $0"
-		return
-	fi
-	devname=$1
-	for ip in ${STATICIP} ; do
-		case $ip in
-			*:$devname:*)
-			echo $ip
-			return
-			;;
-		esac
-	done
-	echo $devname
 }
 
 do_netsetup ()
@@ -80,20 +62,8 @@ do_netsetup ()
 	[ -n "$ETHDEV_TIMEOUT" ] || ETHDEV_TIMEOUT=15
 	echo "Using timeout of $ETHDEV_TIMEOUT seconds for network configuration."
 
-	# Our modus operandi for getting a working network setup is this:
-	# * If ip=* is set, pass that to ipconfig and be done
-	# * Else, try dhcp on all devices in this order:
-	#   ethdevice= bootif= <all interfaces>
-
-	ALLDEVICES="$(cd /sys/class/net/ && ls -1 2>/dev/null | grep -v '^lo$' )"
-
-	# Turn on all interfaces before doing anything, to avoid timing problems
-	# during link negotiation.
-	echo "Net: Turning on all device links..."
-	for device in ${ALLDEVICES}; do
-		ipconfig -c none -d $device -t 1 2>/dev/null >/dev/null
-	done
-
+	if [ -z "${NETBOOT}" ] && [ -z "${FETCH}" ] && [ -z "${HTTPFS}" ] && [ -z "${FTPFS}" ]
+	then
 		# See if we can select the device from BOOTIF
 		Device_from_bootif
 
@@ -103,52 +73,78 @@ do_netsetup ()
 		if [ -z "$ETHDEVICE" ]
 		then
 			echo "If you want to boot from a specific device use bootoption ethdevice=..."
-			ETHDEVICE="$ALLDEVICES"
+			for device in /sys/class/net/*
+			do
+				dev=${device##*/}
+				if [ "$dev" != "lo" ]
+				then
+					ETHDEVICE="$ETHDEVICE $dev"
+				fi
+			done
 		fi
 
 		# split args of ethdevice=eth0,eth1 into "eth0 eth1"
-		for device in $(echo $ETHDEVICE | sed 's/,/ /g')
+		for device in $(echo "$ETHDEVICE" | sed 's/,/ /g')
 		do
 			devlist="$devlist $device"
 		done
 
-		for dev in $devlist ; do
-			param="$(get_ipconfig_para $dev)"
-			if [ -n "$NODHCP" ] && [ "$param" = "$dev" ] ; then
-				echo "Ignoring network device $dev due to nodhcp." | tee -a /boot.log
-				continue
-			fi
-			echo "Executing ipconfig -t $ETHDEV_TIMEOUT $param"
-			ipconfig -t "$ETHDEV_TIMEOUT" "$param" | tee -a /netboot.config
+		for dev in $devlist
+		do
+			echo "Executing ipconfig -t $ETHDEV_TIMEOUT $dev"
+			ipconfig -t "$ETHDEV_TIMEOUT" "$dev" | tee -a /netboot.config
 
 			# if configuration of device worked we should have an assigned
 			# IP address, if so let's use the device as $DEVICE for later usage.
 			# simple and primitive approach which seems to work fine
-
-			IPV4ADDR="0.0.0.0"
-			if [ -e "/run/net-${device}.conf" ]; then
-				. /run/net-${device}.conf
-			fi
-			if [ "${IPV4ADDR}" != "0.0.0.0" ]; then
-				export DEVICE="$dev $DEVICE"
-				# break  # exit loop as we just use the irst
+			if ifconfig "$dev" | grep -q -E 'inet.*addr:|inet [0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*'
+			then
+				export DEVICE="$dev"
+				break
 			fi
 		done
-	unset devlist
+	else
+		for interface in ${DEVICE}; do
+			ipconfig -t "$ETHDEV_TIMEOUT" "${interface}" | tee "/netboot-${interface}.config"
+
+			[ -e "/run/net-${interface}.conf" ] && . "/run/net-${interface}.conf"
+
+			if [ "$IPV4ADDR" != "0.0.0.0" ]
+			then
+				break
+			fi
+		done
+	fi
 
 	for interface in ${DEVICE}
 	do
 		# source relevant ipconfig output
 		OLDHOSTNAME=${HOSTNAME}
 
-		[ -e /run/net-${interface}.conf ] && . /run/net-${interface}.conf
+		[ -e "/run/net-${interface}.conf" ] && . "/run/net-${interface}.conf"
 
-		[ -z ${HOSTNAME} ] && HOSTNAME=${OLDHOSTNAME}
+		[ -z "${HOSTNAME}" ] && HOSTNAME="${OLDHOSTNAME}"
 		export HOSTNAME
 
 		if [ -n "${interface}" ]
 		then
-			HWADDR="$(cat /sys/class/net/${interface}/address)"
+			HWADDR="$(cat "/sys/class/net/${interface}/address")"
+		fi
+
+		# Only create /etc/hosts if FQDN is known (to let 'hostname -f' query
+		# this file). Otherwise DNS will be queried to determine the FQDN.
+		if [ ! -e "/etc/hosts" ] && [ -n "${DNSDOMAIN}" ]
+		then
+			echo "Creating /etc/hosts"
+			cat > /etc/hosts <<EOF
+127.0.0.1	localhost
+127.0.1.1	${HOSTNAME}.${DNSDOMAIN}	${HOSTNAME}
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
 		fi
 
 		if [ ! -e "/etc/resolv.conf" ]

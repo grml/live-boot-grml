@@ -1,3 +1,95 @@
+live-boot (1:20180603) unstable; urgency=medium
+
+  [ Luca Boccassi ]
+  * Mark live-boot-doc as Multi-Arch: foreign
+  * Remove --parallel from dh to fix Lintian Warning.
+
+  [ Benjamin Drung ]
+  * Fix resolving FQDN given by DHCP
+  * Double quote to prevent globbing and word splitting
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Sun, 03 Jun 2018 23:00:11 +0200
+
+live-boot (1:20180328) unstable; urgency=low
+
+  [ Raphaël Hertzog ]
+  * Fix read-only persistence mode with overlayfs. Closes: #877776
+    Thanks to Ronny Standtke <ronny.standtke@fhnw.ch> for the patch.
+  * Add a small warning in the long description that the
+    package must not be installed on a regular system, but only in
+    a live image. Closes: #884886
+  * Strip comments from checksums files passed to "shaXsum -c"
+    Thanks to Andreas Heinlein for the report (Closes: #856482)
+
+  [ Steve McIntyre ]
+  * Repo moved to salsa
+
+  [ Benjamin Drung ]
+  * Don't replace busybox's wget by the true wget.
+    It was likely done for https support but since buster the busybox
+    provided wget has https support too. We save a lot of space by
+    doing so (8 Mb). (Closes: #885455)
+  * Avoid double slashes in some paths (Closes: #885453)
+  * Support setting upperdir tmpfs size with overlay-size boot parameter
+    (Closes: #885466)
+  * Simplify mount point handling by using /run/live instead of /lib/live/mount
+    (Closes: #886328)
+  * Add configuration variables to build a stripped down initrd
+    (Closes: #886337)
+
+  [ Daniel Reichelt ]
+  * Use klibc's mount again for fuse mounts (Closes: #868559)
+
+  [ raizo62 ]
+  * Update DNSFILE even if DNSFILE contains only commented or empty lines
+
+  [ Sameer Agrawal ]
+  * Fix ifconfig parsing (Closes: #892772)
+
+  [ Chas Williams ]
+  * Add back persistence fsck option
+  * Remove workaround for ipconfig issues
+
+  [ Benjamin Drung ]
+  * Remove sourcing /scripts/functions in components
+  * Support live-{top,premount,bottom} hooks (Closes: #884355)
+
+  [ Luca Boccassi ]
+  * Add backward compatibility rbind mount /lib/live/mount -> /run/live.
+    The paths used in the current released versions of live-boot are a
+    form of public API, and existing applications and scripts might rely
+    on them. Do a recursive bind mount of the new path on the previous one
+    so that they do not break on upgrade (see #886328).
+    This backward-compatible mount point will be deprecated and removed
+    before the Bullseye (Debian 11) release. Users are recommended to start
+    migrating to the new /run/live path as soon as possible.
+
+  [ Erik Ziegenbalg ]
+  * fromiso: add support for local ISO (ONIE)
+
+  [ Luca Boccassi ]
+  * Clarify FROMISO documentation in live-boot manpage
+  * Use HTTPS in debian/copyright (policy 4.0.0).
+  * Remove dead link to live-systems.org from debian/copyright.
+  * Bump Standards-Version to 4.1.3, no changes.
+  * Add myself to Uploaders.
+
+ -- Luca Boccassi <bluca@debian.org>  Wed, 28 Mar 2018 20:07:39 +0100
+
+live-boot (1:20170623) unstable; urgency=medium
+
+  * Do not duplicate files in /lib/live/boot/ and /bin/boot/ in the initrd.
+    Closes: #864385 Thanks to Daniel Reichelt <debian@nachtgeist.net> for the
+    patch.
+  * Take into account the fact that udevadm is now in /bin and no longer in
+    /sbin. Closes: #852570
+  * Add myself to Uploaders.
+  * Bump debhelper compat to 10.
+  * Bump Standards-Version to 4.0.0.
+  * Fix spelling errors in live-boot(7).
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Fri, 23 Jun 2017 14:41:06 +0200
+
 live-boot (1:20170112+grml.1) unstable; urgency=medium
 
   [ Kristian Klausen ]

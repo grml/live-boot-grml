@@ -3,8 +3,8 @@ Section: misc
 Priority: optional
 Maintainer: Grml Team <team@grml.org>
 Build-Depends:
- debhelper (>= 9),
-Standards-Version: 3.9.8
+ debhelper (>= 10),
+Standards-Version: 4.1.3
 Homepage: http://live.debian.net/devel/live-boot/
 Vcs-Browser: http://git.grml.org/?p=live-boot-grml.git
 Vcs-Git: git://git.grml.org/live-boot-grml.git
@@ -33,7 +33,8 @@ Replaces: live-boot
 Provides: live-boot
 Description: Live System Boot Components
  live-boot contains the components to configure a live system during the boot
- process (early userspace).
+ process (early userspace). Do not install this package on your regular system,
+ it is only meant to be used in a live image.
  .
  In addition to live-boot, a backend for the initrd generation is required, such
  as live-boot-initramfs-tools.
@@ -45,6 +46,7 @@ Description: Live System Boot Components
 Package: live-boot-grml-doc
 Section: doc
 Architecture: all
+Multi-Arch: foreign
 Depends:
  ${misc:Depends},
 Description: Live System Boot Components (documentation)
@@ -78,7 +80,8 @@ Description: Live System Boot Components (initramfs-tools backend)
  systems and the official Debian Live images themselves.
  .
  live-boot contains the components to configure a live system during the boot
- process (early userspace).
+ process (early userspace). Do not install this package on your regular system,
+ it is only meant to be used in a live image.
  .
  This package contains the initramfs-tools backend.
  .
