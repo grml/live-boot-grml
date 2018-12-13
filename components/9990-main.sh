@@ -182,11 +182,14 @@ Live ()
 	mount --rbind /run/live ${rootmnt}/lib/live/mount
 
 	Fstab
-	Netbase
 
 	Swap
 
-	Grml_Networking
+	if grep -q debian_networking /proc/cmdline ; then
+		Netbase
+	else
+		Grml_Networking
+	fi
 
 	exec 1>&6 6>&-
 	exec 2>&7 7>&-
