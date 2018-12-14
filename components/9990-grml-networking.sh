@@ -8,6 +8,8 @@ if [ -n "${NONETWORKING}" ]; then
    return 0
 fi
 
+log_begin_msg "Preconfiguring Grml networking"
+
 modprobe af_packet # req'd for DHCP
 
 # initialize udev
@@ -37,7 +39,7 @@ fi
 
 # config for loopback networking
 cat > $IFFILE << EOF
-# Initially generated on boot by initramfs' 23networking.
+# Initially generated on boot by initramfs
 
 auto lo
 iface lo inet loopback
@@ -47,8 +49,9 @@ EOF
 unset HOSTNAME
 
 # generate config for each present network device
-for interface in /sys/class/net/eth* /sys/class/net/ath* /sys/class/net/wlan*; do
+for interface in /sys/class/net/* ; do
     [ -e ${interface} ] || continue
+    [ "${interface}" = "lo" ] && continue
     interface=$(basename ${interface})
     method="dhcp"
 
