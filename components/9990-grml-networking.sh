@@ -51,8 +51,8 @@ unset HOSTNAME
 # generate config for each present network device
 for interface in /sys/class/net/* ; do
     [ -e ${interface} ] || continue
-    [ "${interface}" = "lo" ] && continue
     interface=$(basename ${interface})
+    [ "${interface}" = "lo" ] && continue
     method="dhcp"
 
     # NODHCP or a previously run ipconfig mean that ifupdown should never
