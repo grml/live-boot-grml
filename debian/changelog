@@ -1,3 +1,10 @@
+live-boot (1:20180603+grml.2) unstable; urgency=medium
+
+  * [ad4ec75] Do not generate dhcp entry for loopback interface.
+    Thanks to Mykola Malkov for the bug report
+
+ -- Michael Prokop <mika@grml.org>  Fri, 08 Feb 2019 17:26:00 +0100
+
 live-boot (1:20180603+grml.1) unstable; urgency=medium
 
   * [f35e0cf] Sync with Debian's upstream
