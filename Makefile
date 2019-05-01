@@ -32,7 +32,7 @@ test:
 	else \
 		echo "W: checkbashisms - command not found"; \
 		echo "I: checkbashisms can be obtained from: "; \
-		echo "I:   http://git.debian.org/?p=devscripts/devscripts.git"; \
+		echo "I:   https://salsa.debian.org/debian/devscripts.git"; \
 		echo "I: On Debian based systems, checkbashisms can be installed with:"; \
 		echo "I:   apt-get install devscripts"; \
 	fi
