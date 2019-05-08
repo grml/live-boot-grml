@@ -6,6 +6,7 @@ Uploaders: Iain R. Learmonth <irl@debian.org>, Raphaël Hertzog <hertzog@debian.
  Luca Boccassi <bluca@debian.org>
 Build-Depends:
  debhelper (>= 10),
+ po4a,
 Standards-Version: 4.1.3
 Homepage: https://wiki.debian.org/DebianLive
 Vcs-Browser: https://salsa.debian.org/live-team/live-boot
