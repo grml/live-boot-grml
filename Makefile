@@ -38,7 +38,7 @@ test:
 	fi
 
 build:
-	@echo "Nothing to build."
+	$(MAKE) -C $(CURDIR)/manpages
 
 install:
 	# Installing components
