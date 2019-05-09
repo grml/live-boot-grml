@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-boot\n"
-"POT-Creation-Date: 2015-09-22 10:09+0200\n"
+"POT-Creation-Date: 2019-05-09 14:58+0200\n"
 "PO-Revision-Date: 2013-11-10 20:10+0900\n"
 "Last-Translator: Carlos Zuferri <chals@altorricon.com>\n"
 "Language-Team: none\n"
@@ -51,57 +51,62 @@ msgid "DESCRIPTION"
 msgstr "DESCRIPCIÓN"
 
 #. type: SH
-#: en/live-boot.7:28 en/persistence.conf.5:57
+#: en/live-boot.7:61 en/persistence.conf.5:57
 #, no-wrap
 msgid "OPTIONS"
 msgstr "OPCIONES"
 
 #. type: SH
-#: en/live-boot.7:154 en/persistence.conf.5:190
+#: en/live-boot.7:193 en/persistence.conf.5:190
 #, no-wrap
 msgid "SEE ALSO"
 msgstr "VER ADEMÁS"
 
 #. type: Plain text
-#: en/live-boot.7:158 en/persistence.conf.5:194
+#: en/live-boot.7:197 en/persistence.conf.5:194
 msgid "I<live-build>(7)"
 msgstr "I<live-build>(7)"
 
 #. type: Plain text
-#: en/live-boot.7:160 en/persistence.conf.5:196
+#: en/live-boot.7:199 en/persistence.conf.5:196
 msgid "I<live-config>(7)"
 msgstr "I<live-config>(7)"
 
 #. type: Plain text
-#: en/live-boot.7:162 en/persistence.conf.5:198
+#: en/live-boot.7:201 en/persistence.conf.5:198
 msgid "I<live-tools>(7)"
 msgstr "I<live-tools>(7)"
 
 #. type: SH
-#: en/live-boot.7:163 en/persistence.conf.5:199
+#: en/live-boot.7:202 en/persistence.conf.5:199
 #, no-wrap
 msgid "HOMEPAGE"
 msgstr "PÁGINA WEB"
 
 #. type: Plain text
-#: en/live-boot.7:165 en/persistence.conf.5:201
+#: en/live-boot.7:204 en/persistence.conf.5:201
+#, fuzzy
+#| msgid ""
+#| "More information about live-boot and the Live Systems project can be "
+#| "found on the homepage at E<lt>I<http://live-systems.org/>E<gt> and in the "
+#| "manual at E<lt>I<http://live-systems.org/manual/>E<gt>."
 msgid ""
 "More information about live-boot and the Live Systems project can be found "
-"on the homepage at E<lt>I<http://live-systems.org/>E<gt> and in the manual "
-"at E<lt>I<http://live-systems.org/manual/>E<gt>."
+"on the homepage at E<lt>I<https://wiki.debian.org/DebianLive>E<gt> and in "
+"the manual at E<lt>I<https://live-team.pages.debian.net/live-manual/>E<gt>."
 msgstr ""
 "Se puede encontrar más información acerca de live-boot y el proyecto Live "
 "Systems en la página web E<lt>I<http://live-systems.org/>E<gt> y en el "
 "manual en E<lt>I<http://live-systems.org/manual/>E<gt>."
 
 #. type: SH
-#: en/live-boot.7:166 en/persistence.conf.5:202
+#: en/live-boot.7:205 en/persistence.conf.5:202
 #, no-wrap
 msgid "BUGS"
 msgstr "ERRORES"
 
 #. type: Plain text
-#: en/live-boot.7:168 en/persistence.conf.5:204
+#: en/live-boot.7:207 en/persistence.conf.5:204
 msgid ""
 "Bugs can be reported by submitting a bugreport for the live-boot package in "
 "the Bug Tracking System at E<lt>I<http://bugs.debian.org/>E<gt> or by "
@@ -114,13 +119,13 @@ msgstr ""
 "Systems a la dirección E<lt>I<debian-live@lists.debian.org>E<gt>."
 
 #. type: SH
-#: en/live-boot.7:169 en/persistence.conf.5:205
+#: en/live-boot.7:208 en/persistence.conf.5:205
 #, no-wrap
 msgid "AUTHOR"
 msgstr "AUTOR"
 
 #. type: Plain text
-#: en/live-boot.7:170 en/persistence.conf.5:206
+#: en/live-boot.7:209 en/persistence.conf.5:206
 msgid ""
 "live-boot was written by Daniel Baumann E<lt>I<mail@daniel-baumann.ch>E<gt>."
 msgstr ""
@@ -582,7 +587,9 @@ msgstr "Directorio:"
 
 #. type: Plain text
 #: en/persistence.conf.5:170
-msgid "/homea/user2/.ssh (from c)"
+#, fuzzy
+#| msgid "/homea/user2/.ssh (from c)"
+msgid "/home/user2/.ssh (from c)"
 msgstr "/homea/user2/.ssh (de c)"
 
 #. type: Plain text
