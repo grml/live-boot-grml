@@ -1,3 +1,25 @@
+live-boot (1:20190614) unstable; urgency=medium
+
+  [ Roland Clobus ]
+  * The homepage is https://wiki.debian.org/DebianLive
+  * Used the same text for po4a as in live-manual.
+  * Updated URL to the homepage and manual.
+  * Fixed Lintian warning: manpage-section-mismatch
+  * Always rebuild po4a.cfg This is needed to ensure that new languages
+    will automatically be found
+  * New Build-Depends: po4a for the translation files
+  * Updated the translation files. The translators can now update their
+    translations.
+
+  [ Benjamin Drung ]
+  * Also search for libnss_*.so files in /usr/lib (Closes: #930419)
+
+  [ Luca Boccassi ]
+  * Set Rules-Requires-Root: no
+  * Set Standards-Version to 4.3.0
+
+ -- Luca Boccassi <bluca@debian.org>  Fri, 14 Jun 2019 10:55:07 +0100
+
 live-boot (1:20180603) unstable; urgency=medium
 
   [ Luca Boccassi ]
