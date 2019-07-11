@@ -1,3 +1,10 @@
+live-boot (1:20180603+grml.3) unstable; urgency=medium
+
+  * [d189b07] Ensure locating libnss* files doesn't fail on merged-usr
+    systems
+
+ -- Michael Prokop <mika@grml.org>  Thu, 11 Jul 2019 11:51:40 +0200
+
 live-boot (1:20180603+grml.2) unstable; urgency=medium
 
   * [ad4ec75] Do not generate dhcp entry for loopback interface.
