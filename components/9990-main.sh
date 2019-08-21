@@ -37,7 +37,7 @@ Live ()
 	then
 		if do_netmount
 		then
-			livefs_root="${mountpoint}"
+			livefs_root="${mountpoint?}"
 		else
 			panic "Unable to find a live file system on the network"
 		fi
@@ -52,16 +52,14 @@ Live ()
 		else
 			if [ -x /usr/bin/memdiskfind ]
 			then
-				MEMDISK=$(/usr/bin/memdiskfind)
-
-				if [ $? -eq 0 ]
+				if ! MEMDISK=$(/usr/bin/memdiskfind)
 				then
 					# We found a memdisk, set up phram
 					# Sometimes "modprobe phram" can not successfully create /dev/mtd0.
 				        # Have to try several times.
 					max_try=20
-					while [ ! -c /dev/mtd0 -a "$max_try" -gt 0 ]; do
-					  modprobe phram phram=memdisk,${MEMDISK}
+					while [ ! -c /dev/mtd0 ] && [ "$max_try" -gt 0 ]; do
+					  modprobe phram "phram=memdisk,${MEMDISK}"
 					  sleep 0.2
 					  if [ -c /dev/mtd0 ]; then
 					  	break
@@ -88,7 +86,7 @@ Live ()
 				fi
 
 				sleep 1
-				i="$(($i + 1))"
+				i=$((i + 1))
 			done
 		fi
 	fi
@@ -132,10 +130,10 @@ Live ()
 
 	if [ -n "${MODULETORAMFILE}" ] || [ -n "${PLAIN_ROOT}" ]
 	then
-		setup_unionfs "${livefs_root}" "${rootmnt}"
+		setup_unionfs "${livefs_root}" "${rootmnt?}"
 	else
 		mac="$(get_mac)"
-		mac="$(echo ${mac} | sed 's/-//g')"
+		mac="$(echo "${mac}" | sed 's/-//g')"
 		mount_images_in_directory "${livefs_root}" "${rootmnt}" "${mac}"
 	fi
 
@@ -173,10 +171,10 @@ Live ()
 	else
 		DNSFILE="${rootmnt}/etc/resolv.conf"
 	fi
-	if [ -f /etc/resolv.conf ] && ! grep -E -q -v '^[[:space:]]*#|^[[:space:]]*$' ${DNSFILE}
+	if [ -f /etc/resolv.conf ] && ! grep -E -q -v '^[[:space:]]*#|^[[:space:]]*$' "${DNSFILE}"
 	then
 		log_begin_msg "Copying /etc/resolv.conf to ${DNSFILE}"
-		cp -v /etc/resolv.conf ${DNSFILE}
+		cp -v /etc/resolv.conf "${DNSFILE}"
 		log_end_msg
 	fi
 
@@ -189,8 +187,8 @@ Live ()
 	# this includes code that checks what is mounted on /lib/live/mount/*
 	# (eg: grep /lib/live /proc/mount)
 	# XXX: to be removed before the bullseye release
-	mkdir -p ${rootmnt}/lib/live/mount
-	mount --rbind /run/live ${rootmnt}/lib/live/mount
+	mkdir -p "${rootmnt}/lib/live/mount"
+	mount --rbind /run/live "${rootmnt}/lib/live/mount"
 
 	Fstab
 	Netbase
