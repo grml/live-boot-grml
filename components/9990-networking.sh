@@ -128,6 +128,8 @@ do_netsetup ()
 
 		if [ -n "${interface}" ]
 		then
+			# HWADDR used by do_iscsi from 9990-mount-iscsi.sh
+			# shellcheck disable=SC2034
 			HWADDR="$(cat "/sys/class/net/${interface}/address")"
 		fi
 
