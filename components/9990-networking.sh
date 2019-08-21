@@ -133,6 +133,12 @@ do_netsetup ()
 			HWADDR="$(cat "/sys/class/net/${interface}/address")"
 		fi
 
+		if [ ! -e "/etc/hostname" ] && [ -n "${HOSTNAME}" ]
+		then
+			echo "Creating /etc/hostname"
+			echo "${HOSTNAME}" > /etc/hostname
+		fi
+
 		# Only create /etc/hosts if FQDN is known (to let 'hostname -f' query
 		# this file). Otherwise DNS will be queried to determine the FQDN.
 		if [ ! -e "/etc/hosts" ] && [ -n "${DNSDOMAIN}" ]
