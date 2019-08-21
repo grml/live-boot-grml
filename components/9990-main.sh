@@ -171,7 +171,7 @@ Live ()
 	else
 		DNSFILE="${rootmnt}/etc/resolv.conf"
 	fi
-	if [ -f /etc/resolv.conf ] && ! grep -E -q -v '^[[:space:]]*#|^[[:space:]]*$' "${DNSFILE}"
+	if [ -f /etc/resolv.conf ] && ! grep -E -q -v '^[[:space:]]*(#|$)' "${DNSFILE}"
 	then
 		log_begin_msg "Copying /etc/resolv.conf to ${DNSFILE}"
 		cp -v /etc/resolv.conf "${DNSFILE}"
