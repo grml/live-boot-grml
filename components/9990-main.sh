@@ -165,6 +165,20 @@ Live ()
 		fi
 	fi
 
+	if [ -f /etc/hostname ] && ! grep -E -q -v '^[[:space:]]*(#|$)' "${rootmnt}/etc/hostname"
+	then
+		log_begin_msg "Copying /etc/hostname to ${rootmnt}/etc/hostname"
+		cp -v /etc/hostname "${rootmnt}/etc/hostname"
+		log_end_msg
+	fi
+
+	if [ -f /etc/hosts ] && ! grep -E -q -v '^[[:space:]]*(#|$|(127.0.0.1|::1|ff02::[12])[[:space:]])' "${rootmnt}/etc/hosts"
+	then
+		log_begin_msg "Copying /etc/hosts to ${rootmnt}/etc/hosts"
+		cp -v /etc/hosts "${rootmnt}/etc/hosts"
+		log_end_msg
+	fi
+
 	if [ -L /root/etc/resolv.conf ] ; then
 		# assume we have resolvconf
 		DNSFILE="${rootmnt}/etc/resolvconf/resolv.conf.d/base"
