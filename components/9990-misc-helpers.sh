@@ -472,6 +472,14 @@ is_supported_fs ()
 	fi
 
 	# Try to look if it is already supported by the kernel
+	# For ntfs, since user space program ntfs-3g will be used. Check ntfs-3g instead of kernel module.
+	if [ "${fstype}" = "ntfs" ]; then
+		if type ntfs-3g >/dev/null 2>&1; then
+			return 0
+		else
+			return 1
+		fi
+	fi
 	if grep -q ${fstype} /proc/filesystems
 	then
 		return 0
