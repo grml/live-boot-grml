@@ -195,12 +195,15 @@ setup_unionfs ()
 			do
 				media="$(echo ${media} | tr ":" " ")"
 
-				case ${media} in
-					${custom_overlay_label}=*)
-						device="${media#*=}"
-						overlay_devices="${overlay_devices} ${device}"
-						;;
-				 esac
+				for overlay_label in ${custom_overlay_label}
+				do
+					case ${media} in
+						${overlay_label}=*)
+							device="${media#*=}"
+							overlay_devices="${overlay_devices} ${device}"
+							;;
+					esac
+				done
 			done
 		fi
 	elif [ -n "${NFS_COW}" ] && [ -z "${NOPERSISTENCE}" ]
