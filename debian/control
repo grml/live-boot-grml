@@ -5,7 +5,7 @@ Maintainer: Live Systems Maintainers <debian-live@lists.debian.org>
 Uploaders: Iain R. Learmonth <irl@debian.org>, Raphaël Hertzog <hertzog@debian.org>,
  Luca Boccassi <bluca@debian.org>
 Build-Depends:
- debhelper (>= 10),
+ debhelper (>= 12~),
  po4a,
 Standards-Version: 4.4.1
 Rules-Requires-Root: no
