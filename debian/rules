@@ -13,5 +13,5 @@ override_dh_auto_install:
 	mkdir -p debian/live-boot-initramfs-tools/usr/share
 	mv debian/tmp/usr/share/initramfs-tools debian/live-boot-initramfs-tools/usr/share
 
-override_dh_install:
-	dh_install --fail-missing
+override_dh_missing:
+	dh_missing --fail-missing

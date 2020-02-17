@@ -5,9 +5,9 @@ Maintainer: Live Systems Maintainers <debian-live@lists.debian.org>
 Uploaders: Iain R. Learmonth <irl@debian.org>, Raphaël Hertzog <hertzog@debian.org>,
  Luca Boccassi <bluca@debian.org>
 Build-Depends:
- debhelper (>= 10),
+ debhelper-compat (= 12),
  po4a,
-Standards-Version: 4.3.0
+Standards-Version: 4.4.1
 Rules-Requires-Root: no
 Homepage: https://wiki.debian.org/DebianLive
 Vcs-Browser: https://salsa.debian.org/live-team/live-boot
