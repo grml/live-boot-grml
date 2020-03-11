@@ -1,6 +1,7 @@
 #!/bin/sh
 
 ## live-boot(7) - System Boot Components
+## Copyright (C) 2016-2020 The Debian Live team
 ## Copyright (C) 2006-2015 Daniel Baumann <mail@daniel-baumann.ch>
 ##
 ## This program comes with ABSOLUTELY NO WARRANTY; for details see COPYING.
@@ -25,7 +26,7 @@ for MANPAGE in en/*
 do
 	SECTION="$(basename ${MANPAGE} | awk -F. '{ print $2 }')"
 
-	sed -i -e "s|^.TH.*$|.TH ${PROGRAM} ${SECTION} ${DATE} ${VERSION} \"Live Systems Project\"|" ${MANPAGE}
+	sed -i -e "s|^.TH.*$|.TH ${PROGRAM} ${SECTION} ${DATE} ${VERSION} \"Debian Live Project\"|" ${MANPAGE}
 done
 
 # European date format
