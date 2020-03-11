@@ -54,7 +54,7 @@ panic()
 	printf "\n"
 	printf "  This Live System image failed to boot.\n\n"
 
-	printf "  Please file a bug against the 'live-boot' package or email the Live Systems\n"
+	printf "  Please file a bug against the 'live-boot' package or email the Debian Live\n"
 	printf "  mailing list at <debian-live@lists.debian.org>, making sure to note the\n"
 	printf "  exact version, name and distribution of the image you were attempting to boot.\n\n"
 

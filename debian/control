@@ -1,7 +1,7 @@
 Source: live-boot
 Section: misc
 Priority: optional
-Maintainer: Live Systems Maintainers <debian-live@lists.debian.org>
+Maintainer: Debian Live Maintainers <debian-live@lists.debian.org>
 Uploaders: Iain R. Learmonth <irl@debian.org>, Raphaël Hertzog <hertzog@debian.org>,
  Luca Boccassi <bluca@debian.org>
 Build-Depends:
@@ -29,7 +29,7 @@ Suggests:
  httpfs2,
  wget,
 Description: Live System Boot Components
- The Live Systems project maintains the components to build Debian based Live
+ The Debian Live project maintains the components to build Debian based Live
  systems and the official Debian Live images themselves.
  .
  live-boot contains the components to configure a live system during the boot
@@ -46,7 +46,7 @@ Multi-Arch: foreign
 Depends:
  ${misc:Depends},
 Description: Live System Boot Components (documentation)
- The Live Systems project maintains the components to build Debian based Live
+ The Debian Live project maintains the components to build Debian based Live
  systems and the official Debian Live images themselves.
  .
  live-boot contains the components to configure a live system during the boot
@@ -68,7 +68,7 @@ Replaces:
 Provides:
  live-boot-backend,
 Description: Live System Boot Components (initramfs-tools backend)
- The Live Systems project maintains the components to build Debian based Live
+ The Debian Live project maintains the components to build Debian based Live
  systems and the official Debian Live images themselves.
  .
  live-boot contains the components to configure a live system during the boot

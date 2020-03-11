@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: live-boot
-Upstream-Contact: Live Systems Project <debian-live@lists.debian.org>
+Upstream-Contact: Debian Live Project <debian-live@lists.debian.org>
 
 Files: *
 Copyright: 2016-2020 The Debian Live team
