@@ -310,6 +310,12 @@ setup_unionfs ()
 		chmod 1777 "${rootmnt}"/tmp
 	fi
 
+	# Correct the permission of /var/tmp:
+	if [ -d "${rootmnt}/var/tmp" ]
+	then
+		chmod 1777 "${rootmnt}"/var/tmp
+	fi
+
 	# Adding custom persistence
 	if [ -n "${PERSISTENCE}" ] && [ -z "${NOPERSISTENCE}" ]
 	then
