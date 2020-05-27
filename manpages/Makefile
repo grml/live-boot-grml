@@ -23,14 +23,12 @@ build: check po4a.cfg
 	@if [ ! -x "$$(which po4a 2>/dev/null)" ]; \
 	then \
 		echo "E: po4a - command not found"; \
-		echo "I: po4a can be obtained from:"; \
-		echo "I:   http://po4a.alioth.debian.org/"; \
-		echo "I: On Debian based systems, po4a can be installed with:"; \
-		echo "I:   apt-get install po4a"; \
+		echo "I: po4a can be obtained from https://po4a.org"; \
+		echo "I: On Debian based systems, po4a can be installed with 'apt-get install po4a'."; \
 		exit 1; \
 	fi
 
-	po4a --copyright-holder "Live Systems Project" --keep 0 --package-name live-boot --package-version $(shell dpkg-parsechangelog -S Version) po4a.cfg
+	po4a --copyright-holder "Debian Live Project" --keep 0 --package-name live-boot --package-version $(shell cd ..;dpkg-parsechangelog -S Version) po4a.cfg
 
 clean:
 	rm -rf $(LANGUAGES)
@@ -55,3 +53,5 @@ check:
 	fi
 	
 	@echo " done!"
+
+.PHONY: po4a.cfg

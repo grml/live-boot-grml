@@ -128,7 +128,15 @@ do_netsetup ()
 
 		if [ -n "${interface}" ]
 		then
+			# HWADDR used by do_iscsi from 9990-mount-iscsi.sh
+			# shellcheck disable=SC2034
 			HWADDR="$(cat "/sys/class/net/${interface}/address")"
+		fi
+
+		if [ ! -e "/etc/hostname" ] && [ -n "${HOSTNAME}" ]
+		then
+			echo "Creating /etc/hostname"
+			echo "${HOSTNAME}" > /etc/hostname
 		fi
 
 		# Only create /etc/hosts if FQDN is known (to let 'hostname -f' query
@@ -154,7 +162,6 @@ EOF
 			if [ -n "${DNSDOMAIN}" ]
 			then
 				echo "domain ${DNSDOMAIN}" > /etc/resolv.conf
-				echo "search ${DNSDOMAIN}" >> /etc/resolv.conf
 			fi
 
 			for i in ${IPV4DNS0} ${IPV4DNS1} ${IPV4DNS1} ${DNSSERVERS}
@@ -164,6 +171,14 @@ EOF
 					echo "nameserver $i" >> /etc/resolv.conf
 				fi
 			done
+
+			if [ -n "${DOMAINSEARCH}" ]
+			then
+				echo "search ${DOMAINSEARCH}" >> /etc/resolv.conf
+			elif [ -n "${DNSDOMAIN}" ]
+			then
+				echo "search ${DNSDOMAIN}" >> /etc/resolv.conf
+			fi
 		fi
 
 		# Check if we have a network device at all

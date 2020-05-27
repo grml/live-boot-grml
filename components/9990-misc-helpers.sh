@@ -495,6 +495,14 @@ is_supported_fs ()
 	fi
 
 	# Try to look if it is already supported by the kernel
+	# For ntfs, since user space program ntfs-3g will be used. Check ntfs-3g instead of kernel module.
+	if [ "${fstype}" = "ntfs" ]; then
+		if type ntfs-3g >/dev/null 2>&1; then
+			return 0
+		else
+			return 1
+		fi
+	fi
 	if grep -q ${fstype} /proc/filesystems
 	then
 		return 0
@@ -795,7 +803,7 @@ mount_persistence_media ()
 		then
 			mount_opts="ro,noatime"
 		fi
-		if mount -t "${fstype}" -o "${mount_opts}" "${device}" "${backing}" >/dev/null
+		if mount -t "${fstype}" -o "${mount_opts}" "${device}" "${backing}" >/dev/null 2>&1
 		then
 			echo ${backing}
 			return 0
@@ -1398,8 +1406,8 @@ do_union ()
 			# + a workdir to become mounted
 			# + workdir and upperdir to reside under the same mount
 			# + workdir and upperdir to be in separate directories
-			mkdir "${unionrw}/rw"
-			mkdir "${unionrw}/work"
+			mkdir -p "${unionrw}/rw"
+			mkdir -p "${unionrw}/work"
 			unionmountopts="-o noatime,lowerdir=${unionro},upperdir=${unionrw}/rw,workdir=${unionrw}/work"
 			;;
 	esac

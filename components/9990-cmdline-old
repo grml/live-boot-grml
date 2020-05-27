@@ -216,7 +216,7 @@ Cmdline_old ()
 				;;
 
 			persistence-label=*)
-				custom_overlay_label="${_PARAMETER#persistence-label=*}"
+				custom_overlay_label=$(echo ${_PARAMETER#persistence-label=*} | sed -e 's/,/ /g')
 				;;
 
 			nopersistence)

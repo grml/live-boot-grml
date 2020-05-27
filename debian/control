@@ -2,11 +2,15 @@ Source: live-boot
 Section: misc
 Priority: optional
 Maintainer: Grml Team <team@grml.org>
+Uploaders: Michael Prokop <mika@grml.org>
 Build-Depends:
- debhelper (>= 10),
-Standards-Version: 4.1.3
+ debhelper-compat (= 12),
+ po4a,
+Standards-Version: 4.4.1
+Rules-Requires-Root: no
+Homepage: https://wiki.debian.org/DebianLive
 Homepage: http://live.debian.net/devel/live-boot/
-Vcs-Browser: http://git.grml.org/?p=live-boot-grml.git
+Vcs-Browser: https://git.grml.org/?p=live-boot-grml.git
 Vcs-Git: git://git.grml.org/live-boot-grml.git
 Origin: Grml
 Bugs: mailto:bugs@grml.org
@@ -48,7 +52,7 @@ Multi-Arch: foreign
 Depends:
  ${misc:Depends},
 Description: Live System Boot Components (documentation)
- The Live Systems project maintains the components to build Debian based Live
+ The Debian Live project maintains the components to build Debian based Live
  systems and the official Debian Live images themselves.
  .
  live-boot contains the components to configure a live system during the boot
@@ -74,7 +78,7 @@ Replaces:
 Provides:
  live-boot-backend,
 Description: Live System Boot Components (initramfs-tools backend)
- The Live Systems project maintains the components to build Debian based Live
+ The Debian Live project maintains the components to build Debian based Live
  systems and the official Debian Live images themselves.
  .
  live-boot contains the components to configure a live system during the boot
