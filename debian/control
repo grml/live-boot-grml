@@ -9,7 +9,6 @@ Build-Depends:
 Standards-Version: 4.4.1
 Rules-Requires-Root: no
 Homepage: https://wiki.debian.org/DebianLive
-Homepage: http://live.debian.net/devel/live-boot/
 Vcs-Browser: https://git.grml.org/?p=live-boot-grml.git
 Vcs-Git: git://git.grml.org/live-boot-grml.git
 Origin: Grml
