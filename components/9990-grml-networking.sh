@@ -133,11 +133,11 @@ EOF
     unset IPV4DNS IPV4DNSLIST
 
     echo>> $IFFILE
-    echo '# Support overriding defaults:' >> $IFFILE
-    echo 'source /etc/network/interfaces.d/*' >> $IFFILE
-
-    echo>> $IFFILE
 done
+
+echo '# Support overriding defaults:' >> $IFFILE
+echo 'source /etc/network/interfaces.d/*' >> $IFFILE
+echo>> $IFFILE
 
 # dns bootoption
 if [ -n "$DNSSERVERS" ]
