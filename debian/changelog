@@ -1,3 +1,10 @@
+live-boot (1:20200527+grml.2) unstable; urgency=medium
+
+  * [2f7a8c9] Add instance for sourcing /etc/network/interfaces.d/
+    only once
+
+ -- Michael Prokop <mika@grml.org>  Tue, 23 Jun 2020 12:22:16 +0200
+
 live-boot (1:20200527+grml.1) unstable; urgency=medium
 
   [ Michael Prokop ]
