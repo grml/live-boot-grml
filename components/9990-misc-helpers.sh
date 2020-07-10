@@ -761,7 +761,7 @@ try_mount ()
 			fstype=$(get_fstype "${dev}")
 		fi
 		mount -t "${fstype}" -o "${opts}" "${dev}" "${mountp}" || \
-		( echo "SKIPPING: Cannot mount ${dev} on ${mountp}, fstype=${fstype}, options=${opts}" > boot.log && return 0 )
+		( echo "SKIPPING: Cannot mount ${dev} on ${mountp}, fstype=${fstype}, options=${opts}" >> boot.log && return 0 )
 	fi
 }
 
