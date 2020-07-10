@@ -1,3 +1,11 @@
+live-boot (1:20200527+grml.3) unstable; urgency=medium
+
+  * [b368066] 0020-read-only: iterate over all devices + improve console
+    message layout
+  * [ea4f167] 9990-misc-helpers.sh: ensure to appened to boot.log file
+
+ -- Michael Prokop <mika@grml.org>  Fri, 10 Jul 2020 09:07:01 +0200
+
 live-boot (1:20200527+grml.2) unstable; urgency=medium
 
   * [2f7a8c9] Add instance for sourcing /etc/network/interfaces.d/
