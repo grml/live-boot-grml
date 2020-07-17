@@ -1,3 +1,10 @@
+live-boot (1:20200527+grml.4) unstable; urgency=medium
+
+  * [b1e38b1] Include ethtool binary for debugging network configuration
+    during network boot
+
+ -- Michael Prokop <mika@grml.org>  Fri, 17 Jul 2020 23:23:08 +0200
+
 live-boot (1:20200527+grml.3) unstable; urgency=medium
 
   * [b368066] 0020-read-only: iterate over all devices + improve console
