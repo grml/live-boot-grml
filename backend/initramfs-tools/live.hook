@@ -264,4 +264,9 @@ then
 	manual_add_modules 8021q
 fi
 
+if [ -x /sbin/ethtool ]
+then
+       copy_exec /sbin/ethtool
+fi
+
 [ "${QUIET}" ] || echo .
