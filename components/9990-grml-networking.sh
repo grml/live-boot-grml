@@ -39,7 +39,11 @@ fi
 
 # config for loopback networking
 cat > $IFFILE << EOF
-# Initially generated on boot by initramfs
+# Initially generated on boot by initramfs,
+# interfaces(5) file used by ifup(8) and ifdown(8)
+
+# Include files from /etc/network/interfaces.d:
+source /etc/network/interfaces.d/*
 
 auto lo
 iface lo inet loopback
@@ -134,10 +138,6 @@ EOF
 
     echo>> $IFFILE
 done
-
-echo '# Support overriding defaults:' >> $IFFILE
-echo 'source /etc/network/interfaces.d/*' >> $IFFILE
-echo>> $IFFILE
 
 # dns bootoption
 if [ -n "$DNSSERVERS" ]
