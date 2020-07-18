@@ -1,3 +1,11 @@
+live-boot (1:20200527+grml.5) unstable; urgency=medium
+
+  * [b727a78] /e/n/i: move sourcing of /etc/network/interfaces.d/ to begin
+    of file
+  * [61b7447] Avoid executing memdiskfind under Secure Boot
+
+ -- Michael Prokop <mika@grml.org>  Sat, 18 Jul 2020 17:02:55 +0200
+
 live-boot (1:20200527+grml.4) unstable; urgency=medium
 
   * [b1e38b1] Include ethtool binary for debugging network configuration
