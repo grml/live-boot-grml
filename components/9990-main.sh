@@ -52,25 +52,31 @@ Live ()
 		else
 			if [ -x /usr/bin/memdiskfind ]
 			then
-				if MEMDISK=$(/usr/bin/memdiskfind)
+				if ! dd if=/dev/mem of=/dev/zero bs=1 count=1 >/dev/null 2>&1
 				then
-					# We found a memdisk, set up phram
-					# Sometimes "modprobe phram" can not successfully create /dev/mtd0.
-				        # Have to try several times.
-					max_try=20
-					while [ ! -c /dev/mtd0 ] && [ "$max_try" -gt 0 ]; do
-					  modprobe phram "phram=memdisk,${MEMDISK}"
-					  sleep 0.2
-					  if [ -c /dev/mtd0 ]; then
-					  	break
-					  else
-					  	rmmod phram
-				  	  fi
-					  max_try=$((max_try - 1))
-					done
+					log_begin_msg "access to /dev/mem is restriced, skipping memdiskfind"
+					log_end_msg
+				else
+					if MEMDISK=$(/usr/bin/memdiskfind)
+					then
+						# We found a memdisk, set up phram
+						# Sometimes "modprobe phram" can not successfully create /dev/mtd0.
+						# Have to try several times.
+						max_try=20
+						while [ ! -c /dev/mtd0 ] && [ "$max_try" -gt 0 ]; do
+						  modprobe phram "phram=memdisk,${MEMDISK}"
+						  sleep 0.2
+						  if [ -c /dev/mtd0 ]; then
+							break
+						  else
+							rmmod phram
+						  fi
+						  max_try=$((max_try - 1))
+						done
 
-					# Load mtdblock, the memdisk will be /dev/mtdblock0
-					modprobe mtdblock
+						# Load mtdblock, the memdisk will be /dev/mtdblock0
+						modprobe mtdblock
+					fi
 				fi
 			fi
 
