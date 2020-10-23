@@ -2,7 +2,7 @@ Source: live-boot
 Section: misc
 Priority: optional
 Maintainer: Debian Live Maintainers <debian-live@lists.debian.org>
-Uploaders: Iain R. Learmonth <irl@debian.org>, Raphaël Hertzog <hertzog@debian.org>,
+Uploaders: Raphaël Hertzog <hertzog@debian.org>,
  Luca Boccassi <bluca@debian.org>
 Build-Depends:
  debhelper-compat (= 12),
