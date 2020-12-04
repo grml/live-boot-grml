@@ -246,7 +246,7 @@ fi
 # libnss_files.so.*:  /etc/hosts and /etc/passwd
 # libnss_compat.so.*: /etc/passwd
 
-for _SHLIB in $(find /lib /usr/lib -name 'libnss_dns.so.*' -o -name 'libnss_files.so.*')
+for _SHLIB in $(find /lib /usr/lib -name 'libnss_dns.so.*' -o -name 'libnss_files.so.*' | grep -v '/lib/live')
 do
 	copy_exec "${_SHLIB}"
 done
