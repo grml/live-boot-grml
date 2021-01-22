@@ -1,3 +1,43 @@
+live-boot (1:20210122) unstable; urgency=medium
+
+  [ Steven Shiau ]
+  * A workaround to make sure /dev/mtd0 can be created
+  * Use ntfs-3g instead of kernel module ntfs.ko (Closes: #939034)
+
+  [ Benjamin Drung ]
+  * components/9990-networking.sh: Add shellcheck override
+  * Fix DNS search entry in /etc/resolv.conf
+  * Fix shellcheck in components/9990-main.sh
+  * Simplify empty check for /etc/resolv.conf
+  * Create /etc/hostname in initramfs
+  * Copy /etc/hostname and /etc/hosts into target
+  * Fix flipped logic for handling memdiskfind
+  * components/9990-main.sh: Fix shellcheck issue SC2236
+  * Fix leading space in DEVICE setting
+
+  [ Marcel Partap ]
+  * Accept multiple overlay names from persistence-label parameter
+  * Fix spurious error msgs from live-boot about failed mounts…
+  * Document the fact that persistence-label now accepts a list
+  * Set sticky bit on /var/tmp as well (matching perms in base-files)
+
+  [ Debian Janitor ]
+  * Update standards version to 4.4.1, no changes needed.
+  * Bump debhelper from old 10 to 12. + debian/rules: Move --fail-missing
+    argument to dh_missing.
+  * Set debhelper-compat version in Build-Depends.
+
+  [ Lyndon Brown ]
+  * amend copyright
+  * "Live Systems" -> "Debian Live"
+
+  [ Raphaël Hertzog ]
+  * Drop Iain R. Learmonth from Uploaders on his request (Closes: #970288)
+  * Update standards version to 4.5.0, no changes needed.
+  * Update my maintainer email
+
+ -- Raphaël Hertzog <raphael@offensive-security.com>  Fri, 22 Jan 2021 15:18:23 +0100
+
 live-boot (1:20190614) unstable; urgency=medium
 
   [ Roland Clobus ]
