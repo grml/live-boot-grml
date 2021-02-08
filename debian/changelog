@@ -1,3 +1,14 @@
+live-boot (1:20210208) unstable; urgency=high
+
+  [ Steven Shiau ]
+  * Revert commit that forced usage of the last ethernet device making it
+    impossible to boot when the working connection was on another
+    ethernet device
+  * Cleanup the leading space that was causing issues and that resulted
+    in the former wrong change with a sed.
+
+ -- Raphaël Hertzog <raphael@offensive-security.com>  Mon, 08 Feb 2021 12:18:07 +0100
+
 live-boot (1:20210122) unstable; urgency=medium
 
   [ Steven Shiau ]
