@@ -120,7 +120,8 @@ Select_eth_device ()
 					1)
 						echo "Connected $interface found"
 						# inform initrd's init script :
-						found_eth_dev="$interface"
+						found_eth_dev="$found_eth_dev $interface"
+						found_eth_dev="$(echo $found_eth_dev | sed -e "s/^[[:space:]]*//g")"
 						;;
 				esac
 			done
