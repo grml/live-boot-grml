@@ -139,7 +139,20 @@ check_dev ()
 	# support for fromiso=.../isofrom=....
 	if [ -n "$FROMISO" ]
 	then
-		ISO_DEVICE=$(dirname $FROMISO)
+		fs_type="${FROMISO%%:*}"
+		fs_type_auto='1'
+		ISO_DEVICE="${FROMISO}"
+		if echo "${fs_type}" | grep -q '[^[:alnum:]_-]'; then
+			# Not a valid file system name. Treat as part of the
+			# path, and, especially, use autodetection.
+			fs_type=''
+		else
+			# Looks like a file system specification, treat it
+			# like that.
+			fs_type_auto='0'
+			ISO_DEVICE="${ISO_DEVICE#*:}"
+		fi
+		ISO_DEVICE=$(dirname "${ISO_DEVICE}")
 		if ! [ -b $ISO_DEVICE ]
 		then
 			# to support unusual device names like /dev/cciss/c0d0p1
@@ -160,14 +173,17 @@ check_dev ()
 			# example an ISO when booting on an ONIE system
 			if echo "${FROMISO}" | grep -q "\.iso$"
 			then
-				fs_type=$(get_fstype "${FROMISO}")
+				if [ '0' -ne "${fs_type_auto}" ]; then
+					# Autodetect fs type if not overridden.
+					fs_type=$(get_fstype "${FROMISO}")
+				fi
 				if is_supported_fs ${fs_type}
 				then
 					mkdir /run/live/fromiso
-					mount -t $fs_type "${FROMISO}" /run/live/fromiso
+					mount -t "${fs_type}" -o 'ro' "${FROMISO}" '/run/live/fromiso'
 					if [ "$?" != 0 ]
 					then
-						echo "Warning: unable to mount ${FROMISO}." >>/boot.log
+						echo "Warning: unable to mount ${FROMISO} (type ${fs_type})." >>/boot.log
 					fi
 					devname="/run/live/fromiso"
 				fi
@@ -175,16 +191,30 @@ check_dev ()
 				echo "Warning: device for bootoption fromiso= ($FROMISO) not found.">>/boot.log
 			fi
 		else
-			fs_type=$(get_fstype "${ISO_DEVICE}")
+			# Need to extract actual ISO file path later on,
+			# initialize first.
+			iso_name="${FROMISO}"
+
+			if [ '0' -ne "${fs_type_auto}" ]; then
+				# Try to auto-detect file system if not
+				# explicitly provided.
+				fs_type=$(get_fstype "${ISO_DEVICE}")
+			else
+				# Delete file system type override.
+				iso_name="${iso_name#*:}"
+			fi
+			# At this point, the backing device should always be
+			# at the very front, so remove that - leaving only the
+			# ISO file path.
+			iso_name="$(echo "${iso_name}" | sed "s|^${ISO_DEVICE}||")"
 			if is_supported_fs ${fs_type}
 			then
 				mkdir /run/live/fromiso
-				mount -t $fs_type "$ISO_DEVICE" /run/live/fromiso
-				ISO_NAME="$(echo $FROMISO | sed "s|$ISO_DEVICE||")"
-				loopdevname=$(setup_loop "/run/live/fromiso/${ISO_NAME}" "loop" "/sys/block/loop*" "" '')
+				mount -t "${fs_type}" -o 'ro' "$ISO_DEVICE" '/run/live/fromiso'
+				loopdevname=$(setup_loop "/run/live/fromiso/${iso_name}" "loop" "/sys/block/loop*" "" '')
 				devname="${loopdevname}"
 			else
-				echo "Warning: unable to mount $ISO_DEVICE." >>/boot.log
+				echo "Warning: unable to mount $ISO_DEVICE (type ${fs_type})." >>/boot.log
 			fi
 		fi
 	fi
