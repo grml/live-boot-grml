@@ -6,7 +6,7 @@ Uploaders: Michael Prokop <mika@grml.org>
 Build-Depends:
  debhelper-compat (= 12),
  po4a,
-Standards-Version: 4.4.1
+Standards-Version: 4.5.0
 Rules-Requires-Root: no
 Homepage: https://wiki.debian.org/DebianLive
 Vcs-Browser: https://git.grml.org/?p=live-boot-grml.git

@@ -1,5 +1,30 @@
 #!/bin/sh
 
+Wait_for_carrier ()
+{
+	# $1 = network device
+	echo -n "Waiting for link to come up on $1... "
+	ip link set $1 up
+	for step in $(seq 1 15)
+	do
+		carrier=$(cat /sys/class/net/$1/carrier \
+		2>/dev/null)
+		case "${carrier}" in
+			1)
+			echo -e "\nLink is up"
+			return
+			;;
+			*)
+			# Counter
+			echo -n "$step "
+			;;
+		esac
+		sleep 1
+	done
+	echo -e "\nError - carrier not detected on $1."
+	ip link set $1 down
+}
+
 Select_eth_device ()
 {
 	# Boot type in initramfs's config
@@ -46,6 +71,7 @@ Select_eth_device ()
 		then
 			# only one interface : no choice
 			echo "DEVICE=$l_interfaces" >> /conf/param.conf
+			Wait_for_carrier $l_interfaces
 			return
 		fi
 
@@ -57,6 +83,7 @@ Select_eth_device ()
 				NETDEV="${ARGUMENT#live-netdev=}"
 				echo "DEVICE=$NETDEV" >> /conf/param.conf
 				echo "Found live-netdev parameter, forcing to to use network device $NETDEV."
+				Wait_for_carrier $NETDEV
 				return
 				;;
 			esac
@@ -75,6 +102,7 @@ Select_eth_device ()
 			# ATTR{carrier} is not set if this is not done
 			echo -n " $interface ?"
 			ipconfig -c none -d $interface -t 1 >/dev/null 2>&1
+			sleep 1
 		done
 
 		echo ''
@@ -83,6 +111,7 @@ Select_eth_device ()
 		do
 			for interface in $l_interfaces
 			do
+				ip link set $interface up
 				carrier=$(cat /sys/class/net/$interface/carrier \
 					2>/dev/null)
 				# link detected
@@ -92,6 +121,7 @@ Select_eth_device ()
 						echo "Connected $interface found"
 						# inform initrd's init script :
 						found_eth_dev="$found_eth_dev $interface"
+						found_eth_dev="$(echo $found_eth_dev | sed -e "s/^[[:space:]]*//g")"
 						;;
 				esac
 			done
