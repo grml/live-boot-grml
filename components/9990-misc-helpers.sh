@@ -251,12 +251,13 @@ check_dev ()
 
 			/dev/md*)
 				# Adding raid support
-				if [ -x /scripts/local-top/mdadm ]
+				if [ -x /scripts/local-block/mdadm ]
 				then
-					[ -r /conf/conf.d/md ] && cp /conf/conf.d/md /conf/conf.d/md.orig
-					echo "MD_DEVS=$device " >> /conf/conf.d/md
-					/scripts/local-top/mdadm >>/boot.log
-					[ -r /conf/conf.d/md.orig ] && mv /conf/conf.d/md.orig /conf/conf.d/md
+					# Back in the day, when there was still a local-top mdadm script, we
+					# used to select specific devices to be auto-assembled.
+					# This functionality was dropped in the local-block script, so just
+					# scan and assemble all RAID devices.
+					/scripts/local-block/mdadm >>/boot.log
 				fi
 				;;
 		esac
