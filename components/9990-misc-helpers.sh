@@ -137,11 +137,12 @@ check_dev ()
 	skip_uuid_check="${3}"
 
 	# support for fromiso=.../isofrom=....
+	local iso_device=''
 	if [ -n "$FROMISO" ]
 	then
 		fs_type="${FROMISO%%:*}"
 		fs_type_auto='1'
-		ISO_DEVICE="${FROMISO}"
+		iso_device="${FROMISO}"
 		if echo "${fs_type}" | grep -q '[^[:alnum:]_-]'; then
 			# Not a valid file system name. Treat as part of the
 			# path, and, especially, use autodetection.
@@ -150,24 +151,55 @@ check_dev ()
 			# Looks like a file system specification, treat it
 			# like that.
 			fs_type_auto='0'
-			ISO_DEVICE="${ISO_DEVICE#*:}"
+			iso_device="${iso_device#*:}"
 		fi
-		ISO_DEVICE=$(dirname "${ISO_DEVICE}")
-		if ! [ -b $ISO_DEVICE ]
+		iso_device=$(dirname "${iso_device}")
+		if ! [ -b "${iso_device}" ]
 		then
 			# to support unusual device names like /dev/cciss/c0d0p1
 			# as well we have to identify the block device name, let's
 			# do that for up to 15 levels
-			i=15
-			while [ -n "$ISO_DEVICE" ] && [ "$i" -gt 0 ]
+			i='15'
+			while [ -n "${iso_device}" ] && [ "${i}" -gt '0' ]
 			do
-				ISO_DEVICE=$(dirname ${ISO_DEVICE})
-				[ -b "$ISO_DEVICE" ] && break
-				i=$(($i -1))
+				iso_device=$(dirname "${iso_device}")
+				if [ -b "${iso_device}" ]; then
+					# Proper device, we're done.
+					break
+				else
+					# Otherwise, it *could* be a proper device
+					# that just hasn't been started yet - think
+					# lvm or RAID.
+					case "${iso_device}" in
+						'/dev/mapper/'*|'/dev/md/'*)
+							# We're looking for paths like
+							# /dev/{mapper,md}/foo here.
+							if printf '%s\n' "${iso_device}" | \
+							   grep -Eqs '^/dev/(mapper|md)/[^/]+$'; then
+								# Okay, looks like a device we'll
+								# have to start later on, done here.
+								break
+							fi
+							;;
+						'/dev/md'*)
+							# This is different from the path above.
+							# Here, we're looking for something like
+							# /dev/md0, /dev/md126 and the like.
+							if printf '%s\n' "${iso_device}" | \
+							   grep -Eqs '^/dev/md[[:digit:]]+$'; then
+								# Syntax matches, keep as device
+								# name for later when RAIDs were
+								# started.
+								break
+							fi
+							;;
+					esac
+				fi
+				i="$(($i - 1))"
 			done
 		fi
 
-		if [ "$ISO_DEVICE" = "/" ]
+		if [ "${iso_device}" = '/' ]
 		then
 			# not a block device, check if it's an iso file, for
 			# example an ISO when booting on an ONIE system
@@ -191,39 +223,19 @@ check_dev ()
 				echo "Warning: device for bootoption fromiso= ($FROMISO) not found.">>/boot.log
 			fi
 		else
-			# Need to extract actual ISO file path later on,
-			# initialize first.
-			iso_name="${FROMISO}"
-
-			if [ '0' -ne "${fs_type_auto}" ]; then
-				# Try to auto-detect file system if not
-				# explicitly provided.
-				fs_type=$(get_fstype "${ISO_DEVICE}")
-			else
-				# Delete file system type override.
-				iso_name="${iso_name#*:}"
-			fi
-			# At this point, the backing device should always be
-			# at the very front, so remove that - leaving only the
-			# ISO file path.
-			iso_name="$(echo "${iso_name}" | sed "s|^${ISO_DEVICE}||")"
-			if is_supported_fs ${fs_type}
-			then
-				mkdir /run/live/fromiso
-				mount -t "${fs_type}" -o 'ro' "$ISO_DEVICE" '/run/live/fromiso'
-				loopdevname=$(setup_loop "/run/live/fromiso/${iso_name}" "loop" "/sys/block/loop*" "" '')
-				devname="${loopdevname}"
-			else
-				echo "Warning: unable to mount $ISO_DEVICE (type ${fs_type})." >>/boot.log
-			fi
+			# Otherwise, it must be a block device, so record that as the devname.
+			devname="${iso_device}"
+		fi
+	else
+		# Usual handling in the non-fromiso case.
+		if [ -z "${devname}" ]
+		then
+			devname=$(sys2dev "${sysdev}")
 		fi
 	fi
 
-	if [ -z "${devname}" ]
-	then
-		devname=$(sys2dev "${sysdev}")
-	fi
-
+	# Common code path again: if devname is a directory, we can just go ahead
+	# and bind-mount it to our target mount point.
 	if [ -d "${devname}" ]
 	then
 		mount -o bind "${devname}" $mountpoint || continue
@@ -237,7 +249,10 @@ check_dev ()
 		fi
 	fi
 
+	# Check if we have to start logical volumes or RAID arrays.
+	# Do this in the common code path so it's only executed once.
 	IFS=","
+	local device=''
 	for device in ${devname}
 	do
 		case "$device" in
@@ -251,17 +266,55 @@ check_dev ()
 
 			/dev/md*)
 				# Adding raid support
-				if [ -x /scripts/local-top/mdadm ]
+				if [ -x /scripts/local-block/mdadm ]
 				then
-					[ -r /conf/conf.d/md ] && cp /conf/conf.d/md /conf/conf.d/md.orig
-					echo "MD_DEVS=$device " >> /conf/conf.d/md
-					/scripts/local-top/mdadm >>/boot.log
-					[ -r /conf/conf.d/md.orig ] && mv /conf/conf.d/md.orig /conf/conf.d/md
+					# Back in the day, when there was still a local-top mdadm script, we
+					# used to select specific devices to be auto-assembled.
+					# This functionality was dropped in the local-block script, so just
+					# scan and assemble all RAID devices.
+					/scripts/local-block/mdadm >>/boot.log
 				fi
 				;;
 		esac
 	done
 	unset IFS
+
+	# Back to fromiso handling, if necessary.
+	# We should now have the necessary lv/RAID devices available, so try to use them.
+	if [ -n "$FROMISO" ]
+	then
+		if [ "${iso_device}" != '/' ]
+		then
+			# Need to extract actual ISO file path later on,
+			# initialize first.
+			iso_name="${FROMISO}"
+
+			if [ '0' -ne "${fs_type_auto}" ]; then
+				# Try to auto-detect file system if not
+				# explicitly provided.
+				fs_type=$(get_fstype "${iso_device}")
+			else
+				# Delete file system type override.
+				iso_name="${iso_name#*:}"
+			fi
+			# At this point, the backing device should always be
+			# at the very front, so remove that - leaving only the
+			# ISO file path.
+			iso_name="$(echo "${iso_name}" | sed "s|^${iso_device}||")"
+			if is_supported_fs ${fs_type}
+			then
+				mkdir /run/live/fromiso
+				mount -t "${fs_type}" -o 'ro' "${iso_device}" '/run/live/fromiso'
+				loopdevname=$(setup_loop "/run/live/fromiso/${iso_name}" "loop" "/sys/block/loop*" "" '')
+				devname="${loopdevname}"
+
+				# Reset device variable, we won't need it.
+				device=''
+			else
+				echo "Warning: unable to mount ${iso_device} (type ${fs_type})." >>/boot.log
+			fi
+		fi
+	fi
 
 	[ -n "$device" ] && devname="$device"
 
