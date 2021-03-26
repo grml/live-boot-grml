@@ -1,3 +1,11 @@
+live-boot (1:20210208+grml.2) unstable; urgency=medium
+
+  [ Mihai Moldovan ]
+  * [a70800e] 9990-misc-helpers.sh: fix RAID detection for findiso.
+  * [cf60d58] 9990-misc-helpers.sh: support lvm/mdadm in fromiso feature.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 26 Mar 2021 08:57:35 +0100
+
 live-boot (1:20210208+grml.1) unstable; urgency=medium
 
   [ Steven Shiau ]
