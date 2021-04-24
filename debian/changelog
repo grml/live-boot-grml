@@ -1,3 +1,11 @@
+live-boot (1:20210208+grml.3) unstable; urgency=medium
+
+  [ Mihai Moldovan ]
+  * [02b7fee] 9990-misc-helpers.sh: remove mdadm.conf in initramfs if
+    existent.
+
+ -- Michael Prokop <mika@grml.org>  Sat, 24 Apr 2021 22:00:03 +0200
+
 live-boot (1:20210208+grml.2) unstable; urgency=medium
 
   [ Mihai Moldovan ]
