@@ -78,15 +78,32 @@ Select_eth_device ()
 		# If user force to use specific device, write it
 		for ARGUMENT in ${LIVE_BOOT_CMDLINE}
 		do
-			case "${ARGUMENT}" in
-				live-netdev=*)
-				NETDEV="${ARGUMENT#live-netdev=}"
-				echo "DEVICE=$NETDEV" >> /conf/param.conf
-				echo "Found live-netdev parameter, forcing to to use network device $NETDEV."
-				Wait_for_carrier $NETDEV
-				return
-				;;
-			esac
+                        case "${ARGUMENT}" in
+                          live-netdev=*)
+                            NETDEV="${ARGUMENT#live-netdev=}"
+
+                            # Check if NETDEV is a valid MAC address
+                            if echo "$NETDEV" | grep -Eq '^[0-9A-Fa-f]{2}[:-]([0-9A-Fa-f]{2}[:-]){4}[0-9A-Fa-f]{2}$'; then
+                              echo "NETDEV is a valid MAC address."
+
+                              # Retrieve the device name associated with the MAC address
+                              DEVICE_NAME=$(ip -o link | awk -v mac="$NETDEV" '$0 ~ mac{print substr($2, 1, length($2)-1)}')
+                              if [ -n "$DEVICE_NAME" ]; then
+                                echo "Device name for MAC address $NETDEV is $DEVICE_NAME."
+                                NETDEV="$DEVICE_NAME"
+                              fi
+                            else
+                              echo "NETDEV is not a valid MAC address. Assuming it is a device name."
+                              # Assign NETDEV directly to $NETDEV
+                              NETDEV="$NETDEV"
+                            fi
+                            echo "DEVICE=$NETDEV" >> /conf/param.conf
+                            echo "Found live-netdev parameter, forcing it to use network device $NETDEV."
+                            Wait_for_carrier "$NETDEV"
+                            return
+                            ;;
+                        esac
+
 		done
 	else
 		l_interfaces="$DEVICE"
