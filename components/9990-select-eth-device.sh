@@ -103,7 +103,6 @@ Select_eth_device ()
                             return
                             ;;
                         esac
-
 		done
 	else
 		l_interfaces="$DEVICE"
