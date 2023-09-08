@@ -1,3 +1,10 @@
+live-boot (1:20210208+grml.4) unstable; urgency=medium
+
+  [ Michael Laß ]
+  * [98d3d05] 9990-main.sh: activate LVM volumes if needed.
+
+ -- Michael Prokop <mika@grml.org>  Fri, 08 Sep 2023 08:50:55 +0200
+
 live-boot (1:20210208+grml.3) unstable; urgency=medium
 
   [ Mihai Moldovan ]
