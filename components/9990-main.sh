@@ -80,6 +80,30 @@ Live ()
 				fi
 			fi
 
+			# If the live media location is given via command line and access to it
+			# involves LVM volumes, the corresponding volumes need to be activated.
+			IFS=','
+			for dev in $(echo "$LIVE_MEDIA")
+			do
+				case "$dev" in
+				/dev/mapper/*)
+					eval $(dmsetup splitname --nameprefixes --noheadings --rows "${dev#/dev/mapper/}")
+					if [ "$DM_VG_NAME" ] && [ "$DM_LV_NAME" ]
+					then
+						lvm lvchange -aay -y --sysinit --ignoreskippedcluster "$DM_VG_NAME/$DM_LV_NAME"
+					fi
+					;;
+				/dev/*/*)
+					# Could be /dev/VG/LV; use lvs to check
+					if lvm lvs -- "$dev" >/dev/null 2>&1
+					then
+						lvm lvchange -aay -y --sysinit --ignoreskippedcluster "$dev"
+					fi
+					;;
+				esac
+			done
+			unset IFS
+
 			# Scan local devices for the image
 			i=0
 			while [ "$i" -lt 60 ]
