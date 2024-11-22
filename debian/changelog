@@ -1,3 +1,13 @@
+live-boot (1:20210208+grml.6) unstable; urgency=medium
+
+  [ Chris Hofstaedtler ]
+  * [c91dee8] debian: update Vcs-Git and Vcs-Browser
+
+  [ Michael Prokop ]
+  * [abba689] Ship debian/gbp.conf for gbp usage
+
+ -- Michael Prokop <mika@grml.org>  Fri, 22 Nov 2024 18:54:25 +0100
+
 live-boot (1:20210208+grml.5) unstable; urgency=medium
 
   [ ThomasToka ]
