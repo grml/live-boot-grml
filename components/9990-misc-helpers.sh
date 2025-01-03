@@ -268,21 +268,6 @@ check_dev ()
 				# Adding raid support
 				if [ -x /scripts/local-block/mdadm ]
 				then
-					# Before actually doing anything, make sure that no auto-generated
-					# mdadm.conf is around in the initramfs.
-					# Short explanation of why this is needed:
-					# /usr/share/initramfs-tools/hooks/mdadm is executed as part of
-					# mkinitramfs, which generates an /etc/mdadm/mdadm.conf file if one
-					# doesn't exist yet (which should always be the case in our new
-					# chroot) based on the host system configuration. Eventually, this
-					# is copied into the generated initramfs and then causes issues on
-					# other systems.
-					# It's safe to delete the file within the initramfs. The actual
-					# squashfs root will not be affected by that (and, additionally,
-					# a FAI script makes sure that the mdadm.conf in there gets wiped
-					# of any auto-generated arrays).
-					rm -rf '/etc/mdadm/mdadm.conf'
-
 					# Back in the day, when there was still a local-top mdadm script, we
 					# used to select specific devices to be auto-assembled.
 					# This functionality was dropped in the local-block script, so just
