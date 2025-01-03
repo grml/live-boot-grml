@@ -16,12 +16,6 @@ do
 	fi
 done
 
-# Grml version information:
-if [ -r /etc/grml_version ]
-then
-       cp /etc/grml_version "${DESTDIR}"/etc
-fi
-
 # Checking live-boot
 if [ ! -e /bin/live-boot ]
 then
@@ -255,18 +249,6 @@ if [ ! -e "${DESTDIR}/etc/nsswitch.conf" ]
 then
 	# Needed to make "hostname -f" honor the domainname provided by DHCP
 	echo "hosts: files dns" > "${DESTDIR}/etc/nsswitch.conf"
-fi
-
-# vlan support
-if [ -x /sbin/vconfig ]
-then
-	copy_exec /sbin/vconfig
-	manual_add_modules 8021q
-fi
-
-if [ -x /sbin/ethtool ]
-then
-       copy_exec /sbin/ethtool
 fi
 
 [ "${QUIET}" ] || echo .
