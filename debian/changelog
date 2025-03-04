@@ -1,3 +1,10 @@
+live-boot (1:20210208+grml.7) unstable; urgency=medium
+
+  * [0047259] Disable set -e in live.hook
+    Workaround for Debian bug #1099461.
+
+ -- Chris Hofstaedtler <ch@grml.org>  Tue, 04 Mar 2025 17:30:09 +0100
+
 live-boot (1:20210208+grml.6) unstable; urgency=medium
 
   [ Chris Hofstaedtler ]
