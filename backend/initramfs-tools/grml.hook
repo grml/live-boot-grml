@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -e
+
+if [ -r /etc/grml_version ]
+then
+    cp /etc/grml_version "${DESTDIR}"/etc
+fi
+
+# vlan support
+if [ -x /sbin/vconfig ]
+then
+	copy_exec /sbin/vconfig
+	manual_add_modules 8021q
+fi
+
+if [ -x /sbin/ethtool ]
+then
+    copy_exec /sbin/ethtool
+fi
+

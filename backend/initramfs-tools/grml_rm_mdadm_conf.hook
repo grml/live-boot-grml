@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# The mdadm hook installs /etc/mdadm/mdadm.conf from the build chroot
+# into the initramfs. This contains the build host configuration, and
+# is certainly wrong for the live system.
+#
+# This hook deletes the installed mdadm.conf, so mdadm default
+# behaviour runs once again.
+
+set -eu
+
+PREREQ="mdadm"
+prereqs()
+{
+    echo "$PREREQ"
+}
+
+case "${1:-}" in
+  prereqs)
+    prereqs
+    exit 0
+    ;;
+esac
+
+DESTMDADMCONF=$DESTDIR/etc/mdadm/mdadm.conf
+rm -f "$DESTMDADMCONF"
+
