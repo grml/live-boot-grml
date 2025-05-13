@@ -1,7 +1,6 @@
 #!/bin/sh
 
-# disabled as a workaround for #1099461
-#set -e
+set -e
 
 . /usr/share/initramfs-tools/hook-functions
 
