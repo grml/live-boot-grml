@@ -1,3 +1,9 @@
+live-boot (1:20210208+grml.8) unstable; urgency=medium
+
+  * [26a57e1] Revert "Disable set -e in live.hook"
+
+ -- Chris Hofstaedtler <ch@grml.org>  Wed, 14 May 2025 14:02:27 +0200
+
 live-boot (1:20210208+grml.7) unstable; urgency=medium
 
   * [0047259] Disable set -e in live.hook
