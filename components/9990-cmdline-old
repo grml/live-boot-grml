@@ -24,11 +24,6 @@ Cmdline_old ()
 				unset DNS
 				;;
 
-			bootid=*)
-				BOOTID="${_PARAMETER#bootid=}"
-				export BOOTID
-				;;
-
 			dhcp)
 				# Force dhcp even while netbooting
 				# Use for debugging in case somebody works on fixing dhclient
@@ -92,11 +87,6 @@ Cmdline_old ()
 				export FROMISO
 				;;
 
-			ignore_bootid)
-				IGNORE_BOOTID="Yes"
-				export IGNORE_BOOTID
-				;;
-
 			ignore_uuid)
 				IGNORE_UUID="true"
 				export IGNORE_UUID
@@ -156,11 +146,6 @@ Cmdline_old ()
 			nfsoverlay=*)
 				NFS_COW="${_PARAMETER#nfsoverlay=}"
 				export NFS_COW
-				;;
-
-			nodhcphostname)
-				NODHCPHOSTNAME="Yes"
-				export NODHCPHOSTNAME
 				;;
 
 			nofstab)
@@ -268,11 +253,6 @@ Cmdline_old ()
 			union=*)
 				UNIONTYPE="${_PARAMETER#union=}"
 				export UNIONTYPE
-				;;
-
-			vlan=*)
-				VLANS="${VLANS} ${_PARAMETER#vlan=}"
-				export VLANS
 				;;
 		esac
 	done
