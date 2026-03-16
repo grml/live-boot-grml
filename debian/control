@@ -2,7 +2,8 @@ Source: live-boot
 Section: misc
 Priority: optional
 Maintainer: Grml Team <team@grml.org>
-Uploaders: Michael Prokop <mika@grml.org>
+Uploaders:
+ Michael Prokop <mika@grml.org>,
 Build-Depends:
  debhelper-compat (= 12),
  po4a,
@@ -13,6 +14,7 @@ Vcs-Browser: https://github.com/grml/live-boot-grml
 Vcs-Git: https://github.com/grml/live-boot-grml.git
 Origin: Grml
 Bugs: mailto:bugs@grml.org
+X-Style: black
 
 Package: live-boot-grml
 Architecture: all
@@ -29,9 +31,12 @@ Suggests:
  curlftpfs,
  httpfs2,
  wget,
-Conflicts: live-boot
-Replaces: live-boot
-Provides: live-boot
+Conflicts:
+ live-boot,
+Replaces:
+ live-boot,
+Provides:
+ live-boot,
 Description: Live System Boot Components
  live-boot contains the components to configure a live system during the boot
  process (early userspace). Do not install this package on your regular system,
